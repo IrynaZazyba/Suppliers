@@ -48,13 +48,14 @@ public class Category {
         if (this == o) return true;
         if (!(o instanceof Category)) return false;
         Category category1 = (Category) o;
-        return getId().equals(category1.getId()) &&
-                getCategory().equals(category1.getCategory());
+        return Objects.equals(getId(), category1.getId()) &&
+                Objects.equals(getCategory(), category1.getCategory()) &&
+                Objects.equals(getItems(), category1.getItems());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCategory());
+        return Objects.hash(getId(), getCategory(), getItems());
     }
 
     @Override
@@ -62,6 +63,7 @@ public class Category {
         return "Category{" +
                 "id=" + id +
                 ", category='" + category + '\'' +
+                ", items=" + items +
                 '}';
     }
 }

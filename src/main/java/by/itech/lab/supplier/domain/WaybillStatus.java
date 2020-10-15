@@ -2,6 +2,7 @@ package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -38,4 +39,27 @@ public class WaybillStatus {
         this.wayBills = wayBills;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WaybillStatus)) return false;
+        WaybillStatus that = (WaybillStatus) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getStatus(), that.getStatus()) &&
+                Objects.equals(getWayBills(), that.getWayBills());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStatus(), getWayBills());
+    }
+
+    @Override
+    public String toString() {
+        return "WaybillStatus{" +
+                "id=" + id +
+                ", status='" + status + '\'' +
+                ", wayBills=" + wayBills +
+                '}';
+    }
 }

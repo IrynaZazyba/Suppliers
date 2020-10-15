@@ -3,6 +3,7 @@ package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -39,4 +40,27 @@ public class ApplicationStatus {
         this.applications = applications;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ApplicationStatus)) return false;
+        ApplicationStatus that = (ApplicationStatus) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getStatus(), that.getStatus()) &&
+                Objects.equals(getApplications(), that.getApplications());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getStatus(), getApplications());
+    }
+
+    @Override
+    public String toString() {
+        return "ApplicationStatus{" +
+                "id=" + id +
+                ", status='" + status + '\'' +
+                ", applications=" + applications +
+                '}';
+    }
 }

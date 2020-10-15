@@ -3,6 +3,7 @@ package by.itech.lab.supplier.domain;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -174,4 +175,53 @@ public class User {
         this.updatorApplications = updatorApplications;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getName(), user.getName()) &&
+                Objects.equals(getSurname(), user.getSurname()) &&
+                Objects.equals(getBirthday(), user.getBirthday()) &&
+                Objects.equals(getLogin(), user.getLogin()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getRole(), user.getRole()) &&
+                Objects.equals(getAddress(), user.getAddress()) &&
+                Objects.equals(getCustomer(), user.getCustomer()) &&
+                Objects.equals(getWarehouse(), user.getWarehouse()) &&
+                Objects.equals(getCreatorWayBills(), user.getCreatorWayBills()) &&
+                Objects.equals(getUpdatorWayBills(), user.getUpdatorWayBills()) &&
+                Objects.equals(getDriverWayBills(), user.getDriverWayBills()) &&
+                Objects.equals(getCreatorApplications(), user.getCreatorApplications()) &&
+                Objects.equals(getUpdatorApplications(), user.getUpdatorApplications());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getSurname(), getBirthday(), getLogin(), getPassword(), getEmail(), getRole(), getAddress(), getCustomer(), getWarehouse(), getCreatorWayBills(), getUpdatorWayBills(), getDriverWayBills(), getCreatorApplications(), getUpdatorApplications());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthday=" + birthday +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                ", address=" + address +
+                ", customer=" + customer +
+                ", warehouse=" + warehouse +
+                ", creatorWayBills=" + creatorWayBills +
+                ", updatorWayBills=" + updatorWayBills +
+                ", driverWayBills=" + driverWayBills +
+                ", creatorApplications=" + creatorApplications +
+                ", updatorApplications=" + updatorApplications +
+                '}';
+    }
 }

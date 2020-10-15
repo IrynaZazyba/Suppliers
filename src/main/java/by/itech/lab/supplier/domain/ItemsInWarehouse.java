@@ -31,19 +31,4 @@ public class ItemsInWarehouse {
     }
 
 
-    public Set<Warehouse> getWarehouses() {
-        return warehouses;
-    }
-
-    public void setWarehouses(Set<Warehouse> warehouses) {
-        this.warehouses = warehouses;
-    }
-
-    public Set<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(Set<Item> items) {
-        this.items = items;
-    }
 }

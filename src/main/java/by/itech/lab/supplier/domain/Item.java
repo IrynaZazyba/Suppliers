@@ -3,6 +3,7 @@ package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -71,4 +72,33 @@ public class Item {
         this.taxPerDistances = taxPerDistances;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+        Item item = (Item) o;
+        return Objects.equals(getId(), item.getId()) &&
+                Objects.equals(getUpc(), item.getUpc()) &&
+                Objects.equals(getLabel(), item.getLabel()) &&
+                Objects.equals(getUnits(), item.getUnits()) &&
+                Objects.equals(getCategory(), item.getCategory()) &&
+                Objects.equals(getTaxPerDistances(), item.getTaxPerDistances());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUpc(), getLabel(), getUnits(), getCategory(), getTaxPerDistances());
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", upc=" + upc +
+                ", label='" + label + '\'' +
+                ", units=" + units +
+                ", category=" + category +
+                ", taxPerDistances=" + taxPerDistances +
+                '}';
+    }
 }

@@ -69,4 +69,34 @@ public class Customer {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer)) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(getId(), customer.getId()) &&
+                Objects.equals(getName(), customer.getName()) &&
+                Objects.equals(getRegistrationDate(), customer.getRegistrationDate()) &&
+                Objects.equals(getStatus(), customer.getStatus()) &&
+                Objects.equals(getWarehouses(), customer.getWarehouses()) &&
+                Objects.equals(getUsers(), customer.getUsers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getRegistrationDate(), getStatus(), getWarehouses(), getUsers());
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", status='" + status + '\'' +
+                ", warehouses=" + warehouses +
+                ", users=" + users +
+                '}';
+    }
 }

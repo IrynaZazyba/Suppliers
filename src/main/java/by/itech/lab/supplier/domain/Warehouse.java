@@ -84,4 +84,35 @@ public class Warehouse {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Warehouse)) return false;
+        Warehouse warehouse = (Warehouse) o;
+        return getId() == warehouse.getId() &&
+                Objects.equals(getIdentifier(), warehouse.getIdentifier()) &&
+                Objects.equals(getType(), warehouse.getType()) &&
+                Objects.equals(getTotalCapacity(), warehouse.getTotalCapacity()) &&
+                Objects.equals(getAddress(), warehouse.getAddress()) &&
+                Objects.equals(getCustomer(), warehouse.getCustomer()) &&
+                Objects.equals(getUsers(), warehouse.getUsers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getIdentifier(), getType(), getTotalCapacity(), getAddress(), getCustomer(), getUsers());
+    }
+
+    @Override
+    public String toString() {
+        return "Warehouse{" +
+                "id=" + id +
+                ", identifier='" + identifier + '\'' +
+                ", type='" + type + '\'' +
+                ", totalCapacity=" + totalCapacity +
+                ", address=" + address +
+                ", customer=" + customer +
+                ", users=" + users +
+                '}';
+    }
 }

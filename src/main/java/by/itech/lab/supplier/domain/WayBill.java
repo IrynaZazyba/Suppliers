@@ -4,6 +4,7 @@ package by.itech.lab.supplier.domain;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -128,4 +129,43 @@ public class WayBill {
         this.applications = applications;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WayBill)) return false;
+        WayBill wayBill = (WayBill) o;
+        return Objects.equals(getId(), wayBill.getId()) &&
+                Objects.equals(getNumber(), wayBill.getNumber()) &&
+                Objects.equals(getRegistrationDate(), wayBill.getRegistrationDate()) &&
+                Objects.equals(getLastUpdated(), wayBill.getLastUpdated()) &&
+                Objects.equals(getWaybillStatus(), wayBill.getWaybillStatus()) &&
+                Objects.equals(getSourceLocationAddress(), wayBill.getSourceLocationAddress()) &&
+                Objects.equals(getCreatedByUsers(), wayBill.getCreatedByUsers()) &&
+                Objects.equals(getUpdatedByUsers(), wayBill.getUpdatedByUsers()) &&
+                Objects.equals(getCar(), wayBill.getCar()) &&
+                Objects.equals(getDriver(), wayBill.getDriver()) &&
+                Objects.equals(getApplications(), wayBill.getApplications());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNumber(), getRegistrationDate(), getLastUpdated(), getWaybillStatus(), getSourceLocationAddress(), getCreatedByUsers(), getUpdatedByUsers(), getCar(), getDriver(), getApplications());
+    }
+
+    @Override
+    public String toString() {
+        return "WayBill{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", lastUpdated=" + lastUpdated +
+                ", waybillStatus=" + waybillStatus +
+                ", sourceLocationAddress=" + sourceLocationAddress +
+                ", createdByUsers=" + createdByUsers +
+                ", updatedByUsers=" + updatedByUsers +
+                ", car=" + car +
+                ", driver=" + driver +
+                ", applications=" + applications +
+                '}';
+    }
 }

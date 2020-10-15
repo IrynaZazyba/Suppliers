@@ -2,6 +2,7 @@ package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -37,5 +38,29 @@ public class Zone {
 
     public void setTaxes(Set<Tax> taxes) {
         this.taxes = taxes;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Zone)) return false;
+        Zone zone1 = (Zone) o;
+        return Objects.equals(getId(), zone1.getId()) &&
+                Objects.equals(getZone(), zone1.getZone()) &&
+                Objects.equals(getTaxes(), zone1.getTaxes());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getZone(), getTaxes());
+    }
+
+    @Override
+    public String toString() {
+        return "Zone{" +
+                "id=" + id +
+                ", zone='" + zone + '\'' +
+                ", taxes=" + taxes +
+                '}';
     }
 }

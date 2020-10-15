@@ -2,6 +2,7 @@ package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -110,4 +111,41 @@ public class Address {
         this.applications = applications;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address)) return false;
+        Address address = (Address) o;
+        return Objects.equals(getId(), address.getId()) &&
+                Objects.equals(getState(), address.getState()) &&
+                Objects.equals(getCity(), address.getCity()) &&
+                Objects.equals(getAddressLine1(), address.getAddressLine1()) &&
+                Objects.equals(getAddressLine2(), address.getAddressLine2()) &&
+                Objects.equals(getWarehouses(), address.getWarehouses()) &&
+                Objects.equals(getUsers(), address.getUsers()) &&
+                Objects.equals(getCars(), address.getCars()) &&
+                Objects.equals(getWayBills(), address.getWayBills()) &&
+                Objects.equals(getApplications(), address.getApplications());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getState(), getCity(), getAddressLine1(), getAddressLine2(), getWarehouses(), getUsers(), getCars(), getWayBills(), getApplications());
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", state='" + state + '\'' +
+                ", city='" + city + '\'' +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", warehouses=" + warehouses +
+                ", users=" + users +
+                ", cars=" + cars +
+                ", wayBills=" + wayBills +
+                ", applications=" + applications +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -81,4 +82,35 @@ public class Car {
         this.wayBills = wayBills;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Car)) return false;
+        Car car = (Car) o;
+        return Objects.equals(getId(), car.getId()) &&
+                Objects.equals(getNumber(), car.getNumber()) &&
+                Objects.equals(getTotalCapacity(), car.getTotalCapacity()) &&
+                Objects.equals(getCurrentCapacity(), car.getCurrentCapacity()) &&
+                Objects.equals(getCustomer(), car.getCustomer()) &&
+                Objects.equals(getAddress(), car.getAddress()) &&
+                Objects.equals(getWayBills(), car.getWayBills());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNumber(), getTotalCapacity(), getCurrentCapacity(), getCustomer(), getAddress(), getWayBills());
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", number=" + number +
+                ", totalCapacity=" + totalCapacity +
+                ", currentCapacity=" + currentCapacity +
+                ", customer=" + customer +
+                ", address=" + address +
+                ", wayBills=" + wayBills +
+                '}';
+    }
 }

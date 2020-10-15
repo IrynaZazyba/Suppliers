@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.domain;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tax_per_distance")
@@ -37,5 +38,29 @@ public class TaxPerDistance {
 
     public void setItem(Item item) {
         this.item = item;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TaxPerDistance)) return false;
+        TaxPerDistance that = (TaxPerDistance) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getTaxRate(), that.getTaxRate()) &&
+                Objects.equals(getItem(), that.getItem());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getTaxRate(), getItem());
+    }
+
+    @Override
+    public String toString() {
+        return "TaxPerDistance{" +
+                "id=" + id +
+                ", taxRate=" + taxRate +
+                ", item=" + item +
+                '}';
     }
 }
