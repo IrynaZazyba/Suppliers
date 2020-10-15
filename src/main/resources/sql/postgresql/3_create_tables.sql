@@ -496,4 +496,21 @@ ALTER TABLE public.write_off_act
 CREATE INDEX "fki_WRITE_OFF_REASON"
   ON public.write_off_act(reason_id);
 
+CREATE TABLE public.tax_per_distance
+(
+  id serial NOT NULL,
+  tax_rate numeric,
+  item_id integer NOT NULL,
+  PRIMARY KEY (id)
+)
+  WITH (
+    OIDS = FALSE
+  );
 
+ALTER TABLE public.tax_per_distance
+  ADD CONSTRAINT "TAX_FOR_ITEM" FOREIGN KEY (item_id)
+    REFERENCES public.item (id) MATCH SIMPLE
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT;
+CREATE INDEX "fki_TAX_FOR_ITEM"
+  ON public.tax_per_distance(item_id);
