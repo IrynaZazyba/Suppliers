@@ -20,39 +20,39 @@ databaseChangeLog:
                     unique: true
                     nullable: false
   - changeSet:
-    id: 2
-    author: iryna_zazybo
-    changes:
-      -createTabe:
-        tableName: address
-        columns:
-          - column:
-              name: id
-                type: BIGINT
-                autoIncrement: true
-                constraints:
-                  primaryKey: true
-                  nullable: false
-          - column:
-              name: state
-              type: varchar(50)
-              constraints:
-                nullable: false
-          - column:
-              name: city
-              type: varchar(50)
-              constraints:
-                nullable: false
-          - column:
-              name: address_line_1
-              type: varchar(50)
-              constraints:
-                nullable: false
-          - column:
-              name: address_line_2
-              type: varchar(50)
-              constraints:
-                nullable: false
+      id: 2
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: address
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: state
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_line_1
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_line_2
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
   - changeSet:
       id: 3
       author: iryna_zazybo
@@ -61,8 +61,8 @@ databaseChangeLog:
             tableName: customer
             columns:
               - column:
-                name: id
-                type: BIGINT
+                  name: id
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -92,10 +92,10 @@ databaseChangeLog:
               - column:
                   name: id
                   type: BIGINT
-                    autoIncrement: true
-                    constraints:
-                      primaryKey: true
-                      nullable: false
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
               - column:
                   name: identifier
                   type: varchar(45)
@@ -145,7 +145,7 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: address
-  - chgangeSet:
+  - changeSet:
       id: 7
       author: iryna_zazybo
       changes:
@@ -155,10 +155,10 @@ databaseChangeLog:
               - column:
                   name: id
                   type: BIGINT
-                    autoIncrement: true
-                    constraints:
-                      primaryKey: true
-                      nullable: false
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
               - column:
                   name: name
                   type: varchar(45)
