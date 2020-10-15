@@ -1,0 +1,259 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+  - changeSet:
+    id: 2
+    author: iryna_zazybo
+    changes:
+      -createTabe:
+        tableName: address
+        columns:
+          - column:
+              name: id
+                type: BIGINT
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false
+          - column:
+              name: state
+              type: varchar(50)
+              constraints:
+                nullable: false
+          - column:
+              name: city
+              type: varchar(50)
+              constraints:
+                nullable: false
+          - column:
+              name: address_line_1
+              type: varchar(50)
+              constraints:
+                nullable: false
+          - column:
+              name: address_line_2
+              type: varchar(50)
+              constraints:
+                nullable: false
+  - changeSet:
+      id: 3
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: customer
+            columns:
+              - column:
+                name: id
+                type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(35)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 4
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: warehouse
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+              - column:
+                  name: identifier
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_capacity
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 5
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: warehouse
+            constraintName: fk_warehouse_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: 6
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: address_id
+            baseTableName: warehouse
+            constraintName: fk_warehouse_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - chgangeSet:
+      id: 7
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+              - column:
+                  name: name
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: surname
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birthday
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: login
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: warehouse_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 8
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: user
+            constraintName: fk_user_role
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: role
+  - changeSet:
+      id: 9
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: address_id
+            baseTableName: user
+            constraintName: fk_user_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - changeSet:
+      id: 10
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: user
+            constraintName: fk_user_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: 11
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: warehouse_id
+            baseTableName: user
+            constraintName: fk_user_warehouse
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: warehouse
