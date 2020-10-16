@@ -12,7 +12,7 @@ public class Warehouse {
     private int id;
     private String identifier;
     private String type;
-    private Long totalCapacity;
+    private Double totalCapacity;
     private Address address;
     private Customer customer;
     private Set<User> users = new HashSet<>();
@@ -45,11 +45,11 @@ public class Warehouse {
     }
 
     @Column(name = "total_capacity", nullable = false)
-    public Long getTotalCapacity() {
+    public Double getTotalCapacity() {
         return totalCapacity;
     }
 
-    public void setTotalCapacity(Long totalCapacity) {
+    public void setTotalCapacity(Double totalCapacity) {
         this.totalCapacity = totalCapacity;
     }
 

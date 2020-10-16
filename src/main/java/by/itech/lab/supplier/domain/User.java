@@ -63,7 +63,7 @@ public class User {
         this.birthday = birthday;
     }
 
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = false, unique = true)
     public String getLogin() {
         return login;
     }
@@ -81,7 +81,7 @@ public class User {
         this.password = password;
     }
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     public String getEmail() {
         return email;
     }
@@ -90,8 +90,8 @@ public class User {
         this.email = email;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
     public Role getRole() {
         return role;
     }

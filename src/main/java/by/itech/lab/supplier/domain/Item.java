@@ -10,11 +10,11 @@ import java.util.Set;
 @Table(name = "item")
 public class Item {
     private Long id;
-    private Long upc;
+    private Double upc;
     private String label;
-    private Long units;
+    private Double units;
     private Category category;
-    private Set<TaxPerDistance> taxPerDistances = new HashSet<>();
+    private Double taxRate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +27,11 @@ public class Item {
     }
 
     @Column(name = "upc", nullable = false)
-    public Long getUpc() {
+    public Double getUpc() {
         return upc;
     }
 
-    public void setUpc(Long upc) {
+    public void setUpc(Double upc) {
         this.upc = upc;
     }
 
@@ -45,11 +45,11 @@ public class Item {
     }
 
     @Column(name = "units", nullable = false)
-    public Long getUnits() {
+    public Double getUnits() {
         return units;
     }
 
-    public void setUnits(Long units) {
+    public void setUnits(Double units) {
         this.units = units;
     }
 
@@ -63,13 +63,13 @@ public class Item {
         this.category = category;
     }
 
-    @OneToMany(mappedBy = "item")
-    public Set<TaxPerDistance> getTaxPerDistances() {
-        return taxPerDistances;
+    @Column(name = "tax_rate", nullable = false)
+    public Double getTaxRate() {
+        return taxRate;
     }
 
-    public void setTaxPerDistances(Set<TaxPerDistance> taxPerDistances) {
-        this.taxPerDistances = taxPerDistances;
+    public void setTaxRate(final Double taxRate) {
+        this.taxRate = taxRate;
     }
 
 
@@ -81,7 +81,7 @@ public class Item {
                 ", label='" + label + '\'' +
                 ", units=" + units +
                 ", category=" + category +
-                ", taxPerDistances=" + taxPerDistances +
+                ", taxRate=" + taxRate +
                 '}';
     }
 }

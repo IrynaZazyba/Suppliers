@@ -14,6 +14,7 @@ public class Address {
     private String city;
     private String addressLine1;
     private String addressLine2;
+    private Zone zone;
     private Set<Warehouse> warehouses = new HashSet<>();
     private Set<User> users = new HashSet<>();
     private Set<Car> cars = new HashSet<>();
@@ -64,6 +65,16 @@ public class Address {
 
     public void setAddressLine2(String addressLine2) {
         this.addressLine2 = addressLine2;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    public Zone getZone() {
+        return zone;
+    }
+
+    public void setZone(Zone zone) {
+        this.zone = zone;
     }
 
     @OneToMany(mappedBy = "address")

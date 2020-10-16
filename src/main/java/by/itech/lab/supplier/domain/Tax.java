@@ -7,8 +7,8 @@ import java.util.Objects;
 @Table(name = "tax")
 public class Tax {
     private Long id;
-    private Long amount;
-    private Long percentage;
+    private Double amount;
+    private Double percentage;
     private String name;
     private Zone zone;
 
@@ -23,20 +23,20 @@ public class Tax {
     }
 
     @Column(name = "amount")
-    public Long getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
     @Column(name = "percentage")
-    public Long getPercentage() {
+    public Double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(Long percentage) {
+    public void setPercentage(Double percentage) {
         this.percentage = percentage;
     }
 

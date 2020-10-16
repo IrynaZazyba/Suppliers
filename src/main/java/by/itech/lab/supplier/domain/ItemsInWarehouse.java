@@ -7,9 +7,9 @@ import java.util.Set;
 @Table(name = "items_in_warehouse")
 public class ItemsInWarehouse {
     private Long id;
-    private  int amount;
-    private Set<Warehouse> warehouses = new HashSet<>();
-    private Set<Item> items = new HashSet<>();
+    private Double amount;
+    private Warehouse warehouse;
+    private Item item;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,11 @@ public class ItemsInWarehouse {
     }
 
     @Column(name = "amount", nullable = false)
-    public int getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

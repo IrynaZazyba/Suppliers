@@ -60,8 +60,9 @@ public class WayBill {
         this.lastUpdated = lastUpdated;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "waybill_status_id")
+
+    @Column(name = "waybill_status")
+    @Enumerated(EnumType.STRING)
     public WaybillStatus getWaybillStatus() {
         return waybillStatus;
     }

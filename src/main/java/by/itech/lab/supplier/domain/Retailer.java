@@ -31,7 +31,7 @@ public class Retailer {
         this.fullName = fullName;
     }
 
-    @Column(name = "identifier", nullable = false)
+    @Column(name = "identifier", nullable = false, unique = true)
     public String getIdentifier() {
         return identifier;
     }

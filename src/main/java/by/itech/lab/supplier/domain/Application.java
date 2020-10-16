@@ -84,8 +84,8 @@ public class Application {
         this.lastUpdatedByUsers = lastUpdatedByUsers;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "application_status_id")
+    @Column(name = "application_status")
+    @Enumerated(EnumType.STRING)
     public ApplicationStatus getApplicationStatus() {
         return applicationStatus;
     }

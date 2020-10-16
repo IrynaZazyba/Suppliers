@@ -8,7 +8,7 @@ import java.util.Objects;
 @Table(name = "write_off_act")
 public class WriteOffAct {
     private Long id;
-    private int totalSum;
+    private Double totalSum;
     private Date date;
     private WriteOffActReason writeOffActReason;
 
@@ -23,11 +23,11 @@ public class WriteOffAct {
     }
 
     @Column(name = "total_sum")
-    public int getTotalSum() {
+    public Double getTotalSum() {
         return totalSum;
     }
 
-    public void setTotalSum(int totalSum) {
+    public void setTotalSum(Double totalSum) {
         this.totalSum = totalSum;
     }
 

@@ -11,8 +11,8 @@ public class Car {
 
     private Long id;
     private Long number;
-    private Long totalCapacity;
-    private Long currentCapacity;
+    private Double totalCapacity;
+    private Double currentCapacity;
     private Customer customer;
     private Address address;
     private Set<WayBill> wayBills = new HashSet<>();
@@ -26,7 +26,7 @@ public class Car {
         this.id = id;
     }
 
-    @Column(name = "number", nullable = false)
+    @Column(name = "number", nullable = false, unique = true)
     public Long getNumber() {
         return number;
     }
@@ -36,20 +36,20 @@ public class Car {
     }
 
     @Column(name = "total_capacity", nullable = false)
-    public Long getTotalCapacity() {
+    public Double getTotalCapacity() {
         return totalCapacity;
     }
 
-    public void setTotalCapacity(Long totalCapacity) {
+    public void setTotalCapacity(Double totalCapacity) {
         this.totalCapacity = totalCapacity;
     }
 
     @Column(name = "current_capacity", nullable = false)
-    public Long getCurrentCapacity() {
+    public Double getCurrentCapacity() {
         return currentCapacity;
     }
 
-    public void setCurrentCapacity(Long currentCapacity) {
+    public void setCurrentCapacity(Double currentCapacity) {
         this.currentCapacity = currentCapacity;
     }
 

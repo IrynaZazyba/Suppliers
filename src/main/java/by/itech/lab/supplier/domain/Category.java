@@ -25,7 +25,7 @@ public class Category {
         this.id = id;
     }
 
-    @Column(name = "category", nullable = false)
+    @Column(name = "category", nullable = false, unique = true)
     public String getCategory() {
         return category;
     }

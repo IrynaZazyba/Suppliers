@@ -926,12 +926,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
-              - colomn:
+              - column:
                   name: date
-                  type: date
+                  type: DATE
                   constraints:
                     nullable: false
-              - colomn:
+              - column:
                   name: reason_id
                   type: BIGINT
                   constraints:
