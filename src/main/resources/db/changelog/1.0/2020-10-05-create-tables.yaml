@@ -1,25 +1,5 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
-      author: iryna_zazybo
-      changes:
-        - createTable:
-            tableName: role
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: role
-                  type: varchar(50)
-                  constraints:
-                    unique: true
-                    nullable: false
-  - changeSet:
       id: 2
       author: iryna_zazybo
       changes:
@@ -101,6 +81,7 @@ databaseChangeLog:
                   type: varchar(45)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: type
                   type: varchar(45)
@@ -179,6 +160,7 @@ databaseChangeLog:
                   type: varchar(45)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: password
                   type: varchar(45)
@@ -189,9 +171,10 @@ databaseChangeLog:
                   type: varchar(45)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
-                  name: role_id
-                  type: BIGINT
+                  name: role
+                  type: varchar(45)
                   constraints:
                     nullable: false
               - column:
@@ -209,18 +192,6 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 8
-      author: iryna_zazybo
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: role_id
-            baseTableName: user
-            constraintName: fk_user_role
-            deferrable: false
-            initiallyDeferred: false
-            referencedColumnNames: id
-            referencedTableName: role
   - changeSet:
       id: 9
       author: iryna_zazybo
@@ -257,3 +228,729 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: warehouse
+  - changeSet:
+      id: 12
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: categoty
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: 13
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: item
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: upc
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tax_rate
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: label
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: units
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 14
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: item
+            constraintName: fk_item_category
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: category
+  - changeSet:
+      id: 15
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: items_in_warehouses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: warehouse_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 16
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: item_id
+            baseTableName: items_in_warehouses
+            constraintName: fk_item_stored
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: item
+  - changeSet:
+      id: 17
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: warehouse_id
+            baseTableName: items_in_warehouses
+            constraintName: fk_warehouse_to_store
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: warehouse
+  - changeSet:
+      id: 18
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: car
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: number
+                  type: VARCHAR(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: total_capacity
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: current_capacity
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 19
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: car
+            constraintName: fk_car_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: 20
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: address_id
+            baseTableName: car
+            constraintName: fk_car_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - changeSet:
+      id: 21
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: retailer
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: fullname
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: identifier
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: retailerscol
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 22
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: retailer_warehouse
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: warehouse_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: retailer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 23
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: warehouse_id
+            baseTableName: retailer_warehouse
+            constraintName: fk_warehouse_of_retailer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: warehouse
+  - changeSet:
+      id: 24
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: retailer_id
+            baseTableName: retailer_warehouse
+            constraintName: fk_retailer_for_warehouse
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: retailer
+  - changeSet:
+      id: 26
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: waybill
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: number
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: registration_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: waybill_status
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source_location_address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_users_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated_by_users_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: car_driver_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 28
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: source_location_address_id
+            baseTableName: waybill
+            constraintName: fk_waybill_source_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - changeSet:
+      id: 29
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_users_id
+            baseTableName: waybill
+            constraintName: fk_waybill_creator
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 30
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: last_updated_by_users_id
+            baseTableName: waybill
+            constraintName: fk_waybill_last_updator
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 31
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: car_id
+            baseTableName: waybill
+            constraintName: fk_waybill_car
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: car
+  - changeSet:
+      id: 32
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: car_driver_id
+            baseTableName: waybill
+            constraintName: fk_waybill_car_driver
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 34
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: application
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: number
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: registration_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source_location_address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: destination_location_address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by_users_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_updated_by_users_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: application_status
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: waybill_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 36
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: source_location_address_id
+            baseTableName: application
+            constraintName: fk_application_source_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - changeSet:
+      id: 37
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: destination_location_address_id
+            baseTableName: application
+            constraintName: fk_application_destination_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - changeSet:
+      id: 38
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: created_by_users_id
+            baseTableName: application
+            constraintName: fk_application_creator
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 39
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: last_updated_by_users_id
+            baseTableName: application
+            constraintName: fk_application_last_updator
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: user
+  - changeSet:
+      id: 40
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: waybill_id
+            baseTableName: application
+            constraintName: fk_application_waybill
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: waybill
+  - changeSet:
+      id: 41
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: items_in_application
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cost
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: application_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 42
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: application_id
+            baseTableName: items_in_application
+            constraintName: fk_item_in_application
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: item
+  - changeSet:
+      id: 43
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: application_id
+            baseTableName: items_in_application
+            constraintName: fk_application
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: application
+  - changeSet:
+      id: 44
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: tax
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: amount
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: percentage
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zone_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 45
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: zone
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: location
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 46
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: zone_id
+            baseTableName: tax
+            constraintName: fk_zone_for_tax
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: zone
+  - changeSet:
+      id: 47
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: address
+            columns:
+              - column:
+                  name: zone_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 48
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: zone_id
+            baseTableName: address
+            constraintName: fk_zone_for_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: zone
+  - changeSet:
+      id: 49
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: write_off_act_reason
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: reason
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: 50
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: write_off_act
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: total_sum
+                  type: DOUBLE PERCISION
+                  constraints:
+                    nullable: false
+                    unique: true
+              - colomn:
+                  name: date
+                  type: date
+                  constraints:
+                    nullable: false
+              - colomn:
+                  name: reason_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 51
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: reason_id
+            baseTableName: write_off_act
+            constraintName: fk_write_off_act_reason
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: write_off_act_reason
+
+
+
+
+
+
