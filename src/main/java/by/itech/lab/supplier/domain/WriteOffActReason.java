@@ -40,20 +40,7 @@ public class WriteOffActReason {
         this.writeOffActs = writeOffActs;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WriteOffActReason)) return false;
-        WriteOffActReason that = (WriteOffActReason) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getReason(), that.getReason()) &&
-                Objects.equals(getWriteOffActs(), that.getWriteOffActs());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getReason(), getWriteOffActs());
-    }
 
     @Override
     public String toString() {

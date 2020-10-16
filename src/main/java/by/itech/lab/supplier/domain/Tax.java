@@ -59,22 +59,7 @@ public class Tax {
         this.zone = zone;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tax)) return false;
-        Tax tax = (Tax) o;
-        return Objects.equals(getId(), tax.getId()) &&
-                Objects.equals(getAmount(), tax.getAmount()) &&
-                Objects.equals(getPercentage(), tax.getPercentage()) &&
-                Objects.equals(getName(), tax.getName()) &&
-                Objects.equals(getZone(), tax.getZone());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getAmount(), getPercentage(), getName(), getZone());
-    }
 
     @Override
     public String toString() {

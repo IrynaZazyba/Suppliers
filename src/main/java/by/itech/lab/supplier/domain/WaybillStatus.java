@@ -39,20 +39,7 @@ public class WaybillStatus {
         this.wayBills = wayBills;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WaybillStatus)) return false;
-        WaybillStatus that = (WaybillStatus) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getStatus(), that.getStatus()) &&
-                Objects.equals(getWayBills(), that.getWayBills());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getStatus(), getWayBills());
-    }
 
     @Override
     public String toString() {

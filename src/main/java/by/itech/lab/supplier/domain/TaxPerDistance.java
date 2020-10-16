@@ -40,20 +40,7 @@ public class TaxPerDistance {
         this.item = item;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TaxPerDistance)) return false;
-        TaxPerDistance that = (TaxPerDistance) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getTaxRate(), that.getTaxRate()) &&
-                Objects.equals(getItem(), that.getItem());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getTaxRate(), getItem());
-    }
 
     @Override
     public String toString() {

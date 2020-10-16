@@ -49,21 +49,7 @@ public class Retailer {
         this.retailersCol = reailersCol;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Retailer)) return false;
-        Retailer retailer = (Retailer) o;
-        return Objects.equals(getId(), retailer.getId()) &&
-                Objects.equals(getFullName(), retailer.getFullName()) &&
-                Objects.equals(getIdentifier(), retailer.getIdentifier()) &&
-                Objects.equals(getRetailersCol(), retailer.getRetailersCol());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getFullName(), getIdentifier(), getRetailersCol());
-    }
 
     @Override
     public String toString() {

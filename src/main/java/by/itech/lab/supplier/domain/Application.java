@@ -104,26 +104,7 @@ public class Application {
         this.wayBill = wayBill;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Application)) return false;
-        Application that = (Application) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getNumber(), that.getNumber()) &&
-                Objects.equals(getRegistrationDate(), that.getRegistrationDate()) &&
-                Objects.equals(getLastUpdated(), that.getLastUpdated()) &&
-                Objects.equals(getDestinationLocationAddress(), that.getDestinationLocationAddress()) &&
-                Objects.equals(getCreatedByUsers(), that.getCreatedByUsers()) &&
-                Objects.equals(getLastUpdatedByUsers(), that.getLastUpdatedByUsers()) &&
-                Objects.equals(getApplicationStatus(), that.getApplicationStatus()) &&
-                Objects.equals(getWayBill(), that.getWayBill());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getNumber(), getRegistrationDate(), getLastUpdated(), getDestinationLocationAddress(), getCreatedByUsers(), getLastUpdatedByUsers(), getApplicationStatus(), getWayBill());
-    }
 
     @Override
     public String toString() {

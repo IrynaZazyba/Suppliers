@@ -49,21 +49,7 @@ public class WriteOffAct {
         this.writeOffActReason = writeOffActReason;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof WriteOffAct)) return false;
-        WriteOffAct that = (WriteOffAct) o;
-        return getTotalSum() == that.getTotalSum() &&
-                Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getDate(), that.getDate()) &&
-                Objects.equals(getWriteOffActReason(), that.getWriteOffActReason());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getTotalSum(), getDate(), getWriteOffActReason());
-    }
 
     @Override
     public String toString() {
