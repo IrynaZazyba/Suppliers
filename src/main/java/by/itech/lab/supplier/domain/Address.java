@@ -1,10 +1,19 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "address")
 public class Address {
@@ -122,21 +131,4 @@ public class Address {
         this.applications = applications;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", state='" + state + '\'' +
-                ", city='" + city + '\'' +
-                ", addressLine1='" + addressLine1 + '\'' +
-                ", addressLine2='" + addressLine2 + '\'' +
-                ", warehouses=" + warehouses +
-                ", users=" + users +
-                ", cars=" + cars +
-                ", wayBills=" + wayBills +
-                ", applications=" + applications +
-                '}';
-    }
 }

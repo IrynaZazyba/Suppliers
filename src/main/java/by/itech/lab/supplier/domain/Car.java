@@ -1,10 +1,19 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "car")
 public class Car {
@@ -82,17 +91,4 @@ public class Car {
         this.wayBills = wayBills;
     }
 
-
-    @Override
-    public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", number=" + number +
-                ", totalCapacity=" + totalCapacity +
-                ", currentCapacity=" + currentCapacity +
-                ", customer=" + customer +
-                ", address=" + address +
-                ", wayBills=" + wayBills +
-                '}';
-    }
 }

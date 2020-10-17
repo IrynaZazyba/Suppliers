@@ -1,10 +1,18 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "write_off_act_reason")
 public class WriteOffActReason {
@@ -40,14 +48,4 @@ public class WriteOffActReason {
         this.writeOffActs = writeOffActs;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "WriteOffActReason{" +
-                "id=" + id +
-                ", reason='" + reason + '\'' +
-                ", writeOffActs=" + writeOffActs +
-                '}';
-    }
 }

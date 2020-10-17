@@ -1,9 +1,17 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Objects;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "write_off_act")
 public class WriteOffAct {
@@ -39,6 +47,7 @@ public class WriteOffAct {
     public void setDate(Date date) {
         this.date = date;
     }
+
     @ManyToOne
     @JoinColumn(name = "reason_id")
     public WriteOffActReason getWriteOffActReason() {
@@ -49,15 +58,4 @@ public class WriteOffAct {
         this.writeOffActReason = writeOffActReason;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "WriteOffAct{" +
-                "id=" + id +
-                ", totalSum=" + totalSum +
-                ", date=" + date +
-                ", writeOffActReason=" + writeOffActReason +
-                '}';
-    }
 }

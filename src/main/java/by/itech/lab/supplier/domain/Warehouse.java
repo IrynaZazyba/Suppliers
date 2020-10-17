@@ -1,10 +1,18 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "public.warehouse")
 public class Warehouse {
@@ -16,6 +24,7 @@ public class Warehouse {
     private Address address;
     private Customer customer;
     private Set<User> users = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
@@ -84,17 +93,4 @@ public class Warehouse {
     }
 
 
-
-    @Override
-    public String toString() {
-        return "Warehouse{" +
-                "id=" + id +
-                ", identifier='" + identifier + '\'' +
-                ", type='" + type + '\'' +
-                ", totalCapacity=" + totalCapacity +
-                ", address=" + address +
-                ", customer=" + customer +
-                ", users=" + users +
-                '}';
-    }
 }

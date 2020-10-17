@@ -1,11 +1,19 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "public.customer")
 public class Customer {
@@ -43,6 +51,7 @@ public class Customer {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
+
     @Column(name = "status", nullable = false)
     public String getStatus() {
         return status;
@@ -70,17 +79,4 @@ public class Customer {
         this.users = users;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", status='" + status + '\'' +
-                ", warehouses=" + warehouses +
-                ", users=" + users +
-                '}';
-    }
 }

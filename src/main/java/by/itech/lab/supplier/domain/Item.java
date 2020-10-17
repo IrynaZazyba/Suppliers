@@ -1,11 +1,17 @@
 package by.itech.lab.supplier.domain;
 
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "item")
 public class Item {
@@ -14,7 +20,6 @@ public class Item {
     private String label;
     private Double units;
     private Category category;
-    private Double taxRate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,25 +68,4 @@ public class Item {
         this.category = category;
     }
 
-    @Column(name = "tax_rate", nullable = false)
-    public Double getTaxRate() {
-        return taxRate;
-    }
-
-    public void setTaxRate(final Double taxRate) {
-        this.taxRate = taxRate;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", upc=" + upc +
-                ", label='" + label + '\'' +
-                ", units=" + units +
-                ", category=" + category +
-                ", taxRate=" + taxRate +
-                '}';
-    }
 }

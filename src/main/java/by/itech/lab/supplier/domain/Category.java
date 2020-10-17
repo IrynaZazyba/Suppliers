@@ -1,18 +1,25 @@
 package by.itech.lab.supplier.domain;
 
-import liquibase.pro.packaged.E;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "category")
 public class Category {
 
     private Long id;
     private String category;
+    private Double taxRate;
     private Set<Item> items = new HashSet<>();
 
     @Id
@@ -43,14 +50,13 @@ public class Category {
         this.items = items;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", category='" + category + '\'' +
-                ", items=" + items +
-                '}';
+    @Column(name = "tax_rate", nullable = false)
+    public Double getTaxRate() {
+        return taxRate;
     }
+
+    public void setTaxRate(final Double taxRate) {
+        this.taxRate = taxRate;
+    }
+
 }

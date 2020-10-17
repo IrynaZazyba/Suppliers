@@ -1,11 +1,19 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "user")
 public class User {
@@ -26,6 +34,7 @@ public class User {
     private Set<WayBill> driverWayBills = new HashSet<>();
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
@@ -166,6 +175,7 @@ public class User {
     public void setCreatorApplications(Set<Application> creatorApplications) {
         this.creatorApplications = creatorApplications;
     }
+
     @OneToMany(mappedBy = "updatedByUsers")
     public Set<Application> getUpdatorApplications() {
         return updatorApplications;
@@ -175,27 +185,4 @@ public class User {
         this.updatorApplications = updatorApplications;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", birthday=" + birthday +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", role=" + role +
-                ", address=" + address +
-                ", customer=" + customer +
-                ", warehouse=" + warehouse +
-                ", creatorWayBills=" + creatorWayBills +
-                ", updatorWayBills=" + updatorWayBills +
-                ", driverWayBills=" + driverWayBills +
-                ", creatorApplications=" + creatorApplications +
-                ", updatorApplications=" + updatorApplications +
-                '}';
-    }
 }

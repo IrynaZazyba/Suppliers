@@ -1,12 +1,20 @@
 package by.itech.lab.supplier.domain;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "waybill")
 public class WayBill {
@@ -130,22 +138,4 @@ public class WayBill {
         this.applications = applications;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "WayBill{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", lastUpdated=" + lastUpdated +
-                ", waybillStatus=" + waybillStatus +
-                ", sourceLocationAddress=" + sourceLocationAddress +
-                ", createdByUsers=" + createdByUsers +
-                ", updatedByUsers=" + updatedByUsers +
-                ", car=" + car +
-                ", driver=" + driver +
-                ", applications=" + applications +
-                '}';
-    }
 }

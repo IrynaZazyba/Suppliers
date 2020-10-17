@@ -1,8 +1,16 @@
 package by.itech.lab.supplier.domain;
 
-import javax.persistence.*;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "tax")
 public class Tax {
@@ -59,16 +67,4 @@ public class Tax {
         this.zone = zone;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Tax{" +
-                "id=" + id +
-                ", amount=" + amount +
-                ", percentage=" + percentage +
-                ", name='" + name + '\'' +
-                ", zone=" + zone +
-                '}';
-    }
 }

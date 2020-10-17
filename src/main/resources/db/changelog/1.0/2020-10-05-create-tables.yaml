@@ -248,6 +248,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
+              - column:
+                  name: tax_rate
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
   - changeSet:
       id: 13
       author: alexander_popovich
@@ -264,11 +269,6 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: upc
-                  type: DOUBLE PRECISION
-                  constraints:
-                    nullable: false
-              - column:
-                  name: tax_rate
                   type: DOUBLE PRECISION
                   constraints:
                     nullable: false

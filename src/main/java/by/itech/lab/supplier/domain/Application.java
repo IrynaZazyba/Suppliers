@@ -1,10 +1,17 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Objects;
 
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "application")
 public class Application {
@@ -65,6 +72,7 @@ public class Application {
     public void setDestinationLocationAddress(Address destinationLocationAddress) {
         this.destinationLocationAddress = destinationLocationAddress;
     }
+
     @ManyToOne
     @JoinColumn(name = "created_by_users_id")
     public User getCreatedByUsers() {
@@ -74,6 +82,7 @@ public class Application {
     public void setCreatedByUsers(User createdByUsers) {
         this.createdByUsers = createdByUsers;
     }
+
     @ManyToOne
     @JoinColumn(name = "last_updated_by_users_id")
     public User getLastUpdatedByUsers() {
@@ -104,20 +113,4 @@ public class Application {
         this.wayBill = wayBill;
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Application{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", lastUpdated=" + lastUpdated +
-                ", destinationLocationAddress=" + destinationLocationAddress +
-                ", createdByUsers=" + createdByUsers +
-                ", lastUpdatedByUsers=" + lastUpdatedByUsers +
-                ", applicationStatus=" + applicationStatus +
-                ", wayBill=" + wayBill +
-                '}';
-    }
 }
