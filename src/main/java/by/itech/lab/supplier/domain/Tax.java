@@ -58,7 +58,7 @@ public class Tax {
     }
 
     @ManyToOne
-    @JoinColumn(name = "zone_id")
+    @JoinColumn(name = "location_id")
     public Zone getZone() {
         return zone;
     }

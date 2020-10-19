@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +22,7 @@ public class User {
     private String name;
     private String surname;
     private Date birthday;
-    private String login;
+    private String username;
     private String password;
     private String email;
     private Role role;
@@ -34,6 +34,7 @@ public class User {
     private Set<WayBill> driverWayBills = new HashSet<>();
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
+    private boolean active;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,13 +73,13 @@ public class User {
         this.birthday = birthday;
     }
 
-    @Column(name = "login", nullable = false, unique = true)
-    public String getLogin() {
-        return login;
+    @Column(name = "username", nullable = false, unique = true)
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Column(name = "password", nullable = false)
@@ -176,13 +177,22 @@ public class User {
         this.creatorApplications = creatorApplications;
     }
 
-    @OneToMany(mappedBy = "updatedByUsers")
+    @OneToMany(mappedBy = "lastUpdatedByUsers")
     public Set<Application> getUpdatorApplications() {
         return updatorApplications;
     }
 
     public void setUpdatorApplications(Set<Application> updatorApplications) {
         this.updatorApplications = updatorApplications;
+    }
+
+    @Column(name = "is_active", nullable = false)
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 }
