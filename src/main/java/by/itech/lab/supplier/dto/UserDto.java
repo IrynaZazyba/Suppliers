@@ -1,177 +1,74 @@
 package by.itech.lab.supplier.dto;
 
-import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.domain.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.catalina.authenticator.Constants;
 
+import javax.persistence.*;
 import javax.validation.constraints.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class UserDto {
 
+
+
+    public UserDto (User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.email = user.getEmail();
+        this.active= user.isActive();
+        this.birthday = user.getBirthday();
+        this.role = user.getRole();
+    }
+
+    private boolean active = false;
+
     private Long id;
-
     @NotBlank
-    @Pattern(regexp = "")
     @Size(min = 1, max = 50)
-    private String login;
-
-    @Size(max = 50)
-    private String firstName;
-
-    @Size(max = 50)
-    private String lastName;
-
+    private String name;
+    @NotBlank
+    @Size(min = 1, max = 50)
+    private String surname;
+    private Date birthday;
+    @NotBlank
+    @Size(min = 1, max = 50)
+    private String username;
+    @NotBlank
+    @Size(min = 4, max = 50, message = "Password should contain at least 4 characters")
+    private String password;
     @Email
     @Size(min = 5, max = 254)
     private String email;
-
-    @Size(max = 256)
-    private String imageUrl;
-
-    private boolean activated = false;
-
-    @Size(min = 2, max = 6)
-    private String langKey;
-
-    private String createdBy;
-
-    private Instant createdDate;
-
-    private String lastModifiedBy;
-
-    private Instant lastModifiedDate;
-
-    private Set<String> authorities;
+    private String activationKey;
+    private Role role;
+    private Address address;
+    private Customer customer;
+    private Warehouse warehouse;
+    private Set<WayBill> creatorWayBills = new HashSet<>();
+    private Set<WayBill> updatorWayBills = new HashSet<>();
+    private Set<WayBill> driverWayBills = new HashSet<>();
+    private Set<Application> creatorApplications = new HashSet<>();
+    private Set<Application> updatorApplications = new HashSet<>();
 
 
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getLogin() {
-        return login;
-    }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-
-    public void setActivated(boolean activated) {
-        this.activated = activated;
-    }
-
-    public String getLangKey() {
-        return langKey;
-    }
-
-    public void setLangKey(String langKey) {
-        this.langKey = langKey;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public Set<String> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<String> authorities) {
-        this.authorities = authorities;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "login='" + login + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", activated=" + activated +
-                ", langKey='" + langKey + '\'' +
-                ", createdBy=" + createdBy +
-                ", createdDate=" + createdDate +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
-                ", lastModifiedDate=" + lastModifiedDate +
-                ", authorities=" + authorities +
-                "}";
-    }
 }

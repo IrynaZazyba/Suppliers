@@ -15,7 +15,7 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 public class User {
 
     private Long id;
@@ -111,7 +111,7 @@ public class User {
         this.role = role;
     }
 
-    @Column(name = "activation_key", nullable = false)
+    @Column(name = "activation_key")
     public String getActivationKey() {
         return activationKey;
     }
@@ -120,7 +120,7 @@ public class User {
         this.activationKey = activationKey;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     public Address getAddress() {
         return address;
@@ -130,7 +130,7 @@ public class User {
         this.address = address;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     public Customer getCustomer() {
         return customer;
@@ -140,7 +140,7 @@ public class User {
         this.customer = customer;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "warehouse_id")
     public Warehouse getWarehouse() {
         return warehouse;

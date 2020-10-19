@@ -16,29 +16,26 @@ public interface UserService {
 
     User registerUser(UserDto userDTO, String password);
 
-
-
     User createUser(UserDto userDTO);
-
-    void updateUser(String name, String email, String langKey, String imageUrl);
 
     Optional<UserDto> updateUser(UserDto userDTO);
 
     void deleteUser(String login);
 
-    void changePassword(String currentClearTextPassword, String newPassword);
-
-    @Transactional(readOnly = true)
     Page<UserDto> getAllManagedUsers(Pageable pageable);
 
-    @Transactional(readOnly = true)
-    Optional<User> getUserWithAuthoritiesByLogin(String login);
+//    void changePassword(String currentClearTextPassword, String newPassword);
+
+//    @Transactional(readOnly = true)
+//    Page<UserDto> getAllManagedUsers(Pageable pageable);
 
     @Transactional(readOnly = true)
-    Optional<User> getUserWithAuthorities(Long id);
+    Optional<User> getUserWithAuthoritiesByUsername(String login);
 
-    @Transactional(readOnly = true)
-    Optional<User> getUserWithAuthorities();
+
+
+//    @Transactional(readOnly = true)
+//    Optional<User> getUserWithAuthorities();
 
 
 }

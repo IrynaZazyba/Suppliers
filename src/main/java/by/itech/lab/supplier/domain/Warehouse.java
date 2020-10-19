@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "public.warehouse")
+@Table(name = "warehouse")
 public class Warehouse {
 
     private int id;

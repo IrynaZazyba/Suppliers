@@ -21,18 +21,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findOneByEmailIgnoreCase(String email);
 
-    Optional<User> findOneByLogin(String login);
+    Optional<User> findOneByUsername(String login);
 
     @EntityGraph(attributePaths = "roles")
     Optional<User> findOneWithRolesById(Long id);
 
     @EntityGraph(attributePaths = "roles")
 
-    Optional<User> findOneWithRolesByLogin(String login);
+    Optional<User> findOneWithRolesByUsername(String login);
 
     @EntityGraph(attributePaths = "roles")
 
     Optional<User> findOneWithRolesByEmail(String email);
 
-    Page<User> findAllByLoginNot(Pageable pageable, String login);
+    Page<User> findAllByUsernameNot(Pageable pageable, String login);
 }

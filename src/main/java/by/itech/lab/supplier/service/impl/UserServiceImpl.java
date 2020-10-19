@@ -4,24 +4,18 @@ import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.repository.UserRepository;
-import by.itech.lab.supplier.repository.UserSearchRepository;
+
 import by.itech.lab.supplier.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import org.slf4j.Logger;
 
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
 
 @Service
 @Transactional
@@ -31,16 +25,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
-    private final UserSearchRepository userSearchRepository;
 
 
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserSearchRepository userSearchRepository) {
+
+
+
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userSearchRepository = userSearchRepository;
+
 
     }
 
@@ -49,9 +42,9 @@ public class UserServiceImpl implements UserService {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
                 .map(user -> {
-                    user.setActivated(true);
+                    user.setActive(true);
                     user.setActivationKey(null);
-                    userSearchRepository.save(user);
+                    userRepository.save(user);
 
                     log.debug("Activated user: {}", user);
                     return user;
@@ -63,34 +56,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(UserDto userDTO, String password) {
-        userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).ifPresent(existingUser -> {
+        userRepository.findOneByUsername(userDTO.getUsername().toLowerCase()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
-                throw new LoginAlreadyUsedException();
+
             }
         });
         userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
-                throw new EmailAlreadyUsedException();
+
             }
         });
         User newUser = new User();
-        String encryptedPassword = passwordEncoder.encode(password);
-        newUser.setLogin(userDTO.getLogin().toLowerCase());
+        String encryptedPassword = password; //passwordEncoder.encode(password);
+        newUser.setUsername(userDTO.getUsername().toLowerCase());
         // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
-        newUser.setName(userDTO.getFirstName());
+        newUser.setName(userDTO.getName());
+        newUser.setSurname(userDTO.getSurname());
         newUser.setEmail(userDTO.getEmail().toLowerCase());
-
+newUser.setBirthday(userDTO.getBirthday());
         // new user is not active
-        newUser.setActivated(false);
+        newUser.setActive(false);
         // new user gets registration key
         newUser.setActivationKey( RandomStringUtils.randomAlphanumeric(20));
 
         newUser.setRole(userDTO.getRole());
         userRepository.save(newUser);
-        userSearchRepository.save(newUser);
 
         log.debug("Created Information for User: {}", newUser);
         return newUser;
@@ -99,16 +92,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserDto userDTO) {
         User user = new User();
-        user.setLogin(userDTO.getLogin().toLowerCase());
-        user.setName(userDTO.getFirstName());
+        user.setUsername(userDTO.getUsername().toLowerCase());
+        user.setName(userDTO.getName());
+        user.setSurname(userDTO.getSurname());
         user.setEmail(userDTO.getEmail().toLowerCase());
-
-        String encryptedPassword = passwordEncoder.encode( RandomStringUtils.randomAlphanumeric(20));
+        user.setBirthday(userDTO.getBirthday());
+        String encryptedPassword =  "dfdd";//passwordEncoder.encode( RandomStringUtils.randomAlphanumeric(20));
         user.setPassword(encryptedPassword);
-        user.setActivated(true);
+        user.setActive(true);
         user.setRole(userDTO.getRole());
         userRepository.save(user);
-        userSearchRepository.save(user);
 
         log.debug("Created Information for User: {}", user);
         return user;
@@ -124,14 +117,15 @@ public class UserServiceImpl implements UserService {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(user -> {
-
-                    user.setLogin(userDTO.getLogin().toLowerCase());
-                    user.setName(userDTO.getFirstName());
+                    user.setUsername(userDTO.getUsername().toLowerCase());
+                    user.setName(userDTO.getName());
+                    user.setSurname(userDTO.getSurname());
                     user.setEmail(userDTO.getEmail().toLowerCase());
-                    user.setActivated(userDTO.isActivated());
+                    user.setBirthday(userDTO.getBirthday());
+                    user.setActive(userDTO.isActive());
                       Role managedAuthorities = userDTO.getRole();
                    user.setRole(managedAuthorities);
-                    userSearchRepository.save(user);
+                    userRepository.save(user);
                     log.debug("Changed Information for User: {}", user);
                     return user;
                 })
@@ -139,7 +133,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.getActivated()) {
+        if (existingUser.isActive()) {
             return false;
         }
         userRepository.delete(existingUser);
@@ -150,47 +144,46 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(String login) {
-        userRepository.findOneByLogin(login).ifPresent(user -> {
+        userRepository.findOneByUsername(login).ifPresent(user -> {
             userRepository.delete(user);
-            userSearchRepository.delete(user);
 
             log.debug("Deleted User: {}", user);
         });
     }
+//
+//    @Override
+//    public void changePassword(String currentClearTextPassword, String newPassword) {
+//        SecurityUtils.getCurrentUserLogin()
+//                .flatMap(userRepository::findOneByLogin)
+//                .ifPresent(user -> {
+//                    String currentEncryptedPassword = user.getPassword();
+//                    if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
+//                        throw new InvalidPasswordException();
+//                    }
+//                    String encryptedPassword = passwordEncoder.encode(newPassword);
+//                    user.setPassword(encryptedPassword);
+//
+//                });
+//        log.debug("Changed password");
+//    }
 
-    @Override
-    public void changePassword(String currentClearTextPassword, String newPassword) {
-        SecurityUtils.getCurrentUserLogin()
-                .flatMap(userRepository::findOneByLogin)
-                .ifPresent(user -> {
-                    String currentEncryptedPassword = user.getPassword();
-                    if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-                        throw new InvalidPasswordException();
-                    }
-                    String encryptedPassword = passwordEncoder.encode(newPassword);
-                    user.setPassword(encryptedPassword);
 
-                });
-        log.debug("Changed password");
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Page<UserDto> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAllByLoginNot(pageable, Role.UNREGISTERED.getRole()).map(UserDto::new);
+        return userRepository.findAllByUsernameNot(pageable, Role.UNREGISTERED.getRole()).map(UserDto::new);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithRolesByLogin(login);
+    public Optional<User> getUserWithAuthoritiesByUsername(String login) {
+        return userRepository.findOneWithRolesByUsername(login);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthorities(Long id) {
-        return userRepository.findOneWithRolesById(id);
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public Optional<User> getUserWithAuthorities(Long id) {
+//        return userRepository.findOneWithRolesById(id);
+//    }
 
 
 
