@@ -172,11 +172,17 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
+                              - column:
+                              name: activation_key
+                              type: varchar(45)
+                              constraints:
+                                nullable: false
               - column:
                   name: role
                   type: varchar(45)
                   constraints:
                     nullable: false
+
               - column:
                   name: address_id
                   type: BIGINT
