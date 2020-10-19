@@ -72,6 +72,7 @@ CREATE TABLE public."user"
   login character varying(45) NOT NULL,
   password character varying(45) NOT NULL,
   email character varying(45),
+  activation_key character varying(45),
   role_id integer NOT NULL,
   address_id integer NOT NULL,
   customer_id integer NOT NULL,

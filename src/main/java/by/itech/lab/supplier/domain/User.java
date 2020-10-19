@@ -25,6 +25,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String activationKey;
     private Role role;
     private Address address;
     private Customer customer;
@@ -108,6 +109,15 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Column(name = "activation_key", nullable = false)
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
     }
 
     @ManyToOne
