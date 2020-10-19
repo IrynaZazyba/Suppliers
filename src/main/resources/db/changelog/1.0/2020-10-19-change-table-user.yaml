@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: CH-U-14
+      author: iryna_zazybo
+      dropNotNullConstraint:
+        tableName: user
+        columnName: warehouse_id
+        columnDataType: BIGINT
+  - changeSet:
+      id: CH-U-18
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType:  varchar(45)
+            newColumnName:  username
+            oldColumnName:  login
+            tableName:  user
+  - changeSet:
+      id: CH-U-22
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false

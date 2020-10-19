@@ -17,7 +17,7 @@ import java.util.Set;
 @Table(name = "zone")
 public class Zone {
     private Long id;
-    private String zone;
+    private String location;
     private Set<Tax> taxes = new HashSet<>();
 
     @Id
@@ -30,13 +30,13 @@ public class Zone {
         this.id = id;
     }
 
-    @Column(name = "zone", nullable = false)
-    public String getZone() {
-        return zone;
+    @Column(name = "location", nullable = false)
+    public String getLocation() {
+        return location;
     }
 
-    public void setZone(String category) {
-        this.zone = category;
+    public void setLocation(String category) {
+        this.location = category;
     }
 
     @OneToMany(mappedBy = "zone")

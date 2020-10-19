@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "public.customer")
+@Table(name = "customer")
 public class Customer {
     private Long id;
     private String name;
