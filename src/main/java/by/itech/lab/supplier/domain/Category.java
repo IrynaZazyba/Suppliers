@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "category")
-public class Category extends BaseEntity {
+public class Category {
 
     private Long id;
     private String category;
@@ -41,7 +41,7 @@ public class Category extends BaseEntity {
         this.category = category;
     }
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category")
     public Set<Item> getItems() {
         return items;
     }
