@@ -6,9 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value =
-            "SELECT * FROM user WHERE username = ?1 and customer_id=(SELECT id from customer where customer.name=?2)",
-            nativeQuery = true)
-    User findByUsernameAndCustomer(String username, String customer);
+    User findByEmail(String username);
 
 }
