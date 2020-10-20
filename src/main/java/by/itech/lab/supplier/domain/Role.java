@@ -1,6 +1,9 @@
 package by.itech.lab.supplier.domain;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
+
     SYSTEM_ADMIN("System admin"), ADMIN("Admin"), DISPATCHER("Dispatcher"),
     LOGISTICS_SPECIALIST("Logistics specialist"), DRIVER("Driver"),
     DIRECTOR("Director");
@@ -12,5 +15,10 @@ public enum Role {
 
     public String getRole() {
         return role;
+    }
+
+    @Override
+    public String getAuthority() {
+        return name();
     }
 }

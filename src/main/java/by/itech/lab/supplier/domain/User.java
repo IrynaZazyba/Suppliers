@@ -1,20 +1,17 @@
 package by.itech.lab.supplier.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Entity
 @Table(name = "user")
 public class User {
 
@@ -35,6 +32,7 @@ public class User {
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
     private boolean active;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -110,7 +108,7 @@ public class User {
         this.role = role;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     public Address getAddress() {
         return address;
@@ -120,7 +118,7 @@ public class User {
         this.address = address;
     }
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     public Customer getCustomer() {
         return customer;
@@ -130,7 +128,7 @@ public class User {
         this.customer = customer;
     }
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "warehouse_id")
     public Warehouse getWarehouse() {
         return warehouse;
@@ -140,7 +138,7 @@ public class User {
         this.warehouse = warehouse;
     }
 
-    @OneToMany(mappedBy = "createdByUsers")
+    @OneToMany(mappedBy = "createdByUsers", fetch = FetchType.EAGER)
     public Set<WayBill> getCreatorWayBills() {
         return creatorWayBills;
     }
@@ -149,7 +147,7 @@ public class User {
         this.creatorWayBills = creatorWayBills;
     }
 
-    @OneToMany(mappedBy = "updatedByUsers")
+    @OneToMany(mappedBy = "updatedByUsers", fetch = FetchType.EAGER)
     public Set<WayBill> getUpdatorWayBills() {
         return updatorWayBills;
     }
@@ -158,7 +156,7 @@ public class User {
         this.updatorWayBills = updatorWayBills;
     }
 
-    @OneToMany(mappedBy = "driver")
+    @OneToMany(mappedBy = "driver", fetch = FetchType.EAGER)
     public Set<WayBill> getDriverWayBills() {
         return driverWayBills;
     }
@@ -168,7 +166,7 @@ public class User {
     }
 
 
-    @OneToMany(mappedBy = "createdByUsers")
+    @OneToMany(mappedBy = "createdByUsers", fetch = FetchType.EAGER)
     public Set<Application> getCreatorApplications() {
         return creatorApplications;
     }
@@ -177,7 +175,7 @@ public class User {
         this.creatorApplications = creatorApplications;
     }
 
-    @OneToMany(mappedBy = "lastUpdatedByUsers")
+    @OneToMany(mappedBy = "lastUpdatedByUsers", fetch = FetchType.EAGER)
     public Set<Application> getUpdatorApplications() {
         return updatorApplications;
     }
