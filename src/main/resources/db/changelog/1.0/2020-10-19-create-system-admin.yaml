@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: IN-COMP-10
+      author: iryna_zazybo
+      changes:
+        - sql:
+            sql: insert into customer (id, name, registration_date, status) values (3, "SystemCompany", "2020-10-19", "active")
+  - changeSet:
+      id: IN-COMP-11
+      author: iryna_zazybo
+      changes:
+        - sql:
+            sql: insert into zone (id, location) values (3, "NY")
+  - changeSet:
+      id: IN-COMP-12
+      author: iryna_zazybo
+      changes:
+        - sql:
+            sql: insert into address (id, state, city, address_line_1, address_line_2, zone_id ) values (3, "USA", "NY","Lexington Avenue", "Slobodskaya str.", 3)
+  - changeSet:
+      id: IN-COMP-13
+      author: iryna_zazybo
+      changes:
+        - sql:
+            sql: insert into `user` (name, surname, birthday, username, password, email, role, address_id, customer_id, is_active ) values ("Bob", "Roberts", "1990-10-15", "admin", "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG", "zazybo1.17@gmail.com", "ADMIN", 3,3, true)
