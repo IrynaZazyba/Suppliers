@@ -27,3 +27,11 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
+  - changeSet:
+      id: CH-U-23
+      author: iryna_zazybo
+      changes:
+        - modifyDataType:
+            columnName: password
+            newDataType: varchar(150)
+            tableName: user

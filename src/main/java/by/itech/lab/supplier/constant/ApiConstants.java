@@ -11,5 +11,9 @@ public interface ApiConstants {
     String URL_WAREHOUSE = "/warehouse";
     String URL_WAYBILL = "/waybill";
     String URL_WRITE_OFF_ACT = "/write-off-act";
+    String URL_LOGIN = "/login";
+    String URL_LOGOUT = "/logout";
+    String URL_ROOT = "/";
+
 
 }

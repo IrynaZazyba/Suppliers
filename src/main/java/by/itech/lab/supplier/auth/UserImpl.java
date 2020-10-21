@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 public class UserImpl extends org.springframework.security.core.userdetails.User {
 
@@ -20,5 +21,9 @@ public class UserImpl extends org.springframework.security.core.userdetails.User
 
     public List<CustomerDto> getCustomer() {
         return customer;
+    }
+
+    public boolean atCustomer(final Long customerId){
+        return customer.stream().anyMatch(customer-> Objects.equals(customer.getId(), customerId));
     }
 }

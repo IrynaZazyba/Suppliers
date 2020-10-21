@@ -1,8 +1,8 @@
-package by.itech.lab.supplier.auth.service;
+package by.itech.lab.supplier.auth;
 
-import by.itech.lab.supplier.auth.UserImpl;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
+import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,9 +18,12 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
+    public CustomUserDetailsService(UserRepository userRepository,
+                                    CustomerMapper customerMapper) {
         this.userRepository = userRepository;
+        this.customerMapper=customerMapper;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("Username not found for email=%s", email));
         } else {
             List<CustomerDto> customers = new ArrayList<>();
-            customers.add(CustomerDto.toDto(user.getCustomer()));
+            customers.add(customerMapper.map(user.getCustomer()));
             userImpl = new UserImpl(user.getUsername(), user.getPassword(), customers, true,
                     true, true, user.isActive(), defineAuthority(user));
         }
