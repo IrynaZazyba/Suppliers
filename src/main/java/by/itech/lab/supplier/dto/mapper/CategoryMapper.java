@@ -16,6 +16,7 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
     public CategoryDto map(final Category entity) {
         CategoryDto dto = new CategoryDto();
         dto.setId(entity.getId());
+        dto.setActive(entity.isActive());
         dto.setCategory(entity.getCategory());
         dto.setTaxRate(entity.getTaxRate());
         dto.setItems(entity.getItems());
@@ -33,6 +34,7 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
         category.setCategory(dto.getCategory());
         category.setTaxRate(dto.getTaxRate());
         category.setItems(dto.getItems());
+        category.setActive(dto.isActive());
         return category;
     }
 }

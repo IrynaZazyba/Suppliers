@@ -18,11 +18,18 @@ public class CategoryTest {
         CategoryDto category = new CategoryDto();
         category.setCategory("Test");
         category.setTaxRate(20.0);
-        CategoryDto category1 = new CategoryDto();
-        category.setCategory("Test");
-        category.setTaxRate(20.0);
-        service.create(category);
-        service.create(category1);
-        System.out.println(service.readAll());
+        category.setActive(true);
+        category = service.save(category);
+        CategoryDto readCategory = service.findByCategory("Test");
+        assert category.equals(readCategory);
+        service.delete(category);
+        readCategory = service.findByCategory("Test");
+        assert !readCategory.isActive();
+        readCategory = service.findById(readCategory.getId());
+        service.activate(category);
+        readCategory = service.findById(readCategory.getId());
+        assert readCategory.isActive();
+        assert service.readAll().contains(readCategory);
+        service.deleteForever(readCategory);
     }
 }

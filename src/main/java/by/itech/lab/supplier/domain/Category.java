@@ -17,46 +17,16 @@ import java.util.Set;
 @Table(name = "category")
 public class Category extends BaseEntity {
 
-    private Long id;
-    private String category;
-    private Double taxRate;
-    private Set<Item> items = new HashSet<>();
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "category", nullable = false, unique = true)
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
+    private Long id;
+    @Column(nullable = false, unique = true)
+    private String category;
+    @Column(nullable = false)
+    private Double taxRate;
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
-    public Set<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(Set<Item> items) {
-        this.items = items;
-    }
-
-    @Column(name = "tax_rate", nullable = false)
-    public Double getTaxRate() {
-        return taxRate;
-    }
-
-    public void setTaxRate(final Double taxRate) {
-        this.taxRate = taxRate;
-    }
+    private Set<Item> items = new HashSet<>();
+    @Column(name = "is_active")
+    private boolean active;
 
 }

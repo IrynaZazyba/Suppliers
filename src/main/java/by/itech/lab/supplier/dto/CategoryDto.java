@@ -13,5 +13,6 @@ public class CategoryDto extends DefaultDto {
     private String category;
     private Double taxRate;
     private Set<Item> items = new HashSet<>();
+    private boolean active;
 
 }
