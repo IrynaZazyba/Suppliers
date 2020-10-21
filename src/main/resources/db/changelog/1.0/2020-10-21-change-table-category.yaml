@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: category
             columns:
               - column:
-                  name: is_active
+                  name: active
                   type: BOOLEAN
                   defaultValue: true
                   constraints:

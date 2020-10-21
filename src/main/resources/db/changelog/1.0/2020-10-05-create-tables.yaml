@@ -250,7 +250,7 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: tax_rate
-                  type: DOUBLE PRECISION
+                  type: numeric
                   constraints:
                     nullable: false
   - changeSet:
@@ -957,4 +957,3 @@ databaseChangeLog:
             newColumnName: category
             oldColumnName: categoty
             tableName: category
-

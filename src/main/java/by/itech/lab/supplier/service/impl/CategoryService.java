@@ -36,8 +36,7 @@ public class CategoryService {
         } else {
             category = mapper.mapCategoryWithId(dto);
         }
-        CategoryDto created = mapper.map(categoryRepository.save(category));
-        return created;
+        return mapper.map(categoryRepository.save(category));
     }
 
     public List<CategoryDto> readAll() {

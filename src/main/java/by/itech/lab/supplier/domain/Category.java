@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,10 +24,10 @@ public class Category implements BaseEntity {
     @Column(nullable = false, unique = true)
     private String category;
     @Column(nullable = false)
-    private Double taxRate;
+    private BigDecimal taxRate;
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private Set<Item> items = new HashSet<>();
-    @Column(name = "is_active")
+    @Column
     private boolean active;
 
 }
