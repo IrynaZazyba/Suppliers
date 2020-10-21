@@ -61,7 +61,7 @@ public class CategoryService {
     }
 
     public void deleteForever(final CategoryDto dto) {
-        categoryRepository.delete(mapper.map(dto));
+        categoryRepository.delete(mapper.mapCategoryWithId(dto));
     }
 
 }

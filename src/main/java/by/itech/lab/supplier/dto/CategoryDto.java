@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-public class CategoryDto extends DefaultDto {
+public class CategoryDto implements DefaultDto {
 
     private Long id;
     private String category;

@@ -31,5 +31,6 @@ public class CategoryTest {
         assert readCategory.isActive();
         assert service.readAll().contains(readCategory);
         service.deleteForever(readCategory);
+        assert service.findById(readCategory.getId()) == null;
     }
 }
