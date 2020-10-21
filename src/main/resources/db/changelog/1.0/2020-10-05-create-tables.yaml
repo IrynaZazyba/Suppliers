@@ -948,9 +948,3 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: write_off_act_reason
-
-
-
-
-
-

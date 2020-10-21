@@ -1,9 +1,14 @@
 package by.itech.lab.supplier.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -106,7 +111,7 @@ public class User {
         this.role = role;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "address_id")
     public Address getAddress() {
         return address;
@@ -116,7 +121,7 @@ public class User {
         this.address = address;
     }
 
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     public Customer getCustomer() {
         return customer;
@@ -126,7 +131,7 @@ public class User {
         this.customer = customer;
     }
 
-    @ManyToOne (fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "warehouse_id")
     public Warehouse getWarehouse() {
         return warehouse;
@@ -136,7 +141,7 @@ public class User {
         this.warehouse = warehouse;
     }
 
-    @OneToMany(mappedBy = "createdByUsers", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "createdByUsers")
     public Set<WayBill> getCreatorWayBills() {
         return creatorWayBills;
     }
@@ -145,7 +150,7 @@ public class User {
         this.creatorWayBills = creatorWayBills;
     }
 
-    @OneToMany(mappedBy = "updatedByUsers", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "updatedByUsers")
     public Set<WayBill> getUpdatorWayBills() {
         return updatorWayBills;
     }
@@ -154,7 +159,7 @@ public class User {
         this.updatorWayBills = updatorWayBills;
     }
 
-    @OneToMany(mappedBy = "driver", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "driver")
     public Set<WayBill> getDriverWayBills() {
         return driverWayBills;
     }
@@ -164,7 +169,7 @@ public class User {
     }
 
 
-    @OneToMany(mappedBy = "createdByUsers", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "createdByUsers")
     public Set<Application> getCreatorApplications() {
         return creatorApplications;
     }
@@ -173,7 +178,7 @@ public class User {
         this.creatorApplications = creatorApplications;
     }
 
-    @OneToMany(mappedBy = "lastUpdatedByUsers", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "lastUpdatedByUsers")
     public Set<Application> getUpdatorApplications() {
         return updatorApplications;
     }

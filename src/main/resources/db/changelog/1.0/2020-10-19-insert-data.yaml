@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: IN-CSA-1
+      author: iryna_zazybo
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: \nGO
+             path: ../sql/2020-10-21-insert-user-info.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true

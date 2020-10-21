@@ -10,20 +10,29 @@ import java.util.Objects;
 public class UserImpl extends org.springframework.security.core.userdetails.User {
 
     private static final long serialVersionUID = 2403758130184537815L;
+    private Long id;
     private List<CustomerDto> customer;
 
-    public UserImpl(String username, String password, List<CustomerDto> customer, boolean enabled,
-                    boolean accountNonExpired, boolean credentialsNonExpired,
+    public UserImpl(Long id, String username, String password, List<CustomerDto> customer,
                     boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        super(username, password, true, true, true, accountNonLocked, authorities);
         this.customer = customer;
+        this.id = id;
     }
 
     public List<CustomerDto> getCustomer() {
         return customer;
     }
 
-    public boolean atCustomer(final Long customerId){
-        return customer.stream().anyMatch(customer-> Objects.equals(customer.getId(), customerId));
+    public boolean atCustomer(final Long customerId) {
+        return customer.stream().anyMatch(customer -> Objects.equals(customer.getId(), customerId));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

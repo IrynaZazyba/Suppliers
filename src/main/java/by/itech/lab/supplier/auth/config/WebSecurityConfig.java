@@ -33,24 +33,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                    .authorizeRequests()
-                    .antMatchers(URL_ROOT, URL_LOGIN).permitAll()
-                    .anyRequest().authenticated()
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers(URL_ROOT, URL_LOGIN).permitAll()
+                .anyRequest().authenticated()
+
                 .and()
-                    .formLogin()
-                    .loginPage(URL_LOGIN)
-                    .permitAll()
-                    .successHandler(authenticationSuccessHandler)
-                    .failureHandler((req, resp, ex) -> resp.setStatus(SC_FORBIDDEN))
+                .formLogin()
+                .loginPage(URL_LOGIN)
+                .permitAll()
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler((req, resp, ex) -> resp.setStatus(SC_FORBIDDEN))
+
                 .and()
-                    .logout()
-                    .logoutUrl(URL_LOGOUT)
-                    .permitAll()
+                .logout()
+                .logoutUrl(URL_LOGOUT)
+                .permitAll()
+
                 .and()
-                    .exceptionHandling()
-                    .accessDeniedHandler((req, resp, ex) -> resp.setStatus(SC_FORBIDDEN));
-        }
+                .exceptionHandling()
+                .accessDeniedHandler((req, resp, ex) -> resp.setStatus(SC_FORBIDDEN));
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
