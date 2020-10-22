@@ -2,32 +2,24 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.repository.CustomerRepositoryImp;
+import by.itech.lab.supplier.dto.mapper.CustomerMapper;
+import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
 
 @Service
 @AllArgsConstructor
 public class CustomerServiceImp implements CustomerService {
 
+    private final CustomerRepository customerRepository;
     @Override
     public void createNewCustomer(CustomerDto dto) {
         Customer customer = new Customer();
 
-//        Long id = customer.getId();
-//        customer.setId(id);
-        customer.setName(dto.getName());
-        Date date = new Date();
-        customer.setRegistrationDate(date);
-        customer.setStatus("active");
+        CustomerMapper customerMapper = new CustomerMapper();
+        customerMapper.map(dto);
 
-        CustomerRepositoryImp customerRepository = new CustomerRepositoryImp();
         customerRepository.save(customer);
     }
 }
