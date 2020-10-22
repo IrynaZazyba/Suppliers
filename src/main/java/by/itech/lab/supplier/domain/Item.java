@@ -58,7 +58,7 @@ public class Item {
         this.units = units;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     public Category getCategory() {
         return category;

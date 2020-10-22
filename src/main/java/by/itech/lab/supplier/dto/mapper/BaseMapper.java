@@ -1,9 +1,9 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.BaseEntity;
-import by.itech.lab.supplier.dto.DefaultDto;
+import by.itech.lab.supplier.dto.BaseDto;
 
-public interface BaseMapper<E extends BaseEntity, D extends DefaultDto> {
+public interface BaseMapper<E extends BaseEntity, D extends BaseDto> {
 
     E map(final D dto);
 

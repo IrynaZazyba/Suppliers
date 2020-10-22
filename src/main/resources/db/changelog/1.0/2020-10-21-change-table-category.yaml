@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-10-1
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: category
+            columns:
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
