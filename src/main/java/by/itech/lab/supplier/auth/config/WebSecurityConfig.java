@@ -10,10 +10,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import static by.itech.lab.supplier.constant.ApiConstants.*;
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_LOGIN;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_LOGOUT;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ROOT;
+
 
 @EnableWebSecurity
 @Configuration
@@ -25,10 +29,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AccessDeniedHandler accessDeniedHandler;
 
-    public WebSecurityConfig(UserDetailsService userDetailsService, AuthenticationSuccessHandler authenticationSuccessHandler) {
+
+    public WebSecurityConfig(UserDetailsService userDetailsService,
+                             AuthenticationSuccessHandler authenticationSuccessHandler,
+                             AuthenticationFailureHandler authenticationFailureHandler,
+                             AccessDeniedHandler accessDeniedHandler) {
         this.userDetailsService = userDetailsService;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Override
@@ -44,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage(URL_LOGIN)
                 .permitAll()
                 .successHandler(authenticationSuccessHandler)
-                .failureHandler((req, resp, ex) -> resp.setStatus(SC_FORBIDDEN))
+                .failureHandler(authenticationFailureHandler)
 
                 .and()
                 .logout()
@@ -53,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler((req, resp, ex) -> resp.setStatus(SC_FORBIDDEN));
+                .accessDeniedHandler(accessDeniedHandler);
     }
 
     @Override
