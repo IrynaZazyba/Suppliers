@@ -32,8 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(String.format("Username not found for email=%s", email)));
-        List<CustomerDto> customers = new ArrayList<>();
-        customers.add(customerMapper.map(user.getCustomer()));
+        List<CustomerDto> customers = Collections.singletonList(customerMapper.map(user.getCustomer()));
         userImpl = new UserImpl(
                 user.getId(),
                 user.getUsername(),
