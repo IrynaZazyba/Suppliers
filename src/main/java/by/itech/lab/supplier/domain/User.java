@@ -1,30 +1,32 @@
 package by.itech.lab.supplier.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
-@Getter
-@Setter
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
+@Builder
+@Entity
+@Table(name = "`user`")
 public class User {
 
     private Long id;
     private String name;
     private String surname;
-    private Date birthday;
+    private LocalDate birthday;
     private String username;
     private String password;
     private String email;
+    private String activationKey;
     private Role role;
     private Address address;
     private Customer customer;
@@ -35,7 +37,6 @@ public class User {
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
     private boolean active;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,11 +67,11 @@ public class User {
     }
 
     @Column(name = "birthday")
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 
@@ -111,7 +112,16 @@ public class User {
         this.role = role;
     }
 
-    @ManyToOne
+    @Column(name = "activation_key")
+    public String getActivationKey() {
+        return activationKey;
+    }
+
+    public void setActivationKey(String activationKey) {
+        this.activationKey = activationKey;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     public Address getAddress() {
         return address;
@@ -121,7 +131,7 @@ public class User {
         this.address = address;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     public Customer getCustomer() {
         return customer;
@@ -131,7 +141,7 @@ public class User {
         this.customer = customer;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
     public Warehouse getWarehouse() {
         return warehouse;
