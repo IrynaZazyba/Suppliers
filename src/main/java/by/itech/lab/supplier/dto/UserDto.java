@@ -35,6 +35,14 @@ public class UserDto {
         this.active= user.isActive();
         this.birthday = user.getBirthday();
         this.role = user.getRole();
+        /*this.address = user.getAddress();
+        this.customer = user.getCustomer();
+        this.warehouse = user.getWarehouse();
+        this.creatorWayBills = user.getCreatorWayBills();
+        this.driverWayBills = user.getDriverWayBills();
+        this.updatorWayBills = user.getUpdatorWayBills();
+        this.updatorApplications = user.getUpdatorApplications();
+        this.creatorApplications = user.getCreatorApplications();*/
     }
 
     private boolean active;
