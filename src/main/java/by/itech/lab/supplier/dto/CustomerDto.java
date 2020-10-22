@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class CustomerDto implements DefaultDto {
+public class CustomerDto implements BaseDto {
 
     private Long id;
     private String name;
