@@ -1,20 +1,20 @@
 package by.itech.lab.supplier.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Entity
 @Table(name = "user")
 public class User {
 
@@ -35,6 +35,7 @@ public class User {
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
     private boolean active;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

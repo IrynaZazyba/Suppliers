@@ -1,9 +1,16 @@
 package by.itech.lab.supplier.domain;
 
-public enum Role {
-    SYSTEM_ADMIN("System admin"), ADMIN("Admin"), DISPATCHER("Dispatcher"),
-    LOGISTICS_SPECIALIST("Logistics specialist"), DRIVER("Driver"),
-    DIRECTOR("Director");
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
+
+    ROLE_SYSTEM_ADMIN("System admin"),
+    ROLE_ADMIN("Admin"),
+    ROLE_DISPATCHER("Dispatcher"),
+    ROLE_LOGISTICS_SPECIALIST("Logistics specialist"),
+    ROLE_DRIVER("Driver"),
+    ROLE_DIRECTOR("Director");
+
     private String role;
 
     Role(final String role) {
@@ -12,5 +19,10 @@ public enum Role {
 
     public String getRole() {
         return role;
+    }
+
+    @Override
+    public String getAuthority() {
+        return name();
     }
 }
