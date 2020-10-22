@@ -11,7 +11,7 @@ import java.io.IOException;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_COMPANIES;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 
-@Component("customSuccessHandler")
+@Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override

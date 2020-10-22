@@ -11,7 +11,7 @@ import java.io.IOException;
 
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 
-@Component("customFailureHandler")
+@Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     @Override

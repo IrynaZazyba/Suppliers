@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.auth.config;
 
+import by.itech.lab.supplier.auth.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -7,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -27,13 +27,13 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_ROOT;
         jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AccessDeniedHandler accessDeniedHandler;
 
 
-    public WebSecurityConfig(UserDetailsService userDetailsService,
+    public WebSecurityConfig(CustomUserDetailsService userDetailsService,
                              AuthenticationSuccessHandler authenticationSuccessHandler,
                              AuthenticationFailureHandler authenticationFailureHandler,
                              AccessDeniedHandler accessDeniedHandler) {
