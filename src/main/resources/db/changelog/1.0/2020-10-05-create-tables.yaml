@@ -250,7 +250,7 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: tax_rate
-                  type: DOUBLE PRECISION
+                  type: numeric
                   constraints:
                     nullable: false
   - changeSet:
@@ -948,9 +948,13 @@ databaseChangeLog:
             initiallyDeferred: false
             referencedColumnNames: id
             referencedTableName: write_off_act_reason
-
-
-
-
-
+  - changeSet:
+      id: 52
+      author: alexander_popovich
+      changes:
+        - renameColumn:
+            columnDataType: varchar(45)
+            newColumnName: category
+            oldColumnName: categoty
+            tableName: category
 

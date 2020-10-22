@@ -4,12 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +16,8 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "customer")
-public class Customer implements Serializable {
+public class Customer implements BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,4 +31,5 @@ public class Customer implements Serializable {
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
     private Set<User> users = new HashSet<>();
+
 }
