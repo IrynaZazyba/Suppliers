@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 public class CustomerServiceImp implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
+    
     @Override
     public void createNewCustomer(CustomerDto dto) {
         Customer customer = new Customer();
-
-        CustomerMapper customerMapper = new CustomerMapper();
         customerMapper.map(dto);
 
         customerRepository.save(customer);

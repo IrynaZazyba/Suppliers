@@ -15,7 +15,7 @@ public class CustomerController {
 
     @PostMapping()
     public void customerCreator(@RequestBody CustomerDto dto){
-
+        System.out.println(dto.getName());
     }
 
 }
