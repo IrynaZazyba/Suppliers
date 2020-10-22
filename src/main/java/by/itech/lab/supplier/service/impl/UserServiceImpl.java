@@ -20,25 +20,87 @@ import org.slf4j.Logger;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
     private final UserRepository userRepository;
-
-
-
-
-
-
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-
-
     }
 
     @Override
-    public Optional<User> activateRegistration(String key) {
+    @Transactional(readOnly = true)
+    public Optional<UserDto> getUserWithAuthoritiesById(Long id) {
+        return userRepository.findOneWithRolesById(id).map(UserDto::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserDto> getAllManagedUsers(Pageable pageable) {
+        return userRepository.findAllByUsernameNot(pageable, Role.UNREGISTERED.getRole()).map(UserDto::new);
+    }
+
+    @Override
+    public UserDto createUser(UserDto userDTO) {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
+        }
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
+        }
+        User user = new User();
+        user.setUsername(userDTO.getUsername().toLowerCase());
+        user.setName(userDTO.getName());
+        user.setSurname(userDTO.getSurname());
+        user.setEmail(userDTO.getEmail().toLowerCase());
+        user.setBirthday(userDTO.getBirthday());
+        String encryptedPassword = "dfdd";//passwordEncoder.encode( RandomStringUtils.randomAlphanumeric(20));
+        user.setPassword(encryptedPassword);
+        user.setActive(true);
+        user.setRole(userDTO.getRole());
+        userRepository.save(user);
+        log.debug("Created Information for User: {}", user);
+        return new UserDto(user);
+    }
+
+    @Override
+    public Optional<UserDto> updateUser(UserDto userDTO) {
+        if (!userRepository.existsById(userDTO.getId())) {
+            throw new RuntimeException("user is not exist");
+        }
+        if (userRepository.existsByUsernameIsAndIdNot(userDTO.getUsername(), userDTO.getId())) {
+            throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
+        }
+        if (userRepository.existsByEmailIsAndIdNot(userDTO.getEmail(), userDTO.getId())) {
+            throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
+        }
+        return Optional.of(userRepository.findById(userDTO.getId()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(user -> {
+                    user.setUsername(userDTO.getUsername().toLowerCase());
+                    user.setName(userDTO.getName());
+                    user.setSurname(userDTO.getSurname());
+                    user.setEmail(userDTO.getEmail().toLowerCase());
+                    user.setBirthday(userDTO.getBirthday());
+                    user.setActive(userDTO.isActive());
+                    Role managedAuthorities = userDTO.getRole();
+                    user.setRole(managedAuthorities);
+                    userRepository.save(user);
+                    log.debug("Changed Information for User: {}", user);
+                    return user;
+                })
+                .map(UserDto::new);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.findOneById(id).ifPresent(user -> {
+            userRepository.delete(user);
+            log.debug("Deleted User: {}", user);
+        });
+    }
+
+    @Override
+    public Optional<UserDto> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
                 .map(user -> {
@@ -48,15 +110,12 @@ public class UserServiceImpl implements UserService {
 
                     log.debug("Activated user: {}", user);
                     return user;
-                });
+                }).map(UserDto::new);
     }
 
-
-
-
     @Override
-    public User registerUser(UserDto userDTO, String password) {
-        userRepository.findOneByUsername(userDTO.getUsername().toLowerCase()).ifPresent(existingUser -> {
+    public UserDto registerUser(UserDto userDTO, String password) {
+        userRepository.findOneById(userDTO.getId()).ifPresent(existingUser -> {
             boolean removed = removeNonActivatedUser(existingUser);
             if (!removed) {
 
@@ -76,60 +135,17 @@ public class UserServiceImpl implements UserService {
         newUser.setName(userDTO.getName());
         newUser.setSurname(userDTO.getSurname());
         newUser.setEmail(userDTO.getEmail().toLowerCase());
-newUser.setBirthday(userDTO.getBirthday());
+        newUser.setBirthday(userDTO.getBirthday());
         // new user is not active
         newUser.setActive(false);
         // new user gets registration key
-        newUser.setActivationKey( RandomStringUtils.randomAlphanumeric(20));
+        newUser.setActivationKey(RandomStringUtils.randomAlphanumeric(20));
 
         newUser.setRole(userDTO.getRole());
         userRepository.save(newUser);
 
         log.debug("Created Information for User: {}", newUser);
-        return newUser;
-    }
-
-    @Override
-    public User createUser(UserDto userDTO) {
-        User user = new User();
-        user.setUsername(userDTO.getUsername().toLowerCase());
-        user.setName(userDTO.getName());
-        user.setSurname(userDTO.getSurname());
-        user.setEmail(userDTO.getEmail().toLowerCase());
-        user.setBirthday(userDTO.getBirthday());
-        String encryptedPassword =  "dfdd";//passwordEncoder.encode( RandomStringUtils.randomAlphanumeric(20));
-        user.setPassword(encryptedPassword);
-        user.setActive(true);
-        user.setRole(userDTO.getRole());
-        userRepository.save(user);
-
-        log.debug("Created Information for User: {}", user);
-        return user;
-    }
-
-
-
-
-    @Override
-    public Optional<UserDto> updateUser(UserDto userDTO) {
-        return Optional.of(userRepository
-                .findById(userDTO.getId()))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(user -> {
-                    user.setUsername(userDTO.getUsername().toLowerCase());
-                    user.setName(userDTO.getName());
-                    user.setSurname(userDTO.getSurname());
-                    user.setEmail(userDTO.getEmail().toLowerCase());
-                    user.setBirthday(userDTO.getBirthday());
-                    user.setActive(userDTO.isActive());
-                      Role managedAuthorities = userDTO.getRole();
-                   user.setRole(managedAuthorities);
-                    userRepository.save(user);
-                    log.debug("Changed Information for User: {}", user);
-                    return user;
-                })
-                .map(UserDto::new);
+        return new UserDto(newUser);
     }
 
     public boolean removeNonActivatedUser(User existingUser) {
@@ -141,52 +157,6 @@ newUser.setBirthday(userDTO.getBirthday());
 
         return true;
     }
-
-    @Override
-    public void deleteUser(String login) {
-        userRepository.findOneByUsername(login).ifPresent(user -> {
-            userRepository.delete(user);
-
-            log.debug("Deleted User: {}", user);
-        });
-    }
-//
-//    @Override
-//    public void changePassword(String currentClearTextPassword, String newPassword) {
-//        SecurityUtils.getCurrentUserLogin()
-//                .flatMap(userRepository::findOneByLogin)
-//                .ifPresent(user -> {
-//                    String currentEncryptedPassword = user.getPassword();
-//                    if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
-//                        throw new InvalidPasswordException();
-//                    }
-//                    String encryptedPassword = passwordEncoder.encode(newPassword);
-//                    user.setPassword(encryptedPassword);
-//
-//                });
-//        log.debug("Changed password");
-//    }
-
-
-    @Transactional(readOnly = true)
-    public Page<UserDto> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAllByUsernameNot(pageable, Role.UNREGISTERED.getRole()).map(UserDto::new);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByUsername(String login) {
-        return userRepository.findOneWithRolesByUsername(login);
-    }
-
-//    @Override
-//    @Transactional(readOnly = true)
-//    public Optional<User> getUserWithAuthorities(Long id) {
-//        return userRepository.findOneWithRolesById(id);
-//    }
-
-
-
 
 
 }

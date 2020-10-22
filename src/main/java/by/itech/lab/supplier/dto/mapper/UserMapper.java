@@ -15,9 +15,9 @@ public class UserMapper {
 
     public List<UserDto> usersToUserDTOs(List<User> users) {
         return users.stream()
-            .filter(Objects::nonNull)
-            .map(this::userToUserDTO)
-            .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .map(this::userToUserDTO)
+                .collect(Collectors.toList());
     }
 
     public UserDto userToUserDTO(User user) {
@@ -26,9 +26,9 @@ public class UserMapper {
 
     public List<User> userDTOsToUsers(List<UserDto> userDTOs) {
         return userDTOs.stream()
-            .filter(Objects::nonNull)
-            .map(this::userDTOToUser)
-            .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .map(this::userDTOToUser)
+                .collect(Collectors.toList());
     }
 
     public User userDTOToUser(UserDto userDTO) {

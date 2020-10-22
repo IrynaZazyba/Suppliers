@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Data
@@ -21,7 +22,7 @@ public class User {
     private Long id;
     private String name;
     private String surname;
-    private Date birthday;
+    private LocalDate birthday;
     private String username;
     private String password;
     private String email;
@@ -66,11 +67,11 @@ public class User {
     }
 
     @Column(name = "birthday")
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

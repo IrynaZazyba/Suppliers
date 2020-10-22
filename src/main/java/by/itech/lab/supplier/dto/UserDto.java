@@ -12,6 +12,7 @@ import javax.validation.constraints.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +37,7 @@ public class UserDto {
         this.role = user.getRole();
     }
 
-    private boolean active = false;
+    private boolean active;
 
     private Long id;
     @NotBlank
@@ -45,7 +46,7 @@ public class UserDto {
     @NotBlank
     @Size(min = 1, max = 50)
     private String surname;
-    private Date birthday;
+    private LocalDate birthday;
     @NotBlank
     @Size(min = 1, max = 50)
     private String username;

@@ -27,3 +27,13 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
+  - changeSet:
+      id: CH-U-26
+      author: alesia_hlushakova
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: activation_key(45)
+                  type: varchar
