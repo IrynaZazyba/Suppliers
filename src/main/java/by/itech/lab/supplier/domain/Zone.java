@@ -14,10 +14,10 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "zone")
+@Table
 public class Zone {
     private Long id;
-    private String location;
+    private String zone;
     private Set<Tax> taxes = new HashSet<>();
 
     @Id
@@ -30,13 +30,13 @@ public class Zone {
         this.id = id;
     }
 
-    @Column(name = "location", nullable = false)
-    public String getLocation() {
-        return location;
+    @Column(nullable = false)
+    public String getZone() {
+        return zone;
     }
 
-    public void setLocation(String category) {
-        this.location = category;
+    public void setZone(String category) {
+        this.zone = category;
     }
 
     @OneToMany(mappedBy = "zone")

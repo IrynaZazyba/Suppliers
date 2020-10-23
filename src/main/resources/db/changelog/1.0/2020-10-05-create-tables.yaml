@@ -846,7 +846,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: location
+                  name: zone
                   type: varchar(45)
                   constraints:
                     nullable: false
