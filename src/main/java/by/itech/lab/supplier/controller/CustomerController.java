@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 
 @RestController
 @AllArgsConstructor
+@Secured(value = "ROLE_SYSTEM_ADMIN")
 @RequestMapping(URL_CUSTOMER)
 public class CustomerController {
 
@@ -30,7 +32,7 @@ public class CustomerController {
         if (ObjectUtils.anyNull(status)) {
             allCustomers = customerService.getAllCustomers(pageable);
         } else {
-            allCustomers = customerService.getFilteredByStatusCustomers(pageable, status);
+            allCustomers = customerService.getCustomersFilteredByStatus(pageable, status);
         }
         return allCustomers;
     }

@@ -8,5 +8,5 @@ public interface CustomerService {
 
     Page<CustomerDto> getAllCustomers(Pageable pageable);
 
-    Page<CustomerDto> getFilteredByStatusCustomers(Pageable pageable, String status);
+    Page<CustomerDto> getCustomersFilteredByStatus(Pageable pageable, String status);
 }

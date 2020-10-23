@@ -22,7 +22,7 @@ public class DefaultCustomerService implements CustomerService {
     }
 
     @Override
-    public Page<CustomerDto> getFilteredByStatusCustomers(Pageable pageable, String status) {
+    public Page<CustomerDto> getCustomersFilteredByStatus(Pageable pageable, String status) {
         return customerRepository.findAllByStatus(pageable, status).map(customerMapper::mapToCustomerView);
     }
 
