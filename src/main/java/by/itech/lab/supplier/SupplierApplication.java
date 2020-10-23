@@ -15,5 +15,4 @@ public class SupplierApplication {
         SpringApplication.run(SupplierApplication.class, args);
 
     }
-
 }

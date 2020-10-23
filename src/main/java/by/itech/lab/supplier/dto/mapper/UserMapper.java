@@ -58,7 +58,7 @@ public class UserMapper {
 
 
     public User userFromId(Long id) {
-        if (id == null) {
+        if (Objects.isNull(id)) {
             return null;
         }
         User user = new User();

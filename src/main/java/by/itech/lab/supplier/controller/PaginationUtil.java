@@ -20,11 +20,9 @@ public final class PaginationUtil {
         if ((page.getNumber() + 1) < page.getTotalPages()) {
             link = "<" + generateUri(baseUrl, page.getNumber() + 1, page.getSize()) + ">; rel=\"next\",";
         }
-        // prev link
         if ((page.getNumber()) > 0) {
             link += "<" + generateUri(baseUrl, page.getNumber() - 1, page.getSize()) + ">; rel=\"prev\",";
         }
-        // last and first link
         int lastPage = 0;
         if (page.getTotalPages() > 0) {
             lastPage = page.getTotalPages() - 1;
@@ -52,11 +50,9 @@ public final class PaginationUtil {
         if ((page.getNumber() + 1) < page.getTotalPages()) {
             link = "<" + generateUri(baseUrl, page.getNumber() + 1, page.getSize()) + "&query=" + escapedQuery + ">; rel=\"next\",";
         }
-        // prev link
         if ((page.getNumber()) > 0) {
             link += "<" + generateUri(baseUrl, page.getNumber() - 1, page.getSize()) + "&query=" + escapedQuery + ">; rel=\"prev\",";
         }
-        // last and first link
         int lastPage = 0;
         if (page.getTotalPages() > 0) {
             lastPage = page.getTotalPages() - 1;

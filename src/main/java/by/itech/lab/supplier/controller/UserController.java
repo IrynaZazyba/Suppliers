@@ -5,6 +5,7 @@ import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.validator.IdValidator;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +32,14 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
+@AllArgsConstructor
 @RequestMapping(ApiConstants.URL_APPLICATION)
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
+    @Autowired
     private final UserService userService;
 
-    //  private final MailService mailService;
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-        //      this.mailService = mailService;
-    }
 
     @GetMapping("/" + ApiConstants.URL_USER + "/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable @Valid Long id) {
@@ -63,7 +59,6 @@ public class UserController {
     @PostMapping(ApiConstants.URL_USER)
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) throws URISyntaxException {
         UserDto newUser = userService.createUser(userDto);
-        // call service to send mail
         return ResponseEntity.created(new URI("/api/users/" + newUser.getUsername())).body(newUser);
     }
 

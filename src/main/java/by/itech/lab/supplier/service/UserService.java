@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public interface UserService {
-    @Transactional(readOnly = true)
+
     Optional<UserDto> getUserWithAuthoritiesById(Long id);
 
     Page<UserDto> getAllManagedUsers(Pageable pageable);

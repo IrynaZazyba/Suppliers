@@ -6,9 +6,13 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.repository.UserRepository;
 
 import by.itech.lab.supplier.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,13 +24,12 @@ import org.slf4j.Logger;
 
 @Service
 @Transactional
+@Slf4j
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-    private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -53,7 +56,7 @@ public class UserServiceImpl implements UserService {
         user.setSurname(userDTO.getSurname());
         user.setEmail(userDTO.getEmail().toLowerCase());
         user.setBirthday(userDTO.getBirthday());
-        String encryptedPassword = "dfdd";//passwordEncoder.encode( RandomStringUtils.randomAlphanumeric(20));
+        String encryptedPassword ="111";
         user.setPassword(encryptedPassword);
         user.setActive(true);
         user.setRole(userDTO.getRole());
@@ -152,15 +155,12 @@ public class UserServiceImpl implements UserService {
         User newUser = new User();
         String encryptedPassword = password; //passwordEncoder.encode(password);
         newUser.setUsername(userDTO.getUsername().toLowerCase());
-        // new user gets initially a generated password
         newUser.setPassword(encryptedPassword);
         newUser.setName(userDTO.getName());
         newUser.setSurname(userDTO.getSurname());
         newUser.setEmail(userDTO.getEmail().toLowerCase());
         newUser.setBirthday(userDTO.getBirthday());
-        // new user is not active
         newUser.setActive(false);
-        // new user gets registration key
         newUser.setActivationKey(RandomStringUtils.randomAlphanumeric(20));
 
         newUser.setRole(userDTO.getRole());
