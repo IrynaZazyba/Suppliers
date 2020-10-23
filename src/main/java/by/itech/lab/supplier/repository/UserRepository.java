@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-
-
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -28,11 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 
-    boolean existsByUsername(String username);
-
     boolean existsByUsernameIsAndIdNot(String username, Long id);
-
-    boolean existsByEmail(String email);
 
     boolean existsByEmailIsAndIdNot(String email, Long id);
 
@@ -40,9 +34,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneWithRolesById(Long id);
 
-    Optional<User> findOneWithRolesByUsername(String login);
-
-    Optional<User> findOneWithRolesByEmail(String email);
-
-    Page<User> findAllByUsernameNot(Pageable pageable, String login);
+    Page<User> findAll(Pageable pageable);
 }

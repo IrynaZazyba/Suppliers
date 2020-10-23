@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.domain;
 
-
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Role implements GrantedAuthority {
@@ -10,10 +9,9 @@ public enum Role implements GrantedAuthority {
     ROLE_DISPATCHER("Dispatcher"),
     ROLE_LOGISTICS_SPECIALIST("Logistics specialist"),
     ROLE_DRIVER("Driver"),
-    ROLE_DIRECTOR("Director"),
-    UNREGISTERED("Unregistered");
+    ROLE_DIRECTOR("Director");
 
-    private String role;
+    private final String role;
 
     Role(final String role) {
         this.role = role;

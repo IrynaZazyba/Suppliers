@@ -1,20 +1,18 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
-import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
-import by.itech.lab.supplier.service.validator.IdValidator;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,53 +24,46 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-@CrossOrigin
 @RestController
+@Slf4j
 @AllArgsConstructor
-@RequestMapping(ApiConstants.URL_APPLICATION)
+@RequestMapping(ApiConstants.URL_USER)
 public class UserController {
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private final UserService userService;
 
 
-    @GetMapping("/" + ApiConstants.URL_USER + "/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable @Valid Long id) {
-        IdValidator.validate(id);
+    @GetMapping(ApiConstants.URL_ID_PARAMETER)
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
         UserDto userDto = userService.getUserWithAuthoritiesById(id).get();
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @GetMapping(ApiConstants.URL_USER)
-    public ResponseEntity<List<UserDto>> getAllUsers(Pageable pageable) {
-        final Page<UserDto> page = userService.getAllManagedUsers(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    @GetMapping
+    public Page<UserDto> getAllUsers(@PageableDefault(size = 10) Pageable pageable) {
+          return userService.getAll(pageable);
     }
 
-    @PostMapping(ApiConstants.URL_USER)
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) throws URISyntaxException {
-        UserDto newUser = userService.createUser(userDto);
-        return ResponseEntity.created(new URI("/api/users/" + newUser.getUsername())).body(newUser);
-    }
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);  }
 
-    @PutMapping("/" + ApiConstants.URL_USER + "/{id}")
+    @PutMapping(ApiConstants.URL_ID_PARAMETER)
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
-        IdValidator.validate(id);
         userDTO.setId(id);
         return new ResponseEntity<>(userService.updateUser(userDTO).get(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/" + ApiConstants.URL_USER + "/{id}")
+    @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable @Valid Long id) {
-        IdValidator.validate(id);
+    public void deleteUser(@PathVariable  Long id) {
         userService.deleteUser(id);
     }
 }

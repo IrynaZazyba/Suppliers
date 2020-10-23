@@ -1,22 +1,21 @@
 package by.itech.lab.supplier.dto;
 
-import by.itech.lab.supplier.domain.*;
+import by.itech.lab.supplier.domain.Address;
+import by.itech.lab.supplier.domain.Application;
+import by.itech.lab.supplier.domain.Customer;
+import by.itech.lab.supplier.domain.Role;
+import by.itech.lab.supplier.domain.Warehouse;
+import by.itech.lab.supplier.domain.WayBill;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.authenticator.Constants;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.time.Instant;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
@@ -24,28 +23,7 @@ import java.util.stream.Collectors;
 @Data
 public class UserDto implements BaseDto {
 
-
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.username = user.getUsername();
-        this.name = user.getName();
-        this.surname = user.getSurname();
-        this.email = user.getEmail();
-        this.active = user.isActive();
-        this.birthday = user.getBirthday();
-        this.role = user.getRole();
-        this.address = user.getAddress();
-        this.customer = user.getCustomer();
-        this.warehouse = user.getWarehouse();
-        this.creatorWayBills = user.getCreatorWayBills();
-        this.driverWayBills = user.getDriverWayBills();
-        this.updatorWayBills = user.getUpdatorWayBills();
-        this.updatorApplications = user.getUpdatorApplications();
-        this.creatorApplications = user.getCreatorApplications();
-    }
-
     private boolean active;
-
     private Long id;
     @NotBlank
     @Size(min = 1, max = 50)
@@ -73,6 +51,4 @@ public class UserDto implements BaseDto {
     private Set<WayBill> driverWayBills = new HashSet<>();
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
-
-
 }
