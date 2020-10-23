@@ -9,32 +9,28 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
 
     @Override
     public Category map(final CategoryDto dto) {
-        return fillCategory(dto);
+        return Category.builder()
+          .category(dto.getCategory())
+          .taxRate(dto.getTaxRate())
+          .active(dto.isActive())
+          .id(dto.getId())
+          .build();
     }
 
     @Override
     public CategoryDto map(final Category entity) {
-        CategoryDto dto = new CategoryDto();
-        dto.setId(entity.getId());
-        dto.setActive(entity.isActive());
-        dto.setCategory(entity.getCategory());
-        dto.setTaxRate(entity.getTaxRate());
-        dto.setItems(entity.getItems());
-        return dto;
+        return CategoryDto.builder()
+          .id(entity.getId())
+          .taxRate(entity.getTaxRate())
+          .category(entity.getCategory())
+          .active(entity.isActive())
+          .build();
     }
 
-    public Category mapCategoryWithId(final CategoryDto dto) {
-        Category category = fillCategory(dto);
-        category.setId(dto.getId());
-        return category;
+    public void update(final CategoryDto from, final Category to) {
+        to.setCategory(from.getCategory());
+        to.setTaxRate(from.getTaxRate());
+        to.setActive(from.isActive());
     }
 
-    private Category fillCategory(final CategoryDto dto) {
-        Category category = new Category();
-        category.setCategory(dto.getCategory());
-        category.setTaxRate(dto.getTaxRate());
-        category.setItems(dto.getItems());
-        category.setActive(dto.isActive());
-        return category;
-    }
 }

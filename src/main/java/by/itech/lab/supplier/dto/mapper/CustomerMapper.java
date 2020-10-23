@@ -12,20 +12,20 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
     @Override
     public Customer map(CustomerDto dto) {
         return Customer.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .registrationDate(Date.valueOf(dto.getRegistrationDate()))
-                .status(dto.getStatus())
-                .build();
+          .id(dto.getId())
+          .name(dto.getName())
+          .registrationDate(Date.valueOf(dto.getRegistrationDate()))
+          .status(dto.getStatus())
+          .build();
     }
 
     @Override
     public CustomerDto map(Customer entity) {
         return CustomerDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .registrationDate(entity.getRegistrationDate().toLocalDate())
-                .status(entity.getStatus())
-                .build();
+          .id(entity.getId())
+          .name(entity.getName())
+          .registrationDate(entity.getRegistrationDate().toLocalDate())
+          .status(entity.getStatus())
+          .build();
     }
 }
