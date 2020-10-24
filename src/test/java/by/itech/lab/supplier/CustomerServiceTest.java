@@ -3,6 +3,7 @@ package by.itech.lab.supplier;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
 import by.itech.lab.supplier.service.impl.DefaultCustomerService;
@@ -22,6 +23,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 public class CustomerServiceTest {
@@ -83,6 +85,20 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findAllByStatus(pageRequest, status)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
         Assertions.assertEquals(customerDtoPage, customerService().getCustomersFilteredByStatus(pageRequest, status));
+    }
+
+    @Test
+    void getCustomerTest_Positive() {
+        Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.of(customer));
+        Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
+        Assertions.assertEquals(customerDto, customerService().getCustomer(5L));
+    }
+
+    @Test
+    void getCustomerTest_Negative() {
+        Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.empty());
+        Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
+        Assertions.assertThrows(ResourceNotFoundException.class,()->customerService().getCustomer(5L));
     }
 
 

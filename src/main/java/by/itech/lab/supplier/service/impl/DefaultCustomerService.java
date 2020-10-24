@@ -2,6 +2,7 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,13 @@ public class DefaultCustomerService implements CustomerService {
     @Override
     public Page<CustomerDto> getCustomersFilteredByStatus(Pageable pageable, String status) {
         return customerRepository.findAllByStatus(pageable, status).map(customerMapper::mapToCustomerView);
+    }
+
+    @Override
+    public CustomerDto getCustomer(final Long customerId) {
+        return customerRepository.findById(customerId)
+                .map(customerMapper::mapToCustomerView)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with id=" + customerId + " doesn't exist"));
     }
 
 }

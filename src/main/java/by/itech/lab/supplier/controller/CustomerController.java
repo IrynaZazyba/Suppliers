@@ -10,15 +10,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 
 @RestController
 @AllArgsConstructor
-@Secured(value = "ROLE_SYSTEM_ADMIN")
+//@Secured(value = "ROLE_SYSTEM_ADMIN")
 @RequestMapping(URL_CUSTOMER)
 public class CustomerController {
 
@@ -26,8 +28,8 @@ public class CustomerController {
 
     @GetMapping
     public Page<CustomerDto> getCustomers(
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam(required = false) String status) {
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
+            @RequestParam(required = false) final String status) {
         Page<CustomerDto> allCustomers;
         if (ObjectUtils.anyNull(status)) {
             allCustomers = customerService.getAllCustomers(pageable);
@@ -35,5 +37,10 @@ public class CustomerController {
             allCustomers = customerService.getCustomersFilteredByStatus(pageable, status);
         }
         return allCustomers;
+    }
+
+    @GetMapping(URL_CUSTOMER_ID)
+    public CustomerDto getCustomer(@PathVariable final Long customerId) {
+        return customerService.getCustomer(customerId);
     }
 }

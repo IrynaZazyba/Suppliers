@@ -5,6 +5,7 @@ public interface ApiConstants {
     String URL_APPLICATION = "/application";
     String URL_CAR = "/car";
     String URL_CUSTOMER = "/customers";
+    String URL_CUSTOMER_ID = "/{customerId}";
     String URL_ITEM = "/item";
     String URL_RETAILER = "/retailer";
     String URL_USER = "/users";
