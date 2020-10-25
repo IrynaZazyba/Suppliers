@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "zone")
+@Table(name = "zones")
 public class Zone {
     private Long id;
     private String location;

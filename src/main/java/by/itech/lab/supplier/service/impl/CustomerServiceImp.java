@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -19,20 +19,16 @@ public class CustomerServiceImp implements CustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public void createNewCustomer(CustomerDto dto) {
-        Customer customer = new Customer();
-        Customer customerDto = customerMapper.map(dto);
-        dto.setId(customer.getId());
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate localDate = LocalDate.now();
-        dto.setRegistrationDate(LocalDate.parse(dtf.format(localDate)));
-        dto.setStatus("active");
-        customerRepository.save(customerDto);
-    }
-
-    @Override
-    public void editCustomer(CustomerDto dto) {
-        Customer customerDto = customerMapper.map(dto);
-        customerRepository.save(customerDto);
+    public void saveOrEditCustomer(CustomerDto dto) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(dto.getId());
+        if (optionalCustomer.isPresent()) {
+            customerRepository.save(customerMapper.map(dto));
+        } else {
+            Customer customer = customerMapper.map(dto);
+            customer.setRegistrationDate(LocalDate.now());
+            customer.setActive(true);
+            customerRepository.save(customer);
+            // TODO: 10/26/20  createNewRole("Administrator");
+        }
     }
 }
