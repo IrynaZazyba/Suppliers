@@ -1,5 +1,4 @@
 --liquibase formatted sql
---changeset iryna_zazybo:IN-CSA-1 splitStatements:true endDelimiter:;
 insert into customer (id, name, registration_date, status) values (3, 'SystemCompany', '2020-10-19', 'active');
 insert into zone (id, location) values (3, 'NY');
 insert into address (id, state, city, address_line_1, address_line_2, zone_id ) values (3, 'USA', 'NY','Lexington Avenue', 'Slobodskaya str.', 3);
