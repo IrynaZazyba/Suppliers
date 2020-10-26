@@ -3,7 +3,6 @@ package by.itech.lab.supplier.controller;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 
 @RestController
 @AllArgsConstructor
-//@Secured(value = "ROLE_SYSTEM_ADMIN")
+@Secured(value = "ROLE_SYSTEM_ADMIN")
 @RequestMapping(URL_CUSTOMER)
 public class CustomerController {
 
@@ -31,7 +32,7 @@ public class CustomerController {
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
             @RequestParam(required = false) final String status) {
         Page<CustomerDto> allCustomers;
-        if (ObjectUtils.anyNull(status)) {
+        if (Objects.isNull(status)) {
             allCustomers = customerService.getAllCustomers(pageable);
         } else {
             allCustomers = customerService.getCustomersFilteredByStatus(pageable, status);
@@ -44,3 +45,4 @@ public class CustomerController {
         return customerService.getCustomer(customerId);
     }
 }
+

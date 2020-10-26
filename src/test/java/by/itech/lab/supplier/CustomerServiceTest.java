@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
@@ -28,19 +30,29 @@ import java.util.Optional;
 @ExtendWith(SpringExtension.class)
 public class CustomerServiceTest {
 
-//    @Autowired
-//    private CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
-    @MockBean
+    @Autowired
     private CustomerRepository customerRepository;
 
-    @MockBean
+    @Autowired
     private CustomerMapper customerMapper;
 
+    @TestConfiguration
+    static class Config {
 
-    @Bean
-    public CustomerService customerService() {
-        return new DefaultCustomerService(customerRepository, customerMapper);
+        @MockBean
+        private CustomerRepository customerRepository;
+
+        @MockBean
+        private CustomerMapper customerMapper;
+
+        @Bean
+        public CustomerService customerService() {
+            return new DefaultCustomerService(customerRepository, customerMapper);
+        }
+
     }
 
     private Customer customer;
@@ -72,7 +84,7 @@ public class CustomerServiceTest {
         Page<Customer> customerPage = new PageImpl<>(customerList);
         Mockito.when(customerRepository.findAll(pageRequest)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
-        Assertions.assertEquals(customerDtoPage, customerService().getAllCustomers(pageRequest));
+        Assertions.assertEquals(customerDtoPage, customerService.getAllCustomers(pageRequest));
     }
 
     @Test
@@ -84,22 +96,22 @@ public class CustomerServiceTest {
         Page<Customer> customerPage = new PageImpl<>(customerList);
         Mockito.when(customerRepository.findAllByStatus(pageRequest, status)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
-        Assertions.assertEquals(customerDtoPage, customerService().getCustomersFilteredByStatus(pageRequest, status));
+        Assertions.assertEquals(customerDtoPage, customerService.getCustomersFilteredByStatus(pageRequest, status));
     }
 
     @Test
     void getCustomerTest_Positive() {
         Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.of(customer));
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
-        Assertions.assertEquals(customerDto, customerService().getCustomer(5L));
+        Assertions.assertEquals(customerDto, customerService.getCustomer(5L));
     }
 
     @Test
     void getCustomerTest_Negative() {
         Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.empty());
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
-        Assertions.assertThrows(ResourceNotFoundException.class,()->customerService().getCustomer(5L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> customerService.getCustomer(5L));
     }
 
-
 }
+
