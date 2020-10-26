@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -38,7 +37,7 @@ public class CategoryController {
 
     @GetMapping
     public Page<CategoryDto> getAll(@PageableDefault(size = 10) Pageable pageable) {
-        return categoryService.readAll(pageable);
+        return categoryService.findAll(pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

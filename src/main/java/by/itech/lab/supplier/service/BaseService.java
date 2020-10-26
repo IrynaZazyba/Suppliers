@@ -4,12 +4,10 @@ import by.itech.lab.supplier.dto.BaseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
-public interface Service<Dto extends BaseDto> {
+public interface BaseService<Dto extends BaseDto> {
     Dto save(final Dto dto);
 
-    Page<Dto> readAll(Pageable pageable);
+    Page<Dto> findAll(Pageable pageable);
 
     Dto findById(final Long id);
 

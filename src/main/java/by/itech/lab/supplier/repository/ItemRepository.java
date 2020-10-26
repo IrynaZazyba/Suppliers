@@ -2,13 +2,14 @@ package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.CategoryDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,7 +17,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Optional<Item> findByLabel(final String label);
 
-    Optional<List<Item>> findByCategory(final CategoryDto categoryDto);
+    Page<Item> findAllByCategory(final CategoryDto categoryDto, final Pageable page);
 
     @Modifying
     @Query("update Item set active = false where id = :id")

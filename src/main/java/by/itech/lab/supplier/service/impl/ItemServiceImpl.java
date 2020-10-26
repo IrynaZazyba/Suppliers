@@ -13,9 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,15 +23,16 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemMapper itemMapper;
 
-   /* public List<ItemDto> findByCategory(final CategoryDto categoryDto) {
-        return itemRepository.findByCategory(categoryDto)
-          .stream()
-          .map(item -> {
-              return itemMapper.map(item);
-          })
-          .collect(Collectors.toList())
-          .orElseThrow(NotFoundInDBException::new);
-    }*/
+    @Override
+    public ItemDto findByLabel(final String label) {
+        return itemRepository.findByLabel(label)
+          .map(itemMapper::map).orElseThrow(NotFoundInDBException::new);
+    }
+
+    public Page<ItemDto> findAllByCategory(final CategoryDto categoryDto, final Pageable pageable) {
+        return itemRepository.findAllByCategory(categoryDto, pageable)
+          .map(itemMapper::map);
+    }
 
     public ItemDto save(final ItemDto dto) {
         Item item = Optional.ofNullable(dto.getId())
@@ -50,7 +49,7 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.map(saved);
     }
 
-    public Page<ItemDto> readAll(final Pageable pageable) {
+    public Page<ItemDto> findAll(final Pageable pageable) {
         return itemRepository.findAll(pageable).map(itemMapper::map);
     }
 

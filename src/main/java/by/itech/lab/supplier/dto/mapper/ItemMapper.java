@@ -4,8 +4,6 @@ import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.ItemDto;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class ItemMapper implements BaseMapper<Item, ItemDto> {
 

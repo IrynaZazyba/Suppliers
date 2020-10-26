@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.map(saved);
     }
 
-    public Page<CategoryDto> readAll(final Pageable pageable) {
+    public Page<CategoryDto> findAll(final Pageable pageable) {
         return categoryRepository.findAll(pageable).map(categoryMapper::map);
     }
 
