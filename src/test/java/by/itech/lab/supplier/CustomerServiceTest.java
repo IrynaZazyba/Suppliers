@@ -82,27 +82,31 @@ public class CustomerServiceTest {
         List<CustomerDto> customerDtos = Collections.singletonList(customerDto);
         Page<CustomerDto> customerDtoPage = new PageImpl<>(customerDtos);
         Page<Customer> customerPage = new PageImpl<>(customerList);
-        Mockito.when(customerRepository.findAll(pageRequest)).thenReturn(customerPage);
+
+        Mockito.when(customerRepository.findByStatus(pageRequest,null)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
-        Assertions.assertEquals(customerDtoPage, customerService.getAllCustomers(pageRequest));
+
+        Assertions.assertEquals(customerDtoPage, customerService.getCustomers(pageRequest,null));
     }
 
     @Test
     void getCustomersFilteredByStatusTest() {
-        boolean status = true;
         List<Customer> customerList = Collections.singletonList(customer);
         List<CustomerDto> customerDtos = Collections.singletonList(customerDto);
         Page<CustomerDto> customerDtoPage = new PageImpl<>(customerDtos);
         Page<Customer> customerPage = new PageImpl<>(customerList);
-        Mockito.when(customerRepository.findByStatus(pageRequest, status)).thenReturn(customerPage);
+
+        Mockito.when(customerRepository.findByStatus(pageRequest, true)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
-        Assertions.assertEquals(customerDtoPage, customerService.getCustomersFilteredByStatus(pageRequest, status));
+
+        Assertions.assertEquals(customerDtoPage, customerService.getCustomers(pageRequest, true));
     }
 
     @Test
     void getCustomerTest_Positive() {
         Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.of(customer));
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
+
         Assertions.assertEquals(customerDto, customerService.getCustomer(5L));
     }
 
@@ -110,6 +114,7 @@ public class CustomerServiceTest {
     void getCustomerTest_Negative() {
         Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.empty());
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
+
         Assertions.assertThrows(ResourceNotFoundException.class, () -> customerService.getCustomer(5L));
     }
 

@@ -18,12 +18,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public Page<CustomerDto> getAllCustomers(final Pageable pageable) {
-        return customerRepository.findAll(pageable).map(customerMapper::mapToCustomerView);
-    }
-
-    @Override
-    public Page<CustomerDto> getCustomersFilteredByStatus(final Pageable pageable, final Boolean status) {
+    public Page<CustomerDto> getCustomers(final Pageable pageable, final Boolean status) {
         return customerRepository.findByStatus(pageable, status).map(customerMapper::mapToCustomerView);
     }
 

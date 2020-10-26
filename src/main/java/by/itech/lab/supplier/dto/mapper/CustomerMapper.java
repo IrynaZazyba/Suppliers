@@ -8,9 +8,12 @@ import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.util.EnumSet;
 
 @Component
 public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
+
+    private EnumSet<Role> ADMIN_ROLES = EnumSet.of(Role.ROLE_ADMIN, Role.ROLE_SYSTEM_ADMIN);
 
     @Override
     public Customer map(CustomerDto dto) {
@@ -35,7 +38,7 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
     public CustomerDto mapToCustomerView(Customer entity) {
         User admin = entity.getUsers()
                 .stream()
-                .filter(customer -> Role.ROLE_ADMIN == customer.getRole() || Role.ROLE_SYSTEM_ADMIN == customer.getRole())
+                .filter(customer -> ADMIN_ROLES.contains(customer.getRole()))
                 .findAny()
                 .orElseThrow(() -> new ResourceNotFoundException(Role.ROLE_ADMIN.getRole() + " doesn't exist at current customer"));
         CustomerDto customerDto = map(entity);

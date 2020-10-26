@@ -29,7 +29,7 @@ public class Customer implements BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(name = "registration_date", nullable = false)
+    @Column(nullable = false)
     private Date registrationDate;
     @Column(nullable = false)
     private boolean status;

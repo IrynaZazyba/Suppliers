@@ -6,9 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomerService {
 
-    Page<CustomerDto> getAllCustomers(Pageable pageable);
-
-    Page<CustomerDto> getCustomersFilteredByStatus(Pageable pageable, Boolean status);
+    Page<CustomerDto> getCustomers(Pageable pageable, Boolean status);
 
     CustomerDto getCustomer(Long customerId);
 }

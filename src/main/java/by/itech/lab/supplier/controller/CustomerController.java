@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
-
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 
@@ -30,14 +28,8 @@ public class CustomerController {
     @GetMapping
     public Page<CustomerDto> getCustomers(
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
-            @RequestParam(required = false) final String status) {
-        Page<CustomerDto> allCustomers;
-        if (Objects.isNull(status)) {
-            allCustomers = customerService.getAllCustomers(pageable);
-        } else {
-            allCustomers = customerService.getCustomersFilteredByStatus(pageable, Boolean.valueOf(status));
-        }
-        return allCustomers;
+            @RequestParam(required = false) final Boolean status) {
+        return customerService.getCustomers(pageable, status);
     }
 
     @GetMapping(URL_CUSTOMER_ID)
