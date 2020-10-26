@@ -6,7 +6,7 @@ import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
-import by.itech.lab.supplier.service.impl.DefaultCustomerService;
+import by.itech.lab.supplier.service.impl.CustomerServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +50,7 @@ public class CustomerServiceTest {
 
         @Bean
         public CustomerService customerService() {
-            return new DefaultCustomerService(customerRepository, customerMapper);
+            return new CustomerServiceImpl(customerRepository, customerMapper);
         }
 
     }
