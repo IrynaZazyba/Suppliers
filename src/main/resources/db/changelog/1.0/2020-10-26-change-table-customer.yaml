@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: CH-CUST-1
+      author: iryna_zazybo
+      changes:
+        - modifyDataType:
+            columnName: status
+            newDataType: boolean
+            tableName: customer
+
