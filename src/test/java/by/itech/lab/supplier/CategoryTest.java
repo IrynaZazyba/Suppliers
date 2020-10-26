@@ -1,7 +1,7 @@
 package by.itech.lab.supplier;
 
 import by.itech.lab.supplier.dto.CategoryDto;
-import by.itech.lab.supplier.service.impl.CategoryService;
+import by.itech.lab.supplier.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CategoryTest {
 
     @Autowired
-    CategoryService service;
+    CategoryServiceImpl service;
 
     @Test
     void checkAddingCategory() {

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class DefaultItemService implements ItemService {
+public class ItemServiceImpl implements ItemService {
 }

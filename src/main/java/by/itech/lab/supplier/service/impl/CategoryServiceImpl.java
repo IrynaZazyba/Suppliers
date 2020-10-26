@@ -5,6 +5,7 @@ import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.mapper.CategoryMapper;
 import by.itech.lab.supplier.exception.NotFoundInDBException;
 import by.itech.lab.supplier.repository.CategoryRepository;
+import by.itech.lab.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
