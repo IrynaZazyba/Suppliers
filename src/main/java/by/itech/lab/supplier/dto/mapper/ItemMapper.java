@@ -2,10 +2,15 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.ItemDto;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+@Component
 public class ItemMapper implements BaseMapper<Item, ItemDto> {
+
     @Override
-    public Item map(ItemDto dto) {
+    public Item map(final ItemDto dto) {
         return Item.builder()
           .id(dto.getId())
           .upc(dto.getUpc())
@@ -17,7 +22,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
     }
 
     @Override
-    public ItemDto map(Item entity) {
+    public ItemDto map(final Item entity) {
         return ItemDto.builder()
           .id(entity.getId())
           .upc(entity.getUpc())

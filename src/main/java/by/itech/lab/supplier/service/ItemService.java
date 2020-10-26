@@ -1,4 +1,6 @@
 package by.itech.lab.supplier.service;
 
-public interface ItemService {
+import by.itech.lab.supplier.dto.ItemDto;
+
+public interface ItemService extends Service<ItemDto> {
 }

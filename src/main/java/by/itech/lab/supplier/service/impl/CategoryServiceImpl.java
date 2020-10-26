@@ -7,12 +7,12 @@ import by.itech.lab.supplier.exception.NotFoundInDBException;
 import by.itech.lab.supplier.repository.CategoryRepository;
 import by.itech.lab.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -42,9 +42,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.map(saved);
     }
 
-    public List<CategoryDto> readAll() {
-        return categoryRepository.findAll().stream()
-          .map(categoryMapper::map).collect(Collectors.toList());
+    public Page<CategoryDto> readAll(final Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(categoryMapper::map);
     }
 
     public CategoryDto findById(final Long id) {

@@ -5,6 +5,9 @@ import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,36 +32,35 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDto> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<CategoryDto> save(@Valid @RequestBody CategoryDto categoryDto) {
         return new ResponseEntity<>(categoryService.save(categoryDto), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<CategoryDto> getAllCategories() {
-        return categoryService.readAll();
+    public Page<CategoryDto> getAll(@PageableDefault(size = 10) Pageable pageable) {
+        return categoryService.readAll(pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
-    public CategoryDto getCategoryById(@PathVariable Long id) {
+    public CategoryDto getById(@PathVariable Long id) {
         return categoryService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY)
-    public CategoryDto getCategoryByName(@PathVariable String category) {
+    @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
+    public CategoryDto getByName(@PathVariable String category) {
         return categoryService.findByCategory(category);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activateCategory(@PathVariable Long id) {
+    public void activate(@PathVariable Long id) {
         categoryService.activate(id);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         categoryService.delete(id);
     }
-
 
 }
