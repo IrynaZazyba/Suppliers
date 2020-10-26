@@ -15,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "customer")
+@Table()
 public class Customer implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class Customer implements BaseEntity {
     private String name;
     @Column(nullable = false)
     private LocalDate registrationDate;
-    @Column(name = "active", nullable = false)
-    private boolean active;
+    @Column(nullable = false)
+    private boolean status;
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")

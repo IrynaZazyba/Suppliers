@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class CustomerServiceImp implements CustomerService {
+public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
@@ -26,7 +26,7 @@ public class CustomerServiceImp implements CustomerService {
         } else {
             Customer customer = customerMapper.map(dto);
             customer.setRegistrationDate(LocalDate.now());
-            customer.setActive(true);
+            customer.setStatus(true);
             customerRepository.save(customer);
             // TODO: 10/26/20  createNewRole("Administrator");
         }

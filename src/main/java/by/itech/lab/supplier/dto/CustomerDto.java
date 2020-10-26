@@ -12,5 +12,5 @@ public class CustomerDto implements BaseDto {
     private Long id;
     private String name;
     private LocalDate registrationDate;
-    private boolean active;
+    private boolean status;
 }
