@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -33,12 +33,9 @@ public class UserController {
 
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
-    public UserDto getUser(@PathVariable Long id) {
+    public Optional<UserDto> getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
-        if (userService.getUserWithAuthoritiesById(id).isPresent()) {
-            return userService.getUserWithAuthoritiesById(id).get();
-        } else throw new RuntimeException("problem while retrieving user");
-
+       return userService.getUserWithAuthoritiesById(id);
     }
 
     @GetMapping
@@ -75,4 +72,5 @@ public class UserController {
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
+
 }

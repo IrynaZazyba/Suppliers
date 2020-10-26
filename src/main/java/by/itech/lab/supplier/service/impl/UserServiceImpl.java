@@ -1,6 +1,8 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Category;
 import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
@@ -40,24 +42,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto saveUser(UserDto userDTO) {
-        if (userRepository.existsByUsername(userDTO.getUsername())) {
-            throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
-        }
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
-        }
+        User user;
         if (Objects.isNull(userDTO.getId())) {
-            User user = userRepository.save(userMapper.map(userDTO));
-            return userMapper.map(user);
+            user = userMapper.map(userDTO);
+        } else {
+            user = userMapper.mapUserWithId(userDTO);
         }
-        return Optional.of(userRepository.findById(userDTO.getId()))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(user -> {
-                    userRepository.save(userMapper.map(userDTO));
-                    return user;
-                })
-                .map(userMapper::map).get();
+        return userMapper.map(userRepository.save(user));
     }
 
     @Override

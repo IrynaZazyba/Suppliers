@@ -1,6 +1,8 @@
 package by.itech.lab.supplier.dto.mapper;
 
+import by.itech.lab.supplier.domain.Category;
 import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.UserDto;
 import org.springframework.stereotype.Component;
 
@@ -45,10 +47,14 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public User map(UserDto userDTO) {
-        return User.builder()
-                .id(userDTO.getId())
+    public User mapUserWithId(final UserDto userDTO) {
+        User user = fillCategory(userDTO);
+        user.setId(user.getId());
+        return user;
+    }
+
+    private User fillCategory(final UserDto userDTO) {
+        User user = User.builder()
                 .username(userDTO.getUsername())
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
@@ -63,5 +69,11 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .address(userDTO.getAddress())
                 .customer(userDTO.getCustomer())
                 .build();
+        return user;
+    }
+
+    @Override
+    public User map(UserDto userDTO) {
+        return fillCategory(userDTO);
     }
 }
