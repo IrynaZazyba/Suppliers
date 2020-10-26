@@ -1,199 +1,79 @@
 package by.itech.lab.supplier.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
-@Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
-public class User {
-
-    private Long id;
-    private String name;
-    private String surname;
-    private Date birthday;
-    private String username;
-    private String password;
-    private String email;
-    private Role role;
-    private Address address;
-    private Customer customer;
-    private Warehouse warehouse;
-    private Set<WayBill> creatorWayBills = new HashSet<>();
-    private Set<WayBill> updatorWayBills = new HashSet<>();
-    private Set<WayBill> driverWayBills = new HashSet<>();
-    private Set<Application> creatorApplications = new HashSet<>();
-    private Set<Application> updatorApplications = new HashSet<>();
-    private boolean active;
-
+@Builder
+@Entity
+@Table(name = "`user`")
+public class User implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
+    private Long id;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String name;
 
-    @Column(name = "name", nullable = false)
-    public String getName() {
-        return name;
-    }
+    private String surname;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private LocalDate birthday;
 
-    @Column(name = "surname", nullable = false)
-    public String getSurname() {
-        return surname;
-    }
+    private String username;
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+    private String password;
 
-    @Column(name = "birthday")
-    public Date getBirthday() {
-        return birthday;
-    }
+    private String email;
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
+    private String activationKey;
 
-    @Column(name = "username", nullable = false, unique = true)
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    @Column(name = "password", nullable = false)
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Column(name = "email", nullable = false, unique = true)
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    public Role getRole() {
-        return role;
-    }
+    private Role role;
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
-    public Address getAddress() {
-        return address;
-    }
+    private Address address;
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    public Customer getCustomer() {
-        return customer;
-    }
+    private Customer customer;
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
-    public Warehouse getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
+    private Warehouse warehouse;
 
     @OneToMany(mappedBy = "createdByUsers")
-    public Set<WayBill> getCreatorWayBills() {
-        return creatorWayBills;
-    }
-
-    public void setCreatorWayBills(Set<WayBill> creatorWayBills) {
-        this.creatorWayBills = creatorWayBills;
-    }
+    private Set<WayBill> creatorWayBills = new HashSet<>();
 
     @OneToMany(mappedBy = "updatedByUsers")
-    public Set<WayBill> getUpdatorWayBills() {
-        return updatorWayBills;
-    }
-
-    public void setUpdatorWayBills(Set<WayBill> updatorWayBills) {
-        this.updatorWayBills = updatorWayBills;
-    }
+    private Set<WayBill> updatorWayBills = new HashSet<>();
 
     @OneToMany(mappedBy = "driver")
-    public Set<WayBill> getDriverWayBills() {
-        return driverWayBills;
-    }
-
-    public void setDriverWayBills(Set<WayBill> driverWayBills) {
-        this.driverWayBills = driverWayBills;
-    }
-
+    private Set<WayBill> driverWayBills = new HashSet<>();
 
     @OneToMany(mappedBy = "createdByUsers")
-    public Set<Application> getCreatorApplications() {
-        return creatorApplications;
-    }
-
-    public void setCreatorApplications(Set<Application> creatorApplications) {
-        this.creatorApplications = creatorApplications;
-    }
+    private Set<Application> creatorApplications = new HashSet<>();
 
     @OneToMany(mappedBy = "lastUpdatedByUsers")
-    public Set<Application> getUpdatorApplications() {
-        return updatorApplications;
-    }
-
-    public void setUpdatorApplications(Set<Application> updatorApplications) {
-        this.updatorApplications = updatorApplications;
-    }
-
-    @Column(name = "is_active", nullable = false)
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
+    private Set<Application> updatorApplications = new HashSet<>();
+    private boolean active;
 }

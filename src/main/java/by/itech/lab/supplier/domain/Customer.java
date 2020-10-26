@@ -28,7 +28,5 @@ public class Customer implements BaseEntity {
     private boolean status;
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
-    @OneToMany(mappedBy = "customer")
-    private Set<User> users = new HashSet<>();
 
 }

@@ -58,7 +58,7 @@ public class Tax {
     }
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "zone_id")
     public Zone getZone() {
         return zone;
     }
@@ -66,5 +66,4 @@ public class Tax {
     public void setZone(Zone zone) {
         this.zone = zone;
     }
-
 }
