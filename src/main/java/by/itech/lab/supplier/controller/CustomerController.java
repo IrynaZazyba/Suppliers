@@ -35,7 +35,7 @@ public class CustomerController {
         if (Objects.isNull(status)) {
             allCustomers = customerService.getAllCustomers(pageable);
         } else {
-            allCustomers = customerService.getCustomersFilteredByStatus(pageable, status);
+            allCustomers = customerService.getCustomersFilteredByStatus(pageable, Boolean.valueOf(status));
         }
         return allCustomers;
     }

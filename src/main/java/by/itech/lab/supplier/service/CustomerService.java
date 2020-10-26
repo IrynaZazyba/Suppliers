@@ -8,8 +8,10 @@ public interface CustomerService {
 
     Page<CustomerDto> getAllCustomers(Pageable pageable);
 
-    Page<CustomerDto> getCustomersFilteredByStatus(Pageable pageable, String status);
+    Page<CustomerDto> getCustomersFilteredByStatus(Pageable pageable, Boolean status);
 
     CustomerDto getCustomer(Long customerId);
 }
+
+
 

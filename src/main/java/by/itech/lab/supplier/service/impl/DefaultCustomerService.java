@@ -23,8 +23,8 @@ public class DefaultCustomerService implements CustomerService {
     }
 
     @Override
-    public Page<CustomerDto> getCustomersFilteredByStatus(final Pageable pageable, final String status) {
-        return customerRepository.findAllByStatus(pageable, status).map(customerMapper::mapToCustomerView);
+    public Page<CustomerDto> getCustomersFilteredByStatus(final Pageable pageable, final Boolean status) {
+        return customerRepository.findByStatus(pageable, status).map(customerMapper::mapToCustomerView);
     }
 
     @Override

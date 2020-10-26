@@ -9,7 +9,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Page<Customer> findAll(Pageable pageable);
 
-    Page<Customer> findAllByStatus(Pageable pageable, String status);
+    Page<Customer> findByStatus(Pageable pageable, Boolean status);
 
 }
+
 

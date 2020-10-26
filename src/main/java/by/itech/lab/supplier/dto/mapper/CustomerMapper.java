@@ -18,7 +18,7 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
                 .id(dto.getId())
                 .name(dto.getName())
                 .registrationDate(Date.valueOf(dto.getRegistrationDate()))
-                .status(dto.getStatus())
+                .status(dto.isStatus())
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
                 .id(entity.getId())
                 .name(entity.getName())
                 .registrationDate(entity.getRegistrationDate().toLocalDate())
-                .status(entity.getStatus())
+                .status(entity.isStatus())
                 .build();
     }
 

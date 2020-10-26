@@ -65,13 +65,13 @@ public class CustomerServiceTest {
                 .id(5L)
                 .name("System")
                 .registrationDate(Date.valueOf(LocalDate.now()))
-                .status("active")
+                .status(true)
                 .build();
         customerDto = CustomerDto.builder()
                 .id(5L)
                 .name("System")
                 .registrationDate(LocalDate.now())
-                .status("active")
+                .status(true)
                 .build();
         pageRequest = PageRequest.of(1, 10);
     }
@@ -89,12 +89,12 @@ public class CustomerServiceTest {
 
     @Test
     void getCustomersFilteredByStatusTest() {
-        String status = "active";
+        boolean status = true;
         List<Customer> customerList = Collections.singletonList(customer);
         List<CustomerDto> customerDtos = Collections.singletonList(customerDto);
         Page<CustomerDto> customerDtoPage = new PageImpl<>(customerDtos);
         Page<Customer> customerPage = new PageImpl<>(customerList);
-        Mockito.when(customerRepository.findAllByStatus(pageRequest, status)).thenReturn(customerPage);
+        Mockito.when(customerRepository.findByStatus(pageRequest, status)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
         Assertions.assertEquals(customerDtoPage, customerService.getCustomersFilteredByStatus(pageRequest, status));
     }
