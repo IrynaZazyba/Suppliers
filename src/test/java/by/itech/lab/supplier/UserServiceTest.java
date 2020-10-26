@@ -81,7 +81,7 @@ public class UserServiceTest {
     public void testGetUserWithAuthoritiesById() {
         when(userRepository.findOneWithRolesById(1L)).thenReturn(Optional.of(user));
         when(userMapper.map(user)).thenReturn(userDto);
-        assertEquals(Optional.of(userDto), userService.getUserWithAuthoritiesById(1L));
+        assertEquals(Optional.of(userDto), userService.findById(1L));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class UserServiceTest {
         when(userMapper.map(userDto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.map(user)).thenReturn(userDto);
-        assertEquals(userDto, userService.saveUser(userDto));
+        assertEquals(userDto, userService.save(userDto));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class UserServiceTest {
         when(userMapper.map(userDto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.map(user)).thenReturn(userDto);
-        assertEquals(Optional.of(userDto), userService.saveUser(userDto));
+        assertEquals(userDto, userService.save(userDto));
     }
 
 }

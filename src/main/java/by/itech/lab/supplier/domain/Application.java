@@ -16,8 +16,6 @@ import java.sql.Date;
 @Table(name = "application")
 public class Application {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String number;
     private Date registrationDate;
@@ -28,7 +26,8 @@ public class Application {
     private ApplicationStatus applicationStatus;
     private WayBill wayBill;
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }

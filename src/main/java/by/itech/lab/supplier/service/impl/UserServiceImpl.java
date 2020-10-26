@@ -28,11 +28,11 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public Optional<UserDto> getUserWithAuthoritiesById(Long id) {
+    public Optional<UserDto> findById(Long id) {
         return userRepository.findOneWithRolesById(id).map(userMapper::map);
     }
 
-    public Page<UserDto> getAll(Pageable pageable) {
+    public Page<UserDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::map);
     }
 
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto saveUser(UserDto userDTO) {
+    public UserDto save(UserDto userDTO) {
         User user;
         if (Objects.isNull(userDTO.getId())) {
             user = userMapper.map(userDTO);
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         userRepository.deleteById(id);
     }
 

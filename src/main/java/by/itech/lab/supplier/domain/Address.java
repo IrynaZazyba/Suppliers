@@ -31,9 +31,9 @@ public class Address {
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "address")
     private Set<Car> cars = new HashSet<>();
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "sourceLocationAddress")
     private Set<WayBill> wayBills = new HashSet<>();
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "destinationLocationAddress")
     private Set<Application> applications = new HashSet<>();
 
 }

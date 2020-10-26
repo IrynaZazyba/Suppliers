@@ -35,12 +35,12 @@ public class UserController {
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public Optional<UserDto> getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
-       return userService.getUserWithAuthoritiesById(id);
+       return userService.findById(id);
     }
 
     @GetMapping
     public Page<UserDto> getAllUsers(@PageableDefault Pageable pageable) {
-        return userService.getAll(pageable);
+        return userService.findAll(pageable);
     }
 
     @GetMapping(ApiConstants.URL_FILTERED)
@@ -51,7 +51,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-        return userService.saveUser(userDto);
+        return userService.save(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -64,13 +64,13 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
-        return userService.saveUser(userDTO);
+        return userService.save(userDTO);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+        userService.delete(id);
     }
 
 }

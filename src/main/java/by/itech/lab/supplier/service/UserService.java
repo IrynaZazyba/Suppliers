@@ -13,13 +13,13 @@ import java.util.Optional;
 @Service
 public interface UserService {
 
-    Optional<UserDto> getUserWithAuthoritiesById(Long id);
+    Optional<UserDto> findById(Long id);
 
-    Page<UserDto> getAll(Pageable pageable);
+    Page<UserDto> findAll(Pageable pageable);
 
-    UserDto saveUser(UserDto userDTO);
+    UserDto save(UserDto userDTO);
 
-    void deleteUser(Long id);
+    void delete(Long id);
 
     boolean changeActiveStatus(Long id, boolean status);
 
