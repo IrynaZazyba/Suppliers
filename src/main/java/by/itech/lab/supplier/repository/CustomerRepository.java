@@ -12,5 +12,3 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Page<Customer> findByStatus(Pageable pageable, Boolean status);
 
 }
-
-
