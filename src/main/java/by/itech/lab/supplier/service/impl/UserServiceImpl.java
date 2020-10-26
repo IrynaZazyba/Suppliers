@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 @Service
@@ -37,17 +38,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDTO) {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
+        }
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
+        }
         User user = userRepository.save(userMapper.map(userDTO));
         return userMapper.map(user);
     }
 
     @Override
     public Optional<UserDto> updateUser(UserDto userDTO) {
+        if (!userRepository.existsById(userDTO.getId())) {
+            throw new RuntimeException("user is not exist");
+        }
+        if (userRepository.existsByUsernameIsAndIdNot(userDTO.getUsername(), userDTO.getId())) {
+            throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
+        }
+        if (userRepository.existsByEmailIsAndIdNot(userDTO.getEmail(), userDTO.getId())) {
+            throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
+        }
         return Optional.of(userRepository.findById(userDTO.getId()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(user -> {
-                    userRepository.save( userMapper.map(userDTO));
+                    userRepository.save(userMapper.map(userDTO));
                     return user;
                 })
                 .map(userMapper::map);
@@ -66,6 +82,4 @@ public class UserServiceImpl implements UserService {
         userRepository.flush();
         return true;
     }
-
-
 }

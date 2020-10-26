@@ -1,86 +1,103 @@
 package by.itech.lab.supplier;
 
+import by.itech.lab.supplier.domain.Address;
+import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
-import by.itech.lab.supplier.service.UserService;
+import by.itech.lab.supplier.service.impl.UserServiceImpl;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.auditing.AuditingHandler;
 import org.springframework.data.auditing.DateTimeProvider;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
-
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = SupplierApplication.class)
 @Transactional
 public class UserServiceTest {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserService userService;
-
-
-
-
+    private static final String USERNAME = "johndoe";
+    private static final String EMAIL = "johndoe@localhost";
     @Mock
     DateTimeProvider dateTimeProvider;
-
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private UserMapper userMapper;
+    @InjectMocks
+    private UserServiceImpl userService;
+    private UserDto userDto;
     private User user;
 
     @Before
     public void init() {
+        MockitoAnnotations.initMocks(this);
+        userService = new UserServiceImpl(userRepository, userMapper);
+        Address address = new Address();
+        address.setAddressLine1("address1");
+        address.setAddressLine2("address2");
+        Customer customer = new Customer();
+        customer.setName("dwwad");
+        customer.setStatus("active");
+        customer.setRegistrationDate(new Date(2000, 8, 27));
+        userDto = new UserDto();
+        userDto.setUsername(USERNAME);
+        userDto.setPassword(RandomStringUtils.random(60));
+        userDto.setActive(true);
+        userDto.setEmail(EMAIL);
+        userDto.setName("john");
+        userDto.setRole(Role.ROLE_ADMIN);
+        userDto.setSurname("doe");
+        userDto.setAddress(address);
+        userDto.setBirthday(LocalDate.of(1999, 11, 15));
+        userDto.setCustomer(customer);
         user = new User();
-        user.setUsername("johndoe");
+        user.setUsername(USERNAME);
         user.setPassword(RandomStringUtils.random(60));
         user.setActive(true);
-        user.setEmail("johndoe@localhost");
+        user.setEmail(EMAIL);
         user.setName("john");
         user.setRole(Role.ROLE_ADMIN);
         user.setSurname("doe");
-      //  user.setBirthday(new LoDate(34353));
-
-        when(dateTimeProvider.getNow()).thenReturn(Optional.of(LocalDateTime.now()));
+        user.setAddress(address);
+        user.setBirthday(LocalDate.of(1999, 11, 15));
+        user.setCustomer(customer);
 
     }
-
-
 
     @Test
-    @Transactional
-    public void testRemoveNotActivatedUsers() {
-          when(dateTimeProvider.getNow()).thenReturn(Optional.of(Instant.now().minus(30, ChronoUnit.DAYS)));
-
-        user.setActive(false);
-        Optional<User> user=userRepository.findOneByEmailIgnoreCase("johndoe");
-//        userRepository.save(user);
-//
-//        assertThat(userRepository.findOneByUsername("johndoe")).isPresent();
-//        userService.deleteUser("johndoe");
-//        assertThat(userRepository.findOneByUsername("johndoe")).isNotPresent();
-
+    public void testGetUserWithAuthoritiesById() {
+        when(userRepository.findOneWithRolesById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.map(user)).thenReturn(userDto);
+        assertEquals(Optional.of(userDto), userService.getUserWithAuthoritiesById(1L));
     }
 
+    @Test
+    public void testCreateUser() {
+        when(userMapper.map(userDto)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
+        when(userMapper.map(user)).thenReturn(userDto);
+        assertEquals(userDto, userService.createUser(userDto));
+    }
+
+    @Test
+    public void testUpdateUser() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.map(userDto)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
+        when(userMapper.map(user)).thenReturn(userDto);
+        assertEquals(Optional.of(userDto), userService.updateUser(userDto));
+    }
 }
