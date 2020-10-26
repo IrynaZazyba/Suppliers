@@ -12,3 +12,4 @@ public interface CustomerService {
 
     CustomerDto getCustomer(Long customerId);
 }
+
