@@ -89,7 +89,7 @@ public class UserServiceTest {
         when(userMapper.map(userDto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.map(user)).thenReturn(userDto);
-        assertEquals(userDto, userService.createUser(userDto));
+        assertEquals(userDto, userService.saveUser(userDto));
     }
 
     @Test
@@ -98,6 +98,7 @@ public class UserServiceTest {
         when(userMapper.map(userDto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
         when(userMapper.map(user)).thenReturn(userDto);
-        assertEquals(Optional.of(userDto), userService.updateUser(userDto));
+        assertEquals(Optional.of(userDto), userService.saveUser(userDto));
     }
+
 }

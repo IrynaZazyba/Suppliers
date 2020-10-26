@@ -17,11 +17,10 @@ public interface UserService {
 
     Page<UserDto> getAll(Pageable pageable);
 
-    UserDto createUser(UserDto userDTO);
-
-    Optional<UserDto> updateUser(UserDto userDTO);
+    UserDto saveUser(UserDto userDTO);
 
     void deleteUser(Long id);
 
-    public Optional<UserDto> changeActiveStatus(Long id, boolean status);
+    boolean changeActiveStatus(Long id, boolean status);
+
 }

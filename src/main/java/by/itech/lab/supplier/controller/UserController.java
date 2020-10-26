@@ -30,39 +30,38 @@ import java.util.Optional;
 @RequestMapping(ApiConstants.URL_USER)
 public class UserController {
 
-    private final String URL_STATUS_PARAMETER = "/{status}";
-
     @Autowired
     private final UserService userService;
 
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
-        UserDto userDto = userService.getUserWithAuthoritiesById(id).get();
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return userService.getUserWithAuthoritiesById(id).get();
     }
 
     @GetMapping
-    public Page<UserDto> getAllUsers(@PageableDefault(size = 10) Pageable pageable) {
+    public Page<UserDto> getAllUsers(@PageableDefault Pageable pageable) {
         return userService.getAll(pageable);
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
-        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+        return userService.saveUser(userDto);
     }
 
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + URL_STATUS_PARAMETER)
-    public ResponseEntity<UserDto> changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
-        Optional<UserDto> userDto = userService.changeActiveStatus(id, status);
-        return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
+    public boolean changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
+        return userService.changeActiveStatus(id, status);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
-        return new ResponseEntity<>(userService.updateUser(userDTO).get(), HttpStatus.OK);
+        return userService.saveUser(userDTO);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)

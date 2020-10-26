@@ -1,10 +1,7 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
-import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.UserDto;
-import by.itech.lab.supplier.dto.mapper.CategoryMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
@@ -15,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,40 +35,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(UserDto userDTO) {
+    public UserDto saveUser(UserDto userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {
             throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
         }
         if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
         }
-        User user = userRepository.save(userMapper.map(userDTO));
-        return userMapper.map(user);
-    }
-
-    @Override
-    public Optional<UserDto> changeActiveStatus(Long id, boolean status) {
-        return Optional.of(userRepository.findById(id))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(user -> {
-                    user.setActive(status);
-                    userRepository.save(user);
-                    return user;
-                })
-                .map(userMapper::map);
-    }
-
-    @Override
-    public Optional<UserDto> updateUser(UserDto userDTO) {
-        if (!userRepository.existsById(userDTO.getId())) {
-            throw new RuntimeException("user is not exist");
-        }
-        if (userRepository.existsByUsernameIsAndIdNot(userDTO.getUsername(), userDTO.getId())) {
-            throw new RuntimeException("user with this username:" + userDTO.getUsername() + " already exist");
-        }
-        if (userRepository.existsByEmailIsAndIdNot(userDTO.getEmail(), userDTO.getId())) {
-            throw new RuntimeException("user with this email:" + userDTO.getEmail() + " already exist");
+        if (Objects.isNull(userDTO.getId())) {
+            User user = userRepository.save(userMapper.map(userDTO));
+            return userMapper.map(user);
         }
         return Optional.of(userRepository.findById(userDTO.getId()))
                 .filter(Optional::isPresent)
@@ -79,20 +53,19 @@ public class UserServiceImpl implements UserService {
                     userRepository.save(userMapper.map(userDTO));
                     return user;
                 })
-                .map(userMapper::map);
+                .map(userMapper::map).get();
     }
 
     @Override
+    @Transactional
+    public boolean changeActiveStatus(Long id, boolean status) {
+        return userRepository.setStatus(status, id);
+    }
+
+    @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-    public boolean removeNonActivatedUser(User existingUser) {
-        if (existingUser.isActive()) {
-            return false;
-        }
-        userRepository.delete(existingUser);
-        userRepository.flush();
-        return true;
-    }
 }
