@@ -23,4 +23,5 @@ public interface UserService {
 
     boolean changeActiveStatus(Long id, boolean status);
 
+    Page<UserDto> getAllActive(Pageable pageable);
 }

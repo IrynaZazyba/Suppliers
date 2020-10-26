@@ -34,6 +34,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable).map(userMapper::map);
     }
 
+    public Page<UserDto> getAllActive(Pageable pageable) {
+        return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
+    }
+
     @Override
     public UserDto saveUser(UserDto userDTO) {
         if (userRepository.existsByUsername(userDTO.getUsername())) {

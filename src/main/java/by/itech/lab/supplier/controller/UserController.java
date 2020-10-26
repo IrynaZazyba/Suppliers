@@ -46,6 +46,11 @@ public class UserController {
         return userService.getAll(pageable);
     }
 
+    @GetMapping(ApiConstants.URL_FILTERED)
+    public Page<UserDto> getAllEnabledUsers(@PageableDefault Pageable pageable) {
+        return userService.getAllActive(pageable);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {

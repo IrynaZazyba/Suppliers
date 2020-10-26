@@ -15,6 +15,7 @@ public interface ApiConstants {
     String URL_LOGOUT = "/logout";
     String URL_ROOT = "/";
     String URL_COMPANIES = "/companies";
+    String URL_FILTERED = "/companies";
     String URL_ID_PARAMETER = "/{id}";
     String URL_STATUS_PARAMETER = "/{status}";
 
