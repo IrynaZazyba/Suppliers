@@ -22,4 +22,6 @@ public interface UserService {
     Optional<UserDto> updateUser(UserDto userDTO);
 
     void deleteUser(Long id);
+
+    public Optional<UserDto> changeActiveStatus(Long id, boolean status);
 }

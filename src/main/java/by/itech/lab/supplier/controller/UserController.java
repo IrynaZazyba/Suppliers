@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @Slf4j
 @AllArgsConstructor
 @RequestMapping(ApiConstants.URL_USER)
 public class UserController {
+
+    private final String URL_STATUS_PARAMETER = "/{status}";
 
     @Autowired
     private final UserService userService;
@@ -48,6 +51,12 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
+    }
+
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + URL_STATUS_PARAMETER)
+    public ResponseEntity<UserDto> changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
+        Optional<UserDto> userDto = userService.changeActiveStatus(id, status);
+        return new ResponseEntity<>(userDto.get(), HttpStatus.OK);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)

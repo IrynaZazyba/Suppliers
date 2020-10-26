@@ -49,6 +49,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserDto> changeActiveStatus(Long id, boolean status) {
+        return Optional.of(userRepository.findById(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(user -> {
+                    user.setActive(status);
+                    userRepository.save(user);
+                    return user;
+                })
+                .map(userMapper::map);
+    }
+
+    @Override
     public Optional<UserDto> updateUser(UserDto userDTO) {
         if (!userRepository.existsById(userDTO.getId())) {
             throw new RuntimeException("user is not exist");
