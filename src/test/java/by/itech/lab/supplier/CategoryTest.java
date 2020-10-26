@@ -12,7 +12,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -38,7 +37,6 @@ public class CategoryTest {
         assertEquals(categoryToAct, categoriesAfterActions.get(1));
         assertFalse(categoriesAfterActions.get(2).isActive());
         assertTrue(categoriesAfterActions.get(3).isActive());
-        assertNull(categoriesAfterActions.get(4));
     }
 
     private List<CategoryDto> actionsWithCategory(
@@ -49,12 +47,10 @@ public class CategoryTest {
         Long id = results.get(0).getId();
         categoryDto.setId(id);
         results.add(1, service.findByCategory(categoryName));
-        service.delete(results.get(1));
+        service.delete(results.get(1).getId());
         results.add(2, service.findByCategory(categoryName));
-        service.activate(results.get(2));
+        service.activate(results.get(2).getId());
         results.add(3, service.findById(id));
-        service.deleteForever(results.get(3));
-        results.add(4, service.findById(id));
         return results;
     }
 
@@ -66,11 +62,11 @@ public class CategoryTest {
     private CategoryDto fillCategory(final String category,
                                      final BigDecimal taxRate,
                                      final boolean active) {
-        CategoryDto categoryToBeCreated = new CategoryDto();
-        categoryToBeCreated.setCategory(category);
-        categoryToBeCreated.setTaxRate(taxRate);
-        categoryToBeCreated.setActive(active);
-        return categoryToBeCreated;
+        return CategoryDto.builder()
+          .category(category)
+          .taxRate(taxRate)
+          .active(active)
+          .build();
     }
 
 
