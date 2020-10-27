@@ -20,7 +20,7 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
         return Customer.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .registrationDate(Date.valueOf(dto.getRegistrationDate()))
+                .registrationDate(dto.getRegistrationDate())
                 .status(dto.isStatus())
                 .build();
     }
@@ -30,7 +30,7 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
         return CustomerDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .registrationDate(entity.getRegistrationDate().toLocalDate())
+                .registrationDate(entity.getRegistrationDate())
                 .status(entity.isStatus())
                 .build();
     }
@@ -46,4 +46,3 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
         return customerDto;
     }
 }
-
