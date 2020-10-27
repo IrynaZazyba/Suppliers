@@ -5,7 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,38 +20,16 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "zone")
+@Table
 public class Zone {
-    private Long id;
-    private String location;
-    private Set<Tax> taxes = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "location", nullable = false)
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String category) {
-        this.location = category;
-    }
-
+    private Long id;
+    @Column(nullable = false)
+    private String zone;
     @OneToMany(mappedBy = "zone")
-    public Set<Tax> getTaxes() {
-        return taxes;
-    }
-
-    public void setTaxes(Set<Tax> taxes) {
-        this.taxes = taxes;
-    }
+    private Set<Tax> taxes = new HashSet<>();
 
 }
+
