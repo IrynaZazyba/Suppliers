@@ -1,8 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.domain.Category;
 import by.itech.lab.supplier.domain.User;
-import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
@@ -13,8 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,15 +36,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
     }
 
-    @Override
     public UserDto save(UserDto userDTO) {
-        User user;
-        if (Objects.isNull(userDTO.getId())) {
-            user = userMapper.map(userDTO);
-        } else {
-            user = userMapper.mapUserWithId(userDTO);
-        }
-        return userMapper.map(userRepository.save(user));
+        User user = Optional.ofNullable(userDTO.getId())
+                .map(item -> {
+                    final User existing = userRepository
+                            .findById(userDTO.getId())
+                            .orElseThrow();
+                    userMapper.update(userDTO, existing);
+                    return existing;
+                })
+                .orElseGet(() -> userMapper.map(userDTO));
+
+        final User saved = userRepository.save(user);
+        return userMapper.map(saved);
     }
 
     @Override

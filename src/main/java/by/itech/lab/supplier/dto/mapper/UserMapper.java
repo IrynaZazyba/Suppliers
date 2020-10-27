@@ -1,24 +1,11 @@
 package by.itech.lab.supplier.dto.mapper;
 
-import by.itech.lab.supplier.domain.Category;
 import by.itech.lab.supplier.domain.User;
-import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.UserDto;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 @Component
 public class UserMapper implements BaseMapper<User, UserDto> {
-
-    public List<UserDto> usersToUserDTOs(List<User> users) {
-        return users.stream()
-                .filter(Objects::nonNull)
-                .map(this::map)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public UserDto map(User user) {
@@ -40,21 +27,25 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .build();
     }
 
-    public List<User> userDTOsToUsers(List<UserDto> userDTOs) {
-        return userDTOs.stream()
-                .filter(Objects::nonNull)
-                .map(this::map)
-                .collect(Collectors.toList());
+    public void update(final UserDto from, final User to) {
+        to.setUsername(from.getUsername());
+        to.setName(from.getName());
+        to.setSurname(from.getSurname());
+        to.setEmail(from.getEmail());
+        to.setBirthday(from.getBirthday());
+        to.setActive(from.isActive());
+        to.setRole(from.getRole());
+        to.setCreatorApplications(from.getCreatorApplications());
+        to.setUpdatorApplications(from.getUpdatorApplications());
+        to.setCreatorWayBills(from.getCreatorWayBills());
+        to.setDriverWayBills(from.getDriverWayBills());
+        to.setAddress(from.getAddress());
+        to.setCustomer(from.getCustomer());
     }
 
-    public User mapUserWithId(final UserDto userDTO) {
-        User user = fillCategory(userDTO);
-        user.setId(user.getId());
-        return user;
-    }
-
-    private User fillCategory(final UserDto userDTO) {
-        User user = User.builder()
+    @Override
+    public User map(UserDto userDTO) {
+        return User.builder()
                 .username(userDTO.getUsername())
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
@@ -69,11 +60,6 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .address(userDTO.getAddress())
                 .customer(userDTO.getCustomer())
                 .build();
-        return user;
     }
 
-    @Override
-    public User map(UserDto userDTO) {
-        return fillCategory(userDTO);
-    }
 }

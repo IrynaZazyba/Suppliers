@@ -75,5 +75,7 @@ public class User implements BaseEntity {
 
     @OneToMany(mappedBy = "lastUpdatedByUsers")
     private Set<Application> updatorApplications = new HashSet<>();
+
     private boolean active;
+
 }

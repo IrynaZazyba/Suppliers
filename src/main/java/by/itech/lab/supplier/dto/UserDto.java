@@ -51,4 +51,5 @@ public class UserDto implements BaseDto {
     private Set<WayBill> driverWayBills = new HashSet<>();
     private Set<Application> creatorApplications = new HashSet<>();
     private Set<Application> updatorApplications = new HashSet<>();
+
 }
