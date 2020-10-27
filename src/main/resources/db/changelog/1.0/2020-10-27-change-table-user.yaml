@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-USER-1
+      author: alesia_hlushakova
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: active_for_deletion
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false

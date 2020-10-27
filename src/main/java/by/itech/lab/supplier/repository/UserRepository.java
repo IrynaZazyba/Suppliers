@@ -15,7 +15,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
-    void deleteById(Long id);
+    @Modifying
+    @Query("update User set activeForDeletion = false where id = :id")
+    void deleteById(@Param("id") Long id);
 
     @Modifying
     @Query("update User set active = :isActive where id = :id")

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -76,6 +77,9 @@ public class User implements BaseEntity {
     @OneToMany(mappedBy = "lastUpdatedByUsers")
     private Set<Application> updatorApplications = new HashSet<>();
 
+    @Column(name = "is_active")
     private boolean active;
+
+    private boolean activeForDeletion;
 
 }
