@@ -1,7 +1,9 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.CustomerDto;
+import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
@@ -9,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,9 +21,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final UserServiceImpl userService;
 
     @Override
-    public void saveOrEditCustomer(CustomerDto dto) {
+    public Customer saveOrEditCustomer(CustomerDto dto) {
         Optional<Customer> optionalCustomer = customerRepository.findById(dto.getId());
         if (optionalCustomer.isPresent()) {
             customerRepository.save(customerMapper.map(dto));
@@ -28,7 +33,30 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setRegistrationDate(LocalDate.now());
             customer.setStatus(true);
             customerRepository.save(customer);
-            // TODO: 10/26/20  createNewRole("Administrator");
+            userService.createUser(createAdmin());
         }
+        return customerMapper.map(dto);
+    }
+
+    @Override
+    public List<Customer> changeActiveStatus(List<CustomerDto> customerDtoList) {
+        List<Customer> customers = new ArrayList<>();
+        for (CustomerDto customer : customerDtoList) {
+            Customer customerFromDto = customerMapper.map(customer);
+            customerRepository.save(customerFromDto);
+            customers.add(customerFromDto);
+        }
+        return customers;
+    }
+
+    public UserDto createAdmin() {
+        return UserDto.builder()
+                .username("User name")
+                .name("Name")
+                .surname("Surname")
+                .email("email")
+                .active(false)
+                .role(Role.ROLE_ADMIN)
+                .build();
     }
 }
