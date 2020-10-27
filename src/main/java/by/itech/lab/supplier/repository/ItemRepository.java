@@ -19,6 +19,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Page<Item> findAllByCategory(final CategoryDto categoryDto, final Pageable page);
 
+    Page<Item> findAllByActive(final boolean active, final Pageable page);
+
     @Modifying
     @Query("update Item set active = false where id = :id")
     void delete(@Param("id") Long id);

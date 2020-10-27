@@ -27,6 +27,12 @@ public class CategoryServiceImpl implements CategoryService {
           .map(categoryMapper::map).orElseThrow(NotFoundInDBException::new);
     }
 
+    @Override
+    public Page<CategoryDto> findAllByActive(final boolean active, final Pageable pageable) {
+        return categoryRepository.findAllByActive(active, pageable)
+          .map(categoryMapper::map);
+    }
+
     public CategoryDto save(final CategoryDto dto) {
         Category category = Optional.ofNullable(dto.getId())
           .map(item -> {

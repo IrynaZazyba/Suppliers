@@ -34,6 +34,12 @@ public class ItemServiceImpl implements ItemService {
           .map(itemMapper::map);
     }
 
+    @Override
+    public Page<ItemDto> findAllByActive(final boolean active, final Pageable pageable) {
+        return itemRepository.findAllByActive(active, pageable)
+          .map(itemMapper::map);
+    }
+
     public ItemDto save(final ItemDto dto) {
         Item item = Optional.ofNullable(dto.getId())
           .map(itemToSave -> {
