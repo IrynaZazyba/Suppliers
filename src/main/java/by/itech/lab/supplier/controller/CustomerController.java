@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -45,8 +46,6 @@ public class CustomerController {
     public CustomerDto getCustomer(@PathVariable final Long customerId) {
         return customerService.getCustomer(customerId);
     }
-
-    private final CustomerService customerService;
 
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody CustomerDto dto) {
