@@ -36,3 +36,4 @@ databaseChangeLog:
             newDataType: varchar(150)
             tableName: user
 
+

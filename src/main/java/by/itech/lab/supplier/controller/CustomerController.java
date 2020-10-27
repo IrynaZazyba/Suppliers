@@ -10,13 +10,22 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+import java.util.List;
+
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @Secured(value = "ROLE_SYSTEM_ADMIN")
@@ -36,5 +45,18 @@ public class CustomerController {
     public CustomerDto getCustomer(@PathVariable final Long customerId) {
         return customerService.getCustomer(customerId);
     }
-}
 
+    private final CustomerService customerService;
+
+    @PostMapping
+    public ResponseEntity<Customer> createCustomer(@Valid @RequestBody CustomerDto dto) {
+        Customer customer = customerService.saveOrEditCustomer(dto);
+        return ResponseEntity.ok(customer);
+    }
+
+    @PutMapping
+    public ResponseEntity changeActiveStatus(@RequestBody List<CustomerDto> customerDtoList) {
+        customerService.changeActiveStatus(customerDtoList);
+        return ResponseEntity.ok().build();
+    }
+}

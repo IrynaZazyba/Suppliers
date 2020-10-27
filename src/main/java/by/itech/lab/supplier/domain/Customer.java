@@ -12,7 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
+@Table()
 public class Customer implements BaseEntity {
 
     @Id
@@ -30,7 +30,7 @@ public class Customer implements BaseEntity {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private Date registrationDate;
+    private LocalDate registrationDate;
     @Column(nullable = false)
     private boolean status;
     @OneToMany(mappedBy = "customer")
@@ -39,4 +39,3 @@ public class Customer implements BaseEntity {
     private Set<User> users = new HashSet<>();
 
 }
-
