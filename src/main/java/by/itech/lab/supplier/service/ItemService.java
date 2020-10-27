@@ -11,6 +11,4 @@ public interface ItemService extends BaseService<ItemDto> {
 
     Page<ItemDto> findAllByCategory(CategoryDto categoryDto, Pageable pageable);
 
-    Page<ItemDto> findAllByActive(boolean active, Pageable pageable);
-
 }

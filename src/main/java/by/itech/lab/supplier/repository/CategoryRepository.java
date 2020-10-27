@@ -7,15 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByCategory(final String categoryName);
 
-    Page<Category> findAllByActive(final boolean active, final Pageable page);
+    @Query("select c from Category c where :active is null or c.active=:active")
+    Page<Category> findAllByActive(Pageable pageable, @Param("active") Boolean active);
 
     @Modifying
     @Query("update Category set active = false where id = :id")

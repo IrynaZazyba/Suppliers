@@ -35,9 +35,10 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.save(categoryDto), HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public Page<CategoryDto> getAll(@PageableDefault(size = 10) Pageable pageable) {
-        return categoryService.findAll(pageable);
+    @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
+    public Page<CategoryDto> getAllByActive(@PathVariable Boolean active,
+                                            @PageableDefault(size = 10) Pageable pageable) {
+        return categoryService.findAllByActive(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

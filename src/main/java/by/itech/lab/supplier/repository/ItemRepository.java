@@ -8,18 +8,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Optional<Item> findByLabel(final String label);
 
     Page<Item> findAllByCategory(final CategoryDto categoryDto, final Pageable page);
 
-    Page<Item> findAllByActive(final boolean active, final Pageable page);
+    @Query("select i from Item i where :active is null or i.active=:active")
+    Page<Item> findAllByActive(Pageable pageable, @Param("active") Boolean active);
 
     @Modifying
     @Query("update Item set active = false where id = :id")

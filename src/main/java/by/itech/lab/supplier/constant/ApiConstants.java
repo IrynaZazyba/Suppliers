@@ -20,5 +20,6 @@ public interface ApiConstants {
     String URL_ID_PARAMETER = "/{id}";
     String URL_CATEGORY_PARAMETER = "/{category}";
     String URL_LABEL_PARAMETER = "/{label}";
+    String URL_ACTIVE_PARAMETER = "/{active}";
 
 }

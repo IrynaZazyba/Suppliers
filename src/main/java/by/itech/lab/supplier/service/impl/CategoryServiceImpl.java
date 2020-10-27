@@ -28,8 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDto> findAllByActive(final boolean active, final Pageable pageable) {
-        return categoryRepository.findAllByActive(active, pageable)
+    public Page<CategoryDto> findAllByActive(final Pageable pageable, final Boolean active) {
+        return categoryRepository.findAllByActive(pageable, active)
           .map(categoryMapper::map);
     }
 
@@ -46,10 +46,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         final Category saved = categoryRepository.save(category);
         return categoryMapper.map(saved);
-    }
-
-    public Page<CategoryDto> findAll(final Pageable pageable) {
-        return categoryRepository.findAll(pageable).map(categoryMapper::map);
     }
 
     public CategoryDto findById(final Long id) {

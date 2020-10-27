@@ -35,8 +35,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<ItemDto> findAllByActive(final boolean active, final Pageable pageable) {
-        return itemRepository.findAllByActive(active, pageable)
+    public Page<ItemDto> findAllByActive(final Pageable pageable, final Boolean active) {
+        return itemRepository.findAllByActive(pageable, active)
           .map(itemMapper::map);
     }
 
@@ -53,10 +53,6 @@ public class ItemServiceImpl implements ItemService {
 
         final Item saved = itemRepository.save(item);
         return itemMapper.map(saved);
-    }
-
-    public Page<ItemDto> findAll(final Pageable pageable) {
-        return itemRepository.findAll(pageable).map(itemMapper::map);
     }
 
     public ItemDto findById(final Long id) {
