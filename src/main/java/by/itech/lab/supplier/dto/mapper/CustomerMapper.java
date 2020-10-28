@@ -4,6 +4,7 @@ import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
+import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,12 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
                 .registrationDate(entity.getRegistrationDate())
                 .status(entity.isStatus())
                 .build();
+    }
+
+    public void update(final CustomerDto from, final Customer to) {
+        to.setName(from.getName());
+        to.setRegistrationDate(from.getRegistrationDate());
+        to.setStatus(from.isStatus());
     }
 
     public CustomerDto mapToCustomerView(Customer entity) {

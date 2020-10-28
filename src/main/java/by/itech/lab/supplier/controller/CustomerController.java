@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -46,10 +49,19 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity createCustomer(@Valid @RequestBody CustomerDto dto) {
-        customerService.save(dto);
-        return ResponseEntity.ok().build();
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerDto createCustomer(@Valid @RequestBody CustomerDto customerDto) {
+        return customerService.save(customerDto);
     }
+
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public ResponseEntity createCustomer(@Valid @RequestBody CustomerDto dto) {
+//        customerService.save(dto);
+//        return ResponseEntity.ok().build();
+//    }
+
+
 
     @PutMapping
     public ResponseEntity updateStatus(@RequestBody List<CustomerDto> customerDtoList) {

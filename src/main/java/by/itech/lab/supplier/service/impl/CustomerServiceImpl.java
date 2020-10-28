@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
-    private final UserServiceImpl userService;
 
     @Override
     public Page<CustomerDto> getCustomers(final Pageable pageable, final Boolean status) {
@@ -39,18 +37,32 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer save(CustomerDto dto) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(dto.getId());
-        if (optionalCustomer.isPresent()) {
-            customerRepository.save(customerMapper.map(dto));
-        } else {
-            Customer customer = customerMapper.map(dto);
-            customer.setRegistrationDate(LocalDate.now());
-            customer.setStatus(true);
-            customerRepository.save(customer);
-            userService.save(createAdmin());
-        }
-        return customerMapper.map(dto);
+    public CustomerDto save(CustomerDto customerDto) {
+        Customer сustomer = Optional.ofNullable(customerDto.getId())
+                .map(item -> {
+                    final Customer existing = customerRepository
+                            .findById(customerDto.getId())
+                            .orElseThrow();
+                    customerMapper.update(customerDto, existing);
+                    return existing;
+                })
+                .orElseGet(() -> customerMapper.map(customerDto));
+
+        final Customer saved = customerRepository.save(сustomer);
+        return customerMapper.map(saved);
+
+
+//        Optional<Customer> optionalCustomer = customerRepository.findById(dto.getId());
+//        if (optionalCustomer.isPresent()) {
+//            customerRepository.save(customerMapper.map(dto));
+//        } else {
+//            Customer customer = customerMapper.map(dto);
+//            customer.setRegistrationDate(LocalDate.now());
+//            customer.setStatus(true);
+//            customerRepository.save(customer);
+//            userService.save(createAdmin());
+//        }
+//        return customerMapper.map(dto);
     }
 
     @Override
