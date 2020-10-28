@@ -1,6 +1,9 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Customer;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.CustomerDto;
+import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
@@ -8,16 +11,6 @@ import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import by.itech.lab.supplier.domain.Customer;
-import by.itech.lab.supplier.domain.Role;
-import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.dto.UserDto;
-import by.itech.lab.supplier.dto.mapper.CustomerMapper;
-import by.itech.lab.supplier.repository.CustomerRepository;
-import by.itech.lab.supplier.service.CustomerService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -55,7 +48,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setRegistrationDate(LocalDate.now());
             customer.setStatus(true);
             customerRepository.save(customer);
-            userService.createUser(createAdmin());
+            userService.save(createAdmin());
         }
         return customerMapper.map(dto);
     }

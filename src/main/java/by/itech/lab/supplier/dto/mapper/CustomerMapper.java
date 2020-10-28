@@ -7,7 +7,6 @@ import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.util.EnumSet;
 
 @Component
