@@ -33,7 +33,6 @@ public class Item implements BaseEntity {
     private Double units;
     @JoinColumn(name = "category_id")
     private Category category;
-    @Column
     private boolean active;
 
 

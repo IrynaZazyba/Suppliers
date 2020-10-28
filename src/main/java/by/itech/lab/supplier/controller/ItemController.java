@@ -1,15 +1,12 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
-import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
-import by.itech.lab.supplier.service.CategoryService;
 import by.itech.lab.supplier.service.ItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,12 +37,12 @@ public class ItemController {
 
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
     public Page<ItemDto> getAllByActive(@PathVariable Boolean active,
-                                        @PageableDefault() Pageable pageable) {
+                                        Pageable pageable) {
         return itemService.findAllByActive(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAll(@PathVariable String category, @PageableDefault() Pageable pageable) {
+    public Page<ItemDto> getAll(@PathVariable String category, Pageable pageable) {
         return itemService.findAllByCategory(category, pageable);
     }
 

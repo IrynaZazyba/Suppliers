@@ -37,6 +37,9 @@ public class ItemServiceTest {
     private ItemRepository itemRepository;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
     private ItemMapper itemMapper;
 
     private Category category;
@@ -103,9 +106,12 @@ public class ItemServiceTest {
         @MockBean
         private ItemMapper itemMapper;
 
+        @MockBean
+        private CategoryService categoryService;
+
         @Bean
         public ItemService itemService() {
-            return new ItemServiceImpl(itemRepository, itemMapper);
+            return new ItemServiceImpl(itemRepository, itemMapper, categoryService);
         }
 
     }
@@ -175,7 +181,8 @@ public class ItemServiceTest {
 
         Mockito.when(itemRepository.findAllByCategory(categoryDto, pageRequest)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
-        Page<ItemDto> found = itemService.findAllByCategory(categoryDto, pageRequest);
+        Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
+        Page<ItemDto> found = itemService.findAllByCategory("Fruit", pageRequest);
         Assertions.assertEquals(itemDtoPage, found);
     }
 
@@ -183,7 +190,8 @@ public class ItemServiceTest {
     void getItemByCategoryTest_Negative() {
         Mockito.when(itemRepository.findAllByCategory(categoryDto, pageRequest)).thenReturn(Page.empty());
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
+        Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
 
         Assertions.assertEquals(new PageImpl<ItemDto>(new ArrayList<>()),
-          itemService.findAllByCategory(categoryDto, pageRequest));    }
+          itemService.findAllByCategory("Fruit", pageRequest));    }
 }
