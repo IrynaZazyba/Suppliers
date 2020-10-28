@@ -50,7 +50,7 @@ public class UserServiceTest {
         Customer customer = new Customer();
         customer.setName("dwwad");
         customer.setStatus(true);
-        customer.setRegistrationDate(new Date(2000, 8, 27));
+        customer.setRegistrationDate(LocalDate.now());
         userDto = new UserDto();
         userDto.setUsername(USERNAME);
         userDto.setPassword("password");

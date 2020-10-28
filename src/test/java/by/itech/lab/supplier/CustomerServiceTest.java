@@ -6,7 +6,9 @@ import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
+import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.impl.CustomerServiceImpl;
+import by.itech.lab.supplier.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,9 +21,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -48,9 +50,12 @@ public class CustomerServiceTest {
         @MockBean
         private CustomerMapper customerMapper;
 
+        @MockBean
+        private UserServiceImpl userService;
+
         @Bean
         public CustomerService customerService() {
-            return new CustomerServiceImpl(customerRepository, customerMapper);
+            return new CustomerServiceImpl(customerRepository, customerMapper, userService);
         }
 
     }
@@ -64,7 +69,7 @@ public class CustomerServiceTest {
         customer = Customer.builder()
                 .id(5L)
                 .name("System")
-                .registrationDate(Date.valueOf(LocalDate.now()))
+                .registrationDate(LocalDate.now())
                 .status(true)
                 .build();
         customerDto = CustomerDto.builder()
