@@ -6,6 +6,7 @@ import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.exception.NotFoundInDBException;
 import by.itech.lab.supplier.repository.ItemRepository;
+import by.itech.lab.supplier.service.CategoryService;
 import by.itech.lab.supplier.service.ItemService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,14 +24,17 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemMapper itemMapper;
 
+    private final CategoryService categoryService;
+
     @Override
     public ItemDto findByLabel(final String label) {
         return itemRepository.findByLabel(label)
           .map(itemMapper::map).orElseThrow(NotFoundInDBException::new);
     }
 
-    public Page<ItemDto> findAllByCategory(final CategoryDto categoryDto, final Pageable pageable) {
-        return itemRepository.findAllByCategory(categoryDto, pageable)
+    public Page<ItemDto> findAllByCategory(final String categoryName, final Pageable pageable) {
+        CategoryDto found = categoryService.findByCategory(categoryName);
+        return itemRepository.findAllByCategory(found, pageable)
           .map(itemMapper::map);
     }
 

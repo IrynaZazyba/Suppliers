@@ -9,6 +9,6 @@ public interface ItemService extends BaseService<ItemDto> {
 
     ItemDto findByLabel(String label);
 
-    Page<ItemDto> findAllByCategory(CategoryDto categoryDto, Pageable pageable);
+    Page<ItemDto> findAllByCategory(String categoryName, Pageable pageable);
 
 }

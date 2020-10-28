@@ -33,8 +33,6 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    private final CategoryService categoryService;
-
     @PostMapping
     public ItemDto save(@Valid @RequestBody ItemDto itemDto) {
         return itemService.save(itemDto);
@@ -48,8 +46,7 @@ public class ItemController {
 
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
     public Page<ItemDto> getAll(@PathVariable String category, @PageableDefault() Pageable pageable) {
-        CategoryDto found = categoryService.findByCategory(category);
-        return itemService.findAllByCategory(found, pageable);
+        return itemService.findAllByCategory(category, pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
