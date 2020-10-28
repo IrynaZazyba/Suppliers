@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
                     final User existing = userRepository
                             .findById(userDTO.getId())
                             .orElseThrow();
-                    userDTO.setEmail(existing.getEmail());
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
