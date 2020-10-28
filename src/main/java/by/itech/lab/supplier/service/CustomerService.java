@@ -13,7 +13,7 @@ public interface CustomerService {
 
     Page<CustomerDto> getCustomers(Pageable pageable, Boolean status);
     CustomerDto getCustomer(Long customerId);
-    Customer saveOrEditCustomer(CustomerDto dto);
+    Customer save(CustomerDto dto);
     List<Customer> saveNewStatus(List<CustomerDto> customers);
 }
 

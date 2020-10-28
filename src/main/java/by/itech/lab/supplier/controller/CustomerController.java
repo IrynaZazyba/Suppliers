@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.controller;
 
-import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +25,6 @@ import java.util.List;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 
-@CrossOrigin
 @RestController
 @AllArgsConstructor
 @Secured(value = "ROLE_SYSTEM_ADMIN")
@@ -50,7 +47,7 @@ public class CustomerController {
 
     @PostMapping
     public ResponseEntity createCustomer(@Valid @RequestBody CustomerDto dto) {
-        customerService.saveOrEditCustomer(dto);
+        customerService.save(dto);
         return ResponseEntity.ok().build();
     }
 

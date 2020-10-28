@@ -46,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer saveOrEditCustomer(CustomerDto dto) {
+    public Customer save(CustomerDto dto) {
         Optional<Customer> optionalCustomer = customerRepository.findById(dto.getId());
         if (optionalCustomer.isPresent()) {
             customerRepository.save(customerMapper.map(dto));
