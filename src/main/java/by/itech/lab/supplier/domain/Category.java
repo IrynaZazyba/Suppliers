@@ -28,7 +28,6 @@ public class Category implements BaseEntity {
     private String category;
     @Column(nullable = false)
     private BigDecimal taxRate;
-    @Column
     private boolean active;
 
 }

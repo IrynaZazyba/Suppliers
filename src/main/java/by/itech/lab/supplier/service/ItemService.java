@@ -1,4 +1,14 @@
 package by.itech.lab.supplier.service;
 
-public interface ItemService {
+import by.itech.lab.supplier.dto.CategoryDto;
+import by.itech.lab.supplier.dto.ItemDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface ItemService extends BaseService<ItemDto> {
+
+    ItemDto findByLabel(String label);
+
+    Page<ItemDto> findAllByCategory(String categoryName, Pageable pageable);
+
 }
