@@ -1,7 +1,9 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CustomerDto;
+import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,18 +56,16 @@ public class CustomerController {
         return customerService.save(customerDto);
     }
 
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public ResponseEntity createCustomer(@Valid @RequestBody CustomerDto dto) {
-//        customerService.save(dto);
-//        return ResponseEntity.ok().build();
-//    }
-
-
+    @PutMapping(ApiConstants.URL_ID_PARAMETER)
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDto customerDto) {
+        customerDto.setId(id);
+        return customerService.save(customerDto);
+    }
 
     @PutMapping
-    public ResponseEntity updateStatus(@RequestBody List<CustomerDto> customerDtoList) {
-        customerService.saveNewStatus(customerDtoList);
-        return ResponseEntity.ok().build();
+    @ResponseStatus(HttpStatus.OK)
+    public List<Customer> updateStatus(@RequestBody List<CustomerDto> customerDtoList) {
+        return customerService.saveNewStatus(customerDtoList);
     }
 }

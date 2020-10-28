@@ -23,6 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final UserServiceImpl userService;
 
     @Override
     public Page<CustomerDto> getCustomers(final Pageable pageable, final Boolean status) {
@@ -38,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto save(CustomerDto customerDto) {
-        Customer сustomer = Optional.ofNullable(customerDto.getId())
+        Customer customer = Optional.ofNullable(customerDto.getId())
                 .map(item -> {
                     final Customer existing = customerRepository
                             .findById(customerDto.getId())
@@ -48,21 +49,9 @@ public class CustomerServiceImpl implements CustomerService {
                 })
                 .orElseGet(() -> customerMapper.map(customerDto));
 
-        final Customer saved = customerRepository.save(сustomer);
+        final Customer saved = customerRepository.save(customer);
+        userService.save(createAdmin());
         return customerMapper.map(saved);
-
-
-//        Optional<Customer> optionalCustomer = customerRepository.findById(dto.getId());
-//        if (optionalCustomer.isPresent()) {
-//            customerRepository.save(customerMapper.map(dto));
-//        } else {
-//            Customer customer = customerMapper.map(dto);
-//            customer.setRegistrationDate(LocalDate.now());
-//            customer.setStatus(true);
-//            customerRepository.save(customer);
-//            userService.save(createAdmin());
-//        }
-//        return customerMapper.map(dto);
     }
 
     @Override
