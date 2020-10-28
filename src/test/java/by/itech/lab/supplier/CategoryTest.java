@@ -1,14 +1,17 @@
 package by.itech.lab.supplier;
 
 import by.itech.lab.supplier.dto.CategoryDto;
-import by.itech.lab.supplier.service.impl.CategoryService;
+import by.itech.lab.supplier.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CategoryTest {
 
     @Autowired
-    CategoryService service;
+    CategoryServiceImpl service;
 
     @Test
     void checkAddingCategory() {

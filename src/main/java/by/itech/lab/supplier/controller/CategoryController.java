@@ -1,8 +1,8 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
-import by.itech.lab.supplier.dto.ItemDto;
-import by.itech.lab.supplier.service.ItemService;
+import by.itech.lab.supplier.dto.CategoryDto;
+import by.itech.lab.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,52 +20,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEM;
-
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(URL_ITEM)
-public class ItemController {
+@RequestMapping(ApiConstants.URL_CATEGORY)
+public class CategoryController {
 
-    private final ItemService itemService;
+    private final CategoryService categoryService;
 
     @PostMapping
-    public ItemDto save(@Valid @RequestBody ItemDto itemDto) {
-        return itemService.save(itemDto);
+    public CategoryDto save(@Valid @RequestBody CategoryDto categoryDto) {
+        return categoryService.save(categoryDto);
     }
 
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
-    public Page<ItemDto> getAllByActive(@PathVariable Boolean active,
-                                        Pageable pageable) {
-        return itemService.findAllByActive(pageable, active);
-    }
-
-    @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAll(@PathVariable String category, Pageable pageable) {
-        return itemService.findAllByCategory(category, pageable);
+    public Page<CategoryDto> getAllByActive(@PathVariable Boolean active,
+                                            Pageable pageable) {
+        return categoryService.findAllByActive(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
-    public ItemDto getById(@PathVariable Long id) {
-        return itemService.findById(id);
+    public CategoryDto getById(@PathVariable Long id) {
+        return categoryService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_LABEL_PARAMETER)
-    public ItemDto getByName(@PathVariable String label) {
-        return itemService.findByLabel(label);
+    @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
+    public CategoryDto getByName(@PathVariable String category) {
+        return categoryService.findByCategory(category);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activate(@PathVariable Long id) {
-        itemService.activate(id);
+        categoryService.activate(id);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        itemService.delete(id);
+        categoryService.delete(id);
     }
 
 }
