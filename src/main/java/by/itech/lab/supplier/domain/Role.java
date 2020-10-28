@@ -11,7 +11,7 @@ public enum Role implements GrantedAuthority {
     ROLE_DRIVER("Driver"),
     ROLE_DIRECTOR("Director");
 
-    private String role;
+    private final String role;
 
     Role(final String role) {
         this.role = role;

@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserImpl userImpl;
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findOneByEmailIgnoreCase(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(String.format("Username not found for email=%s", email)));
         List<CustomerDto> customers = Collections.singletonList(customerMapper.map(user.getCustomer()));

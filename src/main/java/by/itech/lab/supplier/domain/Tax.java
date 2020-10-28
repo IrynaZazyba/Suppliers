@@ -66,5 +66,4 @@ public class Tax {
     public void setZone(Zone zone) {
         this.zone = zone;
     }
-
 }
