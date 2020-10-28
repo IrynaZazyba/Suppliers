@@ -76,7 +76,7 @@ public class ItemServiceTest {
           .units(5.0)
           .upc(new BigDecimal(0.5))
           .active(true)
-          .category(category)
+          .categoryDto(categoryDto)
           .build();
         falseItem = Item.builder()
           .id(20L)
@@ -92,7 +92,7 @@ public class ItemServiceTest {
           .units(5.0)
           .upc(new BigDecimal(0.5))
           .active(false)
-          .category(category)
+          .categoryDto(categoryDto)
           .build();
         pageRequest = PageRequest.of(0, 10);
     }

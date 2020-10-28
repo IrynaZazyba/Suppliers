@@ -10,10 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,15 +18,13 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
-public class Zone {
+public class Zone implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String zone;
-    @OneToMany(mappedBy = "zone")
-    private Set<Tax> taxes = new HashSet<>();
+    private String location;
 
 }
 

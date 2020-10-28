@@ -6,10 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -17,125 +24,34 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "waybill")
-public class WayBill {
-
-    private Long id;
-    private String number;
-    private Date registrationDate;
-    private Date lastUpdated;
-    private WaybillStatus waybillStatus;
-    private Address sourceLocationAddress;
-    private User createdByUsers;
-    private User updatedByUsers;
-    private Car car;
-    private User driver;
-    private Set<Application> applications = new HashSet<>();
+public class WayBill implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "number")
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    @Column(name = "registration_date")
-    public Date getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    @Column(name = "last_updated")
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-
-    @Column(name = "waybill_status")
+    private Long id;
+    @Column(nullable = false, unique = true)
+    private String number;
+    @Column(nullable = false)
+    private Date registrationDate;
+    @Column(nullable = false)
+    private Date lastUpdated;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    public WaybillStatus getWaybillStatus() {
-        return waybillStatus;
-    }
-
-    public void setWaybillStatus(WaybillStatus waybillStatus) {
-        this.waybillStatus = waybillStatus;
-    }
-
+    private WaybillStatus waybillStatus;
     @ManyToOne
-    @JoinColumn(name = "source_location_address_id")
-    public Address getSourceLocationAddress() {
-        return sourceLocationAddress;
-    }
-
-    public void setSourceLocationAddress(Address sourceLocationAddress) {
-        this.sourceLocationAddress = sourceLocationAddress;
-    }
-
+    @JoinColumn(name = "source_location_address_id", nullable = false)
+    private Address sourceLocationAddress;
     @ManyToOne
-    @JoinColumn(name = "created_by_users_id")
-    public User getCreatedByUsers() {
-        return createdByUsers;
-    }
-
-    public void setCreatedByUsers(User createdByUsers) {
-        this.createdByUsers = createdByUsers;
-    }
-
+    @JoinColumn(name = "created_by_users_id", nullable = false)
+    private User createdByUsers;
     @ManyToOne
-    @JoinColumn(name = "last_updated_by_users_id")
-    public User getUpdatedByUsers() {
-        return updatedByUsers;
-    }
-
-    public void setUpdatedByUsers(User updatedByUsers) {
-        this.updatedByUsers = updatedByUsers;
-    }
-
+    @JoinColumn(name = "last_updated_by_users_id", nullable = false)
+    private User updatedByUsers;
     @ManyToOne
     @JoinColumn(name = "car_id")
-    public Car getCar() {
-        return car;
-    }
-
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
+    private Car car;
     @ManyToOne
     @JoinColumn(name = "car_driver_id")
-    public User getDriver() {
-        return driver;
-    }
-
-    public void setDriver(User driver) {
-        this.driver = driver;
-    }
-
-    @OneToMany(mappedBy = "wayBill")
-    public Set<Application> getApplications() {
-        return applications;
-    }
-
-    public void setApplications(Set<Application> applications) {
-        this.applications = applications;
-    }
+    private User driver;
 
 }

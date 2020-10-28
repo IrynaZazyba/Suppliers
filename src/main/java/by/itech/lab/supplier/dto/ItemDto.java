@@ -15,7 +15,7 @@ public class ItemDto implements BaseDto {
     private BigDecimal upc;
     private String label;
     private Double units;
-    private Category category;
+    private CategoryDto categoryDto;
     private boolean active;
 
 }
