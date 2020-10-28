@@ -33,7 +33,6 @@ public class Item implements BaseEntity {
     private String label;
     @Column(nullable = false)
     private Double units;
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
     @Column

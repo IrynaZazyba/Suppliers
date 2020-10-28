@@ -37,18 +37,18 @@ public class ItemController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<ItemDto> save(@Valid @RequestBody ItemDto itemDto) {
-        return new ResponseEntity<>(itemService.save(itemDto), HttpStatus.CREATED);
+    public ItemDto save(@Valid @RequestBody ItemDto itemDto) {
+        return itemService.save(itemDto);
     }
 
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
     public Page<ItemDto> getAllByActive(@PathVariable Boolean active,
-                                        @PageableDefault(size = 10) Pageable pageable) {
+                                        @PageableDefault() Pageable pageable) {
         return itemService.findAllByActive(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAll(@PathVariable String category, @PageableDefault(size = 10) Pageable pageable) {
+    public Page<ItemDto> getAll(@PathVariable String category, @PageableDefault() Pageable pageable) {
         CategoryDto found = categoryService.findByCategory(category);
         return itemService.findAllByCategory(found, pageable);
     }

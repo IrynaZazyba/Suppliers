@@ -31,13 +31,13 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDto> save(@Valid @RequestBody CategoryDto categoryDto) {
-        return new ResponseEntity<>(categoryService.save(categoryDto), HttpStatus.CREATED);
+    public CategoryDto save(@Valid @RequestBody CategoryDto categoryDto) {
+        return categoryService.save(categoryDto);
     }
 
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
     public Page<CategoryDto> getAllByActive(@PathVariable Boolean active,
-                                            @PageableDefault(size = 10) Pageable pageable) {
+                                            @PageableDefault() Pageable pageable) {
         return categoryService.findAllByActive(pageable, active);
     }
 
