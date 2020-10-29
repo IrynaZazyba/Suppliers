@@ -2,7 +2,6 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
-import by.itech.lab.supplier.dto.BaseDto;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
@@ -13,8 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,14 +36,31 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> saveNewStatus(List<CustomerDto> customerDtoList) {
-        List<Customer> customers = new ArrayList<>();
-        for (CustomerDto customer : customerDtoList) {
-            Customer customerFromDto = customerMapper.map(customer);
-            customerRepository.save(customerFromDto);
-            customers.add(customerFromDto);
+    public void saveNewStatus(List<CustomerDto> customerDtoList) {
+        for (CustomerDto customerDto : customerDtoList) {
+            final Customer customer = customerRepository
+                    .findById(customerDto.getId())
+                    .orElseThrow();
+            customerMapper.updateStatus(customerDto, customer);
+            customerRepository.save(customer);
         }
-        return customers;
+    }
+
+    @Override
+    public CustomerDto save(CustomerDto customerDto) {
+        Customer customer = Optional.ofNullable(customerDto.getId())
+                .map(item -> {
+                    final Customer existing = customerRepository
+                            .findById(customerDto.getId())
+                            .orElseThrow();
+                    customerMapper.updateCustomer(customerDto, existing);
+                    return existing;
+                })
+                .orElseGet(() -> customerMapper.map(customerDto));
+
+        final Customer saved = customerRepository.save(customer);
+        userService.save(createAdmin());
+        return customerMapper.map(saved);
     }
 
     private UserDto createAdmin() {
@@ -58,23 +72,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .active(false)
                 .role(Role.ROLE_ADMIN)
                 .build();
-    }
-
-    @Override
-    public CustomerDto save(CustomerDto customerDto) {
-        Customer customer = Optional.ofNullable(customerDto.getId())
-                .map(item -> {
-                    final Customer existing = customerRepository
-                            .findById(customerDto.getId())
-                            .orElseThrow();
-                    customerMapper.update(customerDto, existing);
-                    return existing;
-                })
-                .orElseGet(() -> customerMapper.map(customerDto));
-
-        final Customer saved = customerRepository.save(customer);
-        userService.save(createAdmin());
-        return customerMapper.map(saved);
     }
 
     @Override
