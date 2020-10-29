@@ -21,8 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteById(@Param("id") Long id);
 
     @Modifying
-    @Query("update User set active = :isActive where username = :username")
-    boolean setStatus(@Param("isActive") boolean isActive, @Param("username") String username);
+    @Query("update User set active = :active where username = :username")
+    boolean setStatus(@Param("active") boolean active, @Param("username") String username);
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 
