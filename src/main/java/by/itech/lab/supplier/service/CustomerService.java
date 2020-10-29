@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface CustomerService {
+public interface CustomerService extends BaseService<CustomerDto> {
 
     Page<CustomerDto> getCustomers(Pageable pageable, Boolean status);
     CustomerDto getCustomer(Long customerId);
-    CustomerDto save(CustomerDto dto);
     List<Customer> saveNewStatus(List<CustomerDto> customers);
 }
 

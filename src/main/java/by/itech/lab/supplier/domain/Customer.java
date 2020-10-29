@@ -21,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table()
+@Table
 public class Customer implements BaseEntity {
 
     @Id

@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table()
+@Table
 public class Category implements BaseEntity {
 
     @Id
