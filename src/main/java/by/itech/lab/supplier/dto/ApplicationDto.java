@@ -14,10 +14,10 @@ public class ApplicationDto implements BaseDto {
     private String number;
     private Date registrationDate;
     private Date lastUpdated;
-    private AddressDto sourceLocationAddressId;
-    private UserDto createdByUsers;
-    private UserDto lastUpdatedByUsers;
+    private AddressDto sourceLocationAddressIdDto;
+    private UserDto createdByUsersDto;
+    private UserDto lastUpdatedByUsersDto;
     private ApplicationStatus applicationStatus;
-    private WayBillDto wayBill;
+    private WayBillDto wayBillDto;
 
 }

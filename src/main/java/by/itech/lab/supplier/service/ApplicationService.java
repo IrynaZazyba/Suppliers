@@ -1,4 +1,9 @@
 package by.itech.lab.supplier.service;
 
-public interface ApplicationService {
+import by.itech.lab.supplier.dto.ApplicationDto;
+
+public interface ApplicationService extends BaseService<ApplicationDto> {
+
+
+
 }

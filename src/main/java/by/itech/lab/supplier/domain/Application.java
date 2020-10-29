@@ -48,5 +48,6 @@ public class Application implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "waybill_id")
     private WayBill wayBill;
+    private boolean active;
 
 }

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-11-1
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: application
+            columns:
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
