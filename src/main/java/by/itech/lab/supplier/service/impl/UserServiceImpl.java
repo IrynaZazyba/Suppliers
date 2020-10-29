@@ -5,6 +5,8 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
+import by.itech.lab.supplier.service.mail.MailService;
+import by.itech.lab.supplier.service.mail.MailServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -45,7 +47,11 @@ public class UserServiceImpl implements UserService {
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
-                .orElseGet(() -> userMapper.map(userDTO));
+                .orElseGet(() -> {
+                    MailService mailService = new MailServiceImpl();
+                    mailService.sendMail(userDTO);
+                   return userMapper.map(userDTO);
+                });
 
         final User saved = userRepository.save(user);
         return userMapper.map(saved);
@@ -53,8 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean changeActiveStatus(Long id, boolean status) {
-        return userRepository.setStatus(status, id);
+    public boolean changeActiveStatus(String username, boolean status) {
+        return userRepository.setStatus(status, username);
     }
 
     @Override

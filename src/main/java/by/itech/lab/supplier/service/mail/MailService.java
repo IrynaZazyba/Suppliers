@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MailService {
-    void sendMail(UserDto user, String url);
+    void sendMail(UserDto user);
 
 }

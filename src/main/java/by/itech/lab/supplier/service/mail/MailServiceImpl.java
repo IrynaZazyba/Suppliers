@@ -17,14 +17,12 @@ public class MailServiceImpl implements MailService {
     private static final String PASSWORD = "password";
     private static final String ACTIVATION_LINK = "Activation link";
 
-    private final TemplateEngine templateEngine;
-
-    public void sendMail(UserDto user, String url) {
+    public void sendMail(UserDto user) {
             Sender sender = new Sender(USERNAME, PASSWORD);
             Email email = new Email();
             email.setTo(user.getEmail());
             email.setSubject(ACTIVATION_LINK);
-            email.setText(buildMessage(user, url));
+            email.setText(buildMessage(user, String.format("localhost:8080/users/%s/true", user.getUsername())));
             sender.send(email);
     }
 
