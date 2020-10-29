@@ -21,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table()
+@Table
 public class Warehouse implements BaseEntity {
 
     @Id
