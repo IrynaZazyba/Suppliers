@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
             final Customer customer = customerRepository
                     .findById(customerDto.getId())
                     .orElseThrow();
-            customerMapper.updateStatus(customerDto, customer);
+            customer.setStatus(customerDto.isStatus());
             customerRepository.save(customer);
         }
     }
@@ -53,25 +53,31 @@ public class CustomerServiceImpl implements CustomerService {
                     final Customer existing = customerRepository
                             .findById(customerDto.getId())
                             .orElseThrow();
-                    customerMapper.updateCustomer(customerDto, existing);
+                    updateCustomer(customerDto, existing);
                     return existing;
                 })
                 .orElseGet(() -> customerMapper.map(customerDto));
 
         final Customer saved = customerRepository.save(customer);
-        userService.save(createAdmin());
+        userService.save(createAdmin(customerDto));
         return customerMapper.map(saved);
     }
 
-    private UserDto createAdmin() {
+    private UserDto createAdmin(CustomerDto customerDto) {
         return UserDto.builder()
                 .username("User name")
                 .name("Name")
                 .surname("Surname")
-                .email("email")
+                .email(customerDto.getAdminEmail())
                 .active(false)
                 .role(Role.ROLE_ADMIN)
                 .build();
+    }
+
+    private void updateCustomer(final CustomerDto from, final Customer to) {
+        to.setName(from.getName());
+        to.setRegistrationDate(from.getRegistrationDate());
+        to.setStatus(from.isStatus());
     }
 
     @Override

@@ -35,16 +35,6 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
                 .build();
     }
 
-    public void updateCustomer(final CustomerDto from, final Customer to) {
-        to.setName(from.getName());
-        to.setRegistrationDate(from.getRegistrationDate());
-        to.setStatus(from.isStatus());
-    }
-
-    public void updateStatus(final CustomerDto from, final Customer to) {
-        to.setStatus(from.isStatus());
-    }
-
     public CustomerDto mapToCustomerView(Customer entity) {
         User admin = entity.getUsers()
                 .stream()
