@@ -14,11 +14,15 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Page<Customer> findByStatus(Pageable pageable, @Param("active") Boolean active);
 
     @Modifying
-    @Query("update Customer set status = false where id = :id")
+    @Query("update Customer set status = true where id = :id")
     void delete(@Param("id") Long id);
 
     @Modifying
     @Query("update Customer set status = true where id = :id")
     void activate(@Param("id") Long id);
+
+    @Modifying
+    @Query("update Customer set status = false where id = :id")
+    void deactivate(@Param("id") Long id);
 
 }

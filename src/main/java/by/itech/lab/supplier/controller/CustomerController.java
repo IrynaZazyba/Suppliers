@@ -62,9 +62,8 @@ public class CustomerController {
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void activate(@PathVariable Long id) {
-        customerService.activate(id);
+        customerService.switchStatus(id);
     }
-
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)

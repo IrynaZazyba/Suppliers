@@ -42,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
                     final Customer existing = customerRepository
                             .findById(customerDto.getId())
                             .orElseThrow();
-                    updateCustomer(customerDto, existing);
+                    customerMapper.map(customerDto, existing);
                     return existing;
                 })
                 .orElseGet(() -> customerMapper.map(customerDto));
@@ -50,6 +50,28 @@ public class CustomerServiceImpl implements CustomerService {
         final Customer saved = customerRepository.save(customer);
         userService.save(createAdmin(customerDto));
         return customerMapper.map(saved);
+    }
+
+    @Transactional
+    public void delete(final Long id) {
+        customerRepository.delete(id);
+    }
+
+    @Override
+    public void activate(Long id) {
+
+    }
+
+    @Transactional
+    public void switchStatus(final Long id) {
+        final Customer existing = customerRepository
+                .findById(id)
+                .orElseThrow();
+        if (existing.isStatus()) {
+            customerRepository.deactivate(id);
+        } else {
+            customerRepository.activate(id);
+        }
     }
 
     private UserDto createAdmin(CustomerDto customerDto) {
@@ -61,21 +83,5 @@ public class CustomerServiceImpl implements CustomerService {
                 .active(false)
                 .role(Role.ROLE_ADMIN)
                 .build();
-    }
-
-    private void updateCustomer(final CustomerDto from, final Customer to) {
-        to.setName(from.getName());
-        to.setRegistrationDate(from.getRegistrationDate());
-        to.setStatus(from.isStatus());
-    }
-
-    @Transactional
-    public void delete(final Long id) {
-        customerRepository.delete(id);
-    }
-
-    @Transactional
-    public void activate(final Long id) {
-        customerRepository.activate(id);
     }
 }

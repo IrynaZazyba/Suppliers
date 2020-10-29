@@ -14,4 +14,5 @@ public interface BaseService<Dto extends BaseDto> {
     void delete(final Long id);
 
     void activate(final Long id);
+
 }
