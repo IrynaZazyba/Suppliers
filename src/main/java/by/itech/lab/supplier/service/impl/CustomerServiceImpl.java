@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -24,26 +24,15 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserServiceImpl userService;
 
     @Override
-    public Page<CustomerDto> getCustomers(final Pageable pageable, final Boolean status) {
+    public Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status) {
         return customerRepository.findByStatus(pageable, status).map(customerMapper::mapToCustomerView);
     }
 
     @Override
-    public CustomerDto getCustomer(final Long customerId) {
+    public CustomerDto findById(final Long customerId) {
         return customerRepository.findById(customerId)
                 .map(customerMapper::mapToCustomerView)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer with id=" + customerId + " doesn't exist"));
-    }
-
-    @Override
-    public void saveNewStatus(List<CustomerDto> customerDtoList) {
-        for (CustomerDto customerDto : customerDtoList) {
-            final Customer customer = customerRepository
-                    .findById(customerDto.getId())
-                    .orElseThrow();
-            customer.setStatus(customerDto.isStatus());
-            customerRepository.save(customer);
-        }
     }
 
     @Override
@@ -80,23 +69,13 @@ public class CustomerServiceImpl implements CustomerService {
         to.setStatus(from.isStatus());
     }
 
-    @Override
-    public Page<CustomerDto> findAllByActive(Pageable pageable, Boolean active) {
-        return null;
+    @Transactional
+    public void delete(final Long id) {
+        customerRepository.delete(id);
     }
 
-    @Override
-    public CustomerDto findById(Long id) {
-        return null;
-    }
-
-    @Override
-    public void delete(Long id) {
-
-    }
-
-    @Override
-    public void activate(Long id) {
-
+    @Transactional
+    public void activate(final Long id) {
+        customerRepository.activate(id);
     }
 }

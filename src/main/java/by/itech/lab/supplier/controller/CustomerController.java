@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
@@ -35,20 +35,20 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public Page<CustomerDto> getCustomers(
+    public Page<CustomerDto> getAllByActive(
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
             @RequestParam(required = false) final Boolean status) {
-        return customerService.getCustomers(pageable, status);
+        return customerService.findAllByActive(pageable, status);
     }
 
     @GetMapping(URL_CUSTOMER_ID)
-    public CustomerDto getCustomer(@PathVariable final Long customerId) {
-        return customerService.getCustomer(customerId);
+    public CustomerDto getById(@PathVariable final Long customerId) {
+        return customerService.findById(customerId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerDto createCustomer(@Valid @RequestBody CustomerDto customerDto) {
+    public CustomerDto save(@Valid @RequestBody CustomerDto customerDto) {
         return customerService.save(customerDto);
     }
 
@@ -59,9 +59,16 @@ public class CustomerController {
         return customerService.save(customerDto);
     }
 
-    @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void updateStatus(@RequestBody List<CustomerDto> customerDtoList) {
-        customerService.saveNewStatus(customerDtoList);
+    @PutMapping(ApiConstants.URL_ID_PARAMETER)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void activate(@PathVariable Long id) {
+        customerService.activate(id);
+    }
+
+
+    @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        customerService.delete(id);
     }
 }

@@ -4,7 +4,6 @@ import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
