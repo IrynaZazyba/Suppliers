@@ -34,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<CustomerDto> customers = Collections.singletonList(customerMapper.map(user.getCustomer()));
         userImpl = new UserImpl(
                 user.getId(),
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 customers,
                 user.isActive(),
