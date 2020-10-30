@@ -48,13 +48,23 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.map(saved);
     }
 
+    @Override
+    public Page<CategoryDto> findAllByDeleted(Pageable pageable, Boolean deleted) {
+        return null;
+    }
+
     public CategoryDto findById(final Long id) {
         return categoryRepository.findById(id).map(categoryMapper::map)
           .orElseThrow(NotFoundInDBException::new);
     }
 
+    @Override
+    public void delete(Long id) {
+
+    }
+
     @Transactional
-    public void delete(final Long id) {
+    public void deactivate(final Long id) {
         categoryRepository.delete(id);
     }
 

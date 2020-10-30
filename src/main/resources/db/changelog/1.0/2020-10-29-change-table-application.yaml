@@ -12,3 +12,25 @@ databaseChangeLog:
                   defaultValue: true
                   constraints:
                     nullable: false
+  - changeSet:
+      id: SUP-11-2
+      author: alexander_popovich
+      changes:
+        - renameColumn:
+            tableName: application
+            newColumnName: deleted
+            oldColumnName: active
+            columnDataType: BOOLEAN
+  - changeSet:
+      id: SUP-11-3
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: application
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+                  constraints:
+                    nullable: false
+

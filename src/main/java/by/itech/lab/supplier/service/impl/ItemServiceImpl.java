@@ -34,7 +34,7 @@ public class ItemServiceImpl implements ItemService {
 
     public Page<ItemDto> findAllByCategory(final String categoryName, final Pageable pageable) {
         CategoryDto found = categoryService.findByCategory(categoryName);
-        return itemRepository.findAllByCategory(found, pageable)
+        return itemRepository.findAllByCategory(found.getId(), pageable)
           .map(itemMapper::map);
     }
 
@@ -59,13 +59,23 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.map(saved);
     }
 
+    @Override
+    public Page<ItemDto> findAllByDeleted(Pageable pageable, Boolean deleted) {
+        return null;
+    }
+
     public ItemDto findById(final Long id) {
         return itemRepository.findById(id).map(itemMapper::map)
           .orElseThrow(NotFoundInDBException::new);
     }
 
+    @Override
+    public void delete(Long id) {
+
+    }
+
     @Transactional
-    public void delete(final Long id) {
+    public void deactivate(final Long id) {
         itemRepository.delete(id);
     }
 

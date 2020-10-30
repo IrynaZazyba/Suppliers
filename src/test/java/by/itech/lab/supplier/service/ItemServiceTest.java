@@ -179,7 +179,7 @@ public class ItemServiceTest {
         Page<ItemDto> itemDtoPage = new PageImpl<>(itemDtoList);
         Page<Item> itemPage = new PageImpl<>(itemList);
 
-        Mockito.when(itemRepository.findAllByCategory(categoryDto, pageRequest)).thenReturn(itemPage);
+        Mockito.when(itemRepository.findAllByCategory(categoryDto.getId(), pageRequest)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
         Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
         Page<ItemDto> found = itemService.findAllByCategory("Fruit", pageRequest);
@@ -188,7 +188,7 @@ public class ItemServiceTest {
 
     @Test
     void getItemByCategoryTest_Negative() {
-        Mockito.when(itemRepository.findAllByCategory(categoryDto, pageRequest)).thenReturn(Page.empty());
+        Mockito.when(itemRepository.findAllByCategory(categoryDto.getId(), pageRequest)).thenReturn(Page.empty());
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
         Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
 

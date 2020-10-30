@@ -28,6 +28,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
           .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
           .wayBill(wayBillMapper.map(dto.getWayBillDto()))
+          .deleted(dto.isDeleted())
+          .deletedAt(dto.getDeletedAt())
           .build();
     }
 
@@ -43,6 +45,21 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
           .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
           .wayBillDto(wayBillMapper.map(application.getWayBill()))
+          .deleted(application.isDeleted())
+          .deletedAt(application.getDeletedAt())
           .build();
+    }
+
+    public void update(final ApplicationDto from, final Application to) {
+        to.setApplicationStatus(from.getApplicationStatus());
+        to.setNumber(from.getNumber());
+        to.setRegistrationDate(from.getRegistrationDate());
+        to.setLastUpdated(from.getLastUpdated());
+        to.setSourceLocationAddressId(addressMapper.map(from.getSourceLocationAddressIdDto()));
+        to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
+        to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
+        to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
+        to.setDeleted(from.isDeleted());
+        to.setDeletedAt(from.getDeletedAt());
     }
 }

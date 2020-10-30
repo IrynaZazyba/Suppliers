@@ -19,5 +19,7 @@ public class ApplicationDto implements BaseDto {
     private UserDto lastUpdatedByUsersDto;
     private ApplicationStatus applicationStatus;
     private WayBillDto wayBillDto;
+    private boolean deleted;
+    private Date deletedAt;
 
 }

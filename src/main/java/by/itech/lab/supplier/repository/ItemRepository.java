@@ -15,7 +15,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Optional<Item> findByLabel(final String label);
 
-    Page<Item> findAllByCategory(final CategoryDto categoryDto, final Pageable page);
+    @Query("select i from Item i where i.category.id=:category_id")
+    Page<Item> findAllByCategory(@Param("category_id") Long categoryId, final Pageable page);
 
     @Query("select i from Item i where :active is null or i.active=:active")
     Page<Item> findAllByActive(Pageable pageable, @Param("active") Boolean active);
