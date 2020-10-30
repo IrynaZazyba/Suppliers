@@ -8,10 +8,4 @@ public interface CategoryService extends BaseService<CategoryDto> {
 
     CategoryDto findByCategory(final String categoryName);
 
-    Page<CategoryDto> findAllByActive(Pageable pageable, Boolean active);
-
-    void deactivate(final Long id);
-
-    void activate(final Long id);
-
 }

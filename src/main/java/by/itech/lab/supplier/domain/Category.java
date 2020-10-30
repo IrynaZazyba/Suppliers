@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -28,6 +29,7 @@ public class Category implements BaseEntity {
     private String category;
     @Column(nullable = false)
     private BigDecimal taxRate;
-    private boolean active;
+    private boolean deleted;
+    private Date deletedAt;
 
 }

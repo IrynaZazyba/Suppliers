@@ -13,14 +13,11 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByCategory(final String categoryName);
 
-    @Query("select c from Category c where :active is null or c.active=:active")
-    Page<Category> findAllByActive(Pageable pageable, @Param("active") Boolean active);
+    @Query("select c from Category c where :deleted is null or c.deleted=:deleted")
+    Page<Category> findAllByDeleted(Pageable pageable, @Param("deleted") Boolean deleted);
 
     @Modifying
-    @Query("update Category set active = false where id = :id")
-    void delete(@Param("id") Long id);
+    @Query("update Category set deleted = true where id = :id")
+    void deleteById(@Param("id") Long id);
 
-    @Modifying
-    @Query("update Category set active = true where id = :id")
-    void activate(@Param("id") Long id);
 }

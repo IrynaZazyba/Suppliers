@@ -10,4 +10,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATION;
 @AllArgsConstructor
 @RequestMapping(URL_APPLICATION)
 public class ApplicationController {
+
+
+
 }

@@ -55,12 +55,12 @@ public class ItemServiceTest {
         category = Category.builder()
           .id(17L)
           .category("Fruit")
-          .active(true)
+          .deleted(false)
           .build();
         categoryDto = CategoryDto.builder()
           .id(17L)
           .category("Fruit")
-          .active(true)
+          .deleted(false)
           .build();
         item = Item.builder()
           .id(10L)

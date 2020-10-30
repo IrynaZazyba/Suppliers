@@ -23,10 +23,14 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Modifying
     @Query("update Item set active = false where id = :id")
-    void delete(@Param("id") Long id);
+    void deactivate(@Param("id") Long id);
 
     @Modifying
     @Query("update Item set active = true where id = :id")
     void activate(@Param("id") Long id);
+
+    @Modifying
+    @Query("update Item set deleted = true where id = :id")
+    void deleteById(@Param("id") Long id);
 
 }

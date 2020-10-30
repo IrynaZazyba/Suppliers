@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public void deactivate(final Long id) {
-        itemRepository.delete(id);
+        itemRepository.deactivate(id);
     }
 
     @Transactional

@@ -23,5 +23,9 @@ public interface ApiConstants {
     String URL_FILTERED = "/companies";
     String URL_ID_PARAMETER = "/{id}";
     String URL_STATUS_PARAMETER = "/{status}";
+    String URL_CREATED_BY_ID_PARAMETER = "/{created_by_id}";
+    String URL_ADDRESS_ID_PARAMETER = "/{address_id}";
+    String URL_WAYBILL_ID_PARAMETER = "/{waybill_id}";
+    String URL_NUMBER_PARAMETER = "/{number}";
 
 }

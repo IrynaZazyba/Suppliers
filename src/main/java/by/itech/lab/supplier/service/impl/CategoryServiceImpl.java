@@ -28,8 +28,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDto> findAllByActive(final Pageable pageable, final Boolean active) {
-        return categoryRepository.findAllByActive(pageable, active)
+    public Page<CategoryDto> findAllByDeleted(final Pageable pageable, final Boolean deleted) {
+        return categoryRepository.findAllByDeleted(pageable, deleted)
           .map(categoryMapper::map);
     }
 
@@ -48,29 +48,15 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.map(saved);
     }
 
-    @Override
-    public Page<CategoryDto> findAllByDeleted(Pageable pageable, Boolean deleted) {
-        return null;
-    }
-
     public CategoryDto findById(final Long id) {
         return categoryRepository.findById(id).map(categoryMapper::map)
           .orElseThrow(NotFoundInDBException::new);
     }
 
     @Override
-    public void delete(Long id) {
-
-    }
-
     @Transactional
-    public void deactivate(final Long id) {
-        categoryRepository.delete(id);
-    }
-
-    @Transactional
-    public void activate(final Long id) {
-        categoryRepository.activate(id);
+    public void delete(final Long id) {
+        categoryRepository.deleteById(id);
     }
 
 }

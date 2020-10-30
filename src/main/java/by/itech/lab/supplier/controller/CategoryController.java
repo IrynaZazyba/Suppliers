@@ -36,7 +36,7 @@ public class CategoryController {
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
     public Page<CategoryDto> getAllByActive(@PathVariable Boolean active,
                                             Pageable pageable) {
-        return categoryService.findAllByActive(pageable, active);
+        return categoryService.findAllByDeleted(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
@@ -47,12 +47,6 @@ public class CategoryController {
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
     public CategoryDto getByName(@PathVariable String category) {
         return categoryService.findByCategory(category);
-    }
-
-    @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activate(@PathVariable Long id) {
-        categoryService.activate(id);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
