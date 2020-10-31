@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-10-2-1
+      author: alexander_popovich
+      changes:
+        - modifyDataType:
+            columnName: upc
+            newDataType: numeric
+            tableName: item
+  - changeSet:
+      id: SUP-10-2-2
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: item
+            columns:
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false

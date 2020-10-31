@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-USER-1
+      author: alesia_hlushakova
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: true
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: SUP-USER-2
+      author: alesia_hlushakova
+      changes:
+        - renameColumn:
+            columnDataType:  varchar(45)
+            newColumnName:  active
+            oldColumnName:  is_active
+            tableName:  user
