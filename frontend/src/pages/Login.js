@@ -5,12 +5,11 @@ import RequestService from "../services/requestService";
 import ErrorMessage from "../messages/errorMessage";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import {Redirect} from "react-router-dom";
 import validateLoginForm from "../validation/LoginFormValidationRules";
+import Companies from "./Companies";
 
 export default (props) => {
     const {user, setUser} = useContext(AuthContext);
-    const prevPageLocation = props?.history?.location?.state?.from || '/';
     const [fields, setField] = useState({
         username: '',
         password: ''
@@ -21,14 +20,13 @@ export default (props) => {
         errorMessage: '',
         errors: []
     });
-
     const requestService = new RequestService();
 
     const onError = () => {
         changeLoginState(preState => ({
             ...preState,
             loginFailed: true,
-            errorMessage: "Invalid login or password. Please, try again."
+            errorMessage: "Invalid login or password."
         }));
     };
 
@@ -43,6 +41,11 @@ export default (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        changeLoginState(preState => ({
+            ...preState,
+            loginFailed: false,
+            errorMessage: ""
+        }));
         let errorFields = validateLoginForm(fields);
         changeLoginState(prevState => {
             return {...prevState, errors: errorFields};
@@ -50,15 +53,20 @@ export default (props) => {
 
         if (errorFields.length === 0) {
             requestService.postResource("/login", fields)
-                .then(res => setUser({
-                    username: res.username
-                }))
+                .then(res => {
+                    setUser({
+                        username: res.username,
+                        role: res.role,
+                        customers: res.customer
+                    });
+                })
                 .catch(error => onError());
         }
     };
 
     const loginForm = (
-        <div style={{margin: '70px 550px'}}>
+
+        <div className="loginCard">
             <Card style={{width: '25rem'}}
                   className="shadow p-3 mb-5 bg-white rounded">
                 <Card.Header className="text-center border-bottom border-primary" style={{'background': 'white'}}>
@@ -98,10 +106,11 @@ export default (props) => {
                                 Please provide a valid password.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Button variant="primary" size="md" block
+                        <Button size="md" block
                                 type="submit"
-                                onClick={handleSubmit}>
-                            Login
+                                onClick={handleSubmit}
+                                className="mainButton">
+                            Log in
                         </Button>
                     </Form>
                 </Card.Body>
@@ -109,5 +118,5 @@ export default (props) => {
         </div>
     );
 
-    return user ? <Redirect to={prevPageLocation}/> : loginForm;
+    return user ? <Companies/> : loginForm;
 }

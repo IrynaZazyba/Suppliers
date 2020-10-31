@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.auth;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;

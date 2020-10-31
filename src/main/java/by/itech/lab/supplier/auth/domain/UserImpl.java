@@ -1,4 +1,4 @@
-package by.itech.lab.supplier.auth;
+package by.itech.lab.supplier.auth.domain;
 
 import by.itech.lab.supplier.dto.CustomerDto;
 import org.springframework.security.core.GrantedAuthority;

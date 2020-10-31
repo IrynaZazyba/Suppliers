@@ -6,6 +6,7 @@ export const AuthContext = createContext({
 
 export default function AuthContextProvider({ children }) {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+
     return (
         <AuthContext.Provider value={{
             user,
@@ -15,7 +16,7 @@ export default function AuthContextProvider({ children }) {
             },
             logout: () => {
                 localStorage.setItem('user', JSON.stringify(null));
-                setUser(null)
+                setUser(null);
             }
         }}>
             {children}

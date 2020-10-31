@@ -16,6 +16,7 @@ export default () => {
         (
             <div>
                 <Button variant="outline-primary"
+                        className="primaryButton"
                         style={{
                             position: 'absolute',
                             right: '15px',
