@@ -1,9 +1,7 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
-import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
@@ -12,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -48,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseGet(() -> customerMapper.map(customerDto));
 
         final Customer saved = customerRepository.save(customer);
-        userService.save(createAdmin(customerDto));
+        userService.save(userService.createAdmin(customerDto));
         return customerMapper.map(saved);
     }
 
@@ -58,30 +57,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void activate(Long id) {
-
-    }
-
     @Transactional
-    public void switchStatus(final Long id) {
-        final Customer existing = customerRepository
-                .findById(id)
-                .orElseThrow();
-        if (existing.isStatus()) {
-            customerRepository.deactivate(id);
-        } else {
-            customerRepository.activate(id);
-        }
-    }
-
-    private UserDto createAdmin(CustomerDto customerDto) {
-        return UserDto.builder()
-                .username("User name")
-                .name("Name")
-                .surname("Surname")
-                .email(customerDto.getAdminEmail())
-                .active(false)
-                .role(Role.ROLE_ADMIN)
-                .build();
+    public boolean changeActiveStatus(Long id, boolean status) {
+        return customerRepository.setStatus(status, id);
     }
 }

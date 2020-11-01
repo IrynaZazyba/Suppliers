@@ -12,7 +12,4 @@ public interface BaseService<Dto extends BaseDto> {
     Dto findById(final Long id);
 
     void delete(final Long id);
-
-    void activate(final Long id);
-
 }

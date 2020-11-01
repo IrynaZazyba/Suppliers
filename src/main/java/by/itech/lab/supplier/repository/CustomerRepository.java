@@ -18,11 +18,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     void delete(@Param("id") Long id);
 
     @Modifying
-    @Query("update Customer set status = true where id = :id")
-    void activate(@Param("id") Long id);
-
-    @Modifying
-    @Query("update Customer set status = false where id = :id")
-    void deactivate(@Param("id") Long id);
-
+    @Query("update Customer set status = :isActive where id = :id")
+    boolean setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
 }
