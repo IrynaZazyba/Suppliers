@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
     @Modifying
-    @Query("update User set deleted = false where id = :id")
+    @Query("update User set deleted = true where id = :id")
     void deleteById(@Param("id") Long id);
 
     @Modifying

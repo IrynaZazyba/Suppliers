@@ -31,7 +31,9 @@ public class Customer implements BaseEntity {
     @Column(nullable = false)
     private LocalDate registrationDate;
     @Column(nullable = false)
-    private boolean status;
+    private boolean active;
+    @Column
+    private LocalDate deletedAt;
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")

@@ -53,16 +53,14 @@ public class CustomerController {
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @ResponseStatus(HttpStatus.OK)
     public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDto customerDto) {
         customerDto.setId(id);
         return customerService.save(customerDto);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    @ResponseStatus(HttpStatus.OK)
-    public boolean changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
-        return customerService.changeActiveStatus(id, status);
+    public boolean changeActive(@PathVariable Long id, @PathVariable boolean status) {
+        return customerService.changeActive(id, status);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)

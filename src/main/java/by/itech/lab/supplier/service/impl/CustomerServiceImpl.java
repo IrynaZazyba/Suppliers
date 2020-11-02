@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -53,12 +54,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     public void delete(final Long id) {
-        customerRepository.delete(id);
+        customerRepository.delete(id, LocalDate.now());
     }
 
     @Override
     @Transactional
-    public boolean changeActiveStatus(Long id, boolean status) {
+    public boolean changeActive(Long id, boolean status) {
         return customerRepository.setStatus(status, id);
     }
 }

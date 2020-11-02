@@ -4,7 +4,7 @@ import by.itech.lab.supplier.dto.CustomerDto;
 
 public interface CustomerService extends BaseService<CustomerDto> {
 
-    boolean changeActiveStatus(Long id, boolean status);
+    boolean changeActive(Long id, boolean status);
 }
 
 
