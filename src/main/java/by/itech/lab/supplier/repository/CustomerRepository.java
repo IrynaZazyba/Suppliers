@@ -12,11 +12,11 @@ import java.time.LocalDate;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Query("select c from Customer c where :active is null or c.active=:active")
+    @Query("select c from Customer c where :active is null or c.active=:active and deleted_at = null")
     Page<Customer> findByStatus(Pageable pageable, @Param("active") Boolean active);
 
     @Modifying
-    @Query("update Customer set deletedAt = :deletedTime where id = :id")
+    @Query("update Customer set deleted_at = :deletedTime where id = :id")
     void delete(@Param("id") Long id, LocalDate deletedTime);
 
     @Modifying

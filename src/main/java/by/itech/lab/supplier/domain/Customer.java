@@ -33,7 +33,7 @@ public class Customer implements BaseEntity {
     @Column(nullable = false)
     private boolean active;
     @Column
-    private LocalDate deletedAt;
+    private LocalDate deleted_at;
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")

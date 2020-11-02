@@ -17,6 +17,6 @@ public class CustomerDto implements BaseDto {
     @Pattern(regexp = "[*?=%:]", message = "You have typed the wrong characters")
     private String name;
     private LocalDate registrationDate;
-    private boolean status;
+    private boolean active;
     private String adminEmail;
 }
