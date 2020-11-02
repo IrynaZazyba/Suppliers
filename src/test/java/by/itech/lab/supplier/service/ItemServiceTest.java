@@ -97,25 +97,6 @@ public class ItemServiceTest {
         pageRequest = PageRequest.of(0, 10);
     }
 
-    @TestConfiguration
-    static class Config {
-
-        @MockBean
-        private ItemRepository itemRepository;
-
-        @MockBean
-        private ItemMapper itemMapper;
-
-        @MockBean
-        private CategoryService categoryService;
-
-        @Bean
-        public ItemService itemService() {
-            return new ItemServiceImpl(itemRepository, itemMapper, categoryService);
-        }
-
-    }
-
     @Test
     public void getAllCategoriesTest() {
         List<Item> itemList = Collections.singletonList(item);
@@ -193,5 +174,25 @@ public class ItemServiceTest {
         Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
 
         Assertions.assertEquals(new PageImpl<ItemDto>(new ArrayList<>()),
-          itemService.findAllByCategory("Fruit", pageRequest));    }
+          itemService.findAllByCategory("Fruit", pageRequest));
+    }
+
+    @TestConfiguration
+    static class Config {
+
+        @MockBean
+        private ItemRepository itemRepository;
+
+        @MockBean
+        private ItemMapper itemMapper;
+
+        @MockBean
+        private CategoryService categoryService;
+
+        @Bean
+        public ItemService itemService() {
+            return new ItemServiceImpl(itemRepository, itemMapper, categoryService);
+        }
+
+    }
 }

@@ -1,7 +1,6 @@
 package by.itech.lab.supplier.dto;
 
 
-import by.itech.lab.supplier.domain.Category;
 import lombok.Builder;
 import lombok.Data;
 

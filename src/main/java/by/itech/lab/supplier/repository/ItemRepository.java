@@ -1,7 +1,6 @@
 package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Item;
-import by.itech.lab.supplier.dto.CategoryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

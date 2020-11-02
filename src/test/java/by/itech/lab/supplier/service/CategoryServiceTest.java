@@ -71,25 +71,8 @@ public class CategoryServiceTest {
         pageRequest = PageRequest.of(0, 10);
     }
 
-    @TestConfiguration
-    static class Config {
-
-        @MockBean
-        private CategoryRepository categoryRepository;
-
-        @MockBean
-        private CategoryMapper categoryMapper;
-
-        @Bean
-        public CategoryService categoryService() {
-            return new CategoryServiceImpl(categoryRepository, categoryMapper);
-        }
-
-    }
-
-
     @Test
-    public void getAllCategoriesTest() {
+    void getAllCategoriesTest() {
         List<Category> categoryList = Collections.singletonList(category);
         List<CategoryDto> categoryDtoList = Collections.singletonList(categoryDto);
         Page<CategoryDto> categoryDtoPage = new PageImpl<>(categoryDtoList);
@@ -110,7 +93,7 @@ public class CategoryServiceTest {
         Page<Category> categoryPage = new PageImpl<>(categoryList);
 
         Mockito.when(categoryRepository.findAllByDeleted(pageRequest, true)).thenReturn(categoryPage);
-        Mockito.when(categoryMapper.map(category)).thenReturn(deletedCategoryDto);
+        Mockito.when(categoryMapper.map(deletedCategory)).thenReturn(deletedCategoryDto);
 
         Assertions.assertEquals(categoryDtoPage, categoryService.findAllByDeleted(pageRequest, true));
     }
@@ -123,7 +106,7 @@ public class CategoryServiceTest {
         Page<Category> categoryPage = new PageImpl<>(categoryList);
 
         Mockito.when(categoryRepository.findAllByDeleted(pageRequest, false)).thenReturn(categoryPage);
-        Mockito.when(categoryMapper.map(deletedCategory)).thenReturn(categoryDto);
+        Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
         Assertions.assertEquals(categoryDtoPage, categoryService.findAllByDeleted(pageRequest, false));
     }
@@ -158,6 +141,22 @@ public class CategoryServiceTest {
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
         Assertions.assertThrows(NotFoundInDBException.class, () -> categoryService.findByCategory("Test"));
+    }
+
+    @TestConfiguration
+    static class Config {
+
+        @MockBean
+        private CategoryRepository categoryRepository;
+
+        @MockBean
+        private CategoryMapper categoryMapper;
+
+        @Bean
+        public CategoryService categoryService() {
+            return new CategoryServiceImpl(categoryRepository, categoryMapper);
+        }
+
     }
 
 }
