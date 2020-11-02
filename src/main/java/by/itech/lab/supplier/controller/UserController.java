@@ -28,9 +28,7 @@ import java.util.Optional;
 @RequestMapping(ApiConstants.URL_USER)
 public class UserController {
 
-    @Autowired
     private final UserService userService;
-
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public Optional<UserDto> getUser(@PathVariable Long id) {

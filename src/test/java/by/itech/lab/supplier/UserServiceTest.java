@@ -8,6 +8,7 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.impl.UserServiceImpl;
+import by.itech.lab.supplier.service.mail.MailServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -35,6 +36,8 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    private MailServiceImpl mailService;
     @InjectMocks
     private UserServiceImpl userService;
     private UserDto userDto;
@@ -43,7 +46,7 @@ public class UserServiceTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository, userMapper);
+        userService = new UserServiceImpl(userRepository, userMapper, mailService);
         Address address = new Address();
         address.setAddressLine1("address1");
         address.setAddressLine2("address2");

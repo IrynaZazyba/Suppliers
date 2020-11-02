@@ -9,6 +9,7 @@ import by.itech.lab.supplier.service.mail.MailService;
 import by.itech.lab.supplier.service.mail.MailServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    private final MailServiceImpl mailService;
 
     @Override
     public Optional<UserDto> findById(Long id) {
@@ -48,8 +51,8 @@ public class UserServiceImpl implements UserService {
                     return existing;
                 })
                 .orElseGet(() -> {
-                    MailService mailService = new MailServiceImpl();
-                    mailService.sendMail(userDTO);
+                    MailService mailService1 = new MailServiceImpl();
+                    mailService1.sendMail(userDTO);
                    return userMapper.map(userDTO);
                 });
 
