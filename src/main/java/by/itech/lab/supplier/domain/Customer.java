@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,8 +33,7 @@ public class Customer implements BaseEntity {
     private LocalDate registrationDate;
     @Column(nullable = false)
     private boolean active;
-    @Column
-    private LocalDate deleted_at;
+    private LocalDate deletedAt;
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")

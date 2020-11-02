@@ -68,13 +68,13 @@ public class CustomerServiceTest {
                 .id(5L)
                 .name("System")
                 .registrationDate(LocalDate.now())
-                .status(true)
+                .active(true)
                 .build();
         customerDto = CustomerDto.builder()
                 .id(5L)
                 .name("System")
                 .registrationDate(LocalDate.now())
-                .status(true)
+                .active(true)
                 .build();
         pageRequest = PageRequest.of(1, 10);
     }

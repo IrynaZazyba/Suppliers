@@ -11,12 +11,13 @@ databaseChangeLog:
                   type: date
                   defaultValue: null
                   constraints:
-                    nullable: false
+                    nullable: true
   - changeSet:
       id: SUP-CUSTOMER-37-2
       author: alexey_overchenko
       changes:
         - renameColumn:
-            newColumnName:  active
-            oldColumnName:  status
-            tableName:  customer
+            columnDataType: boolean
+            newColumnName: active
+            oldColumnName: status
+            tableName: customer

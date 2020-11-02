@@ -49,7 +49,7 @@ public class UserServiceTest {
         address.setAddressLine2("address2");
         Customer customer = new Customer();
         customer.setName("dwwad");
-        customer.setStatus(true);
+        customer.setActive(true);
         customer.setRegistrationDate(LocalDate.now());
         userDto = new UserDto();
         userDto.setUsername(USERNAME);
