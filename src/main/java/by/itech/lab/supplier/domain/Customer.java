@@ -3,6 +3,7 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -37,5 +38,6 @@ public class Customer implements BaseEntity {
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
+    @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }
