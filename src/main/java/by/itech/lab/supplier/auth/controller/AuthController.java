@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import static by.itech.lab.supplier.constant.ApiConstants.URL_LOGIN;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -21,7 +23,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserImplMapper userImplMapper;
 
-    @PostMapping(value = "/login")
+    @PostMapping(value = URL_LOGIN)
     public UserImplDto getUserCustomers(@RequestBody LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken authReq
                 = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
