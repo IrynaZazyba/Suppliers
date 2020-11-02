@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.auth;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
@@ -34,7 +35,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<CustomerDto> customers = Collections.singletonList(customerMapper.map(user.getCustomer()));
         userImpl = new UserImpl(
                 user.getId(),
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 customers,
                 user.isActive(),
