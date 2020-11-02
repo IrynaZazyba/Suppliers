@@ -5,15 +5,14 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
-import by.itech.lab.supplier.service.mail.MailService;
 import by.itech.lab.supplier.service.mail.MailServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 @Service
@@ -51,9 +50,8 @@ public class UserServiceImpl implements UserService {
                     return existing;
                 })
                 .orElseGet(() -> {
-                    MailService mailService1 = new MailServiceImpl();
-                    mailService1.sendMail(userDTO);
-                   return userMapper.map(userDTO);
+                    mailService.sendMail(userDTO);
+                    return userMapper.map(userDTO);
                 });
 
         final User saved = userRepository.save(user);
