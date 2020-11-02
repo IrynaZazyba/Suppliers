@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -49,12 +50,12 @@ public class UserServiceImpl implements UserService {
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
-                .orElseGet(() -> {
-                    mailService.sendMail(userDTO);
-                    return userMapper.map(userDTO);
-                });
+                .orElseGet(() -> userMapper.map(userDTO));
 
         final User saved = userRepository.save(user);
+        if (Objects.isNull(user.getId())) {
+            mailService.sendMail(userDTO);
+        }
         return userMapper.map(saved);
     }
 
