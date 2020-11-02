@@ -27,5 +27,6 @@ public interface ApiConstants {
     String URL_ADDRESS_ID_PARAMETER = "/{address_id}";
     String URL_WAYBILL_ID_PARAMETER = "/{waybill_id}";
     String URL_NUMBER_PARAMETER = "/{number}";
+    String URL_DELETED_PARAMETER = "/{deleted}";
 
 }
