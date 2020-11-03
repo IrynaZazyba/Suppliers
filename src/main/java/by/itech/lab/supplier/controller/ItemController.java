@@ -38,7 +38,7 @@ public class ItemController {
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
     public Page<ItemDto> getAllByActive(@PathVariable Boolean active,
                                         Pageable pageable) {
-        return itemService.findAllByActive(pageable, active);
+        return itemService.findAll(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)

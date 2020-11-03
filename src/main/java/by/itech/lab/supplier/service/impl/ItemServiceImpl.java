@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<ItemDto> findAllByActive(final Pageable pageable, final Boolean active) {
+    public Page<ItemDto> findAll(final Pageable pageable, final Boolean active) {
         return itemRepository.findAllByActive(pageable, active)
           .map(itemMapper::map);
     }

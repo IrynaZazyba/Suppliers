@@ -36,7 +36,7 @@ public class CategoryController {
     @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
     public Page<CategoryDto> getAllByActive(@PathVariable Boolean active,
                                             Pageable pageable) {
-        return categoryService.findAllByActive(pageable, active);
+        return categoryService.findAll(pageable, active);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

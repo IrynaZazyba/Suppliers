@@ -98,7 +98,7 @@ public class CategoryServiceTest {
         Mockito.when(categoryRepository.findAllByActive(pageRequest, null)).thenReturn(categoryPage);
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllByActive(pageRequest, null));
+        Assertions.assertEquals(categoryDtoPage, categoryService.findAll(pageRequest, null));
 
     }
 
@@ -112,7 +112,7 @@ public class CategoryServiceTest {
         Mockito.when(categoryRepository.findAllByActive(pageRequest, true)).thenReturn(categoryPage);
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllByActive(pageRequest, true));
+        Assertions.assertEquals(categoryDtoPage, categoryService.findAll(pageRequest, true));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class CategoryServiceTest {
         Mockito.when(categoryRepository.findAllByActive(pageRequest, false)).thenReturn(categoryPage);
         Mockito.when(categoryMapper.map(falseCategory)).thenReturn(falseCategoryDto);
 
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllByActive(pageRequest, false));
+        Assertions.assertEquals(categoryDtoPage, categoryService.findAll(pageRequest, false));
     }
 
     @Test
