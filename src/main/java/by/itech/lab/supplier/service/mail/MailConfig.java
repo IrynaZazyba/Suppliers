@@ -17,9 +17,9 @@ import java.util.Properties;
 @PropertySource("classpath:application.properties")
 public class MailConfig {
     private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
-    @Value("${admin.email}")
+    @Value("${admin.email}:Itechart2020JavaLab@gmail.com")
     private String email;
-    @Value("${admin.password}")
+    @Value("${admin.password}:Itechart2020java")
     private String password;
 
     @Bean
