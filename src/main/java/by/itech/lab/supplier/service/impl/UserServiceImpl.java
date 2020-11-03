@@ -4,6 +4,7 @@ import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
@@ -70,12 +71,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createAdmin(CustomerDto customerDto) {
         return UserDto.builder()
-                .username("User name")
                 .name("Name")
                 .surname("Surname")
+                .birthday(null)
+                .username("User name")
                 .email(customerDto.getAdminEmail())
-                .active(false)
                 .role(Role.ROLE_ADMIN)
+                //addressDto(adressDto)
+                .customerDto(customerDto)
+                //warehouseDto(warehouseDto)
+                .active(false)
+                .address(null)
                 .build();
     }
 }
