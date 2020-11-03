@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,6 +27,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "`user`")
+@Where(clause = "deleted_at is null")
 public class User implements BaseEntity {
 
     @Id
@@ -44,8 +45,6 @@ public class User implements BaseEntity {
     private String password;
 
     private String email;
-
-    private String activationKey;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -79,6 +78,6 @@ public class User implements BaseEntity {
 
     private boolean active;
 
-    private boolean deleted;
+    private LocalDate deletedAt;
 
 }

@@ -6,6 +6,7 @@ import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WayBill;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +25,7 @@ import java.util.Set;
 public class UserDto implements BaseDto {
 
     private boolean active;
-    private boolean deleted;
+    private LocalDate deletedAt;
     private Long id;
     @NotBlank
     @Size(min = 1, max = 50)
