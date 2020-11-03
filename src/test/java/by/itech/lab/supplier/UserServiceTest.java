@@ -5,6 +5,7 @@ import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.impl.UserServiceImpl;
@@ -37,6 +38,8 @@ public class UserServiceTest {
     @Mock
     private UserMapper userMapper;
     @Mock
+    private CustomerMapper customerMapper;
+    @Mock
     private MailServiceImpl mailService;
     @InjectMocks
     private UserServiceImpl userService;
@@ -64,7 +67,7 @@ public class UserServiceTest {
         userDto.setSurname("doe");
         userDto.setAddress(address);
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
-        userDto.setCustomer(customer);
+        userDto.setCustomer(customerMapper.map(customer));
         user = new User();
         user.setUsername(USERNAME);
         user.setPassword("password");

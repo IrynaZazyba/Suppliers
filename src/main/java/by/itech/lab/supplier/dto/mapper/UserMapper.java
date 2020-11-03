@@ -2,10 +2,15 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class UserMapper implements BaseMapper<User, UserDto> {
+
+    private final CustomerMapper customerMapper;
+
 
     @Override
     public UserDto map(User user) {
@@ -24,7 +29,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .creatorWayBills(user.getCreatorWayBills())
                 .driverWayBills(user.getDriverWayBills())
                 .address(user.getAddress())
-                .customer(user.getCustomer())
+                .customer(customerMapper.map(user.getCustomer()))
                 .build();
     }
 
@@ -40,7 +45,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
         to.setCreatorWayBills(from.getCreatorWayBills());
         to.setDriverWayBills(from.getDriverWayBills());
         to.setAddress(from.getAddress());
-        to.setCustomer(from.getCustomer());
+        to.setCustomer(customerMapper.map(from.getCustomer()));
     }
 
     @Override
@@ -59,7 +64,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .creatorWayBills(userDTO.getCreatorWayBills())
                 .driverWayBills(userDTO.getDriverWayBills())
                 .address(userDTO.getAddress())
-                .customer(userDTO.getCustomer())
+                .customer(customerMapper.map(userDTO.getCustomer()))
                 .build();
     }
 

@@ -25,8 +25,8 @@ public class MailServiceImpl implements MailService {
 
     public void sendMail(final UserDto userDto) {
         Map<String, Object> emailMap = new HashMap<>();
-        emailMap.put("firstName", "Alesya");
-        emailMap.put("lastName", "Glushakova");
+        emailMap.put("firstName", "JavaLab2020");
+        emailMap.put("lastName", "Admin");
         emailMap.put("title", "Registration email");
         Context ctx = new Context(LocaleContextHolder.getLocale());
         ctx.setVariables(emailMap);

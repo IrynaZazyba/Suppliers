@@ -45,7 +45,7 @@ public class UserDto implements BaseDto {
     private String activationKey;
     private Role role;
     private Address address;
-    private Customer customer;
+    private CustomerDto customer;
     private Warehouse warehouse;
     private Set<WayBill> creatorWayBills = new HashSet<>();
     private Set<WayBill> updatorWayBills = new HashSet<>();

@@ -5,7 +5,7 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
-import by.itech.lab.supplier.service.mail.MailServiceImpl;
+import by.itech.lab.supplier.service.mail.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    private final MailServiceImpl mailService;
+    private final MailService mailService;
 
     @Override
     public Optional<UserDto> findById(Long id) {
@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean changeActiveStatus(String username, boolean status) {
-        return userRepository.setStatus(status, username);
+    public boolean changeActiveStatus(Long id, boolean status) {
+        return userRepository.setStatus(status, id);
     }
 
     @Override
