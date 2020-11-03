@@ -55,8 +55,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<ItemDto> findAllNotDeleted(Pageable pageable) {
-        return itemRepository.findAllNotDeleted(pageable)
+    public Page<ItemDto> findAll(Pageable pageable) {
+        return itemRepository.findAll(pageable)
           .map(itemMapper::map);
 
     }

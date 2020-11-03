@@ -32,7 +32,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
           .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
           .wayBill(wayBillMapper.map(dto.getWayBillDto()))
-          .deleted(dto.isDeleted())
           .deletedAt(dto.getDeletedAt())
           .items(dto.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
@@ -50,7 +49,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
           .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
           .wayBillDto(wayBillMapper.map(application.getWayBill()))
-          .deleted(application.isDeleted())
           .deletedAt(application.getDeletedAt())
           .items(application.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
@@ -65,7 +63,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
         to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
         to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
-        to.setDeleted(from.isDeleted());
         to.setDeletedAt(from.getDeletedAt());
         to.setItems(from.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()));
     }

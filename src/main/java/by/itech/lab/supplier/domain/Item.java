@@ -16,7 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -38,7 +38,6 @@ public class Item implements BaseEntity {
     @OneToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    private boolean deleted;
-    private Date deletedAt;
+    private LocalDate deletedAt;
 
 }

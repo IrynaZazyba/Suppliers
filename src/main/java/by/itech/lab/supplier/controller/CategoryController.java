@@ -34,15 +34,15 @@ public class CategoryController {
 
     @GetMapping
     public Page<CategoryDto> getAllNotDeleted(Pageable pageable) {
-        return categoryService.findAllNotDeleted(pageable);
+        return categoryService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_ID_PARAMETER)
+    @GetMapping(ApiConstants.URL_ID + ApiConstants.URL_ID_PARAMETER)
     public CategoryDto getById(@PathVariable Long id) {
         return categoryService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
+    @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
     public CategoryDto getByName(@PathVariable String category) {
         return categoryService.findByCategory(category);
     }

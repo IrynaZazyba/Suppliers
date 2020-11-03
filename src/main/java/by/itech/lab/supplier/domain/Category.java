@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +21,7 @@ import java.sql.Date;
 @Builder
 @Entity
 @Table
-@Where(clause="deleted_at is null")
+@Where(clause = "deleted_at is null")
 public class Category implements BaseEntity {
 
     @Id
@@ -31,7 +31,6 @@ public class Category implements BaseEntity {
     private String category;
     @Column(nullable = false)
     private BigDecimal taxRate;
-    private boolean deleted;
-    private Date deletedAt;
+    private LocalDate deletedAt;
 
 }

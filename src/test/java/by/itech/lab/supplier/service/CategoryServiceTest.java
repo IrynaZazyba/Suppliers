@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,13 +47,13 @@ public class CategoryServiceTest {
           .id(17L)
           .taxRate(new BigDecimal(20.0))
           .category("Test")
-          .deleted(false)
+          .deletedAt(LocalDate.now())
           .build();
         categoryDto = CategoryDto.builder()
           .id(17L)
           .taxRate(new BigDecimal(20.0))
           .category("Test")
-          .deleted(false)
+          .deletedAt(LocalDate.now())
           .build();
         pageRequest = PageRequest.of(0, 10);
     }
@@ -64,10 +65,10 @@ public class CategoryServiceTest {
         Page<CategoryDto> categoryDtoPage = new PageImpl<>(categoryDtoList);
         Page<Category> categoryPage = new PageImpl<>(categoryList);
 
-        Mockito.when(categoryRepository.findAllNotDeleted(pageRequest)).thenReturn(categoryPage);
+        Mockito.when(categoryRepository.findAll(pageRequest)).thenReturn(categoryPage);
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllNotDeleted(pageRequest));
+        Assertions.assertEquals(categoryDtoPage, categoryService.findAll(pageRequest));
 
     }
 

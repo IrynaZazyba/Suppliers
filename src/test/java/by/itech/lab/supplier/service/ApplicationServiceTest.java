@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -50,26 +51,24 @@ public class ApplicationServiceTest {
           .number("Test")
           .wayBill(null)
           .lastUpdatedByUsers(null)
-          .lastUpdated(new Date(new java.util.Date().getTime()))
+          .lastUpdated(LocalDate.now())
           .createdByUsers(null)
           .sourceLocationAddressId(null)
-          .registrationDate(new Date(new java.util.Date().getTime()))
+          .registrationDate(LocalDate.now())
           .applicationStatus(ApplicationStatus.OPEN)
-          .deletedAt(null)
-          .deleted(false)
+          .deletedAt(LocalDate.now())
           .build();
         applicationDto = ApplicationDto.builder()
           .id(17L)
           .number("Test")
           .wayBillDto(null)
           .lastUpdatedByUsersDto(null)
-          .lastUpdated(new Date(new java.util.Date().getTime()))
+          .lastUpdated(LocalDate.now())
           .createdByUsersDto(null)
           .sourceLocationAddressIdDto(null)
-          .registrationDate(new Date(new java.util.Date().getTime()))
+          .registrationDate(LocalDate.now())
           .applicationStatus(ApplicationStatus.OPEN)
-          .deletedAt(null)
-          .deleted(false)
+          .deletedAt(LocalDate.now())
           .build();
         pageRequest = PageRequest.of(0, 10);
     }
@@ -81,10 +80,10 @@ public class ApplicationServiceTest {
         Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
-        Mockito.when(applicationRepository.findAllNotDeleted(pageRequest)).thenReturn(applicationPage);
+        Mockito.when(applicationRepository.findAll(pageRequest)).thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAllNotDeleted(pageRequest));
+        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest));
 
     }
 

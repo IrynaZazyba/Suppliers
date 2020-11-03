@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -13,7 +13,6 @@ public class CategoryDto implements BaseDto {
     private Long id;
     private String category;
     private BigDecimal taxRate;
-    private boolean deleted;
-    private Date deletedAt;
+    private LocalDate deletedAt;
 
 }

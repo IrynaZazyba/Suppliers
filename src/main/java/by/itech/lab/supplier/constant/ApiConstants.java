@@ -19,7 +19,6 @@ public interface ApiConstants {
     String URL_COMPANIES = "/companies";
     String URL_CATEGORY_PARAMETER = "/{category}";
     String URL_LABEL_PARAMETER = "/{label}";
-    String URL_ACTIVE_PARAMETER = "/{active}";
     String URL_FILTERED = "/companies";
     String URL_ID_PARAMETER = "/{id}";
     String URL_STATUS_PARAMETER = "/{status}";
@@ -27,6 +26,7 @@ public interface ApiConstants {
     String URL_ADDRESS_ID_PARAMETER = "/{address_id}";
     String URL_WAYBILL_ID_PARAMETER = "/{waybill_id}";
     String URL_NUMBER_PARAMETER = "/{number}";
-    String URL_DELETED_PARAMETER = "/{deleted}";
+    String URL_ID = "/id";
+    String URL_STATUS = "/status";
 
 }

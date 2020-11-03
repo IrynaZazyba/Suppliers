@@ -36,7 +36,7 @@ public class ItemController {
 
     @GetMapping
     public Page<ItemDto> getAllNotDeleted(Pageable pageable) {
-        return itemService.findAllNotDeleted(pageable);
+        return itemService.findAll(pageable);
     }
 
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)

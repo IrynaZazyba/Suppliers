@@ -20,10 +20,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllByCategory(@Param("category_id") Long categoryId, final Pageable page);
 
     @Query("select i from Item i")
-    Page<Item> findAllNotDeleted(Pageable pageable);
+    Page<Item> findAll(Pageable pageable);
 
     @Modifying
-    @Query("update Item set deleted = true, deletedAt = :deletedTime where id = :id")
+    @Query("update Item set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
 
 }

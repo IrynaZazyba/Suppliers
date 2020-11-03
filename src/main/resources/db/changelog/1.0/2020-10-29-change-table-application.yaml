@@ -7,71 +7,43 @@ databaseChangeLog:
             tableName: application
             columns:
               - column:
-                  name: active
-                  type: BOOLEAN
-                  defaultValue: true
-                  constraints:
-                    nullable: false
+                  name: deleted_at
+                  type: DATE
   - changeSet:
       id: SUP-11-2
       author: alexander_popovich
       changes:
-        - renameColumn:
-            tableName: application
-            newColumnName: deleted
-            oldColumnName: active
-            columnDataType: BOOLEAN
+        - dropColumn:
+            tableName: item
+            columns:
+               - column:
+                   name: active
   - changeSet:
       id: SUP-11-3
       author: alexander_popovich
       changes:
         - addColumn:
-            tableName: application
+            tableName: item
             columns:
               - column:
                   name: deleted_at
                   type: DATE
-                  constraints:
-                    nullable: false
   - changeSet:
-      id: SUP-11-4
-      author: alexander_popovich
+      id:  SUP-11-4
+      author:  alexander_popovich
       changes:
-        - renameColumn:
-            tableName: item
-            newColumnName: deleted
-            oldColumnName: active
-            columnDataType: BOOLEAN
+        - dropColumn:
+            columns:
+              - column:
+                  name:  active
+            tableName:  category
   - changeSet:
       id: SUP-11-5
       author: alexander_popovich
       changes:
         - addColumn:
-            tableName: item
-            columns:
-              - column:
-                  name: deleted_at
-                  type: DATE
-                  constraints:
-                    nullable: false
-  - changeSet:
-      id: SUP-11-6
-      author: alexander_popovich
-      changes:
-        - renameColumn:
-            tableName: category
-            newColumnName: deleted
-            oldColumnName: active
-            columnDataType: BOOLEAN
-  - changeSet:
-      id: SUP-11-7
-      author: alexander_popovich
-      changes:
-        - addColumn:
             tableName: category
             columns:
               - column:
                   name: deleted_at
                   type: DATE
-                  constraints:
-                    nullable: false

@@ -34,15 +34,19 @@ public class ApplicationServiceImpl implements ApplicationService {
               applicationMapper.map(dto, existing);
               return existing;
           })
-          .orElseGet(() -> applicationMapper.map(dto));
+          .orElseGet(() -> {
+              dto.setRegistrationDate(LocalDate.now());
+              return applicationMapper.map(dto);
+          });
 
+        application.setLastUpdated(LocalDate.now());
         final Application saved = applicationRepository.save(application);
         return applicationMapper.map(saved);
     }
 
     @Override
-    public Page<ApplicationDto> findAllNotDeleted(final Pageable pageable) {
-        return applicationRepository.findAllNotDeleted(pageable)
+    public Page<ApplicationDto> findAll(final Pageable pageable) {
+        return applicationRepository.findAll(pageable)
           .map(applicationMapper::map);
     }
 

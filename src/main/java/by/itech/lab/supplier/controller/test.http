@@ -1,0 +1,10 @@
+GET localhost:8080/application
+
+###
+
+GET localhost:8080/application/1
+
+###
+GET localhost:8080/category/1
+
+###

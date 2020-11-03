@@ -29,8 +29,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDto> findAllNotDeleted(final Pageable pageable) {
-        return categoryRepository.findAllNotDeleted(pageable)
+    public Page<CategoryDto> findAll(final Pageable pageable) {
+        return categoryRepository.findAll(pageable)
           .map(categoryMapper::map);
     }
 

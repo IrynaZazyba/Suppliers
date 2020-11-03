@@ -12,7 +12,6 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
         return Category.builder()
           .category(dto.getCategory())
           .taxRate(dto.getTaxRate())
-          .deleted(dto.isDeleted())
           .deletedAt(dto.getDeletedAt())
           .id(dto.getId())
           .build();
@@ -24,7 +23,6 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
           .id(entity.getId())
           .taxRate(entity.getTaxRate())
           .category(entity.getCategory())
-          .deleted(entity.isDeleted())
           .deletedAt(entity.getDeletedAt())
           .build();
     }
@@ -32,7 +30,6 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
     public void map(final CategoryDto from, final Category to) {
         to.setCategory(from.getCategory());
         to.setTaxRate(from.getTaxRate());
-        to.setDeleted(from.isDeleted());
         to.setDeletedAt(from.getDeletedAt());
     }
 

@@ -19,7 +19,6 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
           .label(dto.getLabel())
           .units(dto.getUnits())
           .category(categoryMapper.map(dto.getCategoryDto()))
-          .deleted(dto.isDeleted())
           .deletedAt(dto.getDeletedAt())
           .build();
     }
@@ -32,7 +31,6 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
           .label(entity.getLabel())
           .units(entity.getUnits())
           .categoryDto(categoryMapper.map(entity.getCategory()))
-          .deleted(entity.isDeleted())
           .deletedAt(entity.getDeletedAt())
           .build();
     }
@@ -42,7 +40,6 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
         to.setLabel(from.getLabel());
         to.setUnits(from.getUnits());
         to.setCategory(categoryMapper.map(from.getCategoryDto()));
-        to.setDeleted(from.isDeleted());
         to.setDeletedAt(from.getDeletedAt());
     }
 

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,30 +44,31 @@ public class ApplicationController {
 
     @GetMapping
     public Page<ApplicationDto> getAllNotDeleted(Pageable pageable) {
-        return applicationService.findAllNotDeleted(pageable);
+        return applicationService.findAll(pageable);
     }
 
     @GetMapping(ApiConstants.URL_CREATED_BY_ID_PARAMETER)
-    public Page<ApplicationDto> getAllByCreatedByUsers(@PathVariable Long userId,
+    public Page<ApplicationDto> getAllByCreatedByUsers(@PathVariable Long created_by_id,
                                                        Pageable pageable) {
-        return applicationService.findAllByCreatedByUsers(pageable, userId);
+        return applicationService.findAllByCreatedByUsers(pageable, created_by_id);
     }
 
     @GetMapping(ApiConstants.URL_ADDRESS_ID_PARAMETER)
-    public Page<ApplicationDto> getAllByLocationAddress(@PathVariable Long addressId,
+    public Page<ApplicationDto> getAllByLocationAddress(@PathVariable Long address_id,
                                                         Pageable pageable) {
-        return applicationService.findAllByLocationAddressId(pageable, addressId);
+        return applicationService.findAllByLocationAddressId(pageable, address_id);
     }
 
     @GetMapping(ApiConstants.URL_WAYBILL_ID_PARAMETER)
-    public Page<ApplicationDto> getAllByWaybill(@PathVariable Long waybillId,
+    public Page<ApplicationDto> getAllByWaybill(@PathVariable Long waybill_id,
                                                 Pageable pageable) {
-        return applicationService.findAllByWayBill(pageable, waybillId);
+        return applicationService.findAllByWayBill(pageable, waybill_id);
     }
 
     @GetMapping(ApiConstants.URL_STATUS_PARAMETER)
     public Page<ApplicationDto> getAllByStatus(@PathVariable String status,
                                                Pageable pageable) {
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return applicationService.findAllByApplicationStatus(pageable, ApplicationStatus.valueOf(status));
     }
 
@@ -85,6 +87,5 @@ public class ApplicationController {
     public void delete(@PathVariable Long id) {
         applicationService.delete(id);
     }
-
 
 }

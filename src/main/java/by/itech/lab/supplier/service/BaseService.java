@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 public interface BaseService<Dto extends BaseDto> {
     Dto save(final Dto dto);
 
-    Page<Dto> findAllNotDeleted(Pageable pageable);
+    Page<Dto> findAll(Pageable pageable);
 
     Dto findById(final Long id);
 

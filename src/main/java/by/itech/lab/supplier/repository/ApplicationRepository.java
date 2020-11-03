@@ -17,7 +17,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findByNumber(@Param("number") final String number);
 
     @Query("select app from Application app")
-    Page<Application> findAllNotDeleted(Pageable pageable);
+    Page<Application> findAll(Pageable pageable);
 
     @Query("select app from Application app where app.createdByUsers.id =:user_id")
     Page<Application> findAllByCreatedByUsers(Pageable pageable, @Param("user_id") Long userId);
@@ -36,7 +36,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     void changeStatus(@Param("id") Long id, @Param("status") String status);
 
     @Modifying
-    @Query("update Application set deleted = true, deletedAt = :deletedTime where id = :id")
+    @Query("update Application set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime")LocalDate deletedTime);
 
 }

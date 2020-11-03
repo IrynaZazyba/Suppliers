@@ -23,7 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,20 +54,17 @@ public class ItemServiceTest {
         category = Category.builder()
           .id(17L)
           .category("Fruit")
-          .deleted(false)
           .build();
         categoryDto = CategoryDto.builder()
           .id(17L)
           .category("Fruit")
-          .deleted(false)
           .build();
         item = Item.builder()
           .id(10L)
           .label("Apple")
           .units(5.0)
           .upc(new BigDecimal(0.5))
-          .deleted(false)
-          .deletedAt(new Date(new java.util.Date().getTime()))
+          .deletedAt(LocalDate.now())
           .category(category)
           .build();
         itemDto = ItemDto.builder()
@@ -75,8 +72,7 @@ public class ItemServiceTest {
           .label("Apple")
           .units(5.0)
           .upc(new BigDecimal(0.5))
-          .deleted(false)
-          .deletedAt(new Date(new java.util.Date().getTime()))
+          .deletedAt(LocalDate.now())
           .categoryDto(categoryDto)
           .build();
         pageRequest = PageRequest.of(0, 10);
@@ -89,10 +85,10 @@ public class ItemServiceTest {
         Page<ItemDto> itemDtoPage = new PageImpl<>(itemDtoList);
         Page<Item> itemPage = new PageImpl<>(itemList);
 
-        Mockito.when(itemRepository.findAllNotDeleted(pageRequest)).thenReturn(itemPage);
+        Mockito.when(itemRepository.findAll(pageRequest)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
 
-        Assertions.assertEquals(itemDtoPage, itemService.findAllNotDeleted(pageRequest));
+        Assertions.assertEquals(itemDtoPage, itemService.findAll(pageRequest));
 
     }
 
