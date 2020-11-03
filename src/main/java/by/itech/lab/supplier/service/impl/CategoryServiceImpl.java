@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -28,8 +29,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDto> findAllByDeleted(final Pageable pageable, final Boolean deleted) {
-        return categoryRepository.findAllByDeleted(pageable, deleted)
+    public Page<CategoryDto> findAllNotDeleted(final Pageable pageable) {
+        return categoryRepository.findAllNotDeleted(pageable)
           .map(categoryMapper::map);
     }
 
@@ -39,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
               final Category existing = categoryRepository
                 .findById(dto.getId())
                 .orElseThrow();
-              categoryMapper.update(dto, existing);
+              categoryMapper.map(dto, existing);
               return existing;
           })
           .orElseGet(() -> categoryMapper.map(dto));
@@ -56,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void delete(final Long id) {
-        categoryRepository.deleteById(id);
+        categoryRepository.deleteById(id, LocalDate.now());
     }
 
 }

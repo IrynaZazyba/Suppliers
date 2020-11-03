@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,9 +46,7 @@ public class ItemServiceTest {
     private Category category;
     private CategoryDto categoryDto;
     private Item item;
-    private Item falseItem;
     private ItemDto itemDto;
-    private ItemDto falseItemDto;
     private PageRequest pageRequest;
 
     @BeforeEach
@@ -67,7 +66,8 @@ public class ItemServiceTest {
           .label("Apple")
           .units(5.0)
           .upc(new BigDecimal(0.5))
-          .active(true)
+          .deleted(false)
+          .deletedAt(new Date(new java.util.Date().getTime()))
           .category(category)
           .build();
         itemDto = ItemDto.builder()
@@ -75,23 +75,8 @@ public class ItemServiceTest {
           .label("Apple")
           .units(5.0)
           .upc(new BigDecimal(0.5))
-          .active(true)
-          .categoryDto(categoryDto)
-          .build();
-        falseItem = Item.builder()
-          .id(20L)
-          .label("Apple")
-          .units(5.0)
-          .upc(new BigDecimal(0.5))
-          .active(false)
-          .category(category)
-          .build();
-        falseItemDto = ItemDto.builder()
-          .id(20L)
-          .label("Apple")
-          .units(5.0)
-          .upc(new BigDecimal(0.5))
-          .active(false)
+          .deleted(false)
+          .deletedAt(new Date(new java.util.Date().getTime()))
           .categoryDto(categoryDto)
           .build();
         pageRequest = PageRequest.of(0, 10);
@@ -104,37 +89,11 @@ public class ItemServiceTest {
         Page<ItemDto> itemDtoPage = new PageImpl<>(itemDtoList);
         Page<Item> itemPage = new PageImpl<>(itemList);
 
-        Mockito.when(itemRepository.findAllByActive(pageRequest, null)).thenReturn(itemPage);
+        Mockito.when(itemRepository.findAllNotDeleted(pageRequest)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
 
-        Assertions.assertEquals(itemDtoPage, itemService.findAllByActive(pageRequest, null));
+        Assertions.assertEquals(itemDtoPage, itemService.findAllNotDeleted(pageRequest));
 
-    }
-
-    @Test
-    void getAllCategoriesByActiveTrueTest() {
-        List<Item> itemList = Collections.singletonList(item);
-        List<ItemDto> itemDtoList = Collections.singletonList(itemDto);
-        Page<ItemDto> itemDtoPage = new PageImpl<>(itemDtoList);
-        Page<Item> itemPage = new PageImpl<>(itemList);
-
-        Mockito.when(itemRepository.findAllByActive(pageRequest, true)).thenReturn(itemPage);
-        Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
-
-        Assertions.assertEquals(itemDtoPage, itemService.findAllByActive(pageRequest, true));
-    }
-
-    @Test
-    void getAllCategoriesByFalseTrueTest() {
-        List<Item> itemList = Collections.singletonList(falseItem);
-        List<ItemDto> itemDtoList = Collections.singletonList(falseItemDto);
-        Page<ItemDto> itemDtoPage = new PageImpl<>(itemDtoList);
-        Page<Item> itemPage = new PageImpl<>(itemList);
-
-        Mockito.when(itemRepository.findAllByActive(pageRequest, false)).thenReturn(itemPage);
-        Mockito.when(itemMapper.map(falseItem)).thenReturn(falseItemDto);
-
-        Assertions.assertEquals(itemDtoPage, itemService.findAllByActive(pageRequest, false));
     }
 
     @Test

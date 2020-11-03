@@ -34,7 +34,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
           .build();
     }
 
-    public void update(final AddressDto from, final Address to) {
+    public void map(final AddressDto from, final Address to) {
         to.setState(from.getState());
         to.setCity(from.getCity());
         to.setAddressLine1(from.getAddressLine1());

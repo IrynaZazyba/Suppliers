@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "car")
+@Table
 public class Car implements BaseEntity {
 
     @Id

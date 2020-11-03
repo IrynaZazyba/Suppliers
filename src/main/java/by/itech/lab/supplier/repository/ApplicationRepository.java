@@ -8,14 +8,16 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
-    Optional<Application> findByNumber(final String number);
+    @Query("select app from Application app where app.number = :number")
+    Optional<Application> findByNumber(@Param("number") final String number);
 
-    @Query("select app from Application app where :deleted is null or app.deleted=:deleted")
-    Page<Application> findAllByDeleted(Pageable pageable, @Param("deleted") Boolean deleted);
+    @Query("select app from Application app")
+    Page<Application> findAllNotDeleted(Pageable pageable);
 
     @Query("select app from Application app where app.createdByUsers.id =:user_id")
     Page<Application> findAllByCreatedByUsers(Pageable pageable, @Param("user_id") Long userId);
@@ -34,8 +36,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     void changeStatus(@Param("id") Long id, @Param("status") String status);
 
     @Modifying
-    @Query("update Application set deleted = true where id = :id")
-    void deleteById(@Param("id") Long id);
-
+    @Query("update Application set deleted = true, deletedAt = :deletedTime where id = :id")
+    void deleteById(@Param("id") Long id, @Param("deletedTime")LocalDate deletedTime);
 
 }

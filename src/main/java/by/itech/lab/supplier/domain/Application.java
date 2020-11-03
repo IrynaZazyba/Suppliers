@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,16 +15,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "application")
+@Table
+@Where(clause="deleted_at is null")
 public class Application implements BaseEntity {
 
     @Id
@@ -50,5 +58,14 @@ public class Application implements BaseEntity {
     private WayBill wayBill;
     private boolean deleted;
     private Date deletedAt;
+    @ManyToMany(cascade = {
+      CascadeType.PERSIST,
+      CascadeType.MERGE
+    })
+    @JoinTable(name = "items_in_application",
+      joinColumns = @JoinColumn(name = "application_id"),
+      inverseJoinColumns = @JoinColumn(name = "item_id")
+    )
+    private Set<Item> items = new HashSet<>();
 
 }

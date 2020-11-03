@@ -32,10 +32,9 @@ public class CategoryController {
         return categoryService.save(categoryDto);
     }
 
-    @GetMapping(ApiConstants.URL_DELETED_PARAMETER)
-    public Page<CategoryDto> getAllByDeleted(@PathVariable Boolean deleted,
-                                             Pageable pageable) {
-        return categoryService.findAllByDeleted(pageable, deleted);
+    @GetMapping
+    public Page<CategoryDto> getAllNotDeleted(Pageable pageable) {
+        return categoryService.findAllNotDeleted(pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

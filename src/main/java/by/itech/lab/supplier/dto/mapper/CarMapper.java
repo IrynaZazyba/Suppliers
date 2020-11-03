@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CarMapper implements BaseMapper<Car, CarDto> {
 
-    private CustomerMapper customerMapper;
+    private final CustomerMapper customerMapper;
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
     @Override
     public Car map(final CarDto dto) {
@@ -38,7 +38,7 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
           .build();
     }
 
-    public void update(final CarDto from, final Car to) {
+    public void map(final CarDto from, final Car to) {
         to.setNumber(from.getNumber());
         to.setTotalCapacity(from.getTotalCapacity());
         to.setCurrentCapacity(from.getCurrentCapacity());

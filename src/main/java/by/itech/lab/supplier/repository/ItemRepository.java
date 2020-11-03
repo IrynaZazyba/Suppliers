@@ -8,28 +8,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Optional<Item> findByLabel(final String label);
+    @Query("select i from Item i where i.label = :label")
+    Optional<Item> findByLabel(@Param("label") final String label);
 
     @Query("select i from Item i where i.category.id=:category_id")
     Page<Item> findAllByCategory(@Param("category_id") Long categoryId, final Pageable page);
 
-    @Query("select i from Item i where :active is null or i.active=:active")
-    Page<Item> findAllByActive(Pageable pageable, @Param("active") Boolean active);
+    @Query("select i from Item i")
+    Page<Item> findAllNotDeleted(Pageable pageable);
 
     @Modifying
-    @Query("update Item set active = false where id = :id")
-    void deactivate(@Param("id") Long id);
-
-    @Modifying
-    @Query("update Item set active = true where id = :id")
-    void activate(@Param("id") Long id);
-
-    @Modifying
-    @Query("update Item set deleted = true where id = :id")
-    void deleteById(@Param("id") Long id);
+    @Query("update Item set deleted = true, deletedAt = :deletedTime where id = :id")
+    void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
 
 }

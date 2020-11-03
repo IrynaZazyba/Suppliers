@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -38,19 +39,13 @@ public class ItemServiceImpl implements ItemService {
           .map(itemMapper::map);
     }
 
-    @Override
-    public Page<ItemDto> findAllByActive(final Pageable pageable, final Boolean active) {
-        return itemRepository.findAllByActive(pageable, active)
-          .map(itemMapper::map);
-    }
-
     public ItemDto save(final ItemDto dto) {
         Item item = Optional.ofNullable(dto.getId())
           .map(itemToSave -> {
               final Item existing = itemRepository
                 .findById(dto.getId())
                 .orElseThrow();
-              itemMapper.update(dto, existing);
+              itemMapper.map(dto, existing);
               return existing;
           })
           .orElseGet(() -> itemMapper.map(dto));
@@ -60,8 +55,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<ItemDto> findAllByDeleted(Pageable pageable, Boolean deleted) {
-        return null;
+    public Page<ItemDto> findAllNotDeleted(Pageable pageable) {
+        return itemRepository.findAllNotDeleted(pageable)
+          .map(itemMapper::map);
+
     }
 
     public ItemDto findById(final Long id) {
@@ -70,18 +67,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-
-    }
-
-    @Transactional
-    public void deactivate(final Long id) {
-        itemRepository.deactivate(id);
-    }
-
-    @Transactional
-    public void activate(final Long id) {
-        itemRepository.activate(id);
+        itemRepository.deleteById(id, LocalDate.now());
     }
 
 }

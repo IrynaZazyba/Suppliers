@@ -12,15 +12,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
 
-    private ApplicationRepository applicationRepository;
+    private final ApplicationRepository applicationRepository;
 
-    private ApplicationMapper applicationMapper;
+    private final ApplicationMapper applicationMapper;
 
     @Override
     public ApplicationDto save(final ApplicationDto dto) {
@@ -29,7 +31,7 @@ public class ApplicationServiceImpl implements ApplicationService {
               final Application existing = applicationRepository
                 .findById(dto.getId())
                 .orElseThrow();
-              applicationMapper.update(dto, existing);
+              applicationMapper.map(dto, existing);
               return existing;
           })
           .orElseGet(() -> applicationMapper.map(dto));
@@ -39,8 +41,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAllByDeleted(final Pageable pageable, final Boolean deleted) {
-        return applicationRepository.findAllByDeleted(pageable, deleted)
+    public Page<ApplicationDto> findAllNotDeleted(final Pageable pageable) {
+        return applicationRepository.findAllNotDeleted(pageable)
           .map(applicationMapper::map);
     }
 
@@ -51,8 +53,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional
     public void delete(final Long id) {
-        applicationRepository.deleteById(id);
+        applicationRepository.deleteById(id, LocalDate.now());
     }
 
     @Override
@@ -86,6 +89,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional
     public void changeStatus(final Long appId, final ApplicationStatus applicationStatus) {
         applicationRepository.changeStatus(appId, applicationStatus.getStatus());
     }

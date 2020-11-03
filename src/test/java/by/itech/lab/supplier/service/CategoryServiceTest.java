@@ -37,9 +37,7 @@ public class CategoryServiceTest {
     @Autowired
     private CategoryMapper categoryMapper;
     private Category category;
-    private Category deletedCategory;
     private CategoryDto categoryDto;
-    private CategoryDto deletedCategoryDto;
     private PageRequest pageRequest;
 
     @BeforeEach
@@ -56,18 +54,6 @@ public class CategoryServiceTest {
           .category("Test")
           .deleted(false)
           .build();
-        deletedCategory = Category.builder()
-          .id(27L)
-          .taxRate(new BigDecimal(20.0))
-          .category("Test")
-          .deleted(true)
-          .build();
-        deletedCategoryDto = CategoryDto.builder()
-          .id(27L)
-          .taxRate(new BigDecimal(20.0))
-          .category("Test")
-          .deleted(true)
-          .build();
         pageRequest = PageRequest.of(0, 10);
     }
 
@@ -78,37 +64,11 @@ public class CategoryServiceTest {
         Page<CategoryDto> categoryDtoPage = new PageImpl<>(categoryDtoList);
         Page<Category> categoryPage = new PageImpl<>(categoryList);
 
-        Mockito.when(categoryRepository.findAllByDeleted(pageRequest, null)).thenReturn(categoryPage);
+        Mockito.when(categoryRepository.findAllNotDeleted(pageRequest)).thenReturn(categoryPage);
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllByDeleted(pageRequest, null));
+        Assertions.assertEquals(categoryDtoPage, categoryService.findAllNotDeleted(pageRequest));
 
-    }
-
-    @Test
-    void getAllCategoriesByDeletedTrueTest() {
-        List<Category> categoryList = Collections.singletonList(deletedCategory);
-        List<CategoryDto> categoryDtoList = Collections.singletonList(deletedCategoryDto);
-        Page<CategoryDto> categoryDtoPage = new PageImpl<>(categoryDtoList);
-        Page<Category> categoryPage = new PageImpl<>(categoryList);
-
-        Mockito.when(categoryRepository.findAllByDeleted(pageRequest, true)).thenReturn(categoryPage);
-        Mockito.when(categoryMapper.map(deletedCategory)).thenReturn(deletedCategoryDto);
-
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllByDeleted(pageRequest, true));
-    }
-
-    @Test
-    void getAllCategoriesByDeletedFalseTest() {
-        List<Category> categoryList = Collections.singletonList(category);
-        List<CategoryDto> categoryDtoList = Collections.singletonList(categoryDto);
-        Page<CategoryDto> categoryDtoPage = new PageImpl<>(categoryDtoList);
-        Page<Category> categoryPage = new PageImpl<>(categoryList);
-
-        Mockito.when(categoryRepository.findAllByDeleted(pageRequest, false)).thenReturn(categoryPage);
-        Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
-
-        Assertions.assertEquals(categoryDtoPage, categoryService.findAllByDeleted(pageRequest, false));
     }
 
     @Test

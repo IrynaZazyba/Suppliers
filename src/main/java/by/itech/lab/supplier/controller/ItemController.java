@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,10 +34,9 @@ public class ItemController {
         return itemService.save(itemDto);
     }
 
-    @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
-    public Page<ItemDto> getAllByActive(@PathVariable Boolean active,
-                                        Pageable pageable) {
-        return itemService.findAllByActive(pageable, active);
+    @GetMapping
+    public Page<ItemDto> getAllNotDeleted(Pageable pageable) {
+        return itemService.findAllNotDeleted(pageable);
     }
 
     @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
@@ -54,12 +52,6 @@ public class ItemController {
     @GetMapping(ApiConstants.URL_LABEL_PARAMETER)
     public ItemDto getByName(@PathVariable String label) {
         return itemService.findByLabel(label);
-    }
-
-    @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activate(@PathVariable Long id) {
-        itemService.activate(id);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)

@@ -29,7 +29,7 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
           .build();
     }
 
-    public void update(final CategoryDto from, final Category to) {
+    public void map(final CategoryDto from, final Category to) {
         to.setCategory(from.getCategory());
         to.setTaxRate(from.getTaxRate());
         to.setDeleted(from.isDeleted());

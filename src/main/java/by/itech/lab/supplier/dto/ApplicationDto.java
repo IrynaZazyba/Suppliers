@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Builder
 @Data
@@ -21,5 +22,6 @@ public class ApplicationDto implements BaseDto {
     private WayBillDto wayBillDto;
     private boolean deleted;
     private Date deletedAt;
+    private Set<ItemDto> items;
 
 }

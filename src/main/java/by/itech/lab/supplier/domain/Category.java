@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +20,8 @@ import java.sql.Date;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "category")
+@Table
+@Where(clause="deleted_at is null")
 public class Category implements BaseEntity {
 
     @Id

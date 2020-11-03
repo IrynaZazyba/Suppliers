@@ -5,16 +5,20 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 
 @Component
 @AllArgsConstructor
 public class ApplicationMapper implements BaseMapper<Application, ApplicationDto> {
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    private WayBillMapper wayBillMapper;
+    private final WayBillMapper wayBillMapper;
+
+    private final ItemMapper itemMapper;
 
     @Override
     public Application map(final ApplicationDto dto) {
@@ -30,6 +34,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .wayBill(wayBillMapper.map(dto.getWayBillDto()))
           .deleted(dto.isDeleted())
           .deletedAt(dto.getDeletedAt())
+          .items(dto.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
     }
 
@@ -47,10 +52,11 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .wayBillDto(wayBillMapper.map(application.getWayBill()))
           .deleted(application.isDeleted())
           .deletedAt(application.getDeletedAt())
+          .items(application.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
     }
 
-    public void update(final ApplicationDto from, final Application to) {
+    public void map(final ApplicationDto from, final Application to) {
         to.setApplicationStatus(from.getApplicationStatus());
         to.setNumber(from.getNumber());
         to.setRegistrationDate(from.getRegistrationDate());
@@ -61,5 +67,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
         to.setDeleted(from.isDeleted());
         to.setDeletedAt(from.getDeletedAt());
+        to.setItems(from.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()));
     }
 }

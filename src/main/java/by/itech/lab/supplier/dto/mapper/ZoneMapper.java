@@ -23,7 +23,7 @@ public class ZoneMapper implements BaseMapper<Zone, ZoneDto> {
           .build();
     }
 
-    public void update(final ZoneDto from, final Zone to) {
+    public void map(final ZoneDto from, final Zone to) {
         to.setLocation(from.getLocation());
     }
 }

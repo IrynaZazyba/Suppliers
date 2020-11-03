@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
 
-    private AddressMapper addressMapper;
+    private final AddressMapper addressMapper;
 
-    private CarMapper carMapper;
+    private final CarMapper carMapper;
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     @Override
     public WayBill map(final WayBillDto dto) {

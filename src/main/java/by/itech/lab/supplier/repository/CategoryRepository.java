@@ -8,16 +8,19 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    Optional<Category> findByCategory(final String categoryName);
 
-    @Query("select c from Category c where :deleted is null or c.deleted=:deleted")
-    Page<Category> findAllByDeleted(Pageable pageable, @Param("deleted") Boolean deleted);
+    @Query("select c from Category c where c.category = :category")
+    Optional<Category> findByCategory(@Param("category") final String categoryName);
+
+    @Query("select c from Category c")
+    Page<Category> findAllNotDeleted(Pageable pageable);
 
     @Modifying
-    @Query("update Category set deleted = true where id = :id")
-    void deleteById(@Param("id") Long id);
+    @Query("update Category set deleted = true, deletedAt = :deletedTime where id = :id")
+    void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
 
 }

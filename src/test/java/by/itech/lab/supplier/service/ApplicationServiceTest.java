@@ -40,9 +40,7 @@ public class ApplicationServiceTest {
     private ApplicationMapper applicationMapper;
 
     private Application application;
-    private Application deletedApplication;
     private ApplicationDto applicationDto;
-    private ApplicationDto deletedApplicationDto;
     private PageRequest pageRequest;
 
     @BeforeEach
@@ -56,7 +54,7 @@ public class ApplicationServiceTest {
           .createdByUsers(null)
           .sourceLocationAddressId(null)
           .registrationDate(new Date(new java.util.Date().getTime()))
-          .applicationStatus(ApplicationStatus.WAITING)
+          .applicationStatus(ApplicationStatus.OPEN)
           .deletedAt(null)
           .deleted(false)
           .build();
@@ -69,33 +67,7 @@ public class ApplicationServiceTest {
           .createdByUsersDto(null)
           .sourceLocationAddressIdDto(null)
           .registrationDate(new Date(new java.util.Date().getTime()))
-          .applicationStatus(ApplicationStatus.WAITING)
-          .deletedAt(null)
-          .deleted(false)
-          .build();
-        deletedApplication = Application.builder()
-          .id(18L)
-          .number("Test")
-          .wayBill(null)
-          .lastUpdatedByUsers(null)
-          .lastUpdated(new Date(new java.util.Date().getTime()))
-          .createdByUsers(null)
-          .sourceLocationAddressId(null)
-          .registrationDate(new Date(new java.util.Date().getTime()))
-          .applicationStatus(ApplicationStatus.WAITING)
-          .deletedAt(null)
-          .deleted(false)
-          .build();
-        deletedApplicationDto = ApplicationDto.builder()
-          .id(18L)
-          .number("Test")
-          .wayBillDto(null)
-          .lastUpdatedByUsersDto(null)
-          .lastUpdated(new Date(new java.util.Date().getTime()))
-          .createdByUsersDto(null)
-          .sourceLocationAddressIdDto(null)
-          .registrationDate(new Date(new java.util.Date().getTime()))
-          .applicationStatus(ApplicationStatus.WAITING)
+          .applicationStatus(ApplicationStatus.OPEN)
           .deletedAt(null)
           .deleted(false)
           .build();
@@ -109,37 +81,11 @@ public class ApplicationServiceTest {
         Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
-        Mockito.when(applicationRepository.findAllByDeleted(pageRequest, null)).thenReturn(applicationPage);
+        Mockito.when(applicationRepository.findAllNotDeleted(pageRequest)).thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAllByDeleted(pageRequest, null));
+        Assertions.assertEquals(applicationDtoPage, applicationService.findAllNotDeleted(pageRequest));
 
-    }
-
-    @Test
-    void getAllApplicationsByDeletedTrueTest() {
-        List<Application> applicationList = Collections.singletonList(deletedApplication);
-        List<ApplicationDto> applicationDtoList = Collections.singletonList(deletedApplicationDto);
-        Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
-        Page<Application> applicationPage = new PageImpl<>(applicationList);
-
-        Mockito.when(applicationRepository.findAllByDeleted(pageRequest, true)).thenReturn(applicationPage);
-        Mockito.when(applicationMapper.map(deletedApplication)).thenReturn(deletedApplicationDto);
-
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAllByDeleted(pageRequest, true));
-    }
-
-    @Test
-    void getAllApplicationsByDeletedFalseTest() {
-        List<Application> applicationList = Collections.singletonList(application);
-        List<ApplicationDto> applicationDtoList = Collections.singletonList(applicationDto);
-        Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
-        Page<Application> applicationPage = new PageImpl<>(applicationList);
-
-        Mockito.when(applicationRepository.findAllByDeleted(pageRequest, false)).thenReturn(applicationPage);
-        Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
-
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAllByDeleted(pageRequest, false));
     }
 
     @Test
@@ -188,5 +134,4 @@ public class ApplicationServiceTest {
         }
 
     }
-
 }

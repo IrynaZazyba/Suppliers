@@ -2,10 +2,7 @@ package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.ApplicationStatus;
-import by.itech.lab.supplier.dto.AddressDto;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.UserDto;
-import by.itech.lab.supplier.dto.WayBillDto;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,10 +41,9 @@ public class ApplicationController {
         applicationService.changeStatus(applicationId, ApplicationStatus.valueOf(status));
     }
 
-    @GetMapping(ApiConstants.URL_DELETED_PARAMETER)
-    public Page<ApplicationDto> getAllByDeleted(@PathVariable Boolean deleted,
-                                                Pageable pageable) {
-        return applicationService.findAllByDeleted(pageable, deleted);
+    @GetMapping
+    public Page<ApplicationDto> getAllNotDeleted(Pageable pageable) {
+        return applicationService.findAllNotDeleted(pageable);
     }
 
     @GetMapping(ApiConstants.URL_CREATED_BY_ID_PARAMETER)
@@ -64,13 +60,13 @@ public class ApplicationController {
 
     @GetMapping(ApiConstants.URL_WAYBILL_ID_PARAMETER)
     public Page<ApplicationDto> getAllByWaybill(@PathVariable Long waybillId,
-                                                       Pageable pageable) {
+                                                Pageable pageable) {
         return applicationService.findAllByWayBill(pageable, waybillId);
     }
 
     @GetMapping(ApiConstants.URL_STATUS_PARAMETER)
-    public Page<ApplicationDto> getAllByWaybill(@PathVariable String status,
-                                                Pageable pageable) {
+    public Page<ApplicationDto> getAllByStatus(@PathVariable String status,
+                                               Pageable pageable) {
         return applicationService.findAllByApplicationStatus(pageable, ApplicationStatus.valueOf(status));
     }
 
