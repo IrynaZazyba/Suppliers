@@ -37,6 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerDto save(CustomerDto customerDto) {
         Customer customer = Optional.ofNullable(customerDto.getId())
                 .map(item -> {
@@ -48,6 +49,7 @@ public class CustomerServiceImpl implements CustomerService {
                 })
                 .orElseGet(() -> customerMapper.map(customerDto));
 
+        customer.setRegistrationDate(LocalDate.now());
         final Customer saved = customerRepository.save(customer);
         userService.save(userService.createAdmin(customerDto));
         return customerMapper.map(saved);

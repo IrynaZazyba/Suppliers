@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
+@Where(clause = "deleted_at is null")
 public class Customer implements BaseEntity {
 
     @Id
