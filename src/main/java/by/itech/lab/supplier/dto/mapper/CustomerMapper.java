@@ -7,7 +7,6 @@ import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.util.EnumSet;
 
 @Component
@@ -20,8 +19,8 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
         return Customer.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .registrationDate(Date.valueOf(dto.getRegistrationDate()))
-                .status(dto.isStatus())
+                .registrationDate(dto.getRegistrationDate())
+                .active(dto.isActive())
                 .build();
     }
 
@@ -30,9 +29,15 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
         return CustomerDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .registrationDate(entity.getRegistrationDate().toLocalDate())
-                .status(entity.isStatus())
+                .registrationDate(entity.getRegistrationDate())
+                .active(entity.isActive())
                 .build();
+    }
+
+    public void map(final CustomerDto from, final Customer to) {
+        to.setName(from.getName());
+        to.setRegistrationDate(from.getRegistrationDate());
+        to.setActive(from.isActive());
     }
 
     public CustomerDto mapToCustomerView(Customer entity) {
@@ -46,4 +51,3 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
         return customerDto;
     }
 }
-

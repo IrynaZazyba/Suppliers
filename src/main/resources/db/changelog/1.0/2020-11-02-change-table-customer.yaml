@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-CUSTOMER-37-1
+      author: alexey_overchenko
+      changes:
+        - addColumn:
+            tableName: customer
+            columns:
+              - column:
+                  name: deleted_at
+                  type: date
+                  defaultValue: null
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: SUP-CUSTOMER-37-2
+      author: alexey_overchenko
+      changes:
+        - renameColumn:
+            columnDataType: boolean
+            newColumnName: active
+            oldColumnName: status
+            tableName: customer
