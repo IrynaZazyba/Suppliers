@@ -6,4 +6,5 @@ public interface CategoryService extends BaseService<CategoryDto> {
 
     CategoryDto findByCategory(final String categoryName);
 
+    void activate(final Long id);
 }
