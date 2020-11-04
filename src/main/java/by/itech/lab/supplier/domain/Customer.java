@@ -3,7 +3,9 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
+@Where(clause = "deleted_at is null")
 public class Customer implements BaseEntity {
 
     @Id
@@ -30,12 +33,13 @@ public class Customer implements BaseEntity {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private Date registrationDate;
+    private LocalDate registrationDate;
     @Column(nullable = false)
-    private boolean status;
+    private boolean active;
+    private LocalDate deletedAt;
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
+    @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }
-

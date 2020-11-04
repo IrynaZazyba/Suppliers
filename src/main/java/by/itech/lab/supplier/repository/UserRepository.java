@@ -16,12 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
     @Modifying
-    @Query("update User set deleted = true where id = :id")
-    void deleteById(@Param("id") Long id);
+    @Query("update User set deletedAt = current_timestamp where id = :id")
+    void delete(@Param("id") Long id);
 
     @Modifying
     @Query("update User set active = :isActive where id = :id")
-    boolean setStatus( @Param("isActive") boolean isActive, @Param("id") Long id);
+    boolean setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 

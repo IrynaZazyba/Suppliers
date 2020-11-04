@@ -3,6 +3,7 @@ import './index.css';
 import App from './App';
 import * as ReactDOM from "react-dom";
 import {BrowserRouter} from 'react-router-dom';
+import AuthContextProvider from "./context/authContext";
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -12,6 +13,8 @@ import {BrowserRouter} from 'react-router-dom';
 
 ReactDOM.render((
     <BrowserRouter>
-        <App/>
+        <AuthContextProvider>
+            <App/>
+        </AuthContextProvider>
     </BrowserRouter>
 ), document.getElementById('root'));
