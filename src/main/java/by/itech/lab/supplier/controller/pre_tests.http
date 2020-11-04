@@ -1,0 +1,4 @@
+POST http://localhost:8080/customers
+Content-Type: application/json
+
+{"name":"SomeCompany2", "email": "123@gmail.com" }
