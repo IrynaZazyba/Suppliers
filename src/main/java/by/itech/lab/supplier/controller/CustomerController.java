@@ -38,7 +38,7 @@ public class CustomerController {
     public Page<CustomerDto> getAllByActive(
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
             @RequestParam(required = false) final Boolean status) {
-        return customerService.findAllByActive(pageable, status);
+        return customerService.findAll(pageable, status);
     }
 
     @GetMapping(URL_CUSTOMER_ID)

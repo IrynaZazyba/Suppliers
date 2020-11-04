@@ -89,7 +89,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findByStatus(pageRequest,null)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
 
-        Assertions.assertEquals(customerDtoPage, customerService.findAllByActive(pageRequest,null));
+        Assertions.assertEquals(customerDtoPage, customerService.findAll(pageRequest,null));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findByStatus(pageRequest, true)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
 
-        Assertions.assertEquals(customerDtoPage, customerService.findAllByActive(pageRequest, true));
+        Assertions.assertEquals(customerDtoPage, customerService.findAll(pageRequest, true));
     }
 
     @Test
