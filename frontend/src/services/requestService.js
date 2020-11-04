@@ -11,10 +11,25 @@ export default class RequestService {
         };
 
         const res = await fetch(url, requestOptions);
-        if(!res.ok){
+        if (!res.ok) {
             throw Error(`Couldn't fetch ${url} status: ${res.status}`);
         }
         return await res.json();
+    };
+
+    async getResource(url) {
+
+        let response = await fetch(url);
+        if (response.ok) {
+            let json = await response.json();
+            console.log("here");
+            console.log("json");
+
+        } else {
+            console.log("error");
+        }
+
+        return await response.json();
     };
 
 }
