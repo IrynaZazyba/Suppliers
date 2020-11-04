@@ -1,5 +1,7 @@
 package by.itech.lab.supplier.service.mail;
 
+import lombok.AllArgsConstructor;
+
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -10,16 +12,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+@AllArgsConstructor
 public class Sender {
     private String username;
     private String password;
     private Properties props;
-
-    public Sender(String username, String password, Properties props) {
-        this.username = username;
-        this.password = password;
-        this.props = props;
-    }
 
     public void send(Email email) {
         Session session = Session.getDefaultInstance(props, new Authenticator() {

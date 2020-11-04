@@ -16,7 +16,6 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Service
-@PropertySource("classpath:application.properties")
 public class MailServiceImpl implements MailService {
     private static final String ACTIVATION_LINK = "Activation link";
     private static final String HTML_TEMPLATE_NAME = "html/email-simple";
