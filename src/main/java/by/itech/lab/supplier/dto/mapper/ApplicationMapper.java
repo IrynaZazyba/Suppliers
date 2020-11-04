@@ -2,23 +2,30 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 
 @Component
-@AllArgsConstructor
 public class ApplicationMapper implements BaseMapper<Application, ApplicationDto> {
 
     private final AddressMapper addressMapper;
-
     private final UserMapper userMapper;
-
     private final WayBillMapper wayBillMapper;
-
     private final ItemMapper itemMapper;
+
+    @Autowired
+    public ApplicationMapper(final AddressMapper addressMapper,
+                             final UserMapper userMapper,
+                             final WayBillMapper wayBillMapper,
+                             final ItemMapper itemMapper) {
+        this.addressMapper = addressMapper;
+        this.userMapper = userMapper;
+        this.wayBillMapper = wayBillMapper;
+        this.itemMapper = itemMapper;
+    }
 
     @Override
     public Application map(final ApplicationDto dto) {
@@ -29,9 +36,10 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .registrationDate(dto.getRegistrationDate())
           .lastUpdated(dto.getLastUpdated())
           .sourceLocationAddressId(addressMapper.map(dto.getSourceLocationAddressIdDto()))
-          .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
-          .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
-          .wayBill(wayBillMapper.map(dto.getWayBillDto()))
+          .destinationLocationAddressId(addressMapper.map(dto.getDestinationLocationAddressIdDto()))
+          // .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
+          // .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
+          // .wayBill(wayBillMapper.map(dto.getWayBillDto()))
           .deletedAt(dto.getDeletedAt())
           .items(dto.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
@@ -46,9 +54,10 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .registrationDate(application.getRegistrationDate())
           .lastUpdated(application.getLastUpdated())
           .sourceLocationAddressIdDto(addressMapper.map(application.getSourceLocationAddressId()))
-          .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
-          .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
-          .wayBillDto(wayBillMapper.map(application.getWayBill()))
+          .destinationLocationAddressIdDto(addressMapper.map(application.getDestinationLocationAddressId()))
+          //.createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
+          //.lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
+          //.wayBillDto(wayBillMapper.map(application.getWayBill()))
           .deletedAt(application.getDeletedAt())
           .items(application.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
@@ -60,10 +69,11 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setRegistrationDate(from.getRegistrationDate());
         to.setLastUpdated(from.getLastUpdated());
         to.setSourceLocationAddressId(addressMapper.map(from.getSourceLocationAddressIdDto()));
-        to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
-        to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
-        to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
-        to.setDeletedAt(from.getDeletedAt());
+        to.setDestinationLocationAddressId(addressMapper.map(from.getDestinationLocationAddressIdDto()));
+        // to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
+        // to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
+        // to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
         to.setItems(from.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()));
+        to.setDeletedAt(from.getDeletedAt());
     }
 }

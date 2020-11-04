@@ -29,9 +29,9 @@ public class Address implements BaseEntity {
     private String state;
     @Column(nullable = false)
     private String city;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "address_line_1")
     private String addressLine1;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "address_line_2")
     private String addressLine2;
     @ManyToOne
     @JoinColumn(name = "zone_id")

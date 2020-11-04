@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ItemService extends BaseService<ItemDto> {
 
-    ItemDto findByLabel(String label);
+    Page<ItemDto> findByLabel(String label, Pageable pageable);
 
     Page<ItemDto> findAllByCategory(String categoryName, Pageable pageable);
 

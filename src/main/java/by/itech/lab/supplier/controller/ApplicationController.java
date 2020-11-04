@@ -1,13 +1,17 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.auth.UserImpl;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,59 +35,53 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @PostMapping
+    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
         return applicationService.save(applicationDto);
     }
 
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
+    @PutMapping(ApiConstants.URL_ID + ApiConstants.URL_ID_PARAMETER
+      + ApiConstants.URL_STATUS + ApiConstants.URL_STATUS_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeStatus(@PathVariable Long applicationId,
+    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
+    public void changeStatus(@PathVariable Long id,
                              @PathVariable String status) {
-        applicationService.changeStatus(applicationId, ApplicationStatus.valueOf(status));
+        applicationService.changeStatus(id, ApplicationStatus.valueOf(status));
     }
 
-    @GetMapping
-    public Page<ApplicationDto> getAllNotDeleted(Pageable pageable) {
+    @GetMapping("/{roleFlag}")
+    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
+    public Page<ApplicationDto> getAll(final Pageable pageable, @PathVariable Boolean roleFlag) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Boolean roleFlag = null;
+//        if (authentication.getPrincipal() instanceof UserImpl) {
+//            UserImpl user = (UserImpl) authentication.getPrincipal();
+//            roleFlag = user.getAuthorities().contains(Role.ROLE_DISPATCHER);
+//        }
+        return applicationService.findAll(pageable, roleFlag);
+    }
+
+    @GetMapping(ApiConstants.URL_ADMIN)
+    //@Secured("ROLE_SYSTEM_ADMIN")
+    public Page<ApplicationDto> getAllAdmin(final Pageable pageable) {
         return applicationService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_CREATED_BY_ID_PARAMETER)
-    public Page<ApplicationDto> getAllByCreatedByUsers(@PathVariable Long created_by_id,
-                                                       Pageable pageable) {
-        return applicationService.findAllByCreatedByUsers(pageable, created_by_id);
-    }
-
-    @GetMapping(ApiConstants.URL_ADDRESS_ID_PARAMETER)
-    public Page<ApplicationDto> getAllByLocationAddress(@PathVariable Long address_id,
-                                                        Pageable pageable) {
-        return applicationService.findAllByLocationAddressId(pageable, address_id);
-    }
-
-    @GetMapping(ApiConstants.URL_WAYBILL_ID_PARAMETER)
-    public Page<ApplicationDto> getAllByWaybill(@PathVariable Long waybill_id,
-                                                Pageable pageable) {
-        return applicationService.findAllByWayBill(pageable, waybill_id);
-    }
-
-    @GetMapping(ApiConstants.URL_STATUS_PARAMETER)
-    public Page<ApplicationDto> getAllByStatus(@PathVariable String status,
-                                               Pageable pageable) {
-        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return applicationService.findAllByApplicationStatus(pageable, ApplicationStatus.valueOf(status));
-    }
-
-    @GetMapping(ApiConstants.URL_ID_PARAMETER)
+    @GetMapping(ApiConstants.URL_ID + ApiConstants.URL_ID_PARAMETER)
+    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto getById(@PathVariable Long id) {
         return applicationService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_NUMBER_PARAMETER)
+    @GetMapping(ApiConstants.URL_NUMBER + ApiConstants.URL_NUMBER_PARAMETER)
+    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto getByNumber(@PathVariable String number) {
         return applicationService.findByNumber(number);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
     public void delete(@PathVariable Long id) {
         applicationService.delete(id);
     }

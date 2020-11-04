@@ -16,9 +16,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select c from Category c where c.category = :category")
     Optional<Category> findByCategory(@Param("category") final String categoryName);
 
-    @Query("select c from Category c")
-    Page<Category> findAll(Pageable pageable);
-
     @Modifying
     @Query("update Category set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);

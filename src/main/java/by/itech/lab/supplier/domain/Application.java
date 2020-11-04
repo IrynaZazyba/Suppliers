@@ -45,6 +45,9 @@ public class Application implements BaseEntity {
     @JoinColumn(name = "source_location_address_id")
     private Address sourceLocationAddressId;
     @ManyToOne
+    @JoinColumn(name = "destination_location_address_id")
+    private Address destinationLocationAddressId;
+    @ManyToOne
     @JoinColumn(name = "created_by_users_id")
     private User createdByUsers;
     @ManyToOne

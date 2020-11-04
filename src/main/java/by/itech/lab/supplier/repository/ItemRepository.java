@@ -9,18 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("select i from Item i where i.label = :label")
-    Optional<Item> findByLabel(@Param("label") final String label);
+    Page<Item> findByLabel(@Param("label") final String label, final Pageable page);
 
     @Query("select i from Item i where i.category.id=:category_id")
     Page<Item> findAllByCategory(@Param("category_id") Long categoryId, final Pageable page);
-
-    @Query("select i from Item i")
-    Page<Item> findAll(Pageable pageable);
 
     @Modifying
     @Query("update Item set deletedAt = :deletedTime where id = :id")

@@ -45,8 +45,6 @@ public class User implements BaseEntity {
 
     private String email;
 
-    private String activationKey;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 

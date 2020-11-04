@@ -24,7 +24,7 @@ public class Zone implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String location;
+    private String zone;
 
 }
 

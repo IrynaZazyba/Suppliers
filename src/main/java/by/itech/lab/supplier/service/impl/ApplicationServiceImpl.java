@@ -63,26 +63,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAllByCreatedByUsers(final Pageable pageable, final Long userId) {
-        return applicationRepository.findAllByCreatedByUsers(pageable, userId)
-          .map(applicationMapper::map);
-    }
-
-    @Override
-    public Page<ApplicationDto> findAllByLocationAddressId(final Pageable pageable, final Long addressId) {
-        return applicationRepository.findAllByLocationAddressId(pageable, addressId)
-          .map(applicationMapper::map);
-    }
-
-    @Override
-    public Page<ApplicationDto> findAllByApplicationStatus(final Pageable pageable, final ApplicationStatus status) {
-        return applicationRepository.findAllByApplicationStatus(pageable, status.getStatus())
-          .map(applicationMapper::map);
-    }
-
-    @Override
-    public Page<ApplicationDto> findAllByWayBill(final Pageable pageable, final Long waybillId) {
-        return applicationRepository.findAllByWayBill(pageable, waybillId)
+    public Page<ApplicationDto> findAll(Pageable pageable, Boolean roleFlag) {
+        return applicationRepository.findAll(pageable, roleFlag)
           .map(applicationMapper::map);
     }
 

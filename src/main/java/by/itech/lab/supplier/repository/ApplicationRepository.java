@@ -16,20 +16,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("select app from Application app where app.number = :number")
     Optional<Application> findByNumber(@Param("number") final String number);
 
-    @Query("select app from Application app")
-    Page<Application> findAll(Pageable pageable);
-
-    @Query("select app from Application app where app.createdByUsers.id =:user_id")
-    Page<Application> findAllByCreatedByUsers(Pageable pageable, @Param("user_id") Long userId);
-
-    @Query("select app from Application app where app.sourceLocationAddressId.id =:address_id")
-    Page<Application> findAllByLocationAddressId(Pageable pageable, @Param("address_id") Long addressId);
-
-    @Query("select app from Application app where app.applicationStatus =:status")
-    Page<Application> findAllByApplicationStatus(Pageable pageable, @Param("status") String status);
-
-    @Query("select app from Application app where app.wayBill.id =:waybill_id")
-    Page<Application> findAllByWayBill(Pageable pageable, @Param("waybill_id") Long waybillId);
+    @Query("select app from Application app where :flag = true or (:flag = false and app.wayBill is null)")
+    Page<Application> findAll(Pageable pageable, @Param("flag") Boolean roleFlag);
 
     @Modifying
     @Query("update Application set applicationStatus = :status where id = :id")

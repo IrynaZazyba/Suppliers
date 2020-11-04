@@ -11,7 +11,7 @@ public class ZoneMapper implements BaseMapper<Zone, ZoneDto> {
     public Zone map(final ZoneDto zoneDto) {
         return Zone.builder()
           .id(zoneDto.getId())
-          .location(zoneDto.getLocation())
+          .zone(zoneDto.getZone())
           .build();
     }
 
@@ -19,11 +19,11 @@ public class ZoneMapper implements BaseMapper<Zone, ZoneDto> {
     public ZoneDto map(final Zone zone) {
         return ZoneDto.builder()
           .id(zone.getId())
-          .location(zone.getLocation())
+          .zone(zone.getZone())
           .build();
     }
 
     public void map(final ZoneDto from, final Zone to) {
-        to.setLocation(from.getLocation());
+        to.setZone(from.getZone());
     }
 }

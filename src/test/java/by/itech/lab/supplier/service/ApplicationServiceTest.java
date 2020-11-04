@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -50,9 +49,9 @@ public class ApplicationServiceTest {
           .id(17L)
           .number("Test")
           .wayBill(null)
-          .lastUpdatedByUsers(null)
+          //.lastUpdatedByUsers(null)
           .lastUpdated(LocalDate.now())
-          .createdByUsers(null)
+          //.createdByUsers(null)
           .sourceLocationAddressId(null)
           .registrationDate(LocalDate.now())
           .applicationStatus(ApplicationStatus.OPEN)
@@ -62,9 +61,9 @@ public class ApplicationServiceTest {
           .id(17L)
           .number("Test")
           .wayBillDto(null)
-          .lastUpdatedByUsersDto(null)
+          //.lastUpdatedByUsersDto(null)
           .lastUpdated(LocalDate.now())
-          .createdByUsersDto(null)
+          //.createdByUsersDto(null)
           .sourceLocationAddressIdDto(null)
           .registrationDate(LocalDate.now())
           .applicationStatus(ApplicationStatus.OPEN)
@@ -80,10 +79,10 @@ public class ApplicationServiceTest {
         Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
-        Mockito.when(applicationRepository.findAll(pageRequest)).thenReturn(applicationPage);
+        Mockito.when(applicationRepository.findAll(pageRequest, true)).thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest));
+        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest, true));
 
     }
 

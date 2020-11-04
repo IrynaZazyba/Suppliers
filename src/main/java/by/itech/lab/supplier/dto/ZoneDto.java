@@ -8,6 +8,6 @@ import lombok.Data;
 public class ZoneDto implements BaseDto {
 
     private Long id;
-    private String location;
+    private String zone;
 
 }

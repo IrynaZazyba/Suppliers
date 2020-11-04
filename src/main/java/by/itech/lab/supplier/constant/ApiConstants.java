@@ -2,6 +2,7 @@ package by.itech.lab.supplier.constant;
 
 public interface ApiConstants {
 
+    String URL_ADMIN = "/admin";
     String URL_APPLICATION = "/application";
     String URL_CAR = "/car";
     String URL_CUSTOMER = "/customers";
@@ -22,11 +23,10 @@ public interface ApiConstants {
     String URL_FILTERED = "/companies";
     String URL_ID_PARAMETER = "/{id}";
     String URL_STATUS_PARAMETER = "/{status}";
-    String URL_CREATED_BY_ID_PARAMETER = "/{created_by_id}";
-    String URL_ADDRESS_ID_PARAMETER = "/{address_id}";
-    String URL_WAYBILL_ID_PARAMETER = "/{waybill_id}";
     String URL_NUMBER_PARAMETER = "/{number}";
+    String URL_NUMBER = "/number";
     String URL_ID = "/id";
     String URL_STATUS = "/status";
+    String URL_LABEL = "/label";
 
 }

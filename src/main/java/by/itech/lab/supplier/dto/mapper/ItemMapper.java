@@ -3,13 +3,18 @@ package by.itech.lab.supplier.dto.mapper;
 import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.ItemDto;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
 public class ItemMapper implements BaseMapper<Item, ItemDto> {
 
     private final CategoryMapper categoryMapper;
+
+    @Autowired
+    public ItemMapper(CategoryMapper categoryMapper) {
+        this.categoryMapper = categoryMapper;
+    }
 
     @Override
     public Item map(final ItemDto dto) {

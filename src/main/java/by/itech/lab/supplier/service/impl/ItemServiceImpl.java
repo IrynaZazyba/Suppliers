@@ -28,9 +28,9 @@ public class ItemServiceImpl implements ItemService {
     private final CategoryService categoryService;
 
     @Override
-    public ItemDto findByLabel(final String label) {
-        return itemRepository.findByLabel(label)
-          .map(itemMapper::map).orElseThrow(NotFoundInDBException::new);
+    public Page<ItemDto> findByLabel(final String label, final Pageable pageable) {
+        return itemRepository.findByLabel(label, pageable)
+          .map(itemMapper::map);
     }
 
     public Page<ItemDto> findAllByCategory(final String categoryName, final Pageable pageable) {

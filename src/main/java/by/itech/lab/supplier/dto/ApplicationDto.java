@@ -4,8 +4,8 @@ import by.itech.lab.supplier.domain.ApplicationStatus;
 import lombok.Builder;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Builder
@@ -17,11 +17,12 @@ public class ApplicationDto implements BaseDto {
     private LocalDate registrationDate;
     private LocalDate lastUpdated;
     private AddressDto sourceLocationAddressIdDto;
+    private AddressDto destinationLocationAddressIdDto;
     private UserDto createdByUsersDto;
     private UserDto lastUpdatedByUsersDto;
     private ApplicationStatus applicationStatus;
     private WayBillDto wayBillDto;
     private LocalDate deletedAt;
-    private Set<ItemDto> items;
+    private Set<ItemDto> items = new HashSet<>();
 
 }

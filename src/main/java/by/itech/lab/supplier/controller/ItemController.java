@@ -35,23 +35,23 @@ public class ItemController {
     }
 
     @GetMapping
-    public Page<ItemDto> getAllNotDeleted(Pageable pageable) {
+    public Page<ItemDto> getAll(Pageable pageable) {
         return itemService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
+    @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
     public Page<ItemDto> getAll(@PathVariable String category, Pageable pageable) {
         return itemService.findAllByCategory(category, pageable);
     }
 
-    @GetMapping(ApiConstants.URL_ID_PARAMETER)
+    @GetMapping(ApiConstants.URL_ID + ApiConstants.URL_ID_PARAMETER)
     public ItemDto getById(@PathVariable Long id) {
         return itemService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_LABEL_PARAMETER)
-    public ItemDto getByName(@PathVariable String label) {
-        return itemService.findByLabel(label);
+    @GetMapping(ApiConstants.URL_LABEL + ApiConstants.URL_LABEL_PARAMETER)
+    public Page<ItemDto> getByName(@PathVariable String label, Pageable pageable) {
+        return itemService.findByLabel(label, pageable);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
