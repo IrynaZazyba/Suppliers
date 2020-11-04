@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     public void delete(final Long id) {
-        customerRepository.delete(id, LocalDate.now());
+        customerRepository.delete(id);
     }
 
     @Override
