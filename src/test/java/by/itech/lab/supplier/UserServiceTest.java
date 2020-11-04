@@ -4,6 +4,7 @@ import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
@@ -55,8 +56,8 @@ public class UserServiceTest {
         address.setAddressLine2("address2");
         Customer customer = new Customer();
         customer.setName("dwwad");
-        customer.setStatus(true);
-        customer.setRegistrationDate(new Date(2000, 8, 27));
+        customer.setActive(true);
+        customer.setRegistrationDate(LocalDate.now());
         userDto = new UserDto();
         userDto.setUsername(USERNAME);
         userDto.setPassword("password");

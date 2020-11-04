@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
@@ -17,8 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
     @Modifying
-    @Query("update User set deleted = false where id = :id")
-    void deleteById(@Param("id") Long id);
+    @Query("update User set deletedAt = current_timestamp where id = :id")
+    void delete(@Param("id") Long id);
 
     @Modifying
     @Query("update User set active = :active where id = :id")

@@ -5,12 +5,11 @@ import by.itech.lab.supplier.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
 @AllArgsConstructor
+@Component
 public class UserMapper implements BaseMapper<User, UserDto> {
 
     private final CustomerMapper customerMapper;
-
 
     @Override
     public UserDto map(User user) {
@@ -23,13 +22,13 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .birthday(user.getBirthday())
                 .active(user.isActive())
                 .role(user.getRole())
-                .deleted(user.isDeleted())
+                .deletedAt(user.getDeletedAt())
                 .creatorApplications(user.getCreatorApplications())
                 .updatorApplications(user.getUpdatorApplications())
                 .creatorWayBills(user.getCreatorWayBills())
                 .driverWayBills(user.getDriverWayBills())
                 .address(user.getAddress())
-                .customer(customerMapper.map(user.getCustomer()))
+                .customerDto(customerMapper.map(user.getCustomer()))
                 .build();
     }
 
@@ -38,14 +37,14 @@ public class UserMapper implements BaseMapper<User, UserDto> {
         to.setSurname(from.getSurname());
         to.setBirthday(from.getBirthday());
         to.setActive(from.isActive());
-        to.setDeleted(from.isDeleted());
+        to.setDeletedAt(from.getDeletedAt());
         to.setRole(from.getRole());
         to.setCreatorApplications(from.getCreatorApplications());
         to.setUpdatorApplications(from.getUpdatorApplications());
         to.setCreatorWayBills(from.getCreatorWayBills());
         to.setDriverWayBills(from.getDriverWayBills());
         to.setAddress(from.getAddress());
-        to.setCustomer(customerMapper.map(from.getCustomer()));
+        to.setCustomer(customerMapper.map(from.getCustomerDto()));
     }
 
     @Override
@@ -57,15 +56,14 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .email(userDTO.getEmail())
                 .birthday(userDTO.getBirthday())
                 .active(userDTO.isActive())
-                .deleted(userDTO.isDeleted())
+                .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
                 .creatorApplications(userDTO.getCreatorApplications())
                 .updatorApplications(userDTO.getUpdatorApplications())
                 .creatorWayBills(userDTO.getCreatorWayBills())
                 .driverWayBills(userDTO.getDriverWayBills())
                 .address(userDTO.getAddress())
-                .customer(customerMapper.map(userDTO.getCustomer()))
+                .customer(customerMapper.map(userDTO.getCustomerDto()))
                 .build();
     }
-
 }

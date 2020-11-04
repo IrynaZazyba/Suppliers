@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service;
 
+import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,8 @@ import java.util.Optional;
 
 @Service
 public interface UserService {
+
+    UserDto createAdmin(CustomerDto customerDto);
 
     Optional<UserDto> findById(Long id);
 
