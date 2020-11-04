@@ -73,7 +73,6 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .name("Name")
                 .surname("Surname")
-                .birthday(null)
                 .username("User name")
                 .email(customerDto.getAdminEmail())
                 .role(Role.ROLE_ADMIN)
