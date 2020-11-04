@@ -2,12 +2,14 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@AllArgsConstructor
 @Component
 public class UserMapper implements BaseMapper<User, UserDto> {
 
-    private CustomerMapper customerMapper;
+    private final CustomerMapper customerMapper;
 
     @Override
     public UserDto map(User user) {

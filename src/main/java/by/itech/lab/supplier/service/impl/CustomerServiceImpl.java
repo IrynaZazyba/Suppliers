@@ -12,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -51,7 +50,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         customer.setRegistrationDate(LocalDate.now());
         final Customer saved = customerRepository.save(customer);
-        userService.save(userService.createAdmin(customerDto));
+        // TODO: 11/4/20 when "user" branch will fixed, I should unfreeze and check the functional for user-admin creation
+        // TODO: 11/4/20 also I should add addressDto and warehouseDto parameters in createAdmin()
+//        userService.save(userService.createAdmin(customerDto));
         return customerMapper.map(saved);
     }
 
