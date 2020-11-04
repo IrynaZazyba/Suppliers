@@ -1,7 +1,10 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
@@ -21,7 +24,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
 
     @Override
@@ -29,10 +31,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findOneWithRolesById(id).map(userMapper::map);
     }
 
+    @Override
     public Page<UserDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::map);
     }
 
+    @Override
     public Page<UserDto> getAllActive(Pageable pageable) {
         return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
     }
@@ -64,4 +68,16 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(id);
     }
 
+    @Override
+    public UserDto createAdmin(CustomerDto customerDto) {
+        return UserDto.builder()
+                .name("Name")
+                .surname("Surname")
+                .username("User name")
+                .email(customerDto.getAdminEmail())
+                .role(Role.ROLE_ADMIN)
+                .customerDto(customerDto)
+                .active(false)
+                .build();
+    }
 }
