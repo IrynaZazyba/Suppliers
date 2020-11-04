@@ -22,17 +22,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
 
-    @Override
-    public Page<WarehouseDto> findAllByActive(Pageable pageable, Boolean active) {
-        return null;
-    }
-
-    @Override
-    public WarehouseDto findById(Long warehouseId) {
-        return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
-                .orElseThrow(NotFoundInDBException::new);
-    }
-
     @Transactional
     @Override
     public WarehouseDto save(WarehouseDto warehouseDto) {
@@ -48,6 +37,16 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         final Warehouse saved = warehouseRepository.save(customer);
         return warehouseMapper.map(saved);
+    }
+
+    @Override
+    public Page<WarehouseDto> findAllByActive(Pageable pageable, Boolean active) {
+        return null;
+    }
+
+    @Override
+    public WarehouseDto findById(Long id) {
+        return null;
     }
 
     @Transactional
