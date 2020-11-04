@@ -35,7 +35,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Page<WarehouseDto> findAll(Pageable pageable, Boolean active) {
+    public Page<WarehouseDto> findAllByActive(Pageable pageable, Boolean active) {
         return null;
     }
 
