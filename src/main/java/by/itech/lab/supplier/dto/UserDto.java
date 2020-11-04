@@ -6,6 +6,7 @@ import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WayBill;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +45,7 @@ public class UserDto implements BaseDto {
     private String email;
     private Role role;
     private Address address;
+    @JsonBackReference
     private CustomerDto customer;
     private Warehouse warehouse;
     private Set<WayBill> creatorWayBills = new HashSet<>();
