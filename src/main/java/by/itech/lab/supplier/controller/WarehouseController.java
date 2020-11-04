@@ -22,7 +22,9 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
 
     @GetMapping
-    public Page<WarehouseDto> findAll(@PageableDefault final Pageable pageable) { return warehouseService.findAll(pageable); }
+    public Page<WarehouseDto> findAll(@PageableDefault final Pageable pageable) {
+        return warehouseService.findAll(pageable);
+    }
 
     @GetMapping(URL_ID_PARAMETER)
     public WarehouseDto findById(@PathVariable final Long id) {

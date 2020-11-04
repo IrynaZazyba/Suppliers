@@ -27,7 +27,6 @@ public class Category implements BaseEntity {
     private Long id;
     @Column(nullable = false, unique = true)
     private String category;
-    @OneToOne
     @Column(nullable = false)
     private BigDecimal taxRate;
     private boolean active;

@@ -3,10 +3,12 @@ package by.itech.lab.supplier.dto.mapper;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@Component
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
     private final CustomerMapper customerMapper;
