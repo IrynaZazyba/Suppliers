@@ -1,4 +1,7 @@
 package by.itech.lab.supplier.service;
 
-public interface WarehouseService {
+import by.itech.lab.supplier.dto.WarehouseDto;
+
+public interface WarehouseService extends BaseService<WarehouseDto> {
+
 }
