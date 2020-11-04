@@ -9,6 +9,7 @@ import ProtectedComponent from "./components/ProtectedComponent";
 
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import Customers from "./pages/Customers";
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
                         return <Profile/>
                     })}/>
                 }}/>/>
+                <Route path={'/customers'} component={Customers}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

@@ -14,6 +14,7 @@ function Header() {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav style={{height: '45px'}} className="mr-auto">
                     {user && user.currentCustomerId ? <Nav.Link href="/profile">Profile</Nav.Link> : null}
+                    {user && user.currentCustomerId ? <Nav.Link href="/customers">Customers</Nav.Link> : null}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>

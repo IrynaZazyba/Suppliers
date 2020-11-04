@@ -60,3 +60,7 @@ code {
     margin: 70px 0;
 }
 
+.mainContainer {
+    margin: 80px 30px 0 30px !important;
+}
+
