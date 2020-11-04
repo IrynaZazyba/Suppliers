@@ -2,8 +2,13 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
+
+    private final CustomerMapper customerMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Warehouse map(WarehouseDto dto) {
@@ -13,8 +18,8 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
                 .address(dto.getAddress())
-                .customer(dto.getCustomer())
-                .users(dto.getUsers())
+                .customer(customerMapper.map(dto.getCustomerDto()))
+                .users(userMapper.map(dto.getUsersDto()))
                 .build();
     }
 
@@ -26,8 +31,8 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
                 .address(entity.getAddress())
-                .customer(entity.getCustomer())
-                .users(entity.getUsers())
+                .customerDto(customerMapper.map(entity.getCustomer()))
+                .usersDto(userMapper.map(entity.getUsers()))
                 .build();
     }
 
@@ -36,7 +41,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
         to.setType(from.getType());
         to.setTotalCapacity(from.getTotalCapacity());
         to.setAddress(from.getAddress());
-        to.setCustomer(from.getCustomer());
-        to.setUsers(from.getUsers());
+        to.setCustomer(customerMapper.map(from.getCustomerDto()));
+        to.setUsers(userMapper.map(from.getUsersDto()));
     }
 }
