@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    // TODO: 11/4/20  this method should be corrected when develop will have Warehouse and Address.
     @Override
     public UserDto createAdmin(CustomerDto customerDto) {
         return UserDto.builder()
@@ -78,10 +77,7 @@ public class UserServiceImpl implements UserService {
                 .username("User name")
                 .email(customerDto.getAdminEmail())
                 .role(Role.ROLE_ADMIN)
-                //addressDto(addressDto)
-                .address(null)
                 .customerDto(customerDto)
-                //warehouseDto(warehouseDto)
                 .active(false)
                 .build();
     }
