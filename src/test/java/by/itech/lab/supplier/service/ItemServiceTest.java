@@ -126,7 +126,7 @@ public class ItemServiceTest {
         Mockito.when(itemRepository.findAllByActive(pageRequest, null)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
 
-        Assertions.assertEquals(itemDtoPage, itemService.findAll(pageRequest, null));
+        Assertions.assertEquals(itemDtoPage, itemService.findAllByActive(pageRequest, null));
 
     }
 
@@ -140,7 +140,7 @@ public class ItemServiceTest {
         Mockito.when(itemRepository.findAllByActive(pageRequest, true)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
 
-        Assertions.assertEquals(itemDtoPage, itemService.findAll(pageRequest, true));
+        Assertions.assertEquals(itemDtoPage, itemService.findAllByActive(pageRequest, true));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class ItemServiceTest {
         Mockito.when(itemRepository.findAllByActive(pageRequest, false)).thenReturn(itemPage);
         Mockito.when(itemMapper.map(falseItem)).thenReturn(falseItemDto);
 
-        Assertions.assertEquals(itemDtoPage, itemService.findAll(pageRequest, false));
+        Assertions.assertEquals(itemDtoPage, itemService.findAllByActive(pageRequest, false));
     }
 
     @Test
