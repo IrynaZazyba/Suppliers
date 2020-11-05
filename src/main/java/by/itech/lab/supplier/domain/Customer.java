@@ -1,5 +1,7 @@
 package by.itech.lab.supplier.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +40,7 @@ public class Customer implements BaseEntity {
     private boolean active;
     private LocalDate deletedAt;
     @OneToMany(mappedBy = "customer")
+    @EqualsAndHashCode.Exclude
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
     @EqualsAndHashCode.Exclude

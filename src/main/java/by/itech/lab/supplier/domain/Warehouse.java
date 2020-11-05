@@ -1,5 +1,7 @@
 package by.itech.lab.supplier.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +46,7 @@ public class Warehouse implements BaseEntity {
     private Address address;
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    @EqualsAndHashCode.Exclude
     private Customer customer;
     @OneToMany(mappedBy = "warehouse")
     @EqualsAndHashCode.Exclude

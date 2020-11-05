@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -25,7 +26,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional
     @Override
     public WarehouseDto save(WarehouseDto warehouseDto) {
-        Warehouse customer = Optional.ofNullable(warehouseDto.getId())
+        Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
                 .map(item -> {
                     final Warehouse existing = warehouseRepository
                             .findById(warehouseDto.getId())
@@ -35,7 +36,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                 })
                 .orElseGet(() -> warehouseMapper.map(warehouseDto));
 
-        final Warehouse saved = warehouseRepository.save(customer);
+        final Warehouse saved = warehouseRepository.save(warehouse);
         return warehouseMapper.map(saved);
     }
 
