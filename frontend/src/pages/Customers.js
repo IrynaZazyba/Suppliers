@@ -14,26 +14,84 @@ import RequestService from "../services/requestService";
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
-    const [customers, setCustomers] = useState();
+    const [page, setPage] = useState({
+        active: 1,
+        currentPage: 1,
+        countPerPage: 10,
+        countPages: 1
+    });
+    const [customers, setCustomers] = useState([]);
+    const [switched, setSwitched] = useState(true);
     const requestService = new RequestService();
 
     const handleSubmit = (e) => {
+        console.log(page);
         e.preventDefault();
 
-        let resource = requestService.getResource("/customers");
-        console.log(resource);
+    };
+
+    const handleSwitch = (e) => {
+
+        console.log(e.currentTarget);
+
+        let status = e.target.value !== 'true';
+        let id = e.eventPhase;
+        fetch("/customers/" + id + "/status", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(status)
+        })
+            .then(function (response) {
+                if (response.status !== 200) {
+                    //todo
+                } else {
+                    let newData = [...customers];
+                    newData.forEach(elem => {
+                        if (elem.id === id) {
+                            elem.active = status;
+                        }
+                    });
+                    setCustomers(newData);
+                }
+            });
+    };
+
+
+    const changePage = (e) => {
+        e.preventDefault();
+        console.log(e.target.innerHTML);
+        let page = e.target.innerHTML - 1;
+
+        fetch('/customers?page=' + page)
+            .then(response => response.json())
+            .then(commits => {
+                console.log(commits);
+                // setPage({
+                //     active: (commits.pageable.pageNumber + 1),
+                //     countPerPage: "'" + commits.size + "'",
+                //     countPages: commits.totalPages
+                // });
+                setCustomers(commits.content);
+
+            });
 
     };
 
-    const handleSelect = (e) => {
-
-    };
-
-
-    // useEffect(() => {
-    //     let resource = requestService.getResource("/customers");
-    //     console.log(resource);
-    // }, []);
+    useEffect(() => {
+        fetch('/customers')
+            .then(response => response.json())
+            .then(commits => {
+                setCustomers(commits.content);
+                console.log(commits.pageable);
+                setPage({
+                    active: (commits.pageable.pageNumber + 1),
+                    countPerPage: "'" + commits.size + "'",
+                    countPages: commits.totalPages
+                });
+            });
+    }, []);
 
 
     return (
@@ -45,9 +103,6 @@ export default () => {
                             <Button className="mainButton" size="sm" onClick={handleSubmit}>
                                 Add
                             </Button>
-                            <Button className="deleteButton" size="sm">
-                                Remove
-                            </Button>
                         </Col>
                         <Col md={7}></Col>
                         <Col md={2}>
@@ -58,7 +113,7 @@ export default () => {
                             </Form.Control>
                         </Col>
                         <Col md={1}>
-                            <TogglePage/>
+                            <TogglePage props={page}/>
                         </Col>
                     </Row>
                 </Card.Header>
@@ -66,148 +121,36 @@ export default () => {
                     <Table hover size="sm" style={{marginTop: '25px'}}>
                         <thead>
                         <tr>
-                            <th style={{width: '2%'}}></th>
-                            <th style={{width: '11%'}}>Name</th>
-                            <th style={{width: '11%'}}>Registration date</th>
-                            <th style={{width: '11%'}}>email of admin</th>
-                            <th style={{width: '5%'}}>status</th>
-                            <th style={{width: '2%'}}></th>
+                            <th>Name</th>
+                            <th>Registration date</th>
+                            <th>Email of admin</th>
+                            <th>status</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><Form.Check type="checkbox"/></td>
-                            <td>Mark</td>
-                            <td>04.11.2020</td>
-                            <td>admin@mdo</td>
-                            <td><Form.Check
-                                type="switch"
-                                id="custom-switch"
-                                style={{width: '25px'}}/>
-                            </td>
-                            <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
-                            </td>
-                        </tr>
+                        {customers.map(custom => (
+                            <tr key={custom.id}>
+                                <td>{custom.name}</td>
+                                <td>{custom.registrationDate}</td>
+                                <td>{custom.adminEmail}</td>
+                                <td><Form.Check
+                                    type="switch"
+                                    id={custom.id}
+                                    style={{width: '25px'}}
+                                    onChange={handleSwitch}
+                                    checked={custom.active}
+                                    value={custom.active}
+                                />
+                                </td>
+                                <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
+                                </td>
+                            </tr>
+                        ))}
+
                         </tbody>
                     </Table>
-                    <Page/>
+                    <Page page={page} onChange={changePage}/>
                 </Card.Body>
             </Card>
         </Container>

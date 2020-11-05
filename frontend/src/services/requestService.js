@@ -17,19 +17,21 @@ export default class RequestService {
         return await res.json();
     };
 
-    async getResource(url) {
+    async putResource(url, body) {
 
-        let response = await fetch(url);
-        if (response.ok) {
-            let json = await response.json();
-            console.log("here");
-            console.log("json");
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        };
 
-        } else {
-            console.log("error");
+        const res = await fetch(url, requestOptions);
+        if (!res.ok) {
+            throw Error(`Couldn't fetch ${url} status: ${res.status}`);
         }
-
-        return await response.json();
+        return await res.json();
     };
 
 }

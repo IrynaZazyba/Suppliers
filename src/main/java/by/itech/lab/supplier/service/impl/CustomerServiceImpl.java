@@ -61,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public boolean changeActive(Long id, boolean status) {
-        return customerRepository.setStatus(status, id);
+    public void changeActive(Long id, boolean status) {
+        customerRepository.setStatus(status, id);
     }
 }

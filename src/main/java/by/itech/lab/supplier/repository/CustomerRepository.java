@@ -19,5 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Modifying
     @Query("update Customer set active = :isActive where id = :id")
-    boolean setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
+    void setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
 }
