@@ -39,8 +39,6 @@ public class WarehouseController {
         return warehouseService.findById(id);
     }
 
-    private final WarehouseService warehouseService;
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WarehouseDto save(@Valid @RequestBody WarehouseDto warehouseDto) {

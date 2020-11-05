@@ -22,6 +22,17 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
 
+    @Override
+    public Page<WarehouseDto> findAll(Pageable pageable) {
+        return warehouseRepository.findAll(pageable).map(warehouseMapper::map);
+    }
+
+    @Override
+    public WarehouseDto findById(Long warehouseId) {
+        return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
+    }
+
     @Transactional
     @Override
     public WarehouseDto save(WarehouseDto warehouseDto) {
@@ -39,28 +50,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseMapper.map(saved);
     }
 
-    @Override
-    public Page<WarehouseDto> findAllByActive(Pageable pageable, Boolean active) {
-        return null;
-    }
-
-    @Override
-    public WarehouseDto findById(Long id) {
-        return null;
-    }
-
     @Transactional
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id, LocalDate.now());
-    @Override
-    public Page<WarehouseDto> findAll(Pageable pageable) {
-        return warehouseRepository.findAll(pageable).map(warehouseMapper::map);
-    }
-
-    @Override
-    public WarehouseDto findById(Long warehouseId) {
-        return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 }
