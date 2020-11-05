@@ -42,7 +42,6 @@ public class UserDto implements BaseDto {
     @Email
     @Size(min = 5, max = 254)
     private String email;
-    private String activationKey;
     private Role role;
     private Address address;
     private CustomerDto customerDto;
