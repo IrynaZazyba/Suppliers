@@ -13,6 +13,6 @@ import java.time.LocalDate;
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     @Modifying
-    @Query("update Warehouse set deletedAt = :deletedDate where id = :id")
-    void delete(@Param("id") Long id, LocalDate deletedDate);
+    @Query("update Warehouse set deletedAt = current_timestamp where id = :id")
+    void delete(@Param("id") Long id);
 }
