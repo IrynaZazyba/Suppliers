@@ -28,5 +28,4 @@ public interface ApiConstants {
     String URL_ID = "/id";
     String URL_STATUS = "/status";
     String URL_LABEL = "/label";
-
 }

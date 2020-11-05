@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class ItemsInApplication implements BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "application_id")
+    @JsonBackReference
     private Application application;
 
     @ManyToOne

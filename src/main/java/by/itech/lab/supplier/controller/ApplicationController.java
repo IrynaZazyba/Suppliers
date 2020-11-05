@@ -1,13 +1,17 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
