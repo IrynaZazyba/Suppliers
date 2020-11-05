@@ -4,6 +4,6 @@ databaseChangeLog:
       author: alexey_overchenko
       changes:
         - dropNotNullConstraint:
-            columnDataType: bigint
+            columnDataType: date
             columnName:  birthday
             tableName:  user
