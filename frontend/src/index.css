@@ -24,3 +24,39 @@ code {
     border: none;
 }
 
+.header {
+    background-color: #5A5863 !important;
+}
+
+.header a {
+    color: white !important;
+}
+
+.mainButton {
+    background-color: #1A7FA8 !important;
+}
+
+.primaryButton {
+    color: #009edd !important;
+    border: 2px solid #009edd !important;
+}
+
+.primaryButton:hover {
+    background-color: #1A7FA8 !important;
+    color: white !important;
+}
+
+.footer {
+    background-color: #E8E8EE;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.loginCard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 70px 0;
+}
+

@@ -10,7 +10,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
     private final ZoneMapper zoneMapper;
 
     @Autowired
-    public AddressMapper(ZoneMapper zoneMapper) {
+    public AddressMapper(final ZoneMapper zoneMapper) {
         this.zoneMapper = zoneMapper;
     }
 

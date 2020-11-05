@@ -12,7 +12,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
     private final CategoryMapper categoryMapper;
 
     @Autowired
-    public ItemMapper(CategoryMapper categoryMapper) {
+    public ItemMapper(final CategoryMapper categoryMapper) {
         this.categoryMapper = categoryMapper;
     }
 

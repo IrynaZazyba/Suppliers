@@ -47,3 +47,11 @@ databaseChangeLog:
               - column:
                   name: deleted_at
                   type: DATE
+  - changeSet:
+      id: SUP-11-6
+      author: alexander_popovich
+      changes:
+        - modifyDataType:
+            columnName: cost
+            newDataType: numeric
+            tableName: items_in_application

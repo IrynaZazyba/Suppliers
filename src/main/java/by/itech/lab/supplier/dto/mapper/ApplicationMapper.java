@@ -3,24 +3,25 @@ package by.itech.lab.supplier.dto.mapper;
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
-
+@Lazy
 @Component
 public class ApplicationMapper implements BaseMapper<Application, ApplicationDto> {
 
     private final AddressMapper addressMapper;
     private final UserMapper userMapper;
     private final WayBillMapper wayBillMapper;
-    private final ItemMapper itemMapper;
+    private final ItemsInApplicationMapper itemMapper;
 
     @Autowired
     public ApplicationMapper(final AddressMapper addressMapper,
                              final UserMapper userMapper,
                              final WayBillMapper wayBillMapper,
-                             final ItemMapper itemMapper) {
+                             final ItemsInApplicationMapper itemMapper) {
         this.addressMapper = addressMapper;
         this.userMapper = userMapper;
         this.wayBillMapper = wayBillMapper;

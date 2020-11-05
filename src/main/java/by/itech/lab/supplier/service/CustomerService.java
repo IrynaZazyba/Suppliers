@@ -4,11 +4,11 @@ import by.itech.lab.supplier.dto.CustomerDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface CustomerService {
+public interface CustomerService extends BaseService<CustomerDto> {
 
-    Page<CustomerDto> getCustomers(Pageable pageable, Boolean status);
+    boolean changeActive(Long id, boolean status);
 
-    CustomerDto getCustomer(Long customerId);
+    Page<CustomerDto> findAllByActive(Pageable pageable, Boolean active);
 }
 
 

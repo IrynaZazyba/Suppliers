@@ -13,7 +13,7 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
     private final AddressMapper addressMapper;
 
     @Autowired
-    public CarMapper(CustomerMapper customerMapper, AddressMapper addressMapper) {
+    public CarMapper(final CustomerMapper customerMapper, final AddressMapper addressMapper) {
         this.customerMapper = customerMapper;
         this.addressMapper = addressMapper;
     }

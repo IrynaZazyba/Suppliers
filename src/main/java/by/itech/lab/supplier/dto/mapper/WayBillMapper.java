@@ -15,7 +15,7 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
     private final UserMapper userMapper;
 
     @Autowired
-    public WayBillMapper(AddressMapper addressMapper, CarMapper carMapper, UserMapper userMapper) {
+    public WayBillMapper(final AddressMapper addressMapper, final CarMapper carMapper, final UserMapper userMapper) {
         this.addressMapper = addressMapper;
         this.carMapper = carMapper;
         this.userMapper = userMapper;

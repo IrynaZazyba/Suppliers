@@ -58,7 +58,6 @@ public class ItemServiceImpl implements ItemService {
     public Page<ItemDto> findAll(Pageable pageable) {
         return itemRepository.findAll(pageable)
           .map(itemMapper::map);
-
     }
 
     public ItemDto findById(final Long id) {
