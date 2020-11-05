@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: IN-CCA-11
+      author: alesia_hlushakova
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: ;
+             path: ../sql/2020-11-05-fill-data.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true
+

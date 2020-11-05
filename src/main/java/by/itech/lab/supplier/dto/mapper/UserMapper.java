@@ -59,7 +59,6 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .birthday(userDTO.getBirthday())
                 .active(userDTO.isActive())
                 .password(userDTO.getPassword())
-                .deleted(userDTO.isDeleted())
                 .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
                 .creatorApplications(userDTO.getCreatorApplications())
