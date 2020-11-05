@@ -34,7 +34,6 @@ public class Item implements BaseEntity {
     private Double units;
     @OneToOne
     @JoinColumn(name = "category_id")
-    @OneToOne
     private Category category;
     private boolean active;
 
