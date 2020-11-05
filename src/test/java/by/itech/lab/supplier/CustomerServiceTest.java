@@ -7,6 +7,7 @@ import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.service.CustomerService;
 import by.itech.lab.supplier.service.impl.CustomerServiceImpl;
+import by.itech.lab.supplier.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -48,9 +48,12 @@ public class CustomerServiceTest {
         @MockBean
         private CustomerMapper customerMapper;
 
+        @MockBean
+        private UserServiceImpl userService;
+
         @Bean
         public CustomerService customerService() {
-            return new CustomerServiceImpl(customerRepository, customerMapper);
+            return new CustomerServiceImpl(customerRepository, customerMapper, userService);
         }
 
     }
@@ -64,14 +67,14 @@ public class CustomerServiceTest {
         customer = Customer.builder()
                 .id(5L)
                 .name("System")
-                .registrationDate(Date.valueOf(LocalDate.now()))
-                .status(true)
+                .registrationDate(LocalDate.now())
+                .active(true)
                 .build();
         customerDto = CustomerDto.builder()
                 .id(5L)
                 .name("System")
                 .registrationDate(LocalDate.now())
-                .status(true)
+                .active(true)
                 .build();
         pageRequest = PageRequest.of(1, 10);
     }
@@ -86,7 +89,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findByStatus(pageRequest,null)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
 
-        Assertions.assertEquals(customerDtoPage, customerService.getCustomers(pageRequest,null));
+        Assertions.assertEquals(customerDtoPage, customerService.findAllByActive(pageRequest,null));
     }
 
     @Test
@@ -99,7 +102,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findByStatus(pageRequest, true)).thenReturn(customerPage);
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
 
-        Assertions.assertEquals(customerDtoPage, customerService.getCustomers(pageRequest, true));
+        Assertions.assertEquals(customerDtoPage, customerService.findAllByActive(pageRequest, true));
     }
 
     @Test
@@ -107,7 +110,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.of(customer));
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
 
-        Assertions.assertEquals(customerDto, customerService.getCustomer(5L));
+        Assertions.assertEquals(customerDto, customerService.findById(5L));
     }
 
     @Test
@@ -115,7 +118,7 @@ public class CustomerServiceTest {
         Mockito.when(customerRepository.findById(5L)).thenReturn(Optional.empty());
         Mockito.when(customerMapper.mapToCustomerView(customer)).thenReturn(customerDto);
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> customerService.getCustomer(5L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> customerService.findById(5L));
     }
 
 }

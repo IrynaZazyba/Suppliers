@@ -23,8 +23,8 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .birthday(user.getBirthday())
                 .active(user.isActive())
                 .role(user.getRole())
+                .deletedAt(user.getDeletedAt())
                 .password(user.getPassword())
-                .deleted(user.isDeleted())
                 .creatorApplications(user.getCreatorApplications())
                 .updatorApplications(user.getUpdatorApplications())
                 .creatorWayBills(user.getCreatorWayBills())
@@ -39,7 +39,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
         to.setSurname(from.getSurname());
         to.setBirthday(from.getBirthday());
         to.setActive(from.isActive());
-        to.setDeleted(from.isDeleted());
+        to.setDeletedAt(from.getDeletedAt());
         to.setRole(from.getRole());
         to.setCreatorApplications(from.getCreatorApplications());
         to.setUpdatorApplications(from.getUpdatorApplications());
@@ -60,6 +60,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .active(userDTO.isActive())
                 .password(userDTO.getPassword())
                 .deleted(userDTO.isDeleted())
+                .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
                 .creatorApplications(userDTO.getCreatorApplications())
                 .updatorApplications(userDTO.getUpdatorApplications())

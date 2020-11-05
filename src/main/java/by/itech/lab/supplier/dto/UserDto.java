@@ -25,7 +25,7 @@ import java.util.Set;
 public class UserDto implements BaseDto {
 
     private boolean active;
-    private boolean deleted;
+    private LocalDate deletedAt;
     private Long id;
     @NotBlank
     @Size(min = 1, max = 50)

@@ -55,8 +55,8 @@ public class UserServiceTest {
         address.setAddressLine2("address2");
         Customer customer = new Customer();
         customer.setName("dwwad");
-        customer.setStatus(true);
-        customer.setRegistrationDate(new Date(2000, 8, 27));
+        customer.setActive(true);
+        customer.setRegistrationDate(LocalDate.now());
         userDto = new UserDto();
         userDto.setUsername(USERNAME);
         userDto.setPassword("password");
@@ -67,7 +67,7 @@ public class UserServiceTest {
         userDto.setSurname("doe");
         userDto.setAddress(address);
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
-        userDto.setCustomer(customerMapper.map(customer));
+//        userDto.setCustomerDto(customerDto);
         user = new User();
         user.setUsername(USERNAME);
         user.setPassword("password");

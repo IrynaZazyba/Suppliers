@@ -1,19 +1,20 @@
-import React, {useContext, useState} from 'react';
-import {UserContext} from './UserContext';
-import {NavLink} from 'react-router-dom';
+import React, {useContext} from 'react';
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import UserProfile from "./components/UserProfile";
+import {AuthContext} from "./context/authContext";
 
 function Header() {
 
-    const context = useContext(UserContext);
+    const {user, setUser} = useContext(AuthContext);
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
             <Navbar.Toggle aria-controls="responsive-navbar-nav"/>
             <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="mr-auto">
-                    <Nav.Link href="/">Home</Nav.Link>
+                <Nav style={{height: '45px'}} className="mr-auto">
+                    {user && user.currentCustomerId ? <Nav.Link href="/profile">Profile</Nav.Link> : null}
+                    <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
