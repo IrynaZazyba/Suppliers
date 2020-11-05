@@ -32,7 +32,6 @@ public class Item implements BaseEntity {
     private String label;
     @Column(nullable = false)
     private Double units;
-    @OneToOne
     @JoinColumn(name = "category_id")
     @OneToOne
     private Category category;

@@ -4,8 +4,6 @@ databaseChangeLog:
       author: alexey_overchenko
       changes:
         - dropNotNullConstraint:
-            catalogName: test
             columnDataType: bigint
             columnName:  address_id
-            schemaName:  test
             tableName:  user

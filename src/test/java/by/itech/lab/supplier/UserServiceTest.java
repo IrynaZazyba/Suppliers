@@ -68,7 +68,7 @@ public class UserServiceTest {
         userDto.setSurname("doe");
         userDto.setAddress(address);
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
-        userDto.setCustomer(customerMapper.map(customer));
+     //   userDto.setCustomer(customerMapper.map(customer));
         user = new User();
         user.setUsername(USERNAME);
         user.setPassword("password");
