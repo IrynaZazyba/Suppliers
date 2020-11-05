@@ -34,7 +34,7 @@ public class Item implements BaseEntity {
     private String label;
     @Column(nullable = false)
     private Double units;
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @OneToOne
     @JoinColumn(name = "category_id")
     private Category category;
     private boolean active;

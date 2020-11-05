@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: IN-CCA-15
+      author: alesia_hlushakova
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: ;
+             path: ../sql/2020-11-05-fill-data.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true
+  - changeSet:
+      id: IN-CCA-19
+      author: alesia_hlushakova
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: ;
+             path: ../sql/2020-11-05-fill-data-waybill.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true
+  - changeSet:
+      id: IN-CCA-21
+      author: alesia_hlushakova
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: ;
+             path: ../sql/2020-11-05-fill-data-retailers.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true
+  - changeSet:
+      id: IN-CCA-22
+      author: alesia_hlushakova
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: ;
+             path: ../sql/2020-11-05-fill-data-taxes.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true
