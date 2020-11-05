@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class CustomerDto implements BaseDto {
-
     private Long id;
     @Size(min = 1, max = 50, message = "Your name should contains at least 2 letters")
     @NotEmpty(message = "Please provide a name")

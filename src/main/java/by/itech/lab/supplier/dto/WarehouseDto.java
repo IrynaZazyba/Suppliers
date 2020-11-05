@@ -1,11 +1,17 @@
 package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.Address;
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+=======
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+>>>>>>> develop
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;

@@ -3,6 +3,7 @@ package by.itech.lab.supplier.service.impl;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
@@ -52,5 +53,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id, LocalDate.now());
+    @Override
+    public Page<WarehouseDto> findAll(Pageable pageable) {
+        return warehouseRepository.findAll(pageable).map(warehouseMapper::map);
+    }
+
+    @Override
+    public WarehouseDto findById(Long warehouseId) {
+        return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 }
