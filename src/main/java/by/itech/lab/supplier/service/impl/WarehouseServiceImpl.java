@@ -1,10 +1,8 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
