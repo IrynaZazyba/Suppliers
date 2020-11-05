@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -21,6 +22,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
+    private final Customer customer;
 
     @Override
     public Page<WarehouseDto> findAll(Pageable pageable) {

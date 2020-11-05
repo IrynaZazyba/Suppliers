@@ -29,6 +29,5 @@ public class WarehouseDto implements BaseDto {
     @Size(min = 5, max = 50, message = "Your address should contains at least 5 letters")
     @NotBlank
     private Address address;
-    private CustomerDto customerDto;
     private Set<UserDto> usersDto = new HashSet<>();
 }
