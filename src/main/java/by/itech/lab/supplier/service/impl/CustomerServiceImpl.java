@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final UserServiceImpl userService;
 
     @Override
-    public Page<CustomerDto> findAll(final Pageable pageable, final Boolean status) {
+    public Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status) {
         return customerRepository.findByStatus(pageable, status).map(customerMapper::mapToCustomerView);
     }
 

@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDto> findAll(final Pageable pageable, final Boolean active) {
+    public Page<CategoryDto> findAllByActive(final Pageable pageable, final Boolean active) {
         return categoryRepository.findAllByActive(pageable, active)
           .map(categoryMapper::map);
     }
