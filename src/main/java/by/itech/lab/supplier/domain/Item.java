@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class Item implements BaseEntity {
     private String label;
     @Column(nullable = false)
     private Double units;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JoinColumn(name = "category_id")
     private Category category;
     private boolean active;
