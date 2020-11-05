@@ -25,7 +25,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public WarehouseDto findById(Long warehouseId) {
         return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("Customer with id=" + warehouseId + " doesn't exist"));
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 
     // TODO: 11/4/20
