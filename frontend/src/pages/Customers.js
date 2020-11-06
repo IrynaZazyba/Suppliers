@@ -10,7 +10,6 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../components/TogglePage";
-import RequestService from "../services/requestService";
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
@@ -21,22 +20,33 @@ export default () => {
         countPages: 1
     });
     const [customers, setCustomers] = useState([]);
-    const [switched, setSwitched] = useState(true);
-    const requestService = new RequestService();
+    const [filter, setFilter] = useState([]);
 
     const handleSubmit = (e) => {
-        console.log(page);
         e.preventDefault();
 
     };
 
-    const handleSwitch = (e) => {
+    const onChangeFilter = (e) => {
+        e.preventDefault();
+        setFilter(e.target.value);
+        getCustomers('/customers?status=' + e.target.value + '&size=' + page.countPerPage);
 
-        console.log(e.currentTarget);
+    };
 
+    const handleCountPerPage = (e) => {
+        e.preventDefault();
+        setPage(preState => ({
+            ...preState,
+            countPerPage: e.target.value
+        }));
+        getCustomers('/customers?size=' + e.target.value + '&status=' + filter);
+    };
+
+    const handleChangeStatus = (e) => {
         let status = e.target.value !== 'true';
-        let id = e.eventPhase;
-        fetch("/customers/" + id + "/status", {
+        let id = e.target.id;
+        fetch('/customers/' + id + '/status', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,49 +59,40 @@ export default () => {
                 } else {
                     let newData = [...customers];
                     newData.forEach(elem => {
-                        if (elem.id === id) {
+                        if (elem.id == id) {
                             elem.active = status;
                         }
                     });
                     setCustomers(newData);
                 }
             });
+        getCustomers('/customers?size=' + page.countPerPage + '&status=' + filter);
     };
 
 
     const changePage = (e) => {
         e.preventDefault();
-        console.log(e.target.innerHTML);
         let page = e.target.innerHTML - 1;
-
-        fetch('/customers?page=' + page)
-            .then(response => response.json())
-            .then(commits => {
-                console.log(commits);
-                // setPage({
-                //     active: (commits.pageable.pageNumber + 1),
-                //     countPerPage: "'" + commits.size + "'",
-                //     countPages: commits.totalPages
-                // });
-                setCustomers(commits.content);
-
-            });
-
+        getCustomers('/customers?page=' + page + '&status=' + filter);
     };
 
     useEffect(() => {
-        fetch('/customers')
+        getCustomers('/customers');
+    }, []);
+
+
+    function getCustomers(url) {
+        fetch(url)
             .then(response => response.json())
             .then(commits => {
                 setCustomers(commits.content);
-                console.log(commits.pageable);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
-                    countPerPage: "'" + commits.size + "'",
+                    countPerPage: commits.size,
                     countPages: commits.totalPages
                 });
             });
-    }, []);
+    }
 
 
     return (
@@ -106,14 +107,17 @@ export default () => {
                         </Col>
                         <Col md={7}></Col>
                         <Col md={2}>
-                            <Form.Control size="sm" as="select" defaultValue="Choose...">
-                                <option>All</option>
-                                <option>Enabled</option>
-                                <option>Disabled</option>
+                            <Form.Control size="sm" as="select"
+                                          value={filter}
+                                          defaultValue="Choose..."
+                                          onChange={onChangeFilter}>
+                                <option value={''}>All</option>
+                                <option value={true}>Active</option>
+                                <option value={false}>Disabled</option>
                             </Form.Control>
                         </Col>
                         <Col md={1}>
-                            <TogglePage props={page}/>
+                            <TogglePage props={page} onChange={handleCountPerPage}/>
                         </Col>
                     </Row>
                 </Card.Header>
@@ -138,7 +142,7 @@ export default () => {
                                     type="switch"
                                     id={custom.id}
                                     style={{width: '25px'}}
-                                    onChange={handleSwitch}
+                                    onChange={handleChangeStatus}
                                     checked={custom.active}
                                     value={custom.active}
                                 />
@@ -147,7 +151,6 @@ export default () => {
                                 </td>
                             </tr>
                         ))}
-
                         </tbody>
                     </Table>
                     <Page page={page} onChange={changePage}/>
