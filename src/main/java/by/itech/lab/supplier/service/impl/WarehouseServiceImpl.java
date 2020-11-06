@@ -1,22 +1,19 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
-import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -24,8 +21,8 @@ import java.util.Optional;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final CustomerRepository customerRepository;
     private final WarehouseMapper warehouseMapper;
-    private final CustomerMapper customerMapper;
 
     @Override
     public Page<WarehouseDto> findAll(Pageable pageable) {
@@ -40,7 +37,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Transactional
     @Override
-    public WarehouseDto save(WarehouseDto warehouseDto) {
+    public WarehouseDto save(Long customerId, WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
                 .map(item -> {
                     final Warehouse existing = warehouseRepository
@@ -51,8 +48,8 @@ public class WarehouseServiceImpl implements WarehouseService {
                 })
                 .orElseGet(() -> warehouseMapper.map(warehouseDto));
 
-        UserImpl userImpl = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        warehouse.setCustomer(customerMapper.map(userImpl.getCustomer().get(0)));
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        customer.ifPresent(warehouse::setCustomer);
         final Warehouse saved = warehouseRepository.save(warehouse);
         return warehouseMapper.map(saved);
     }
@@ -61,5 +58,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id);
+    }
+
+    @Override
+    public WarehouseDto save(WarehouseDto dto) {
+        return null;
     }
 }

@@ -19,12 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
-import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
+import static by.itech.lab.supplier.constant.ApiConstants.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(URL_WAREHOUSE)
+@RequestMapping(URL_CUSTOMER + URL_CUSTOMER_ID + URL_WAREHOUSE)
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
@@ -41,8 +40,8 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WarehouseDto save(@Valid @RequestBody WarehouseDto warehouseDto) {
-        return warehouseService.save(warehouseDto);
+    public WarehouseDto save(@PathVariable(name = "customerId") Long customerId, @Valid @RequestBody WarehouseDto warehouseDto) {
+        return warehouseService.save(customerId, warehouseDto);
     }
 
     @PutMapping(URL_ID_PARAMETER)
