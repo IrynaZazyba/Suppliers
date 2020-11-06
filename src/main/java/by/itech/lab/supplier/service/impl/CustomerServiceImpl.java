@@ -50,6 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         customer.setRegistrationDate(LocalDate.now());
         final Customer saved = customerRepository.save(customer);
+        customerDto.setId(saved.getId());
         userService.save(userService.createAdmin(customerDto));
         return customerMapper.map(saved);
     }

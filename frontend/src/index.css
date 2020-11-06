@@ -49,8 +49,9 @@ code {
 .footer {
     background-color: #E8E8EE;
     width: 100%;
-    /*position: absolute;*/
+    position: fixed;
     bottom: 0;
+    z-index: 5;
 }
 
 .loginCard {
@@ -63,6 +64,7 @@ code {
 .mainContainer {
     margin-top: 80px !important;
     padding: 0 205px !important;
+    margin-bottom: 70px !important;
 }
 
 .deleteButton{
@@ -104,12 +106,21 @@ a.page-link{
 }
 
 .card-body{
-    padding-top:0 !important;
+    padding-top:10px !important;
 }
 
 .tableHead .mainButton:hover{
     background-color: #1993c4 !important;
     border: 1px solid #009edd !important;
     color: white;
+}
+
+.modal-header{
+    border-bottom: 1px solid #009edd !important;
+}
+
+.modal-content{
+    border-radius: .2rem !important;
+
 }
 

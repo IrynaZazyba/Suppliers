@@ -10,6 +10,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../components/TogglePage";
+import ModalCustomer from "../components/ModalCustomer";
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
@@ -21,10 +22,13 @@ export default () => {
     });
     const [customers, setCustomers] = useState([]);
     const [filter, setFilter] = useState([]);
+    const [lgShow, setLgShow] = useState(false);
+
 
     const handleSubmit = (e) => {
+        console.log("here");
         e.preventDefault();
-
+        setLgShow(true);
     };
 
     const onChangeFilter = (e) => {
@@ -66,7 +70,6 @@ export default () => {
                     setCustomers(newData);
                 }
             });
-        getCustomers('/customers?size=' + page.countPerPage + '&status=' + filter);
     };
 
 
@@ -94,9 +97,17 @@ export default () => {
             });
     }
 
+    const modalWin = (e, customerDto) => {
+        setLgShow(e);
+        if (customerDto) {
+            getCustomers('/customers?status=' + filter + '&size=' + page.countPerPage);
+        }
+    };
 
     return (
         <Container fluid className="mainContainer">
+            <ModalCustomer props={lgShow} onChange={modalWin}>
+            </ModalCustomer>
             <Card className="shadow-sm bg-white rounded">
                 <Card.Header className="tableHead">
                     <Row>
