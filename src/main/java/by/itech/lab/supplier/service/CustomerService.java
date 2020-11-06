@@ -8,8 +8,6 @@ public interface CustomerService extends BaseService<CustomerDto> {
 
     boolean changeActive(Long id, boolean status);
 
-    Page<CustomerDto> findAllByActive(Pageable pageable, Boolean active);
+    Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status);
+
 }
-
-
-

@@ -24,7 +24,7 @@ public class ItemsInApplication implements BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id")
-    @JsonManagedReference
+    //@JsonManagedReference
     private Application application;
 
     @ManyToOne

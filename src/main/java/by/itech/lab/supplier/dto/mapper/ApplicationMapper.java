@@ -38,9 +38,9 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .lastUpdated(dto.getLastUpdated())
           .sourceLocationAddressId(addressMapper.map(dto.getSourceLocationAddressIdDto()))
           .destinationLocationAddressId(addressMapper.map(dto.getDestinationLocationAddressIdDto()))
-          .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
-          .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
-          // .wayBill(wayBillMapper.map(dto.getWayBillDto()))
+          //.createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
+          //.lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
+          //.wayBill(wayBillMapper.map(dto.getWayBillDto()))
           .deletedAt(dto.getDeletedAt())
           .items(dto.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
           .build();
@@ -56,8 +56,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
           .lastUpdated(application.getLastUpdated())
           .sourceLocationAddressIdDto(addressMapper.map(application.getSourceLocationAddressId()))
           .destinationLocationAddressIdDto(addressMapper.map(application.getDestinationLocationAddressId()))
-          .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
-          .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
+          //.createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
+          //.lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
           //.wayBillDto(wayBillMapper.map(application.getWayBill()))
           .deletedAt(application.getDeletedAt())
           .items(application.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()))
@@ -71,9 +71,9 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setLastUpdated(from.getLastUpdated());
         to.setSourceLocationAddressId(addressMapper.map(from.getSourceLocationAddressIdDto()));
         to.setDestinationLocationAddressId(addressMapper.map(from.getDestinationLocationAddressIdDto()));
-        to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
-        to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
-        // to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
+        //to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
+        //to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
+        //to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
         to.setItems(from.getItems().stream().map(itemMapper::map).collect(Collectors.toSet()));
         to.setDeletedAt(from.getDeletedAt());
     }
