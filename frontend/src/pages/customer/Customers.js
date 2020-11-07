@@ -1,17 +1,16 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from "../../context/authContext";
-import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Form from 'react-bootstrap/Form'
 import {FaEdit} from "react-icons/fa";
 import Page from "../../components/Page";
-import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import ModalAddCustomer from "./ModalAddCustomer";
 import ModalEditCustomer from "./ModalEditCustomer";
+import CardContainer from "../../components/CardContainer";
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
@@ -115,11 +114,15 @@ export default () => {
 
 
     return (
-        <Container fluid className="mainContainer">
-            <ModalAddCustomer props={lgShow} onChange={closeModalAdd}/>
-            <ModalEditCustomer props={editCustomer} onChange={closeModalEdit}/>
-            <Card className="shadow-sm bg-white rounded">
-                <Card.Header className="tableHead">
+        <CardContainer
+            modals={() => (
+                <React.Fragment>
+                    <ModalAddCustomer props={lgShow} onChange={closeModalAdd}/>
+                    <ModalEditCustomer props={editCustomer} onChange={closeModalEdit}/>
+                </React.Fragment>
+            )}
+            header={() => (
+                <React.Fragment>
                     <Row>
                         <Col md={2}>
                             <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
@@ -141,8 +144,10 @@ export default () => {
                             <TogglePage props={page} onChange={handleCountPerPage}/>
                         </Col>
                     </Row>
-                </Card.Header>
-                <Card.Body>
+                </React.Fragment>
+            )}
+            body={() => (
+                <React.Fragment>
                     <Table hover size="sm" style={{marginTop: '25px'}}>
                         <thead>
                         <tr>
@@ -182,9 +187,9 @@ export default () => {
                         </tbody>
                     </Table>
                     <Page page={page} onChange={changePage}/>
-                </Card.Body>
-            </Card>
-        </Container>
+                </React.Fragment>
+            )}/>
+
     );
 
 }
