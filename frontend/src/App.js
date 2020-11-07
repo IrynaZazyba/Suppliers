@@ -9,7 +9,7 @@ import ProtectedComponent from "./components/ProtectedComponent";
 
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import Customers from "./pages/Customers";
+import Customers from "./pages/customer/Customers";
 
 function App() {
 

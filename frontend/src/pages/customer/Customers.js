@@ -1,16 +1,17 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {AuthContext} from "../context/authContext";
+import {AuthContext} from "../../context/authContext";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Form from 'react-bootstrap/Form'
 import {FaEdit} from "react-icons/fa";
-import Page from "../components/Page";
+import Page from "../../components/Page";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import TogglePage from "../components/TogglePage";
-import ModalCustomer from "../components/ModalCustomer";
+import TogglePage from "../../components/TogglePage";
+import ModalAddCustomer from "./ModalAddCustomer";
+import ModalEditCustomer from "./ModalEditCustomer";
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
@@ -23,13 +24,10 @@ export default () => {
     const [customers, setCustomers] = useState([]);
     const [filter, setFilter] = useState([]);
     const [lgShow, setLgShow] = useState(false);
-
-
-    const handleSubmit = (e) => {
-        console.log("here");
-        e.preventDefault();
-        setLgShow(true);
-    };
+    const [editCustomer, setEditCustomer] = useState({
+        editShow: false,
+        customer: []
+    });
 
     const onChangeFilter = (e) => {
         e.preventDefault();
@@ -97,22 +95,34 @@ export default () => {
             });
     }
 
-    const modalWin = (e, customerDto) => {
+    const closeModalAdd = (e, customerDto) => {
         setLgShow(e);
         if (customerDto) {
             getCustomers('/customers?status=' + filter + '&size=' + page.countPerPage);
         }
     };
 
+    const closeModalEdit = (e, customerDto) => {
+        setEditCustomer(
+            preState => ({
+                ...preState,
+                editShow: false
+            }));
+        if (customerDto) {
+            getCustomers('/customers?status=' + filter + '&size=' + page.countPerPage);
+        }
+    };
+
+
     return (
         <Container fluid className="mainContainer">
-            <ModalCustomer props={lgShow} onChange={modalWin}>
-            </ModalCustomer>
+            <ModalAddCustomer props={lgShow} onChange={closeModalAdd}/>
+            <ModalEditCustomer props={editCustomer} onChange={closeModalEdit}/>
             <Card className="shadow-sm bg-white rounded">
                 <Card.Header className="tableHead">
                     <Row>
                         <Col md={2}>
-                            <Button className="mainButton" size="sm" onClick={handleSubmit}>
+                            <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                                 Add
                             </Button>
                         </Col>
@@ -158,7 +168,14 @@ export default () => {
                                     value={custom.active}
                                 />
                                 </td>
-                                <td><a href='#'><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}} size={'1.3em'}/></a>
+                                <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+                                            size={'1.3em'}
+                                            onClick={() => {
+                                                setEditCustomer({
+                                                    editShow: true,
+                                                    customer: custom
+                                                });
+                                            }}/>
                                 </td>
                             </tr>
                         ))}

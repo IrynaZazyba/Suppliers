@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import validateCustomer from "../validation/CustomerValidationRules";
+import validateCustomer from "../../validation/CustomerValidationRules";
 
-function ModalCustomer(props) {
+function ModalAddCustomer(props) {
 
 
     const [customerDto, setCustomer] = useState({
@@ -28,8 +28,6 @@ function ModalCustomer(props) {
 
     const addCustomerHandler = (e) => {
         e.preventDefault();
-        console.log(customerDto);
-        console.log(validError);
         let validationResult = validateCustomer(customerDto);
         setError(validationResult);
         if (validationResult.length === 0) {
@@ -42,7 +40,6 @@ function ModalCustomer(props) {
             })
                 .then(function (response) {
                     if (response.status !== 201) {
-                        console.log("error");
                         setError('');
                     } else {
                         setError('');
@@ -103,4 +100,4 @@ function ModalCustomer(props) {
     );
 }
 
-export default ModalCustomer;
+export default ModalAddCustomer;
