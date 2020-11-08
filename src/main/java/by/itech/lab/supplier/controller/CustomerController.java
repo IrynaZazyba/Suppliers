@@ -55,7 +55,7 @@ public class CustomerController {
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDto customerDto) {
         customerDto.setId(id);
-        return customerService.save(customerDto);
+        return customerService.update(customerDto);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)

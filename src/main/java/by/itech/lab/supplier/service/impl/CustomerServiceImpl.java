@@ -38,7 +38,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerDto save(CustomerDto customerDto) {
-        Customer customer = Optional.ofNullable(customerDto.getId())
+        Customer customer = buildCustomerEntity(customerDto);
+        customer.setRegistrationDate(LocalDate.now());
+        final Customer saved = customerRepository.save(customer);
+        customerDto.setId(saved.getId());
+        userService.save(userService.createAdmin(customerDto));
+        return customerMapper.map(saved);
+    }
+
+    @Override
+    public CustomerDto update(CustomerDto customerDto) {
+        Customer customer = buildCustomerEntity(customerDto);
+        final Customer saved = customerRepository.save(customer);
+        return customerMapper.map(saved);
+    }
+
+    private Customer buildCustomerEntity(CustomerDto customerDto) {
+        return Optional.ofNullable(customerDto.getId())
                 .map(item -> {
                     final Customer existing = customerRepository
                             .findById(customerDto.getId())
@@ -47,11 +63,6 @@ public class CustomerServiceImpl implements CustomerService {
                     return existing;
                 })
                 .orElseGet(() -> customerMapper.map(customerDto));
-
-        customer.setRegistrationDate(LocalDate.now());
-        final Customer saved = customerRepository.save(customer);
-        userService.save(userService.createAdmin(customerDto));
-        return customerMapper.map(saved);
     }
 
     @Transactional

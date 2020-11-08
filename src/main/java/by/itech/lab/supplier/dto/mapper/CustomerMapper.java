@@ -36,7 +36,6 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
 
     public void map(final CustomerDto from, final Customer to) {
         to.setName(from.getName());
-        to.setRegistrationDate(from.getRegistrationDate());
         to.setActive(from.isActive());
     }
 
