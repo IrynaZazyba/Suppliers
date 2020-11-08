@@ -28,6 +28,7 @@ export default () => {
         customer: []
     });
     const [errorMessage, setErrors] = useState('');
+    const filterOptions={'All': '', 'Active': true, 'Disabled': false};
 
     const onChangeFilter = (e) => {
         e.preventDefault();
@@ -137,9 +138,9 @@ export default () => {
                                           value={filter}
                                           defaultValue="Choose..."
                                           onChange={onChangeFilter}>
-                                <option value={''}>All</option>
-                                <option value={true}>Active</option>
-                                <option value={false}>Disabled</option>
+                                {Object.entries(filterOptions).map(([k, v]) => (
+                                    <option value={v}>{k}</option>
+                                ))}
                             </Form.Control>
                         </Col>
                         <Col md={1}>

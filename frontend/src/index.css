@@ -121,6 +121,9 @@ a.page-link{
 
 .modal-content{
     border-radius: .2rem !important;
+}
 
+.nav-link.active{
+    color: #009edd !important;
 }
 
