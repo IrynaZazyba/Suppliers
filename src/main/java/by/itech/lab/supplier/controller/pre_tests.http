@@ -60,17 +60,38 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/warehouses
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
+#GET http://localhost:8080/customers/3/warehouses
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/warehouses/1
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
+#GET http://localhost:8080/customers/3/warehouses/2
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+#POST http://localhost:8080/customers/3/warehouses
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+#PUT http://localhost:8080/customers/3/warehouses/2
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+#DELETE http://localhost:8080/customers/3/warehouses/2
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
 
 ###
 
