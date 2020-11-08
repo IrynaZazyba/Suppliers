@@ -13,7 +13,7 @@ export default () => {
         setUser({
             ...user, currentCustomerId: currentCustomerId
         });
-        window.location.assign('/profile');
+        window.location.assign('/customers/'+currentCustomerId+'/profile');
     };
 
     const handleSelect = (e) => {

@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import validateCustomer from "../../validation/CustomerValidationRules";
+import validateCustomerName from "../../validation/CustomerValidationRules";
+import ErrorMessage from "../../messages/errorMessage";
 
 function ModalEditCustomer(props) {
 
@@ -12,6 +13,7 @@ function ModalEditCustomer(props) {
         adminEmail: ''
     });
     const [validError, setError] = useState([]);
+    const [errorMessage, setErrors] = useState('');
 
     const handleName = (e) => {
         setCustomer(preState => ({
@@ -33,7 +35,7 @@ function ModalEditCustomer(props) {
 
     const editCustomerHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateCustomer(customerDto);
+        let validationResult = validateCustomerName(customerDto);
         setError(validationResult);
            if (validationResult.length === 0) {
                fetch('/customers/' + customerDto.id, {
@@ -46,6 +48,7 @@ function ModalEditCustomer(props) {
                    .then(function (response) {
                        if (response.status !== 200) {
                            setError('');
+                           setErrors("Something go wrong, try later");
                        } else {
                            setError('');
                            props.onChange(false, customerDto);
@@ -68,6 +71,7 @@ function ModalEditCustomer(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    {errorMessage && <ErrorMessage message={errorMessage}/>}
                     <Form>
                         <Form.Group controlId="editCustomer" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"

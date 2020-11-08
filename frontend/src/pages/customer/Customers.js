@@ -1,5 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {AuthContext} from "../../context/authContext";
+import React, {useEffect, useState} from 'react';
 import Table from "react-bootstrap/Table";
 import Form from 'react-bootstrap/Form'
 import {FaEdit} from "react-icons/fa";
@@ -11,9 +10,10 @@ import TogglePage from "../../components/TogglePage";
 import ModalAddCustomer from "./ModalAddCustomer";
 import ModalEditCustomer from "./ModalEditCustomer";
 import CardContainer from "../../components/CardContainer";
+import ErrorMessage from "../../messages/errorMessage";
 
 export default () => {
-    const {user, setUser} = useContext(AuthContext);
+
     const [page, setPage] = useState({
         active: 1,
         currentPage: 1,
@@ -27,6 +27,7 @@ export default () => {
         editShow: false,
         customer: []
     });
+    const [errorMessage, setErrors] = useState('');
 
     const onChangeFilter = (e) => {
         e.preventDefault();
@@ -56,7 +57,7 @@ export default () => {
         })
             .then(function (response) {
                 if (response.status !== 200) {
-                    //todo
+                    setErrors("Something go wrong, try later");
                 } else {
                     let newData = [...customers];
                     newData.forEach(elem => {
@@ -117,6 +118,7 @@ export default () => {
         <CardContainer
             modals={() => (
                 <React.Fragment>
+                    {errorMessage && <ErrorMessage message={errorMessage}/>}
                     <ModalAddCustomer props={lgShow} onChange={closeModalAdd}/>
                     <ModalEditCustomer props={editCustomer} onChange={closeModalEdit}/>
                 </React.Fragment>

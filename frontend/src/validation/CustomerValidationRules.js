@@ -7,10 +7,18 @@ export default function validateCustomer(dto) {
         errorsFields.push("email");
     }
 
+    let validationResult = validateCustomerName(dto);
+    errorsFields = [...errorsFields, ...validationResult];
+    return errorsFields;
+};
+
+export function validateCustomerName(dto) {
+    let errorsFields = [];
+
     if (dto.name.length < 2 || dto.name.length > 50 || /[*?=%:]/.test(dto.name)) {
         errorsFields.push("name");
     }
     return errorsFields;
-};
+}
 
 

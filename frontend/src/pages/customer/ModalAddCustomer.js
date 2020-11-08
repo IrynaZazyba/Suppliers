@@ -3,15 +3,16 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import validateCustomer from "../../validation/CustomerValidationRules";
+import ErrorMessage from "../../messages/errorMessage";
 
 function ModalAddCustomer(props) {
-
 
     const [customerDto, setCustomer] = useState({
         name: '',
         adminEmail: ''
     });
     const [validError, setError] = useState([]);
+    const [errorMessage, setErrors] = useState('');
 
     const handleName = (e) => {
         setCustomer(preState => ({
@@ -41,6 +42,7 @@ function ModalAddCustomer(props) {
                 .then(function (response) {
                     if (response.status !== 201) {
                         setError('');
+                        setErrors("Something go wrong, try later");
                     } else {
                         setError('');
                         props.onChange(false, customerDto);
@@ -63,6 +65,7 @@ function ModalAddCustomer(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    {errorMessage && <ErrorMessage message={errorMessage}/>}
                     <Form>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="Company name" onChange={handleName}
