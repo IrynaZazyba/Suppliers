@@ -58,9 +58,9 @@ public class CustomerController {
         return customerService.update(customerDto);
     }
 
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    public boolean changeActive(@PathVariable Long id, @PathVariable boolean status) {
-        return customerService.changeActive(id, status);
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
+    public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
+        customerService.changeActive(id, status);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
