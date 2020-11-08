@@ -34,6 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
           .map(categoryMapper::map);
     }
 
+    @Override
     public CategoryDto save(final CategoryDto dto) {
         Category category = Optional.ofNullable(dto.getId())
           .map(item -> {

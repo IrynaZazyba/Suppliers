@@ -39,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
           .map(itemMapper::map);
     }
 
+    @Override
     public ItemDto save(final ItemDto dto) {
         Item item = Optional.ofNullable(dto.getId())
           .map(itemToSave -> {

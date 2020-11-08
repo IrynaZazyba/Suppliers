@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerDto save(CustomerDto customerDto) {
+    public CustomerDto save(final CustomerDto customerDto) {
         Customer customer = Optional.ofNullable(customerDto.getId())
                 .map(item -> {
                     final Customer existing = customerRepository
@@ -54,11 +54,6 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.map(saved);
     }
 
-    @Override
-    public Page<CustomerDto> findAll(Pageable pageable) {
-        return findAllByActive(pageable,null);
-    }
-
     @Transactional
     public void delete(final Long id) {
         customerRepository.delete(id);
@@ -66,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public boolean changeActive(Long id, boolean status) {
+    public boolean changeActive(final Long id, boolean status) {
         return customerRepository.setStatus(status, id);
     }
 }

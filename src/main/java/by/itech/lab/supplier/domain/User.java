@@ -56,7 +56,7 @@ public class User implements BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    //@JsonManagedReference
+    @JsonManagedReference
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
