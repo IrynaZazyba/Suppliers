@@ -1,4 +1,110 @@
-POST http://localhost:8080/customers
+POST http://localhost:8080/login
 Content-Type: application/json
+Connection: keep-alive
 
-{"name":"SomeCompany2", "email": "123@gmail.com" }
+{
+  "username": "zazybo1.17@gmail.com",
+  "password": "pass"
+}
+
+> {%
+client.global.set("test", response.headers.valueOf('Set-Cookie'));
+%}
+
+####
+
+GET http://localhost:8080/customers
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/customers/5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+DELETE http://localhost:8080/customers/5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+#POST http://localhost:8080/customers
+#Content-Type: application/json
+#Cookie: {{test}}
+#
+#{
+#  "name": "SomeCompany2",
+#  "adminEmail": "123@gmail.com"
+#}
+
+###
+#PUT http://localhost:8080/customers/4/status
+#Content-Type: application/json
+#Cookie: {{test}}
+#
+#"false"
+
+###
+
+#PUT http://localhost:8080/customers/19
+#Content-Type: application/json
+#Cookie: {{test}}
+#
+#{"name":"New name"}
+
+###
+
+GET http://localhost:8080/warehouses
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/warehouses/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/users
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/users/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+#POST http://localhost:8080/users
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#{"name": "Lewis", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_power", "email": "zazybo1.17@gmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+
+###
+#PUT http://localhost:8080/users/18
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#//todo add body
+###
+
+
+
+
+
