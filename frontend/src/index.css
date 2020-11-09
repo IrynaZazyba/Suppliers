@@ -32,6 +32,10 @@ code {
     color: white !important;
 }
 
+.navigation{
+    height: 45px;
+}
+
 .mainButton {
     background-color: #1A7FA8 !important;
 }
@@ -83,6 +87,10 @@ code {
 .table > tbody > tr > td {
     vertical-align: middle;
     padding-left: 5px !important;
+}
+
+.card-body .table{
+    margin-top: 25px;
 }
 
 .pagination span{

@@ -11,8 +11,11 @@ function ModalAddCustomer(props) {
         name: '',
         adminEmail: ''
     });
-    const [validError, setError] = useState([]);
-    const [errorMessage, setErrors] = useState('');
+
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
 
     const handleName = (e) => {
         setCustomer(preState => ({
@@ -30,7 +33,10 @@ function ModalAddCustomer(props) {
     const addCustomerHandler = (e) => {
         e.preventDefault();
         let validationResult = validateCustomer(customerDto);
-        setError(validationResult);
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: validationResult
+        }));
         if (validationResult.length === 0) {
             fetch('/customers', {
                 method: 'POST',
@@ -41,10 +47,15 @@ function ModalAddCustomer(props) {
             })
                 .then(function (response) {
                     if (response.status !== 201) {
-                        setError('');
-                        setErrors("Something go wrong, try later");
+                        setErrors({
+                            serverErrors: "Something go wrong, try later",
+                            validationErrors: ''
+                        });
                     } else {
-                        setError('');
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: []
+                        }));
                         props.onChange(false, customerDto);
                     }
                 });
@@ -55,9 +66,16 @@ function ModalAddCustomer(props) {
         <>
             <Modal
                 show={props.props}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                    props.onChange(false);
+                }}
                 aria-labelledby="modal-custom"
                 className="shadow"
+                centered
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
@@ -65,12 +83,12 @@ function ModalAddCustomer(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {errorMessage && <ErrorMessage message={errorMessage}/>}
+                    {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="Company name" onChange={handleName}
                                           className={
-                                              validError.includes("name")
+                                              errors.validationErrors.includes("name")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -82,7 +100,7 @@ function ModalAddCustomer(props) {
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
                             <Form.Control type="email" placeholder="Admin email" onChange={handleEmail}
                                           className={
-                                              validError.includes("email")
+                                              errors.validationErrors.includes("email")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>

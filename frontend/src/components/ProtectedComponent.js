@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
+import React from 'react';
+import {Redirect, useLocation} from 'react-router-dom';
 
-export default function ProtectedComponent({render}) {
+export default function ProtectedComponent({conditions, render}) {
     const location = useLocation();
-    const { user } = useContext(AuthContext);
 
-    return user
-        ? render(user)
+    return conditions
+        ? render()
         : <Redirect to={{
             pathname: '/login',
-            state: { from: location.pathname }
+            state: {from: location.pathname}
         }}/>
 }

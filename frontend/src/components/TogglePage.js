@@ -11,27 +11,29 @@ function ToggleButtonExample(props) {
         {name: '20', value: '20'},
     ];
 
+    const toggleButtons=
+        radios.map((radio, idx) => (
+        <ToggleButton
+            size={"sm"}
+            key={idx}
+            type="radio"
+            variant="secondary"
+            name="radio"
+            value={radio.value}
+            checked={radioValue == radio.value}
+            onChange={(e) => {
+                setRadioValue(e.currentTarget.value);
+                props.onChange(e);
+            }}
+        >
+            {radio.name}
+        </ToggleButton>
+    ));
 
     return (
         <>
             <ButtonGroup toggle>
-                {radios.map((radio, idx) => (
-                    <ToggleButton
-                        size={"sm"}
-                        key={idx}
-                        type="radio"
-                        variant="secondary"
-                        name="radio"
-                        value={radio.value}
-                        checked={radioValue == radio.value}
-                        onChange={(e) => {
-                            setRadioValue(e.currentTarget.value);
-                            props.onChange(e);
-                        }}
-                    >
-                        {radio.name}
-                    </ToggleButton>
-                ))}
+                {toggleButtons}
             </ButtonGroup>
         </>
     );

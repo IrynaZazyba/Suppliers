@@ -64,6 +64,7 @@ function ModalEditCustomer(props) {
                 onHide={() => props.onChange(false)}
                 aria-labelledby="modal-custom"
                 className="shadow"
+                centered
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
