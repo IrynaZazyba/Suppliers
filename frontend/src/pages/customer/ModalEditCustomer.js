@@ -12,8 +12,11 @@ function ModalEditCustomer(props) {
         name: '',
         adminEmail: ''
     });
-    const [validError, setError] = useState([]);
-    const [errorMessage, setErrors] = useState('');
+
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
 
     const handleName = (e) => {
         setCustomer(preState => ({
@@ -36,7 +39,10 @@ function ModalEditCustomer(props) {
     const editCustomerHandler = (e) => {
         e.preventDefault();
         let validationResult = validateCustomerName(customerDto);
-        setError(validationResult);
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: validationResult
+        }));
            if (validationResult.length === 0) {
                fetch('/customers/' + customerDto.id, {
                    method: 'PUT',
@@ -47,10 +53,15 @@ function ModalEditCustomer(props) {
                })
                    .then(function (response) {
                        if (response.status !== 200) {
-                           setError('');
-                           setErrors("Something go wrong, try later");
+                           setErrors({
+                               serverErrors: "Something go wrong, try later",
+                               validationErrors: ''
+                           });
                        } else {
-                           setError('');
+                           setErrors(preState => ({
+                               ...preState,
+                               validationErrors: []
+                           }));
                            props.onChange(false, customerDto);
                        }
                    });
@@ -72,7 +83,7 @@ function ModalEditCustomer(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {errorMessage && <ErrorMessage message={errorMessage}/>}
+                    {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="editCustomer" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"
@@ -80,7 +91,7 @@ function ModalEditCustomer(props) {
                                           onChange={handleName}
                                           value={customerDto.name}
                                           className={
-                                              validError.includes("name")
+                                              errors.validationErrors.includes("name")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
