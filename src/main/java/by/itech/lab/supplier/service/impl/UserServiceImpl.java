@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+
+    public Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status) {
+        return userRepository.findByStatus(pageable, status).map(userMapper::map);
+    }
+
     @Override
     public Optional<UserDto> findById(Long id) {
         return userRepository.findOneWithRolesById(id).map(userMapper::map);

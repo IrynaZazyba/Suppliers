@@ -16,6 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+    @Query("select c from User c where :active is null or c.active=:active")
+    Page<User> findByStatus(Pageable pageable, @Param("active") Boolean active);
+
     @Modifying
     @Query("update User set deletedAt = current_timestamp where id = :id")
     void delete(@Param("id") Long id);
