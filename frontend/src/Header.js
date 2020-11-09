@@ -8,10 +8,10 @@ function Header() {
 
     const {user, setUser} = useContext(AuthContext);
 
-    const checkPermission=user && user.currentCustomerId;
+    const checkPermission = user && user.currentCustomerId;
 
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
-    const customersClass = window.location.pathname==="/customers" ? "active" : "";
+    const customersClass = window.location.pathname === "/customers" ? "active" : "";
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -19,11 +19,11 @@ function Header() {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto navigation">
                     {checkPermission &&
-                        <Nav.Link className={profileClass}
-                                  href={"/customers/" + user.currentCustomerId + "/profile"}>Profile
-                        </Nav.Link>}
+                    <Nav.Link className={profileClass}
+                              href={`/customers/${user.currentCustomerId}/profile`}>Profile
+                    </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
-                        <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
+                    <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>

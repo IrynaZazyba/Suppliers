@@ -33,7 +33,7 @@ export default () => {
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getCustomers('/customers?status=' + e.target.value + '&size=' + page.countPerPage);
+        getCustomers(`/customers?status=${e.target.value}&size=${page.countPerPage}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -42,13 +42,13 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getCustomers('/customers?size=' + e.target.value + '&status=' + filter);
+        getCustomers(`/customers?size=${e.target.value}&status=${filter}`);
     };
 
     const handleChangeStatus = (e) => {
         let status = e.target.value !== 'true';
         let id = e.target.id;
-        fetch('/customers/' + id + '/status', {
+        fetch(`/customers/${id}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ export default () => {
     const changePage = (e) => {
         e.preventDefault();
         let page = e.target.innerHTML - 1;
-        getCustomers('/customers?page=' + page + '&status=' + filter);
+        getCustomers(`/customers?page=${page}&status=${filter}`);
     };
 
     useEffect(() => {
@@ -98,7 +98,7 @@ export default () => {
     const closeModalAdd = (e, customerDto) => {
         setLgShow(e);
         if (customerDto) {
-            getCustomers('/customers?status=' + filter + '&size=' + page.countPerPage);
+            getCustomers(`/customers?status=${filter}&size=${page.countPerPage}`);
         }
     };
 
@@ -109,7 +109,7 @@ export default () => {
                 editShow: false
             }));
         if (customerDto) {
-            getCustomers('/customers?status=' + filter + '&size=' + page.countPerPage);
+            getCustomers(`1/customers?status=${filter}&size=${page.countPerPage}`);
         }
     };
 
