@@ -44,9 +44,5 @@ public class Warehouse implements BaseEntity {
     private Address address;
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    @EqualsAndHashCode.Exclude
     private Customer customer;
-    @OneToMany(mappedBy = "warehouse")
-    @EqualsAndHashCode.Exclude
-    private Set<User> users = new HashSet<>();
 }

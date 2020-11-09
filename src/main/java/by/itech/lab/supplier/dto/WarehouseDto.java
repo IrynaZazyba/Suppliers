@@ -27,5 +27,4 @@ public class WarehouseDto implements BaseDto {
     @NotBlank
     private Double totalCapacity;
     private Address address;
-    private Set<UserDto> usersDto = new HashSet<>();
 }

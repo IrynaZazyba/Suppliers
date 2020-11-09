@@ -40,12 +40,12 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WarehouseDto save(@PathVariable(name = "customerId") Long customerId, @Valid @RequestBody WarehouseDto warehouseDto) {
+    public WarehouseDto save(@PathVariable Long customerId, @Valid @RequestBody WarehouseDto warehouseDto) {
         return warehouseService.save(customerId, warehouseDto);
     }
 
     @PutMapping(URL_ID_PARAMETER)
-    public WarehouseDto updateWarehouse(@PathVariable(name = "customerId") Long customerId, @PathVariable Long id, @Valid @RequestBody WarehouseDto warehouseDto) {
+    public WarehouseDto updateWarehouse(@PathVariable Long customerId, @PathVariable Long id, @Valid @RequestBody WarehouseDto warehouseDto) {
         warehouseDto.setId(id);
         return warehouseService.save(customerId, warehouseDto);
     }
