@@ -78,17 +78,27 @@ Cookie: {{test}}
 #Content-Type: application/json
 #Connection: keep-alive
 #Cookie: {{test}}
+#{
+#  "identifier": "someIdentifier",
+#  "type": "someType",
+#  "totalCapacity": "8"
+#}
 
 ###
 
-#PUT http://localhost:8080/customers/3/warehouses/2
+#PUT http://localhost:8080/customers/3/warehouses/8
 #Content-Type: application/json
 #Connection: keep-alive
 #Cookie: {{test}}
+#{
+#  "identifier": "777",
+#  "type": "C",
+#  "totalCapacity": "7"
+#}
 
 ###
 
-#DELETE http://localhost:8080/customers/3/warehouses/2
+#DELETE http://localhost:8080/customers/3/warehouses/8
 #Content-Type: application/json
 #Connection: keep-alive
 #Cookie: {{test}}
