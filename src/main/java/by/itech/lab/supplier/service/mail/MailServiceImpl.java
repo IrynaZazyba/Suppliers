@@ -16,25 +16,22 @@ import java.util.Map;
 
 @AllArgsConstructor
 @Service
-@PropertySource("classpath:application.properties")
 public class MailServiceImpl implements MailService {
-    private static final String ACTIVATION_LINK = "Activation link";
+
     private static final String HTML_TEMPLATE_NAME = "html/email-simple";
     private final TemplateEngine templateEngine;
     private final Sender sender;
 
     public void sendMail(final UserDto userDto) {
         Map<String, Object> emailMap = new HashMap<>();
-        emailMap.put("firstName", "JavaLab2020");
-        emailMap.put("lastName", "Admin");
+        emailMap.put("firstName", userDto.getName());
+        emailMap.put("lastName", userDto.getSurname());
+        emailMap.put("activationLink", "localhost:8080/users/" + userDto.getId() + "/true");
         emailMap.put("title", "Registration email");
         Context ctx = new Context(LocaleContextHolder.getLocale());
         ctx.setVariables(emailMap);
         final String textContent = templateEngine.process(HTML_TEMPLATE_NAME, ctx);
-        Email email = new Email();
-        email.setTo(userDto.getEmail());
-        email.setSubject(ACTIVATION_LINK);
-        email.setText(textContent);
+        Email email = new Email(userDto.getEmail(), userDto.getEmail(), textContent);
         sender.send(email);
     }
 }
