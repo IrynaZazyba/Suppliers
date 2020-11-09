@@ -26,8 +26,6 @@ public class WarehouseDto implements BaseDto {
     @Size(min = 1, max = 10000, message = "Your totalCapacity shouldn't be empty")
     @NotBlank
     private Double totalCapacity;
-    @Size(min = 5, max = 50, message = "Your address should contains at least 5 letters")
-    @NotBlank
     private Address address;
     private Set<UserDto> usersDto = new HashSet<>();
 }

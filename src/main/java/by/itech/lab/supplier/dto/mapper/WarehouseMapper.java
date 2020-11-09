@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Component
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
-    private final CustomerMapper customerMapper;
     private final UserMapper userMapper;
 
     @Override
