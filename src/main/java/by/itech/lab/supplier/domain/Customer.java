@@ -40,7 +40,6 @@ public class Customer implements BaseEntity {
     @OneToMany(mappedBy = "customer")
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
-    @JsonManagedReference
     @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }
