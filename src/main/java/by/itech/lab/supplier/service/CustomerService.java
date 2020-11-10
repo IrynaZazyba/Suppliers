@@ -6,3 +6,5 @@ public interface CustomerService extends BaseActiveService<CustomerDto> {
 
     void changeActive(Long id, boolean status);
 
+}
+

@@ -109,7 +109,7 @@ export default () => {
                 editShow: false
             }));
         if (customerDto) {
-            getCustomers(`1/customers?status=${filter}&size=${page.countPerPage}`);
+            getCustomers(`/customers?status=${filter}&size=${page.countPerPage}`);
         }
     };
 
