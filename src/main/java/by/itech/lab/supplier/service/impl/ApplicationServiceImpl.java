@@ -4,7 +4,7 @@ import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
@@ -54,7 +54,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationDto findById(Long id) {
         return applicationRepository.findById(id).map(applicationMapper::map)
-          .orElseThrow(NotFoundInDBException::new);
+          .orElseThrow(() -> new ResourceNotFoundException("Application with id=" + id + " doesn't exist"));
     }
 
     @Override
@@ -72,7 +72,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ApplicationDto findByNumber(final String number) {
         return applicationRepository.findByNumber(number)
-          .map(applicationMapper::map).orElseThrow(NotFoundInDBException::new);
+          .map(applicationMapper::map)
+          .orElseThrow(() -> new ResourceNotFoundException("Application with number=" + number + " doesn't exist"));
     }
 
     @Override

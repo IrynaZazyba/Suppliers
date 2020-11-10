@@ -3,7 +3,7 @@ package by.itech.lab.supplier.service;
 import by.itech.lab.supplier.domain.Category;
 import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.mapper.CategoryMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CategoryRepository;
 import by.itech.lab.supplier.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -85,7 +85,7 @@ public class CategoryServiceTest {
         Mockito.when(categoryRepository.findById(17L)).thenReturn(Optional.empty());
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
-        Assertions.assertThrows(NotFoundInDBException.class, () -> categoryService.findById(17L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> categoryService.findById(17L));
     }
 
     @Test
@@ -101,7 +101,8 @@ public class CategoryServiceTest {
         Mockito.when(categoryRepository.findByCategory("Test")).thenReturn(Optional.empty());
         Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
 
-        Assertions.assertThrows(NotFoundInDBException.class, () -> categoryService.findByCategory("Test"));
+        Assertions.assertThrows(ResourceNotFoundException.class,
+          () -> categoryService.findByCategory("Test"));
     }
 
     @TestConfiguration

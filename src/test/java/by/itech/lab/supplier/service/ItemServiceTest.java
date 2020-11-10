@@ -5,7 +5,7 @@ import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ItemRepository;
 import by.itech.lab.supplier.service.impl.ItemServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -105,7 +105,7 @@ public class ItemServiceTest {
         Mockito.when(itemRepository.findById(10L)).thenReturn(Optional.empty());
         Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
 
-        Assertions.assertThrows(NotFoundInDBException.class, () -> itemService.findById(10L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> itemService.findById(10L));
     }
 
     @Test

@@ -5,7 +5,7 @@ import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.service.impl.ApplicationServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -98,7 +98,7 @@ public class ApplicationServiceTest {
     void getApplicationByIdTest_Negative() {
         Mockito.when(applicationRepository.findById(130L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundInDBException.class, () -> applicationService.findById(130L));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> applicationService.findById(130L));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ApplicationServiceTest {
         Mockito.when(applicationRepository.findByNumber("Test")).thenReturn(Optional.empty());
 
 
-        Assertions.assertThrows(NotFoundInDBException.class, () -> applicationService.findByNumber("Test"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> applicationService.findByNumber("Test"));
     }
 
     @TestConfiguration

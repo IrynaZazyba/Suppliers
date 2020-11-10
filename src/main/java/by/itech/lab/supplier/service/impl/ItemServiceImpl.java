@@ -4,7 +4,7 @@ import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ItemRepository;
 import by.itech.lab.supplier.service.CategoryService;
 import by.itech.lab.supplier.service.ItemService;
@@ -63,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
 
     public ItemDto findById(final Long id) {
         return itemRepository.findById(id).map(itemMapper::map)
-          .orElseThrow(NotFoundInDBException::new);
+          .orElseThrow(() -> new ResourceNotFoundException("Item with id=" + id + " doesn't exist"));
     }
 
     @Override
