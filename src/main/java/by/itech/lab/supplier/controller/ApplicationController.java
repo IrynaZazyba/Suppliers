@@ -35,7 +35,7 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @PostMapping
-    //@Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
+    @Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
         return applicationService.save(applicationDto);
     }
