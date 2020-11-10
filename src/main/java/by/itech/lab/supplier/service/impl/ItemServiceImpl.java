@@ -4,7 +4,7 @@ import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ItemRepository;
 import by.itech.lab.supplier.service.CategoryService;
 import by.itech.lab.supplier.service.ItemService;
@@ -12,8 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -27,30 +28,26 @@ public class ItemServiceImpl implements ItemService {
     private final CategoryService categoryService;
 
     @Override
-    public ItemDto findByLabel(final String label) {
-        return itemRepository.findByLabel(label)
-          .map(itemMapper::map).orElseThrow(NotFoundInDBException::new);
+    public Page<ItemDto> findByLabel(final String label, final Pageable pageable) {
+        return itemRepository.findByLabel(label, pageable)
+          .map(itemMapper::map);
     }
 
     public Page<ItemDto> findAllByCategory(final String categoryName, final Pageable pageable) {
         CategoryDto found = categoryService.findByCategory(categoryName);
-        return itemRepository.findAllByCategory(found, pageable)
+        return itemRepository.findAllByCategory(found.getId(), pageable)
           .map(itemMapper::map);
     }
 
     @Override
-    public Page<ItemDto> findAllByActive(final Pageable pageable, final Boolean active) {
-        return itemRepository.findAllByActive(pageable, active)
-          .map(itemMapper::map);
-    }
-
+    @Transactional
     public ItemDto save(final ItemDto dto) {
         Item item = Optional.ofNullable(dto.getId())
           .map(itemToSave -> {
               final Item existing = itemRepository
                 .findById(dto.getId())
                 .orElseThrow();
-              itemMapper.update(dto, existing);
+              itemMapper.map(dto, existing);
               return existing;
           })
           .orElseGet(() -> itemMapper.map(dto));
@@ -59,19 +56,21 @@ public class ItemServiceImpl implements ItemService {
         return itemMapper.map(saved);
     }
 
+    @Override
+    public Page<ItemDto> findAll(Pageable pageable) {
+        return itemRepository.findAll(pageable)
+          .map(itemMapper::map);
+    }
+
     public ItemDto findById(final Long id) {
         return itemRepository.findById(id).map(itemMapper::map)
-          .orElseThrow(NotFoundInDBException::new);
+          .orElseThrow(() -> new ResourceNotFoundException("Item with id=" + id + " doesn't exist"));
     }
 
+    @Override
     @Transactional
-    public void delete(final Long id) {
-        itemRepository.delete(id);
-    }
-
-    @Transactional
-    public void activate(final Long id) {
-        itemRepository.activate(id);
+    public void delete(Long id) {
+        itemRepository.deleteById(id, LocalDate.now());
     }
 
 }
