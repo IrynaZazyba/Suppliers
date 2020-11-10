@@ -21,7 +21,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
-public class State {
+public class State implements BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
