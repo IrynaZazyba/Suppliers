@@ -21,14 +21,14 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
-public class Zone {
+public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String zone;
-    @OneToMany(mappedBy = "zone")
+    private String state;
+    @OneToMany(mappedBy = "state")
     private Set<Tax> taxes = new HashSet<>();
 
 }

@@ -1,0 +1,82 @@
+databaseChangeLog:
+  - changeSet:
+      id: ADDR-1
+      author: iryna_zazybo
+      changes:
+        - dropColumn:
+            columns:
+              - column:
+                  name: state
+            tableName: address
+  - changeSet:
+      id: ADDR-2
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: BIGINT
+            newColumnName: state_id
+            oldColumnName: zone_id
+            tableName: address
+  - changeSet:
+      id: ADDR-3
+      author: iryna_zazybo
+      changes:
+        - renameTable:
+            newTableName: state
+            oldTableName: zone
+  - changeSet:
+      id: ADDR-4
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: varchar(45)
+            newColumnName: state
+            oldColumnName: zone
+            tableName: state
+  - changeSet:
+      id: ADDR-5
+      author: iryna_zazybo
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: tax
+            constraintName: fk_zone_for_tax
+  - changeSet:
+      id: ADDR-6
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: BIGINT
+            newColumnName: state_id
+            oldColumnName: zone_id
+            tableName: tax
+  - changeSet:
+      id: ADDR-7
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: state_id
+            baseTableName: tax
+            constraintName: fk_state_for_tax
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: state
+  - changeSet:
+      id: ADDR-8
+      author: iryna_zazybo
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: address
+            constraintName: fk_zone_for_address
+  - changeSet:
+      id: ADDR-9
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: state_id
+            baseTableName: address
+            constraintName: fk_state_for_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: state
