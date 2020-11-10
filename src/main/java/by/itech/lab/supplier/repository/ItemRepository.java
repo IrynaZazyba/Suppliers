@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 
+@Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("select i from Item i where i.label = :label")

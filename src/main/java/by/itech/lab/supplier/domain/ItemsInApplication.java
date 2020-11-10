@@ -1,21 +1,30 @@
 package by.itech.lab.supplier.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "items_in_application")
+@Table
+@Where(clause = "deleted_at is null")
 public class ItemsInApplication implements BaseEntity {
 
     @Id
@@ -24,14 +33,16 @@ public class ItemsInApplication implements BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id")
-    //@JsonManagedReference
     private Application application;
 
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @Column(nullable = false)
     private BigDecimal cost;
+    @Column(nullable = false)
     private Double amount;
+    private LocalDate deletedAt;
 
 }

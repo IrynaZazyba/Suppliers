@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,9 +32,9 @@ import java.util.Set;
 @Where(clause = "deleted_at is null")
 public class Application implements BaseEntity {
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude
-    Set<ItemsInApplication> items = new HashSet<>();
+    private Set<ItemsInApplication> items = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

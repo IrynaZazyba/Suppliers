@@ -25,7 +25,5 @@ public interface ApiConstants {
     String URL_STATUS_PARAMETER = "/{status}";
     String URL_NUMBER_PARAMETER = "/{number}";
     String URL_NUMBER = "/number";
-    String URL_ID = "/id";
-    String URL_STATUS = "/status";
     String URL_LABEL = "/label";
 }

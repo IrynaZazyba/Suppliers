@@ -40,6 +40,7 @@ public class ApplicationServiceImpl implements ApplicationService {
           });
 
         application.setLastUpdated(LocalDate.now());
+        application = applicationMapper.mapItems(application);
         final Application saved = applicationRepository.save(application);
         return applicationMapper.map(saved);
     }
@@ -77,6 +78,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     @Transactional
     public void changeStatus(final Long appId, final ApplicationStatus applicationStatus) {
-        applicationRepository.changeStatus(appId, applicationStatus.getStatus());
+        applicationRepository.changeStatus(appId, applicationStatus);
     }
 }

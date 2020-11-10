@@ -40,11 +40,11 @@ public class ItemController {
     }
 
     @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAll(@PathVariable String category, Pageable pageable) {
+    public Page<ItemDto> getAllByCategory(@PathVariable String category, Pageable pageable) {
         return itemService.findAllByCategory(category, pageable);
     }
 
-    @GetMapping(ApiConstants.URL_ID + ApiConstants.URL_ID_PARAMETER)
+    @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public ItemDto getById(@PathVariable Long id) {
         return itemService.findById(id);
     }

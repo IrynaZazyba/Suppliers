@@ -37,7 +37,7 @@ public class CategoryController {
         return categoryService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_ID + ApiConstants.URL_ID_PARAMETER)
+    @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public CategoryDto getById(@PathVariable Long id) {
         return categoryService.findById(id);
     }

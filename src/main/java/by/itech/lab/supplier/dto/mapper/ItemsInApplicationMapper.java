@@ -23,6 +23,7 @@ public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, 
           .amount(dto.getAmount())
           .cost(dto.getCost())
           .item(itemMapper.map(dto.getItemDto()))
+          .deletedAt(dto.getDeletedAt())
           .build();
     }
 
@@ -33,6 +34,14 @@ public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, 
           .amount(entity.getAmount())
           .cost(entity.getCost())
           .itemDto(itemMapper.map(entity.getItem()))
+          .deletedAt(entity.getDeletedAt())
           .build();
+    }
+
+    public void map(final ItemsInApplicationDto from, final ItemsInApplication to) {
+        to.setAmount(from.getAmount());
+        to.setCost(from.getCost());
+        to.setItem(itemMapper.map(from.getItemDto()));
+        to.setDeletedAt(from.getDeletedAt());
     }
 }

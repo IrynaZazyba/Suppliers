@@ -2,7 +2,6 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.dto.WayBillDto;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -13,11 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @Data
@@ -44,8 +41,6 @@ public class Car implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
-    @OneToMany(mappedBy = "car")
-    private Set<WayBill> wayBills = new HashSet<>();
     private LocalDate deletedAt;
 
 }
