@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomerService extends BaseService<CustomerDto> {
 
-    CustomerDto update(CustomerDto customerDto);
-
     void changeActive(Long id, boolean status);
 
     Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status);

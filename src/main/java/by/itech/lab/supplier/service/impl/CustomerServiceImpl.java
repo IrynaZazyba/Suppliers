@@ -38,32 +38,29 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public CustomerDto save(CustomerDto customerDto) {
-        Customer customer = buildCustomerEntity(customerDto);
-        customer.setRegistrationDate(LocalDate.now());
-        final Customer saved = customerRepository.save(customer);
+        Customer customer = Optional.ofNullable(customerDto.getId())
+                .map(item -> update(customerDto))
+                .orElseGet(() -> create(customerDto));
+        return customerMapper.map(customer);
+    }
+
+    private Customer create(CustomerDto customerDto) {
+        Customer newCustomer = customerMapper.map(customerDto);
+        newCustomer.setRegistrationDate(LocalDate.now());
+        final Customer saved = customerRepository.save(newCustomer);
         customerDto.setId(saved.getId());
         userService.save(userService.createAdmin(customerDto));
-        return customerMapper.map(saved);
+        return saved;
     }
 
-    @Override
-    public CustomerDto update(CustomerDto customerDto) {
-        Customer customer = buildCustomerEntity(customerDto);
-        final Customer saved = customerRepository.save(customer);
-        return customerMapper.map(saved);
+    private Customer update(CustomerDto customerDto) {
+        final Customer existing = customerRepository
+                .findById(customerDto.getId())
+                .orElseThrow();
+        customerMapper.map(customerDto, existing);
+        return customerRepository.save(existing);
     }
 
-    private Customer buildCustomerEntity(CustomerDto customerDto) {
-        return Optional.ofNullable(customerDto.getId())
-                .map(item -> {
-                    final Customer existing = customerRepository
-                            .findById(customerDto.getId())
-                            .orElseThrow();
-                    customerMapper.map(customerDto, existing);
-                    return existing;
-                })
-                .orElseGet(() -> customerMapper.map(customerDto));
-    }
 
     @Transactional
     public void delete(final Long id) {
