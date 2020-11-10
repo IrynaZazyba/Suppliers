@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-USER-31
+      author: alesia_hlushakova
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: bigint
+            columnName:  customer_id
+            tableName:  user
+        - dropNotNullConstraint:
+            columnDataType: bigint
+            columnName: warehouse_id
+            tableName: user

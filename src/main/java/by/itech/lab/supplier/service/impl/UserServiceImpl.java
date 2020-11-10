@@ -6,6 +6,7 @@ import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.mail.MailService;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> findById(Long id) {
-        return userRepository.findOneWithRolesById(id).map(userMapper::map);
+        return Optional.of(userRepository.findOneWithRolesById(id).map(userMapper::map).orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist")));
     }
 
     @Override
@@ -46,21 +48,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
     }
 
+    @Transactional
     public UserDto save(UserDto userDTO) {
         User user = Optional.ofNullable(userDTO.getId())
                 .map(item -> {
                     final User existing = userRepository
                             .findById(userDTO.getId())
-                            .orElseThrow();
+                            .orElseThrow(() -> new ResourceNotFoundException("User with id=" + userDTO.getId() + " doesn't exist"));
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
                 .orElseGet(() -> userMapper.map(userDTO));
-
-        final User saved = userRepository.save(user);
         if (Objects.isNull(user.getId())) {
             mailService.sendMail(userDTO);
         }
+        final User saved = userRepository.save(user);
         return userMapper.map(saved);
     }
 

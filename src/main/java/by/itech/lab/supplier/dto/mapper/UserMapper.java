@@ -63,7 +63,6 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .creatorWayBills(userDTO.getCreatorWayBills())
                 .driverWayBills(userDTO.getDriverWayBills())
                 .address(userDTO.getAddress())
-                .customer(customerMapper.map(userDTO.getCustomerDto()))
                 .build();
     }
 }
