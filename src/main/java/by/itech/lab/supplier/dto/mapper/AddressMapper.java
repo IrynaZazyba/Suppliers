@@ -17,25 +17,25 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
     @Override
     public Address map(final AddressDto addressDto) {
         return Address.builder()
-          .state(addressDto.getState())
-          .city(addressDto.getCity())
-          .addressLine1(addressDto.getAddressLine1())
-          .addressLine2(addressDto.getAddressLine2())
-          .id(addressDto.getId())
-          .zone(zoneMapper.map(addressDto.getZoneDto()))
-          .build();
+                .state(addressDto.getState())
+                .city(addressDto.getCity())
+                .addressLine1(addressDto.getAddressLine1())
+                .addressLine2(addressDto.getAddressLine2())
+                .id(addressDto.getId())
+                .zone(zoneMapper.map(addressDto.getZoneDto()))
+                .build();
     }
 
     @Override
     public AddressDto map(final Address address) {
         return AddressDto.builder()
-          .state(address.getState())
-          .city(address.getCity())
-          .addressLine1(address.getAddressLine1())
-          .addressLine2(address.getAddressLine2())
-          .id(address.getId())
-          .zoneDto(zoneMapper.map(address.getZone()))
-          .build();
+                .state(address.getState())
+                .city(address.getCity())
+                .addressLine1(address.getAddressLine1())
+                .addressLine2(address.getAddressLine2())
+                .id(address.getId())
+                .zoneDto(zoneMapper.map(address.getZone()))
+                .build();
     }
 
     public void map(final AddressDto from, final Address to) {

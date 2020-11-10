@@ -42,6 +42,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
     @Override
     public User map(UserDto userDTO) {
         return User.builder()
+                .id(userDTO.getId())
                 .username(userDTO.getUsername())
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())

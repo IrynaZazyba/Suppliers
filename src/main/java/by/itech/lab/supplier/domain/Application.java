@@ -32,9 +32,6 @@ import java.util.Set;
 @Where(clause = "deleted_at is null")
 public class Application implements BaseEntity {
 
-    @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @EqualsAndHashCode.Exclude
-    private Set<ItemsInApplication> items = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -62,5 +59,8 @@ public class Application implements BaseEntity {
     @JoinColumn(name = "waybill_id")
     private WayBill wayBill;
     private LocalDate deletedAt;
+    @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @EqualsAndHashCode.Exclude
+    private Set<ItemsInApplication> items = new HashSet<>();
 
 }

@@ -10,21 +10,21 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
     @Override
     public Category map(final CategoryDto dto) {
         return Category.builder()
-          .category(dto.getCategory())
-          .taxRate(dto.getTaxRate())
-          .deletedAt(dto.getDeletedAt())
-          .id(dto.getId())
-          .build();
+                .category(dto.getCategory())
+                .taxRate(dto.getTaxRate())
+                .deletedAt(dto.getDeletedAt())
+                .id(dto.getId())
+                .build();
     }
 
     @Override
     public CategoryDto map(final Category entity) {
         return CategoryDto.builder()
-          .id(entity.getId())
-          .taxRate(entity.getTaxRate())
-          .category(entity.getCategory())
-          .deletedAt(entity.getDeletedAt())
-          .build();
+                .id(entity.getId())
+                .taxRate(entity.getTaxRate())
+                .category(entity.getCategory())
+                .deletedAt(entity.getDeletedAt())
+                .build();
     }
 
     public void map(final CategoryDto from, final Category to) {

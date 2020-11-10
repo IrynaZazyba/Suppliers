@@ -38,37 +38,37 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     @Override
     public Application map(final ApplicationDto dto) {
         return Application.builder()
-          .id(dto.getId())
-          .applicationStatus(dto.getApplicationStatus())
-          .number(dto.getNumber())
-          .registrationDate(dto.getRegistrationDate())
-          .lastUpdated(dto.getLastUpdated())
-          .sourceLocationAddressId(addressMapper.map(dto.getSourceLocationAddressIdDto()))
-          .destinationLocationAddressId(addressMapper.map(dto.getDestinationLocationAddressIdDto()))
-          .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
-          .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
-          .wayBill(wayBillMapper.map(dto.getWayBillDto()))
-          .deletedAt(dto.getDeletedAt())
-          .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
-          .build();
+                .id(dto.getId())
+                .applicationStatus(dto.getApplicationStatus())
+                .number(dto.getNumber())
+                .registrationDate(dto.getRegistrationDate())
+                .lastUpdated(dto.getLastUpdated())
+                .sourceLocationAddressId(addressMapper.map(dto.getSourceLocationAddressIdDto()))
+                .destinationLocationAddressId(addressMapper.map(dto.getDestinationLocationAddressIdDto()))
+                .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
+                .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
+                .wayBill(wayBillMapper.map(dto.getWayBillDto()))
+                .deletedAt(dto.getDeletedAt())
+                .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .build();
     }
 
     @Override
     public ApplicationDto map(final Application application) {
         return ApplicationDto.builder()
-          .id(application.getId())
-          .applicationStatus(application.getApplicationStatus())
-          .number(application.getNumber())
-          .registrationDate(application.getRegistrationDate())
-          .lastUpdated(application.getLastUpdated())
-          .sourceLocationAddressIdDto(addressMapper.map(application.getSourceLocationAddressId()))
-          .destinationLocationAddressIdDto(addressMapper.map(application.getDestinationLocationAddressId()))
-          .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
-          .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
-          .wayBillDto(wayBillMapper.map(application.getWayBill()))
-          .deletedAt(application.getDeletedAt())
-          .items(application.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
-          .build();
+                .id(application.getId())
+                .applicationStatus(application.getApplicationStatus())
+                .number(application.getNumber())
+                .registrationDate(application.getRegistrationDate())
+                .lastUpdated(application.getLastUpdated())
+                .sourceLocationAddressIdDto(addressMapper.map(application.getSourceLocationAddressId()))
+                .destinationLocationAddressIdDto(addressMapper.map(application.getDestinationLocationAddressId()))
+                .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
+                .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
+                .wayBillDto(wayBillMapper.map(application.getWayBill()))
+                .deletedAt(application.getDeletedAt())
+                .items(application.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .build();
     }
 
     public void map(final ApplicationDto from, final Application to) {
@@ -97,10 +97,10 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         for (ItemsInApplicationDto item : update
         ) {
             ItemsInApplication result = forUpdate.stream()
-              .filter(Objects::nonNull)
-              .filter(p -> p.getId().equals(item.getId()))
-              .findAny()
-              .orElse(null);
+                    .filter(Objects::nonNull)
+                    .filter(p -> p.getId().equals(item.getId()))
+                    .findAny()
+                    .orElse(null);
             if (Objects.nonNull(result)) {
                 result.setAmount(item.getAmount());
                 result.setCost(item.getCost());

@@ -18,25 +18,25 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
     @Override
     public Item map(final ItemDto dto) {
         return Item.builder()
-          .id(dto.getId())
-          .upc(dto.getUpc())
-          .label(dto.getLabel())
-          .units(dto.getUnits())
-          .category(categoryMapper.map(dto.getCategoryDto()))
-          .deletedAt(dto.getDeletedAt())
-          .build();
+                .id(dto.getId())
+                .upc(dto.getUpc())
+                .label(dto.getLabel())
+                .units(dto.getUnits())
+                .category(categoryMapper.map(dto.getCategoryDto()))
+                .deletedAt(dto.getDeletedAt())
+                .build();
     }
 
     @Override
     public ItemDto map(final Item entity) {
         return ItemDto.builder()
-          .id(entity.getId())
-          .upc(entity.getUpc())
-          .label(entity.getLabel())
-          .units(entity.getUnits())
-          .categoryDto(categoryMapper.map(entity.getCategory()))
-          .deletedAt(entity.getDeletedAt())
-          .build();
+                .id(entity.getId())
+                .upc(entity.getUpc())
+                .label(entity.getLabel())
+                .units(entity.getUnits())
+                .categoryDto(categoryMapper.map(entity.getCategory()))
+                .deletedAt(entity.getDeletedAt())
+                .build();
     }
 
     public void map(final ItemDto from, final Item to) {

@@ -21,25 +21,25 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
     @Override
     public Car map(final CarDto dto) {
         return Car.builder()
-          .id(dto.getId())
-          .totalCapacity(dto.getTotalCapacity())
-          .currentCapacity(dto.getCurrentCapacity())
-          .address(addressMapper.map(dto.getAddressDto()))
-          .number(dto.getNumber())
-          .customer(customerMapper.map(dto.getCustomerDto()))
-          .build();
+                .id(dto.getId())
+                .totalCapacity(dto.getTotalCapacity())
+                .currentCapacity(dto.getCurrentCapacity())
+                .address(addressMapper.map(dto.getAddressDto()))
+                .number(dto.getNumber())
+                .customer(customerMapper.map(dto.getCustomerDto()))
+                .build();
     }
 
     @Override
     public CarDto map(final Car car) {
         return CarDto.builder()
-          .id(car.getId())
-          .totalCapacity(car.getTotalCapacity())
-          .currentCapacity(car.getCurrentCapacity())
-          .addressDto(addressMapper.map(car.getAddress()))
-          .number(car.getNumber())
-          .customerDto(customerMapper.map(car.getCustomer()))
-          .build();
+                .id(car.getId())
+                .totalCapacity(car.getTotalCapacity())
+                .currentCapacity(car.getCurrentCapacity())
+                .addressDto(addressMapper.map(car.getAddress()))
+                .number(car.getNumber())
+                .customerDto(customerMapper.map(car.getCustomer()))
+                .build();
     }
 
     public void map(final CarDto from, final Car to) {

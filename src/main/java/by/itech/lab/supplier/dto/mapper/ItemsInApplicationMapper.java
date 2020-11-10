@@ -19,23 +19,23 @@ public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, 
     @Override
     public ItemsInApplication map(final ItemsInApplicationDto dto) {
         return ItemsInApplication.builder()
-          .id(dto.getId())
-          .amount(dto.getAmount())
-          .cost(dto.getCost())
-          .item(itemMapper.map(dto.getItemDto()))
-          .deletedAt(dto.getDeletedAt())
-          .build();
+                .id(dto.getId())
+                .amount(dto.getAmount())
+                .cost(dto.getCost())
+                .item(itemMapper.map(dto.getItemDto()))
+                .deletedAt(dto.getDeletedAt())
+                .build();
     }
 
     @Override
     public ItemsInApplicationDto map(final ItemsInApplication entity) {
         return ItemsInApplicationDto.builder()
-          .id(entity.getId())
-          .amount(entity.getAmount())
-          .cost(entity.getCost())
-          .itemDto(itemMapper.map(entity.getItem()))
-          .deletedAt(entity.getDeletedAt())
-          .build();
+                .id(entity.getId())
+                .amount(entity.getAmount())
+                .cost(entity.getCost())
+                .itemDto(itemMapper.map(entity.getItem()))
+                .deletedAt(entity.getDeletedAt())
+                .build();
     }
 
     public void map(final ItemsInApplicationDto from, final ItemsInApplication to) {
