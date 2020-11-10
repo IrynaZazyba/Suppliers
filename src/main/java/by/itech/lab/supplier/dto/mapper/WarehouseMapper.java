@@ -33,7 +33,6 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
     }
 
     public void map(final WarehouseDto from, final Warehouse to) {
-        to.setIdentifier(from.getIdentifier());
         to.setType(from.getType());
         to.setTotalCapacity(from.getTotalCapacity());
         to.setAddress(from.getAddress());
