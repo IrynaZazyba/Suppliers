@@ -52,42 +52,29 @@ Cookie: {{test}}
 
 ###
 
-#DELETE http://localhost:8080/customers/5
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#> {%
-#    client.test("Request executed successfully", function() {
-#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
-#    });
-#%}
+POST http://localhost:8080/customers
+Content-Type: application/json
+Cookie: {{test}}
+
+{
+  "name": "SomeCompany2",
+  "adminEmail": "123@gmail.com"
+}
+
+###
+PUT http://localhost:8080/customers/4/status
+Content-Type: application/json
+Cookie: {{test}}
+
+"false"
 
 ###
 
-#POST http://localhost:8080/customers
-#Content-Type: application/json
-#Cookie: {{test}}
-#
-#{
-#  "name": "SomeCompany2",
-#  "adminEmail": "123@gmail.com"
-#}
+PUT http://localhost:8080/customers/4
+Content-Type: application/json
+Cookie: {{test}}
 
-###
-#PUT http://localhost:8080/customers/4/status
-#Content-Type: application/json
-#Cookie: {{test}}
-#
-#"false"
-
-###
-
-#PUT http://localhost:8080/customers/19
-#Content-Type: application/json
-#Cookie: {{test}}
-#
-#{"name":"New name"}
+{"name":"New name"}
 
 ###
 
@@ -343,7 +330,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/item/2
+GET http://localhost:8080/item/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
