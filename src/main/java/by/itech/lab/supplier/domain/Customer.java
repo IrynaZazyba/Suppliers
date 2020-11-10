@@ -38,6 +38,7 @@ public class Customer implements BaseEntity {
     private boolean active;
     private LocalDate deletedAt;
     @OneToMany(mappedBy = "customer")
+    @EqualsAndHashCode.Exclude
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
     @EqualsAndHashCode.Exclude

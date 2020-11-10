@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-11-1
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: application
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+  - changeSet:
+      id: SUP-11-2
+      author: alexander_popovich
+      changes:
+        - dropColumn:
+            tableName: item
+            columns:
+               - column:
+                   name: active
+  - changeSet:
+      id: SUP-11-3
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: item
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+  - changeSet:
+      id:  SUP-11-4
+      author:  alexander_popovich
+      changes:
+        - dropColumn:
+            columns:
+              - column:
+                  name:  active
+            tableName:  category
+  - changeSet:
+      id: SUP-11-5
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: category
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+  - changeSet:
+      id: SUP-11-6
+      author: alexander_popovich
+      changes:
+        - modifyDataType:
+            columnName: cost
+            newDataType: numeric
+            tableName: items_in_application

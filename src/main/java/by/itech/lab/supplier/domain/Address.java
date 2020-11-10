@@ -1,9 +1,10 @@
 package by.itech.lab.supplier.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,24 +15,30 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@Getter
-@Setter
+
+@Data
+//TODO delete this annotation after User bugfix.
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table
-public class Address {
+public class Address implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String state;
+    @Column(nullable = false)
     private String city;
-    @Column(name = "address_line_1")
+    @Column(nullable = false, name = "address_line_1")
     private String addressLine1;
-    @Column(name = "address_line_2")
+    @Column(nullable = false, name = "address_line_2")
     private String addressLine2;
     @ManyToOne
-    @JoinColumn(name = "state_id")
-    private State state;
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
 
 }

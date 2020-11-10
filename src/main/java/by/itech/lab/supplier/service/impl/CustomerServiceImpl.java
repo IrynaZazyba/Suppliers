@@ -37,21 +37,28 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerDto save(CustomerDto customerDto) {
+    public CustomerDto save(final CustomerDto customerDto) {
         Customer customer = Optional.ofNullable(customerDto.getId())
-                .map(item -> {
-                    final Customer existing = customerRepository
-                            .findById(customerDto.getId())
-                            .orElseThrow();
-                    customerMapper.map(customerDto, existing);
-                    return existing;
-                })
-                .orElseGet(() -> customerMapper.map(customerDto));
+                .map(item -> update(customerDto))
+                .orElseGet(() -> create(customerDto));
+        return customerMapper.map(customer);
+    }
 
-        customer.setRegistrationDate(LocalDate.now());
-        final Customer saved = customerRepository.save(customer);
+    private Customer create(CustomerDto customerDto) {
+        Customer newCustomer = customerMapper.map(customerDto);
+        newCustomer.setRegistrationDate(LocalDate.now());
+        final Customer saved = customerRepository.save(newCustomer);
+        customerDto.setId(saved.getId());
         userService.save(userService.createAdmin(customerDto));
-        return customerMapper.map(saved);
+        return saved;
+    }
+
+    private Customer update(CustomerDto customerDto) {
+        final Customer existing = customerRepository
+                .findById(customerDto.getId())
+                .orElseThrow();
+        customerMapper.map(customerDto, existing);
+        return customerRepository.save(existing);
     }
 
     @Transactional
@@ -61,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public boolean changeActive(Long id, boolean status) {
-        return customerRepository.setStatus(status, id);
+    public void changeActive(Long id, boolean status) {
+        customerRepository.setStatus(status, id);
     }
 }
