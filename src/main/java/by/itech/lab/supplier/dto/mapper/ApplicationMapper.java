@@ -4,16 +4,15 @@ import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ItemsInApplication;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ItemsInApplicationDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Lazy
 @Component
+@AllArgsConstructor
 public class ApplicationMapper implements BaseMapper<Application, ApplicationDto> {
 
     private final AddressMapper addressMapper;
@@ -21,19 +20,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     private final WayBillMapper wayBillMapper;
     private final ItemsInApplicationMapper itemsInApplicationMapper;
     private final ItemMapper itemMapper;
-
-    @Autowired
-    public ApplicationMapper(final AddressMapper addressMapper,
-                             final UserMapper userMapper,
-                             final WayBillMapper wayBillMapper,
-                             final ItemsInApplicationMapper itemsInApplicationMapper,
-                             final ItemMapper itemMapper) {
-        this.addressMapper = addressMapper;
-        this.userMapper = userMapper;
-        this.wayBillMapper = wayBillMapper;
-        this.itemsInApplicationMapper = itemsInApplicationMapper;
-        this.itemMapper = itemMapper;
-    }
 
     @Override
     public Application map(final ApplicationDto dto) {

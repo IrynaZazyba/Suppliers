@@ -17,6 +17,7 @@ import javax.persistence.Table;
 
 
 @Data
+//TODO delete this annotation after User bugfix.
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor
 @NoArgsConstructor

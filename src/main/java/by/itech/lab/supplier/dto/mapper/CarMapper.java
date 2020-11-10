@@ -2,21 +2,16 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Car;
 import by.itech.lab.supplier.dto.CarDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 
 @Component
+@AllArgsConstructor
 public class CarMapper implements BaseMapper<Car, CarDto> {
 
     private final CustomerMapper customerMapper;
     private final AddressMapper addressMapper;
-
-    @Autowired
-    public CarMapper(final CustomerMapper customerMapper, final AddressMapper addressMapper) {
-        this.customerMapper = customerMapper;
-        this.addressMapper = addressMapper;
-    }
 
     @Override
     public Car map(final CarDto dto) {

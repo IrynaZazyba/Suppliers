@@ -2,17 +2,13 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.dto.AddressDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class AddressMapper implements BaseMapper<Address, AddressDto> {
     private final ZoneMapper zoneMapper;
-
-    @Autowired
-    public AddressMapper(final ZoneMapper zoneMapper) {
-        this.zoneMapper = zoneMapper;
-    }
 
     @Override
     public Address map(final AddressDto addressDto) {
