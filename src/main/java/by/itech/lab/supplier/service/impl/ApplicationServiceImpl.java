@@ -11,8 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -25,6 +25,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     @Override
+    @Transactional
     public ApplicationDto save(final ApplicationDto dto) {
         Application application = Optional.ofNullable(dto.getId())
           .map(appToSave -> {

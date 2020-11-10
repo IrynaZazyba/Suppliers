@@ -17,7 +17,6 @@ import javax.persistence.Table;
 
 
 @Data
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

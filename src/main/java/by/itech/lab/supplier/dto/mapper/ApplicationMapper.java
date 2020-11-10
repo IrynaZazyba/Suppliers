@@ -43,8 +43,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .number(dto.getNumber())
                 .registrationDate(dto.getRegistrationDate())
                 .lastUpdated(dto.getLastUpdated())
-                .sourceLocationAddressId(addressMapper.map(dto.getSourceLocationAddressIdDto()))
-                .destinationLocationAddressId(addressMapper.map(dto.getDestinationLocationAddressIdDto()))
+                .sourceLocationAddress(addressMapper.map(dto.getSourceLocationAddressDto()))
+                .destinationLocationAddress(addressMapper.map(dto.getDestinationLocationAddressDto()))
                 .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
                 .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
                 .wayBill(wayBillMapper.map(dto.getWayBillDto()))
@@ -61,8 +61,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .number(application.getNumber())
                 .registrationDate(application.getRegistrationDate())
                 .lastUpdated(application.getLastUpdated())
-                .sourceLocationAddressIdDto(addressMapper.map(application.getSourceLocationAddressId()))
-                .destinationLocationAddressIdDto(addressMapper.map(application.getDestinationLocationAddressId()))
+                .sourceLocationAddressDto(addressMapper.map(application.getSourceLocationAddress()))
+                .destinationLocationAddressDto(addressMapper.map(application.getDestinationLocationAddress()))
                 .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
                 .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
                 .wayBillDto(wayBillMapper.map(application.getWayBill()))
@@ -76,8 +76,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setNumber(from.getNumber());
         to.setRegistrationDate(from.getRegistrationDate());
         to.setLastUpdated(from.getLastUpdated());
-        to.setSourceLocationAddressId(addressMapper.map(from.getSourceLocationAddressIdDto()));
-        to.setDestinationLocationAddressId(addressMapper.map(from.getDestinationLocationAddressIdDto()));
+        to.setSourceLocationAddress(addressMapper.map(from.getSourceLocationAddressDto()));
+        to.setDestinationLocationAddress(addressMapper.map(from.getDestinationLocationAddressDto()));
         to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
         to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
         to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
@@ -86,16 +86,14 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     }
 
     public Application mapItems(final Application application) {
-        for (ItemsInApplication item : application.getItems()
-        ) {
+        for (ItemsInApplication item : application.getItems()) {
             item.setApplication(application);
         }
         return application;
     }
 
     private void updateItems(Set<ItemsInApplication> forUpdate, Set<ItemsInApplicationDto> update) {
-        for (ItemsInApplicationDto item : update
-        ) {
+        for (ItemsInApplicationDto item : update) {
             ItemsInApplication result = forUpdate.stream()
                     .filter(Objects::nonNull)
                     .filter(p -> p.getId().equals(item.getId()))
@@ -109,7 +107,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
             } else {
                 forUpdate.add(itemsInApplicationMapper.map(item));
             }
-
         }
     }
 

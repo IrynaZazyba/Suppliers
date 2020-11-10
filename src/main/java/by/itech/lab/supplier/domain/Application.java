@@ -43,10 +43,10 @@ public class Application implements BaseEntity {
     private LocalDate lastUpdated;
     @ManyToOne
     @JoinColumn(name = "source_location_address_id")
-    private Address sourceLocationAddressId;
+    private Address sourceLocationAddress;
     @ManyToOne
     @JoinColumn(name = "destination_location_address_id")
-    private Address destinationLocationAddressId;
+    private Address destinationLocationAddress;
     @ManyToOne
     @JoinColumn(name = "created_by_users_id")
     private User createdByUsers;

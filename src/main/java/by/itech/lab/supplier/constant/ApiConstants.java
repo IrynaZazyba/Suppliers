@@ -1,29 +1,29 @@
 package by.itech.lab.supplier.constant;
 
-public interface ApiConstants {
+public final class ApiConstants {
 
-    String URL_ADMIN = "/admin";
-    String URL_APPLICATION = "/application";
-    String URL_CAR = "/car";
-    String URL_CUSTOMER = "/customers";
-    String URL_CUSTOMER_ID = "/{customerId}";
-    String URL_ITEM = "/item";
-    String URL_CATEGORY = "/category";
-    String URL_RETAILER = "/retailer";
-    String URL_USER = "/users";
-    String URL_WAREHOUSE = "/warehouses";
-    String URL_WAYBILL = "/waybill";
-    String URL_WRITE_OFF_ACT = "/write-off-act";
-    String URL_LOGIN = "/login";
-    String URL_LOGOUT = "/logout";
-    String URL_ROOT = "/";
-    String URL_COMPANIES = "/companies";
-    String URL_CATEGORY_PARAMETER = "/{category}";
-    String URL_LABEL_PARAMETER = "/{label}";
-    String URL_FILTERED = "/companies";
-    String URL_ID_PARAMETER = "/{id}";
-    String URL_STATUS_PARAMETER = "/{status}";
-    String URL_NUMBER_PARAMETER = "/{number}";
-    String URL_NUMBER = "/number";
-    String URL_LABEL = "/label";
+    public final static String URL_ADMIN = "/admin";
+    public final static String URL_APPLICATION = "/application";
+    public final static String URL_CAR = "/car";
+    public final static String URL_CUSTOMER = "/customers";
+    public final static String URL_CUSTOMER_ID = "/{customerId}";
+    public final static String URL_ITEM = "/item";
+    public final static String URL_CATEGORY = "/category";
+    public final static String URL_RETAILER = "/retailer";
+    public final static String URL_USER = "/users";
+    public final static String URL_WAREHOUSE = "/warehouses";
+    public final static String URL_WAYBILL = "/waybill";
+    public final static String URL_WRITE_OFF_ACT = "/write-off-act";
+    public final static String URL_LOGIN = "/login";
+    public final static String URL_LOGOUT = "/logout";
+    public final static String URL_ROOT = "/";
+    public final static String URL_COMPANIES = "/companies";
+    public final static String URL_CATEGORY_PARAMETER = "/{category}";
+    public final static String URL_LABEL_PARAMETER = "/{label}";
+    public final static String URL_FILTERED = "/companies";
+    public final static String URL_ID_PARAMETER = "/{id}";
+    public final static String URL_STATUS_PARAMETER = "/{status}";
+    public final static String URL_NUMBER_PARAMETER = "/{number}";
+    public final static String URL_NUMBER = "/number";
+    public final static String URL_LABEL = "/label";
 }
