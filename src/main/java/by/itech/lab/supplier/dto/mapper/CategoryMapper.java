@@ -10,27 +10,27 @@ public class CategoryMapper implements BaseMapper<Category, CategoryDto> {
     @Override
     public Category map(final CategoryDto dto) {
         return Category.builder()
-          .category(dto.getCategory())
-          .taxRate(dto.getTaxRate())
-          .active(dto.isActive())
-          .id(dto.getId())
-          .build();
+                .category(dto.getCategory())
+                .taxRate(dto.getTaxRate())
+                .deletedAt(dto.getDeletedAt())
+                .id(dto.getId())
+                .build();
     }
 
     @Override
     public CategoryDto map(final Category entity) {
         return CategoryDto.builder()
-          .id(entity.getId())
-          .taxRate(entity.getTaxRate())
-          .category(entity.getCategory())
-          .active(entity.isActive())
-          .build();
+                .id(entity.getId())
+                .taxRate(entity.getTaxRate())
+                .category(entity.getCategory())
+                .deletedAt(entity.getDeletedAt())
+                .build();
     }
 
-    public void update(final CategoryDto from, final Category to) {
+    public void map(final CategoryDto from, final Category to) {
         to.setCategory(from.getCategory());
         to.setTaxRate(from.getTaxRate());
-        to.setActive(from.isActive());
+        to.setDeletedAt(from.getDeletedAt());
     }
 
 }

@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerDto save(CustomerDto customerDto) {
+    public CustomerDto save(final CustomerDto customerDto) {
         Customer customer = Optional.ofNullable(customerDto.getId())
                 .map(item -> {
                     final Customer existing = customerRepository
@@ -61,7 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public boolean changeActive(Long id, boolean status) {
+    public boolean changeActive(final Long id, boolean status) {
         return customerRepository.setStatus(status, id);
     }
 }
