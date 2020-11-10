@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,7 +55,6 @@ public class User implements BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    @JsonManagedReference
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
