@@ -6,10 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Data
 @AllArgsConstructor
@@ -18,13 +24,13 @@ import java.util.Set;
 @Entity
 @Table
 @Where(clause = "deleted_at is null")
-public class Car {
+public class Car implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, unique = true)
-    private Long number;
+    private String number;
     @Column(nullable = false)
     private Double totalCapacity;
     @Column(nullable = false)
@@ -35,8 +41,6 @@ public class Car {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
-    @OneToMany(mappedBy = "car")
-    private Set<WayBill> wayBills = new HashSet<>();
     private LocalDate deletedAt;
 
 }

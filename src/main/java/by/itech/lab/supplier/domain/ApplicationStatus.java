@@ -2,7 +2,7 @@ package by.itech.lab.supplier.domain;
 
 public enum ApplicationStatus {
 
-    WAITING("Waiting"), IN_PROGRESS("In progress"), COMPLETED("Completed");
+    OPEN("Open"), STARTED_PROCESSING("Started processing"), FINISHED_PROCESSING("Finished processing");
 
     private String status;
 

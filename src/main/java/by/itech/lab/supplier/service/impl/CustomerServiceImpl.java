@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerDto save(CustomerDto customerDto) {
+    public CustomerDto save(final CustomerDto customerDto) {
         Customer customer = Optional.ofNullable(customerDto.getId())
                 .map(item -> update(customerDto))
                 .orElseGet(() -> create(customerDto));
@@ -60,7 +60,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerMapper.map(customerDto, existing);
         return customerRepository.save(existing);
     }
-
 
     @Transactional
     public void delete(final Long id) {

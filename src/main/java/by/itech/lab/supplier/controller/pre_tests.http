@@ -1,0 +1,780 @@
+POST http://localhost:8080/login
+Content-Type: application/json
+Connection: keep-alive
+
+{
+  "username": "zazybo1.17@gmail.com",
+  "password": "pass"
+}
+
+> {%
+client.global.set("test", response.headers.valueOf('Set-Cookie'));
+%}
+
+####
+
+GET http://localhost:8080/customers
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/3
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/5555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404");
+    });
+%}
+
+###
+
+#DELETE http://localhost:8080/customers/5
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+#    });
+#%}
+
+###
+
+#POST http://localhost:8080/customers
+#Content-Type: application/json
+#Cookie: {{test}}
+#
+#{
+#  "name": "SomeCompany2",
+#  "adminEmail": "123@gmail.com"
+#}
+
+###
+#PUT http://localhost:8080/customers/4/status
+#Content-Type: application/json
+#Cookie: {{test}}
+#
+#"false"
+
+###
+
+#PUT http://localhost:8080/customers/19
+#Content-Type: application/json
+#Cookie: {{test}}
+#
+#{"name":"New name"}
+
+###
+
+#GET http://localhost:8080/customers/3/warehouses
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+#GET http://localhost:8080/customers/3/warehouses/2
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+#POST http://localhost:8080/customers/3/warehouses
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#{
+#  "identifier": "someIdentifier",
+#  "type": "someType",
+#  "totalCapacity": "8"
+#}
+
+###
+
+#PUT http://localhost:8080/customers/3/warehouses/8
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#{
+#  "identifier": "777",
+#  "type": "C",
+#  "totalCapacity": "7"
+#}
+
+###
+
+#DELETE http://localhost:8080/customers/3/warehouses/8
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/users
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/users/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+#GET http://localhost:8080/users/5555
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+#    });
+#%}
+
+###
+
+GET http://localhost:8080/users/companies
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+#DELETE http://localhost:8080/users/2
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+#    });
+#%}
+
+###
+
+#PUT http://localhost:8080/users/1/false
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+
+###
+
+#POST http://localhost:8080/users
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#{"name": "Lewis", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_power", "email": "zazybo1.17@gmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+
+###
+#PUT http://localhost:8080/users/18
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#//todo add body
+###
+
+#---------------------------------------------------Category----------------------------------------------------------
+
+POST http://localhost:8080/category
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "category": "someType",
+  "taxRate": "8"
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/category/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/category/555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/category/category/someType
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+DELETE http://localhost:8080/category/4
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+
+###
+#-----------------------------------------------------Item------------------------------------------------------------
+POST http://localhost:8080/item
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "upc": "8.5",
+  "label": "label",
+  "units": "80.5",
+  "categoryDto": {
+    "id": 1
+  }
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/item
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/item/category/someType
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/item/2
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/item/555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/item/label/label
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+DELETE http://localhost:8080/item/2
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+
+###
+
+#-------------------------------------------------------Application---------------------------------------------------
+# Note: put commentaries before @Secured in ApplicationController
+
+POST http://localhost:8080/application
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "number": "Test",
+  "registrationDate": "2020-11-03",
+  "lastUpdated": "2020-11-04",
+  "sourceLocationAddressDto": {
+    "id": 3,
+    "state": "USA",
+    "city": "NY",
+    "addressLine1": "Lexington Avenue",
+    "addressLine2": "Slobodskaya str.",
+    "zoneDto": {
+      "id": 3,
+      "zone": "NY"
+    }
+  },
+  "destinationLocationAddressDto": {
+    "id": 3,
+    "state": "USA",
+    "city": "NY",
+    "addressLine1": "Lexington Avenue",
+    "addressLine2": "Slobodskaya str.",
+    "zoneDto": {
+      "id": 3,
+      "zone": "NY"
+    }
+  },
+  "createdByUsersDto": {
+    "active": true,
+    "deletedAt": null,
+    "id": 1,
+    "name": "Bob",
+    "surname": "Roberts",
+    "birthday": "1990-10-15",
+    "username": "admin",
+    "password": null,
+    "email": "zazybo1.17@gmail.com",
+    "role": "ROLE_SYSTEM_ADMIN",
+    "address": {
+      "id": 3,
+      "state": "USA",
+      "city": "NY",
+      "addressLine1": "Lexington Avenue",
+      "addressLine2": "Slobodskaya str.",
+      "zone": {
+        "id": 3,
+        "zone": "NY"
+      }
+    },
+    "customerDto": {
+      "id": 3,
+      "name": "SystemCompany",
+      "registrationDate": "2020-10-19",
+      "active": true,
+      "adminEmail": null
+    },
+    "warehouse": null
+  },
+  "lastUpdatedByUsersDto": {
+    "active": true,
+    "deletedAt": null,
+    "id": 1,
+    "name": "Bob",
+    "surname": "Roberts",
+    "birthday": "1990-10-15",
+    "username": "admin",
+    "password": null,
+    "email": "zazybo1.17@gmail.com",
+    "role": "ROLE_SYSTEM_ADMIN",
+    "address": {
+      "id": 3,
+      "state": "USA",
+      "city": "NY",
+      "addressLine1": "Lexington Avenue",
+      "addressLine2": "Slobodskaya str.",
+      "zone": {
+        "id": 3,
+        "zone": "NY"
+      }
+    },
+    "customerDto": {
+      "id": 3,
+      "name": "SystemCompany",
+      "registrationDate": "2020-10-19",
+      "active": true,
+      "adminEmail": null
+    },
+    "warehouse": null
+  },
+  "applicationStatus": "OPEN",
+  "wayBillDto": {
+    "id": 1,
+    "createdByUsersDto": {
+      "active": true,
+      "deletedAt": null,
+      "id": 1,
+      "name": "Bob",
+      "surname": "Roberts",
+      "birthday": "1990-10-15",
+      "username": "admin",
+      "password": null,
+      "email": "zazybo1.17@gmail.com",
+      "role": "ROLE_SYSTEM_ADMIN",
+      "address": {
+        "id": 3,
+        "state": "USA",
+        "city": "NY",
+        "addressLine1": "Lexington Avenue",
+        "addressLine2": "Slobodskaya str.",
+        "zone": {
+          "id": 3,
+          "zone": "NY"
+        }
+      },
+      "customerDto": {
+        "id": 3,
+        "name": "SystemCompany",
+        "registrationDate": "2020-10-19",
+        "active": true,
+        "adminEmail": null
+      },
+      "warehouse": null
+    },
+    "updatedByUsersDto": {
+      "active": true,
+      "deletedAt": null,
+      "id": 1,
+      "name": "Bob",
+      "surname": "Roberts",
+      "birthday": "1990-10-15",
+      "username": "admin",
+      "password": null,
+      "email": "zazybo1.17@gmail.com",
+      "role": "ROLE_SYSTEM_ADMIN",
+      "address": {
+        "id": 3,
+        "state": "USA",
+        "city": "NY",
+        "addressLine1": "Lexington Avenue",
+        "addressLine2": "Slobodskaya str.",
+        "zone": {
+          "id": 3,
+          "zone": "NY"
+        }
+      },
+      "customerDto": {
+        "id": 3,
+        "name": "SystemCompany",
+        "registrationDate": "2020-10-19",
+        "active": true,
+        "adminEmail": null
+      },
+      "warehouse": null
+    },
+    "sourceLocationAddressDto": {
+      "id": 3,
+      "state": "USA",
+      "city": "NY",
+      "addressLine1": "Lexington Avenue",
+      "addressLine2": "Slobodskaya str.",
+      "zoneDto": {
+        "id": 3,
+        "zone": "NY"
+      }
+    },
+    "carDto": {
+      "addressDto": {
+        "id": 3,
+        "state": "USA",
+        "city": "NY",
+        "addressLine1": "Lexington Avenue",
+        "addressLine2": "Slobodskaya str.",
+        "zoneDto": {
+          "id": 3,
+          "zone": "NY"
+        }
+      },
+      "customerDto": {
+        "id": 3,
+        "name": "SystemCompany",
+        "registrationDate": "2020-10-19",
+        "active": true,
+        "adminEmail": null
+      }
+    },
+    "driverDto": {
+      "active": true,
+      "deletedAt": null,
+      "id": 1,
+      "name": "Bob",
+      "surname": "Roberts",
+      "birthday": "1990-10-15",
+      "username": "admin",
+      "password": null,
+      "email": "zazybo1.17@gmail.com",
+      "role": "ROLE_SYSTEM_ADMIN",
+      "address": {
+        "id": 3,
+        "state": "USA",
+        "city": "NY",
+        "addressLine1": "Lexington Avenue",
+        "addressLine2": "Slobodskaya str.",
+        "zone": {
+          "id": 3,
+          "zone": "NY"
+        }
+      },
+      "customerDto": {
+        "id": 3,
+        "name": "SystemCompany",
+        "registrationDate": "2020-10-19",
+        "active": true,
+        "adminEmail": null
+      },
+      "warehouse": null
+    }
+  },
+  "deletedAt": null,
+  "items": [
+    {
+      "cost": 35.0,
+      "amount": 77,
+      "itemDto": {
+        "id": 2,
+        "upc": 5,
+        "label": "Apple",
+        "units": 10.0,
+        "categoryDto": {
+          "id": 1,
+          "category": "Fruit",
+          "taxRate": 20,
+          "deletedAt": null
+        },
+        "deletedAt": null
+      },
+      "deletedAt": null
+    },
+    {
+      "cost": 45.0,
+      "amount": 88,
+      "itemDto": {
+        "id": 3,
+        "upc": 5,
+        "label": "Pear",
+        "units": 10.0,
+        "categoryDto": {
+          "id": 1,
+          "category": "Fruit",
+          "taxRate": 20,
+          "deletedAt": null
+        },
+        "deletedAt": null
+      },
+      "deletedAt": null
+    },
+    {
+      "cost": 55.0,
+      "amount": 99,
+      "itemDto": {
+        "id": 2,
+        "upc": 5,
+        "label": "Apple",
+        "units": 10.0,
+        "categoryDto": {
+          "id": 1,
+          "category": "Fruit",
+          "taxRate": 20,
+          "deletedAt": null
+        },
+        "deletedAt": null
+      },
+      "deletedAt": null
+    }
+  ]
+}
+
+
+
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/application/admin
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/application/number/Test
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/application/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/application/555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/application/number/Blablabla
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+
+PUT http://localhost:8080/application/1/STARTED_PROCESSING
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+###
+
+DELETE http://localhost:8080/application/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+
+###

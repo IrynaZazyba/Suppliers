@@ -8,11 +8,11 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class CategoryDto implements BaseDto {
-
+public class ItemsInApplicationDto implements BaseDto {
     private Long id;
-    private String category;
-    private BigDecimal taxRate;
+    private ItemDto itemDto;
+    private ApplicationDto applicationDto;
+    private BigDecimal cost;
+    private Double amount;
     private LocalDate deletedAt;
-
 }
