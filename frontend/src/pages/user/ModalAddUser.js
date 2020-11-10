@@ -79,8 +79,8 @@ function ModalAddUser(props) {
     };
     const addUserHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateUser(userDto);
-        setError(validationResult);
+     //   let validationResult = validateUser(userDto);
+       // setError(validationResult);
       //  if (validationResult.length === 0) {
             fetch('/users', {
                 method: 'POST',

@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
 
-    public Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status) {
+    public Page<UserDto> findAllByActive(final Pageable pageable, final Boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
 
