@@ -52,16 +52,16 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/customers/5
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
-    });
-%}
+#DELETE http://localhost:8080/customers/5
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+#    });
+#%}
 
 ###
 
@@ -188,16 +188,16 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/users/2
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
-    });
-%}
+#DELETE http://localhost:8080/users/2
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+#    });
+#%}
 
 ###
 
@@ -224,33 +224,33 @@ Cookie: {{test}}
 #//todo add body
 ###
 
-POST http://localhost:8080/category
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-{
-  "category": "someType",
-  "taxRate": "8"
-}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
-    });
-%}
+#POST http://localhost:8080/category
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#{
+#  "category": "someType",
+#  "taxRate": "8"
+#}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+#    });
+#%}
 ###
 
-GET http://localhost:8080/category/id/4
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
-    });
-%}
+#GET http://localhost:8080/category/id/1
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+#    });
+#%}
 
 ###
 
@@ -266,7 +266,7 @@ Cookie: {{test}}
 #%}
 
 ###
-
+#
 #GET http://localhost:8080/category/category/someType
 #Content-Type: application/json
 #Connection: keep-alive
@@ -277,8 +277,8 @@ Cookie: {{test}}
 #        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
 #    });
 #%}
-
-###
+#
+####
 #DELETE http://localhost:8080/category/4
 #Content-Type: application/json
 #Connection: keep-alive
@@ -302,7 +302,7 @@ Cookie: {{test}}
 #  "label": "label",
 #  "units": "80.5",
 #  "categoryDto": {
-#    "id": 4
+#    "id": 1
 #  }
 #}
 #
@@ -311,9 +311,9 @@ Cookie: {{test}}
 #        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
 #    });
 #%}
-#
-####
-#
+
+###
+
 #GET http://localhost:8080/item
 #Content-Type: application/json
 #Connection: keep-alive
@@ -337,9 +337,9 @@ Cookie: {{test}}
 #        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
 #    });
 #%}
-#
-####
-#
+
+###
+
 #GET http://localhost:8080/item/id/2
 #Content-Type: application/json
 #Connection: keep-alive
@@ -376,9 +376,9 @@ Cookie: {{test}}
 #        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
 #    });
 #%}
-#
-####
-#
+
+###
+
 #DELETE http://localhost:8080/item/2
 #Content-Type: application/json
 #Connection: keep-alive
