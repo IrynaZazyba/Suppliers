@@ -407,7 +407,7 @@ Cookie: {{test}}
   "number": "Test",
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
-  "sourceLocationAddressIdDto": {
+  "sourceLocationAddressDto": {
     "id": 3,
     "state": "USA",
     "city": "NY",
@@ -418,7 +418,7 @@ Cookie: {{test}}
       "zone": "NY"
     }
   },
-  "destinationLocationAddressIdDto": {
+  "destinationLocationAddressDto": {
     "id": 3,
     "state": "USA",
     "city": "NY",
@@ -776,3 +776,5 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
+###
