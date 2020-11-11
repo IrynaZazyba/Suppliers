@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -19,12 +20,12 @@ import javax.persistence.Table;
 @Builder
 @Entity
 @Table
-public class Tax {
+public class Tax implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double amount;
+    private BigDecimal amount;
     private Double percentage;
     private String name;
     @ManyToOne
