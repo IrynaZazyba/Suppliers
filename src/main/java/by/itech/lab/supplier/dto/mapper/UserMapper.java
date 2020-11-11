@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper implements BaseMapper<User, UserDto> {
 
-    private final CustomerMapper customerMapper;
-
     private final AddressMapper addressMapper;
 
     @Override
@@ -26,7 +24,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .password(user.getPassword())
                 .role(user.getRole())
                 .deletedAt(user.getDeletedAt())
-                .addressDto(addressMapper.map(user.getAddress()))
+                .addressDto(user.getAddress() != null ? addressMapper.map(user.getAddress()) : null)
                 .build();
     }
 
@@ -53,7 +51,8 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .active(userDTO.isActive())
                 .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
-                .address(addressMapper.map(userDTO.getAddressDto()))
+                .address(userDTO.getAddressDto() != null ? addressMapper.map(userDTO.getAddressDto()) : null)
                 .build();
     }
+
 }
