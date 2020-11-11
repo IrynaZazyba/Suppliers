@@ -79,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerById.get();
         Set<User> users = customer.getUsers();
         for (User u : users) {
-            if (!status || (status && !customer.isActive() && u.getRole() == Role.ROLE_ADMIN)) {
+            if (!status || (!customer.isActive() && u.getRole() == Role.ROLE_ADMIN)) {
                 userService.changeActiveStatus(u.getId(), status);
             }
         }
