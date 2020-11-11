@@ -1,10 +1,14 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
+import by.itech.lab.supplier.dto.AddressDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.mapper.AddressMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.repository.AddressRepository;
 import by.itech.lab.supplier.repository.CustomerRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.WarehouseService;
@@ -24,7 +28,9 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final CustomerRepository customerRepository;
+    private final AddressRepository addressRepository;
     private final WarehouseMapper warehouseMapper;
+    private final AddressMapper addressMapper;
 
     @Override
     public Page<WarehouseDto> findAll(Pageable pageable) {
@@ -40,32 +46,51 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional
     @Override
     public WarehouseDto save(Long customerId, WarehouseDto warehouseDto) {
-        Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
-                .map(item -> {
-                    final Warehouse existing = warehouseRepository
-                            .findById(warehouseDto.getId())
-                            .orElseThrow();
-                    isIdentifierExist(warehouseDto);
-                    warehouseMapper.map(warehouseDto, existing);
-                    return existing;
-                })
-                .orElseGet(() -> warehouseMapper.map(warehouseDto));
+        if (warehouseDto.getIdentifier() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_ACCEPTABLE, "You can't delete \"identifier\" field");
+        }
 
+        Warehouse warehouse = warehouseMapper.map(warehouseDto);
+        Address savedAddress = addressCreate(warehouseDto.getAddressDto());
+        warehouse.setAddress(savedAddress);
         Optional<Customer> customer = customerRepository.findById(customerId);
         customer.ifPresent(warehouse::setCustomer);
-        final Warehouse saved = warehouseRepository.save(warehouse);
-        return warehouseMapper.map(saved);
+        final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
+        return warehouseMapper.map(savedWarehouse);
     }
 
-    private void isIdentifierExist(WarehouseDto warehouseDto) {
-        Optional<Warehouse> entity = warehouseRepository.findById(warehouseDto.getId());
-        if (warehouseDto.getIdentifier() == null) {
-            return;
-        } else if (!warehouseDto.getIdentifier().equals(entity.get().getIdentifier())) {
+    @Transactional
+    @Override
+    public WarehouseDto update(WarehouseDto warehouseDto) {
+        Warehouse entity = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
+        if (!warehouseDto.getIdentifier().equals(entity.getIdentifier())) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, "You can't change \"identifier\" field"
-            );
+                    HttpStatus.NOT_ACCEPTABLE, "You can't change \"identifier\" field");
         }
+
+        final Address existingAddress = addressRepository.findById(entity.getAddress().getId()).orElseThrow();
+        warehouseDto.getAddressDto().setId(existingAddress.getId());
+        addressMapper.map(warehouseDto.getAddressDto(), existingAddress);
+        addressRepository.save(existingAddress);
+
+        Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
+                .map(item -> {
+                    final Warehouse existingWarehouse = warehouseRepository
+                            .findById(warehouseDto.getId())
+                            .orElseThrow();
+                    warehouseMapper.map(warehouseDto, existingWarehouse);
+                    return existingWarehouse;
+                })
+                .orElseThrow();
+
+        final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
+        return warehouseMapper.map(savedWarehouse);
+    }
+
+    private Address addressCreate(AddressDto addressDto) {
+        Address address = addressMapper.map(addressDto);
+        return addressRepository.save(address);
     }
 
     @Transactional

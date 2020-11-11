@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
+    private final AddressMapper addressMapper;
+
     @Override
     public Warehouse map(WarehouseDto dto) {
         return Warehouse.builder()
@@ -17,7 +19,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .identifier(dto.getIdentifier())
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
-                .address(dto.getAddress())
+                .address(addressMapper.map(dto.getAddressDto()))
                 .build();
     }
 
@@ -28,13 +30,13 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .identifier(entity.getIdentifier())
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
-                .address(entity.getAddress())
+                .addressDto(addressMapper.map(entity.getAddress()))
                 .build();
     }
 
     public void map(final WarehouseDto from, final Warehouse to) {
         to.setType(from.getType());
         to.setTotalCapacity(from.getTotalCapacity());
-        to.setAddress(from.getAddress());
+        to.setAddress(addressMapper.map(from.getAddressDto()));
     }
 }

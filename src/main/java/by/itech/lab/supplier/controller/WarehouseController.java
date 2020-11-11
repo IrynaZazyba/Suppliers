@@ -45,9 +45,10 @@ public class WarehouseController {
     }
 
     @PutMapping(URL_ID_PARAMETER)
-    public WarehouseDto updateWarehouse(@PathVariable Long customerId, @PathVariable Long id, @Valid @RequestBody WarehouseDto warehouseDto) {
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public WarehouseDto updateWarehouse(@PathVariable Long id, @Valid @RequestBody WarehouseDto warehouseDto) {
         warehouseDto.setId(id);
-        return warehouseService.save(customerId, warehouseDto);
+        return warehouseService.update(warehouseDto);
     }
 
     @DeleteMapping(URL_ID_PARAMETER)

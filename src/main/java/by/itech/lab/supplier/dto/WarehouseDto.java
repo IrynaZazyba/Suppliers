@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.dto;
 
-import by.itech.lab.supplier.domain.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @Builder
@@ -26,5 +23,5 @@ public class WarehouseDto implements BaseDto {
     @Size(min = 1, max = 10000, message = "Your totalCapacity shouldn't be empty")
     @NotBlank
     private Double totalCapacity;
-    private Address address;
+    private AddressDto addressDto;
 }

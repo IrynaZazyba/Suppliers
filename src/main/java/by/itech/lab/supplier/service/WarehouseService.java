@@ -9,4 +9,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     Page<WarehouseDto> findAll(Pageable pageable);
 
     WarehouseDto save(Long customerId, WarehouseDto warehouseDto);
+
+    WarehouseDto update(WarehouseDto warehouseDto);
 }
