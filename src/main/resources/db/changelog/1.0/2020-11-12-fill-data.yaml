@@ -1,49 +1,49 @@
 databaseChangeLog:
   - changeSet:
-      id: IN-CCA-15
+      id: IN-CCA-305
       author: alesia_hlushakova
       changes:
         -  sqlFile:
              dbms:  '!h2,  oracle,  mysql'
              encoding:  UTF-8
              endDelimiter: ;
-             path: ../sql/2020-11-05-fill-data.sql
+             path: ../sql/2020-11-12-fill-data.sql
              relativeToChangelogFile: true
              splitStatements:  true
              stripComments:  true
   - changeSet:
-      id: IN-CCA-19
+      id: IN-CCA-331
       author: alesia_hlushakova
       changes:
         -  sqlFile:
              dbms:  '!h2,  oracle,  mysql'
              encoding:  UTF-8
              endDelimiter: ;
-             path: ../sql/2020-11-05-fill-data-waybill.sql
+             path: ../sql/2020-11-12-fill-data-waybill.sql
              relativeToChangelogFile: true
              splitStatements:  true
              stripComments:  true
   - changeSet:
-      id: IN-CCA-21
+      id: IN-CCA-32
       author: alesia_hlushakova
       changes:
         -  sqlFile:
              dbms:  '!h2,  oracle,  mysql'
              encoding:  UTF-8
              endDelimiter: ;
-             path: ../sql/2020-11-05-fill-data-retailers.sql
+             path: ../sql/2020-11-12-fill-data-retailers.sql
              relativeToChangelogFile: true
              splitStatements:  true
              stripComments:  true
   - changeSet:
-      id: IN-CCA-22
+      id: IN-CCA-33
       author: alesia_hlushakova
       changes:
         -  sqlFile:
              dbms:  '!h2,  oracle,  mysql'
              encoding:  UTF-8
              endDelimiter: ;
-             path: ../sql/2020-11-05-fill-data-taxes.sql
+             path: ../sql/2020-11-12-fill-data-taxes.sql
              relativeToChangelogFile: true
              splitStatements:  true
              stripComments:  true

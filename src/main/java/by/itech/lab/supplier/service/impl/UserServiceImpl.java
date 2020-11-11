@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
                 .surname("Surname")
                 .email(customerDto.getAdminEmail())
                 .role(Role.ROLE_ADMIN)
-                .customer(customerDto)
+                .customerDto(customerDto)
                 .active(false)
                 .build();
     }
