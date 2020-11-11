@@ -58,16 +58,16 @@ public class UserServiceImpl implements UserService {
                     return existing;
                 })
                 .orElseGet(() -> userMapper.map(userDTO));
-        if (Objects.isNull(user.getId())) {
-            mailService.sendMail(userDTO);
-        }
+//        if (Objects.isNull(user.getId())) {
+//            mailService.sendMail(userDTO);
+//        }
         final User saved = userRepository.save(user);
         return userMapper.map(saved);
     }
 
     @Override
     @Transactional
-    public boolean changeActiveStatus(Long id, boolean status) {
+    public int changeActiveStatus(Long id, boolean status) {
         return userRepository.setStatus(status, id);
     }
 

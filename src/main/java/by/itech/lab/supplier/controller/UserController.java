@@ -55,7 +55,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    public boolean changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
+    public int changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
         return userService.changeActiveStatus(id, status);
     }
 

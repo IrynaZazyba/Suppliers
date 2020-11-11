@@ -39,7 +39,6 @@ public class UserDto implements BaseDto {
     @Size(min = 5, max = 254)
     private String email;
     private Role role;
-    private Address address;
+    private AddressDto addressDto;
     private CustomerDto customerDto;
-    private Warehouse warehouse;
 }

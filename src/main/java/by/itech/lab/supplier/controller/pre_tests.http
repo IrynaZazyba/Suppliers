@@ -188,10 +188,10 @@ Cookie: {{test}}
 
 ###
 
-#PUT http://localhost:8080/users/1/false
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
+PUT http://localhost:8080/users/1/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
 ###
 
@@ -200,7 +200,7 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{"name": "Lewis", "role": "ROLE_SYSTEM_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_powwwer", "email": "zazyboq1q1.17@gmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+{"name": "Lewis", "role": "ROLE_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_poaewwwer", "email": "zaawzyboq1q1.17@gmail.com", "addressDto": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
 
 ###
 PUT http://localhost:8080/users/18
