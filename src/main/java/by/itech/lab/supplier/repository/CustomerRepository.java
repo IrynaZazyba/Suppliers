@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
@@ -20,5 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Modifying
     @Query("update Customer set active = :isActive where id = :id")
-    boolean setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
+    void setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
 }

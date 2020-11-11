@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
     private final CustomerMapper customerMapper;
-    private final UserMapper userMapper;
 
     @Override
     public Warehouse map(WarehouseDto dto) {
@@ -23,7 +22,6 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .totalCapacity(dto.getTotalCapacity())
                 .address(dto.getAddress())
                 .customer(customerMapper.map(dto.getCustomerDto()))
-                .users(dto.getUsersDto().stream().map(userMapper::map).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -36,7 +34,6 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .totalCapacity(entity.getTotalCapacity())
                 .address(entity.getAddress())
                 .customerDto(customerMapper.map(entity.getCustomer()))
-                .usersDto(entity.getUsers().stream().map(userMapper::map).collect(Collectors.toSet()))
                 .build();
     }
 }

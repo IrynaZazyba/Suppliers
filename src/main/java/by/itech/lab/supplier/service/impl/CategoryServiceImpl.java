@@ -3,15 +3,16 @@ package by.itech.lab.supplier.service.impl;
 import by.itech.lab.supplier.domain.Category;
 import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.mapper.CategoryMapper;
-import by.itech.lab.supplier.exception.NotFoundInDBException;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.CategoryRepository;
 import by.itech.lab.supplier.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -24,22 +25,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     public CategoryDto findByCategory(final String categoryName) {
         return categoryRepository.findByCategory(categoryName)
-          .map(categoryMapper::map).orElseThrow(NotFoundInDBException::new);
+          .map(categoryMapper::map)
+          .orElseThrow(() -> new ResourceNotFoundException("Category with name=" + categoryName + " doesn't exist"));
     }
 
     @Override
-    public Page<CategoryDto> findAllByActive(final Pageable pageable, final Boolean active) {
-        return categoryRepository.findAllByActive(pageable, active)
+    public Page<CategoryDto> findAll(final Pageable pageable) {
+        return categoryRepository.findAll(pageable)
           .map(categoryMapper::map);
     }
 
+    @Override
+    @Transactional
     public CategoryDto save(final CategoryDto dto) {
         Category category = Optional.ofNullable(dto.getId())
           .map(item -> {
               final Category existing = categoryRepository
                 .findById(dto.getId())
                 .orElseThrow();
-              categoryMapper.update(dto, existing);
+              categoryMapper.map(dto, existing);
               return existing;
           })
           .orElseGet(() -> categoryMapper.map(dto));
@@ -50,17 +54,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     public CategoryDto findById(final Long id) {
         return categoryRepository.findById(id).map(categoryMapper::map)
-          .orElseThrow(NotFoundInDBException::new);
+          .orElseThrow(() -> new ResourceNotFoundException("Category with id=" + id + " doesn't exist"));
     }
 
+    @Override
     @Transactional
     public void delete(final Long id) {
-        categoryRepository.delete(id);
-    }
-
-    @Transactional
-    public void activate(final Long id) {
-        categoryRepository.activate(id);
+        categoryRepository.deleteById(id, LocalDate.now());
     }
 
 }

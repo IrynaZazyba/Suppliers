@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -19,6 +21,7 @@ import java.math.BigDecimal;
 @Builder
 @Entity
 @Table
+@Where(clause = "deleted_at is null")
 public class Category implements BaseEntity {
 
     @Id
@@ -28,6 +31,6 @@ public class Category implements BaseEntity {
     private String category;
     @Column(nullable = false)
     private BigDecimal taxRate;
-    private boolean active;
+    private LocalDate deletedAt;
 
 }

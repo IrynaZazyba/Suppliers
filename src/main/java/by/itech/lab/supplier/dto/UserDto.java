@@ -1,12 +1,8 @@
 package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.Address;
-import by.itech.lab.supplier.domain.Application;
-import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.Warehouse;
-import by.itech.lab.supplier.domain.WayBill;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +11,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -44,14 +38,6 @@ public class UserDto implements BaseDto {
     @Size(min = 5, max = 254)
     private String email;
     private Role role;
-    private Address address;
-    @JsonBackReference
-    private CustomerDto customer;
-    private Warehouse warehouse;
-    private Set<WayBill> creatorWayBills = new HashSet<>();
-    private Set<WayBill> updatorWayBills = new HashSet<>();
-    private Set<WayBill> driverWayBills = new HashSet<>();
-    private Set<Application> creatorApplications = new HashSet<>();
-    private Set<Application> updatorApplications = new HashSet<>();
+    private AddressDto addressDto;
+    private CustomerDto customerDto;
 }
-
