@@ -2,6 +2,7 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
+import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -70,17 +72,20 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void changeActive(Long id, boolean status) {
-        customerRepository.findById(id).map(elem -> {
-            elem.getUsers().forEach(u -> {
-                if (status && !elem.isActive() && u.getRole() == Role.ROLE_ADMIN) {
-                    userService.changeActiveStatus(u.getId(), status);
-                }
-                if (!status) {
-                    userService.changeActiveStatus(u.getId(), status);
-                }
-            });
-            return elem;
-        });
+        Optional<Customer> byId = customerRepository.findById(id);
+        if (byId.isEmpty()) {
+            return;
+        }
+        Customer customer = byId.get();
+        Set<User> users = customer.getUsers();
+        for (User u : users) {
+            if (status && !customer.isActive() && u.getRole() == Role.ROLE_ADMIN) {
+                userService.changeActiveStatus(u.getId(), status);
+            }
+            if (!status) {
+                userService.changeActiveStatus(u.getId(), status);
+            }
+        }
         customerRepository.setStatus(status, id);
     }
 }
