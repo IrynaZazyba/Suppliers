@@ -23,5 +23,6 @@ public class WarehouseDto implements BaseDto {
     @Size(min = 1, max = 10000, message = "Your totalCapacity shouldn't be empty")
     @NotBlank
     private Double totalCapacity;
-    private AddressDto addressDto;
+    @NotBlank
+    private AddressDto address;
 }

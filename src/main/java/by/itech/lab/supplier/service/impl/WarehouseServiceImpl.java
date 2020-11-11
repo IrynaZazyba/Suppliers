@@ -52,7 +52,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
 
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
-        Address savedAddress = addressCreate(warehouseDto.getAddressDto());
+        Address savedAddress = addressCreate(warehouseDto.getAddress());
         warehouse.setAddress(savedAddress);
         Optional<Customer> customer = customerRepository.findById(customerId);
         customer.ifPresent(warehouse::setCustomer);
@@ -70,8 +70,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
 
         final Address existingAddress = addressRepository.findById(entity.getAddress().getId()).orElseThrow();
-        warehouseDto.getAddressDto().setId(existingAddress.getId());
-        addressMapper.map(warehouseDto.getAddressDto(), existingAddress);
+        warehouseDto.getAddress().setId(existingAddress.getId());
+        addressMapper.map(warehouseDto.getAddress(), existingAddress);
         addressRepository.save(existingAddress);
 
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())

@@ -46,6 +46,4 @@ public class Warehouse implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @OneToMany(mappedBy = "warehouse")
-    private Set<User> users = new HashSet<>();
 }
