@@ -14,7 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Service
 public class MailServiceImpl implements MailService {
-    private static final String HTML_TEMPLATE_NAME = "html/email-simple";
+    private static final String HTML_TEMPLATE_NAME = "email-simple";
     private final TemplateEngine templateEngine;
     private final Sender sender;
 

@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService {
                     return existing;
                 })
                 .orElseGet(() -> userMapper.map(userDTO));
-//        if (Objects.isNull(user.getId())) {
-//            mailService.sendMail(userDTO);
-//        }
+        if (Objects.isNull(user.getId())) {
+            mailService.sendMail(userDTO);
+        }
         final User saved = userRepository.save(user);
         return userMapper.map(saved);
     }
