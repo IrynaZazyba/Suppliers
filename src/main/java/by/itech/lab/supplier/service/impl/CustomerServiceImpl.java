@@ -72,17 +72,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void changeActive(Long id, boolean status) {
-        Optional<Customer> byId = customerRepository.findById(id);
-        if (byId.isEmpty()) {
+        Optional<Customer> customerById = customerRepository.findById(id);
+        if (customerById.isEmpty()) {
             return;
         }
-        Customer customer = byId.get();
+        Customer customer = customerById.get();
         Set<User> users = customer.getUsers();
         for (User u : users) {
-            if (status && !customer.isActive() && u.getRole() == Role.ROLE_ADMIN) {
-                userService.changeActiveStatus(u.getId(), status);
-            }
-            if (!status) {
+            if (!status || (status && !customer.isActive() && u.getRole() == Role.ROLE_ADMIN)) {
                 userService.changeActiveStatus(u.getId(), status);
             }
         }
