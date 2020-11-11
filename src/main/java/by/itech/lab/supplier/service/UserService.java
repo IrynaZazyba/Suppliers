@@ -25,4 +25,6 @@ public interface UserService {
 
     Page<UserDto> getAllActive(Pageable pageable);
 
+    Page<UserDto> findAllByActive(Pageable pageable, boolean status);
+
 }

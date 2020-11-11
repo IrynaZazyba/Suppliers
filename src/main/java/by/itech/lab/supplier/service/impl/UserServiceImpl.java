@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-
-    public Page<CustomerDto> findAllByActive(final Pageable pageable, final Boolean status) {
+    @Override
+    public Page<UserDto> findAllByActive( Pageable pageable,  boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
 
@@ -45,6 +45,8 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> getAllActive(Pageable pageable) {
         return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
     }
+
+
 
     public UserDto save(UserDto userDTO) {
         User user = Optional.ofNullable(userDTO.getId())
