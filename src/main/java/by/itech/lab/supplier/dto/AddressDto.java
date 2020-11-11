@@ -12,6 +12,6 @@ public class AddressDto implements BaseDto {
     private String city;
     private String addressLine1;
     private String addressLine2;
-
+    private ZoneDto zoneDto;
 
 }

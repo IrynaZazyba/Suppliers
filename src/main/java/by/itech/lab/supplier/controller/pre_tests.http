@@ -200,7 +200,7 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{"name": "Lewis", "role": "ROLE_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_poaeww11wer", "email": "zaaw1boq1q1.17@gmail.com", "addressDto": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+{"name": "Lewis", "role": "ROLE_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_poaeww11wer", "email": "zaaw1boq1q1.17@gmail.com", "addressDto": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2", "zoneDto": { "id": 1, "zone": "Alaska"}}}
 
 ###
 PUT http://localhost:8080/users/18

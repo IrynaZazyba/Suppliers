@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> findById(Long id) {
-        return Optional.of(userRepository.findOneWithRolesById(id).map(userMapper::map).orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist")));
+        return Optional.of(userRepository.findOneWithRolesById(id).map(userMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist")));
     }
 
     @Override

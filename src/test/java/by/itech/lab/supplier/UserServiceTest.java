@@ -33,13 +33,9 @@ public class UserServiceTest {
     private static final String USERNAME = "johndoe";
     private static final String EMAIL = "johndoe@localhost";
     @Mock
-    DateTimeProvider dateTimeProvider;
-    @Mock
     private UserRepository userRepository;
     @Mock
     private UserMapper userMapper;
-    @Mock
-    private CustomerMapper customerMapper;
     @Mock
     private MailServiceImpl mailService;
     @InjectMocks
@@ -66,9 +62,7 @@ public class UserServiceTest {
         userDto.setName("john");
         userDto.setRole(Role.ROLE_ADMIN);
         userDto.setSurname("doe");
-       // userDto.setAddressDto(address);
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
-     //   userDto.setCustomer(customerMapper.map(customer));
         user = new User();
         user.setUsername(USERNAME);
         user.setPassword("password");
@@ -77,7 +71,7 @@ public class UserServiceTest {
         user.setName("john");
         user.setRole(Role.ROLE_ADMIN);
         user.setSurname("doe");
-        user.setAddress(address);
+
         user.setBirthday(LocalDate.of(1999, 11, 15));
         user.setCustomer(customer);
 

@@ -18,6 +18,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine1(addressDto.getAddressLine1())
                 .addressLine2(addressDto.getAddressLine2())
                 .id(addressDto.getId())
+                .zone(zoneMapper.map(addressDto.getZoneDto()))
                 .build();
     }
 
@@ -29,6 +30,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine1(address.getAddressLine1())
                 .addressLine2(address.getAddressLine2())
                 .id(address.getId())
+                .zoneDto(zoneMapper.map(address.getZone()))
                 .build();
     }
 
@@ -37,5 +39,6 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
         to.setCity(from.getCity());
         to.setAddressLine1(from.getAddressLine1());
         to.setAddressLine2(from.getAddressLine2());
+        to.setZone(zoneMapper.map(from.getZoneDto()));
     }
 }
