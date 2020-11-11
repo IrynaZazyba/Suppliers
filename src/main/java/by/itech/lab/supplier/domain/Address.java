@@ -16,9 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
-@Data
 //TODO delete this annotation after User bugfix.
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -30,15 +30,13 @@ public class Address implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String state;
-    @Column(nullable = false)
     private String city;
     @Column(nullable = false, name = "address_line_1")
     private String addressLine1;
     @Column(nullable = false, name = "address_line_2")
     private String addressLine2;
     @ManyToOne
-    @JoinColumn(name = "zone_id")
-    private Zone zone;
+    @JoinColumn(name = "state_id")
+    private State state;
 
 }
