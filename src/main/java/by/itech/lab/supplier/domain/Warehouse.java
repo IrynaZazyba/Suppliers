@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -39,7 +40,7 @@ public class Warehouse implements BaseEntity {
     @Column(nullable = false)
     private Double totalCapacity;
     private LocalDate deletedAt;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
     @ManyToOne
