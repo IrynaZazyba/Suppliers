@@ -70,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void changeActive(Long id, boolean status) {
-        customerRepository.findById(55L).map(elem -> {
+        customerRepository.findById(id).map(elem -> {
             elem.getUsers().forEach(u -> {
                 if (status && !elem.isActive() && u.getRole() == Role.ROLE_ADMIN) {
                     userService.changeActiveStatus(u.getId(), status);
