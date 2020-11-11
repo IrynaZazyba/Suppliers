@@ -3,9 +3,18 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,38 +23,18 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "write_off_act_reason")
-public class WriteOffActReason {
-    private Long id;
-    private String reason;
-    private Set<WriteOffAct> writeOffActs = new HashSet<>();
+@Table
+@Where(clause = "deleted_at is null")
+public class WriteOffActReason implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "reason", nullable = false)
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String category) {
-        this.reason = category;
-    }
-
+    private Long id;
+    @Column(nullable = false)
+    private String reason;
     @OneToMany(mappedBy = "writeOffActReason")
-    public Set<WriteOffAct> getWriteOffActs() {
-        return writeOffActs;
-    }
-
-    public void setWriteOffActs(Set<WriteOffAct> writeOffActs) {
-        this.writeOffActs = writeOffActs;
-    }
+    @EqualsAndHashCode.Exclude
+    private Set<WriteOffAct> writeOffActs = new HashSet<>();
+    private LocalDate deletedAt;
 
 }

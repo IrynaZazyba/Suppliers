@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-61-1
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: items_in_warehouses
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+  - changeSet:
+      id: SUP-61-2
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: write_off_act
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+  - changeSet:
+      id: SUP-61-3
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: write_off_act_reason
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
+  - changeSet:
+      id: SUP-61-4
+      author: alexander_popovich
+      changes:
+        - renameTable:
+            newTableName: items_in_warehouse
+            oldTableName: items_in_warehouses
+  - changeSet:
+      id: SUP-61-5
+      author: alexander_popovich
+      changes:
+        - modifyDataType:
+            columnName: total_sum
+            newDataType: numeric
+            tableName: write_off_act
+  - changeSet:
+      id: SUP-61-6
+      author: alexander_popovich
+      changes:
+        - modifyDataType:
+            columnName: amount
+            newDataType: numeric
+            tableName: tax
+  - changeSet:
+      id: SUP-61-7
+      author: alexander_popovich
+      changes:
+        - dropColumn:
+            tableName: tax
+            columns:
+              - column:
+                  name: percentage
+  - changeSet:
+      id: SUP-61-8
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: tax
+            columns:
+              - column:
+                  name: percentage
+                  type: double
