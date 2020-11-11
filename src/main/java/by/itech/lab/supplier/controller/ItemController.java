@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,14 +34,13 @@ public class ItemController {
         return itemService.save(itemDto);
     }
 
-    @GetMapping(ApiConstants.URL_ACTIVE_PARAMETER)
-    public Page<ItemDto> getAllByActive(@PathVariable Boolean active,
-                                        Pageable pageable) {
-        return itemService.findAllByActive(pageable, active);
+    @GetMapping
+    public Page<ItemDto> getAll(Pageable pageable) {
+        return itemService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAll(@PathVariable String category, Pageable pageable) {
+    @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
+    public Page<ItemDto> getAllByCategory(@PathVariable String category, Pageable pageable) {
         return itemService.findAllByCategory(category, pageable);
     }
 
@@ -51,15 +49,9 @@ public class ItemController {
         return itemService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_LABEL_PARAMETER)
-    public ItemDto getByName(@PathVariable String label) {
-        return itemService.findByLabel(label);
-    }
-
-    @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void activate(@PathVariable Long id) {
-        itemService.activate(id);
+    @GetMapping(ApiConstants.URL_LABEL + ApiConstants.URL_LABEL_PARAMETER)
+    public Page<ItemDto> getByName(@PathVariable String label, Pageable pageable) {
+        return itemService.findByLabel(label, pageable);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)

@@ -3,114 +3,64 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
-import java.sql.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "application")
-public class Application {
-
-    private Long id;
-    private String number;
-    private Date registrationDate;
-    private Date lastUpdated;
-    private Address destinationLocationAddress;
-    private User createdByUsers;
-    private User lastUpdatedByUsers;
-    private ApplicationStatus applicationStatus;
-    private WayBill wayBill;
+@Table
+@Where(clause = "deleted_at is null")
+public class Application implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "number")
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    @Column(name = "registration_date")
-    public Date getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    @Column(name = "last_updated")
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
+    private Long id;
+    @Column(unique = true, nullable = false)
+    private String number;
+    @Column(nullable = false)
+    private LocalDate registrationDate;
+    @Column(nullable = false)
+    private LocalDate lastUpdated;
     @ManyToOne
     @JoinColumn(name = "source_location_address_id")
-    public Address getDestinationLocationAddress() {
-        return destinationLocationAddress;
-    }
-
-    public void setDestinationLocationAddress(Address destinationLocationAddress) {
-        this.destinationLocationAddress = destinationLocationAddress;
-    }
-
+    private Address sourceLocationAddress;
+    @ManyToOne
+    @JoinColumn(name = "destination_location_address_id")
+    private Address destinationLocationAddress;
     @ManyToOne
     @JoinColumn(name = "created_by_users_id")
-    public User getCreatedByUsers() {
-        return createdByUsers;
-    }
-
-    public void setCreatedByUsers(User createdByUsers) {
-        this.createdByUsers = createdByUsers;
-    }
-
+    private User createdByUsers;
     @ManyToOne
     @JoinColumn(name = "last_updated_by_users_id")
-    public User getLastUpdatedByUsers() {
-        return lastUpdatedByUsers;
-    }
-
-    public void setLastUpdatedByUsers(User lastUpdatedByUsers) {
-        this.lastUpdatedByUsers = lastUpdatedByUsers;
-    }
-
-    @Column(name = "application_status")
+    private User lastUpdatedByUsers;
     @Enumerated(EnumType.STRING)
-    public ApplicationStatus getApplicationStatus() {
-        return applicationStatus;
-    }
-
-    public void setApplicationStatus(ApplicationStatus applicationStatus) {
-        this.applicationStatus = applicationStatus;
-    }
-
+    private ApplicationStatus applicationStatus;
     @ManyToOne
     @JoinColumn(name = "waybill_id")
-    public WayBill getWayBill() {
-        return wayBill;
-    }
-
-    public void setWayBill(WayBill wayBill) {
-        this.wayBill = wayBill;
-    }
+    private WayBill wayBill;
+    private LocalDate deletedAt;
+    @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @EqualsAndHashCode.Exclude
+    private Set<ItemsInApplication> items = new HashSet<>();
 
 }

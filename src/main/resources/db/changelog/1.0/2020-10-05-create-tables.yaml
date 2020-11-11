@@ -957,4 +957,22 @@ databaseChangeLog:
             newColumnName: category
             oldColumnName: categoty
             tableName: category
-
+  - changeSet:
+      id:  53
+      author:  alexander_popovich
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: items_in_application
+            constraintName: fk_item_in_application
+  - changeSet:
+      id: 54
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: item_id
+            baseTableName: items_in_application
+            constraintName: fk_item_in_application
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: item

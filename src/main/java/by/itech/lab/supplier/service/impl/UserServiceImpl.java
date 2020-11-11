@@ -4,7 +4,6 @@ import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
-import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.UserRepository;
@@ -83,7 +82,6 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .name("Name")
                 .surname("Surname")
-                .username("User name")
                 .email(customerDto.getAdminEmail())
                 .role(Role.ROLE_ADMIN)
                 .customerDto(customerDto)

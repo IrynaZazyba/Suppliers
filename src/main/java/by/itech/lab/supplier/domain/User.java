@@ -15,11 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -60,21 +57,6 @@ public class User implements BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
-
-    @OneToMany(mappedBy = "createdByUsers")
-    private Set<WayBill> creatorWayBills = new HashSet<>();
-
-    @OneToMany(mappedBy = "updatedByUsers")
-    private Set<WayBill> updatorWayBills = new HashSet<>();
-
-    @OneToMany(mappedBy = "driver")
-    private Set<WayBill> driverWayBills = new HashSet<>();
-
-    @OneToMany(mappedBy = "createdByUsers")
-    private Set<Application> creatorApplications = new HashSet<>();
-
-    @OneToMany(mappedBy = "lastUpdatedByUsers")
-    private Set<Application> updatorApplications = new HashSet<>();
 
     private boolean active;
 
