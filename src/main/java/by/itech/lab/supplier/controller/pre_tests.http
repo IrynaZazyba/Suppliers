@@ -416,24 +416,22 @@ Cookie: {{test}}
   "lastUpdated": "2020-11-04",
   "sourceLocationAddressDto": {
     "id": 3,
-    "state": "USA",
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
-    "zoneDto": {
-      "id": 3,
-      "zone": "NY"
+    "state": {
+      "id": 4,
+      "state": "Alabama"
     }
   },
   "destinationLocationAddressDto": {
     "id": 3,
-    "state": "USA",
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
-    "zoneDto": {
-      "id": 3,
-      "zone": "NY"
+    "state": {
+      "id": 4,
+      "state": "Alabama"
     }
   },
   "createdByUsersDto": {
@@ -447,15 +445,14 @@ Cookie: {{test}}
     "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
-    "address": {
+    "addressDto": {
       "id": 3,
-      "state": "USA",
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
-      "zone": {
-        "id": 3,
-        "zone": "NY"
+      "state": {
+        "id": 4,
+        "state": "Alabama"
       }
     },
     "customerDto": {
@@ -478,15 +475,14 @@ Cookie: {{test}}
     "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
-    "address": {
+    "addressDto": {
       "id": 3,
-      "state": "USA",
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
-      "zone": {
-        "id": 3,
-        "zone": "NY"
+      "state": {
+        "id": 4,
+        "state": "Alabama"
       }
     },
     "customerDto": {
@@ -499,133 +495,7 @@ Cookie: {{test}}
     "warehouse": null
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": {
-    "id": 1,
-    "createdByUsersDto": {
-      "active": true,
-      "deletedAt": null,
-      "id": 1,
-      "name": "Bob",
-      "surname": "Roberts",
-      "birthday": "1990-10-15",
-      "username": "admin",
-      "password": null,
-      "email": "zazybo1.17@gmail.com",
-      "role": "ROLE_SYSTEM_ADMIN",
-      "address": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zone": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      },
-      "warehouse": null
-    },
-    "updatedByUsersDto": {
-      "active": true,
-      "deletedAt": null,
-      "id": 1,
-      "name": "Bob",
-      "surname": "Roberts",
-      "birthday": "1990-10-15",
-      "username": "admin",
-      "password": null,
-      "email": "zazybo1.17@gmail.com",
-      "role": "ROLE_SYSTEM_ADMIN",
-      "address": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zone": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      },
-      "warehouse": null
-    },
-    "sourceLocationAddressDto": {
-      "id": 3,
-      "state": "USA",
-      "city": "NY",
-      "addressLine1": "Lexington Avenue",
-      "addressLine2": "Slobodskaya str.",
-      "zoneDto": {
-        "id": 3,
-        "zone": "NY"
-      }
-    },
-    "carDto": {
-      "addressDto": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zoneDto": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      }
-    },
-    "driverDto": {
-      "active": true,
-      "deletedAt": null,
-      "id": 1,
-      "name": "Bob",
-      "surname": "Roberts",
-      "birthday": "1990-10-15",
-      "username": "admin",
-      "password": null,
-      "email": "zazybo1.17@gmail.com",
-      "role": "ROLE_SYSTEM_ADMIN",
-      "address": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zone": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      },
-      "warehouse": null
-    }
-  },
+  "wayBillDto": null,
   "deletedAt": null,
   "items": [
     {
@@ -783,5 +653,3 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
-
-###

@@ -71,3 +71,11 @@ databaseChangeLog:
               - column:
                   name: percentage
                   type: double
+  - changeSet:
+      id:  SUP-64-1
+      author: alexander_popovich
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: bigint
+            columnName: waybill_id
+            tableName: application
