@@ -289,7 +289,7 @@ Cookie: {{test}}
 %}
 
 ###
-DELETE http://localhost:8080/category/4
+DELETE http://localhost:8080/category/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -389,7 +389,7 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/item/2
+DELETE http://localhost:8080/item/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -499,53 +499,17 @@ Cookie: {{test}}
   "deletedAt": null,
   "items": [
     {
-      "cost": 35.0,
-      "amount": 77,
-      "itemDto": {
-        "id": 2,
-        "upc": 5,
-        "label": "Apple",
-        "units": 10.0,
-        "categoryDto": {
-          "id": 1,
-          "category": "Fruit",
-          "taxRate": 20,
-          "deletedAt": null
-        },
-        "deletedAt": null
-      },
-      "deletedAt": null
-    },
-    {
-      "cost": 45.0,
-      "amount": 88,
-      "itemDto": {
-        "id": 3,
-        "upc": 5,
-        "label": "Pear",
-        "units": 10.0,
-        "categoryDto": {
-          "id": 1,
-          "category": "Fruit",
-          "taxRate": 20,
-          "deletedAt": null
-        },
-        "deletedAt": null
-      },
-      "deletedAt": null
-    },
-    {
       "cost": 55.0,
       "amount": 99,
       "itemDto": {
-        "id": 2,
-        "upc": 5,
-        "label": "Apple",
-        "units": 10.0,
+        "id": 1,
+        "upc": 8.5,
+        "label": "label",
+        "units": 80.5,
         "categoryDto": {
           "id": 1,
-          "category": "Fruit",
-          "taxRate": 20,
+          "category": "someType",
+          "taxRate": 8,
           "deletedAt": null
         },
         "deletedAt": null

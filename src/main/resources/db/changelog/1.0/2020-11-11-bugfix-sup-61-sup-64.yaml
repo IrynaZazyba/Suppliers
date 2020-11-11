@@ -79,3 +79,13 @@ databaseChangeLog:
             columnDataType: bigint
             columnName: waybill_id
             tableName: application
+  - changeSet:
+      id: SUP-64-2
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: items_in_application
+            columns:
+              - column:
+                  name: deleted_at
+                  type: DATE
