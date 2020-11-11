@@ -200,8 +200,27 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{"name": "Lewis", "role": "ROLE_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_poaeww11wer", "email": "zaaw1boq1q1.17@gmail.com", "addressDto": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2", "zoneDto": { "id": 1, "zone": "Alaska"}}}
-
+{
+  "active": true,
+  "deletedAt": null,
+  "name": "Bobik",
+  "surname": "Roberts",
+  "birthday": "1990-10-15",
+  "username": "administrator",
+  "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
+  "email": "zazybo11.17@gmail.com",
+  "role": "ROLE_SYSTEM_ADMIN",
+  "addressDto": {
+    "id": 3,
+    "city": "NY",
+    "addressLine1": "Lexington Avenue",
+    "addressLine2": "Slobodskaya str.",
+    "state": {
+      "id": 4,
+      "state": "Alabama"
+    }
+  }
+}
 ###
 PUT http://localhost:8080/users/18
 Content-Type: application/json
