@@ -5,21 +5,11 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -34,7 +24,7 @@ public class UserController {
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public Optional<UserDto> getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
-       return userService.findById(id);
+        return userService.findById(id);
     }
 
     @GetMapping
@@ -55,7 +45,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    public boolean changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
+    public int changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
         return userService.changeActiveStatus(id, status);
     }
 

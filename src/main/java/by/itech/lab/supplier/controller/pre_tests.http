@@ -58,7 +58,7 @@ Cookie: {{test}}
 
 {
   "name": "SomeCompany2",
-  "adminEmail": "123@gmail.com"
+  "adminEmail": "12323@gmail.com"
 }
 
 ###
@@ -149,16 +149,16 @@ Cookie: {{test}}
 
 ###
 
-#GET http://localhost:8080/users/5555
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#> {%
-#    client.test("Request executed successfully", function() {
-#        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
-#    });
-#%}
+GET http://localhost:8080/users/5555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
 
 ###
 
@@ -175,40 +175,60 @@ Cookie: {{test}}
 
 ###
 
-#DELETE http://localhost:8080/users/2
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#> {%
-#    client.test("Request executed successfully", function() {
-#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
-#    });
-#%}
+DELETE http://localhost:8080/users/2
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
 
 ###
 
-#PUT http://localhost:8080/users/1/false
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
+PUT http://localhost:8080/users/1/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
 ###
 
-#POST http://localhost:8080/users
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#{"name": "Lewis", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_power", "email": "zazybo1.17@gmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+POST http://localhost:8080/users
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
+{
+  "active": true,
+  "deletedAt": null,
+  "name": "Bobik",
+  "surname": "Roberts",
+  "birthday": "1990-10-15",
+  "username": "administrator1",
+  "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
+  "email": "zazybo1211.17@gmail.com",
+  "role": "ROLE_SYSTEM_ADMIN",
+  "addressDto": {
+    "id": 3,
+    "city": "NY",
+    "addressLine1": "Lexington Avenue",
+    "addressLine2": "Slobodskaya str.",
+    "state": {
+      "id": 4,
+      "state": "Alabama"
+    }
+  }
+}
 ###
-#PUT http://localhost:8080/users/18
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#//todo add body
+PUT http://localhost:8080/users/18
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{"name": "Lewis", "role": "ROLE_SYSTEM_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_powera", "email": "zazybo1q1.17@gfmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+
 ###
 
 #---------------------------------------------------Category----------------------------------------------------------

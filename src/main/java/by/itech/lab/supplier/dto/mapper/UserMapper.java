@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper implements BaseMapper<User, UserDto> {
 
-    private final CustomerMapper customerMapper;
+    private final AddressMapper addressMapper;
 
     @Override
     public UserDto map(User user) {
@@ -21,10 +21,10 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .email(user.getEmail())
                 .birthday(user.getBirthday())
                 .active(user.isActive())
+                .password(user.getPassword())
                 .role(user.getRole())
                 .deletedAt(user.getDeletedAt())
-                .address(user.getAddress())
-                .customerDto(customerMapper.map(user.getCustomer()))
+                .addressDto(user.getAddress() != null ? addressMapper.map(user.getAddress()) : null)
                 .build();
     }
 
@@ -35,8 +35,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
         to.setActive(from.isActive());
         to.setDeletedAt(from.getDeletedAt());
         to.setRole(from.getRole());
-        to.setAddress(from.getAddress());
-        to.setCustomer(customerMapper.map(from.getCustomerDto()));
+        to.setAddress(addressMapper.map(from.getAddressDto()));
     }
 
     @Override
@@ -47,12 +46,13 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
                 .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
                 .birthday(userDTO.getBirthday())
                 .active(userDTO.isActive())
                 .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
-                .address(userDTO.getAddress())
-                .customer(customerMapper.map(userDTO.getCustomerDto()))
+                .address(userDTO.getAddressDto() != null ? addressMapper.map(userDTO.getAddressDto()) : null)
                 .build();
     }
+
 }

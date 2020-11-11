@@ -21,7 +21,7 @@ public interface UserService {
 
     void delete(Long id);
 
-    boolean changeActiveStatus(Long id, boolean status);
+    int changeActiveStatus(Long id, boolean status);
 
     Page<UserDto> getAllActive(Pageable pageable);
 
