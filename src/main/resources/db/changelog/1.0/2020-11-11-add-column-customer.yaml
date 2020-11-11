@@ -1,0 +1,176 @@
+databaseChangeLog:
+  - changeSet:
+      id: ADD-CUSTOMER-ID-1
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: item
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-1.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: item
+            constraintName: fk_item_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: ADD-CUSTOMER-ID-3
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: retailer
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-3.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: retailer
+            constraintName: fk_retailer_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: ADD-CUSTOMER-ID-5
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: application
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-5.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: application
+            constraintName: fk_application_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: ADD-CUSTOMER-ID-6
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: waybill
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-6.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: waybill
+            constraintName: fk_waybill_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: ADD-CUSTOMER-ID-7
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: write_off_act
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-7.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: write_off_act
+            constraintName: fk_write_off_act_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: ADD-CUSTOMER-ID-8
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: category
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-8.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: category
+            constraintName: fk_category_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
+  - changeSet:
+      id: ADD-CUSTOMER-ID-9
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: address
+            columns:
+              - column:
+                  name: customer_id
+                  type: BIGINT
+                  defaultValue: 3
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: ADD-CUSTOMER-ID-9.1
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: address
+            constraintName: fk_address_customer
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: customer
