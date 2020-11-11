@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -69,6 +70,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void changeActive(Long id, boolean status) {
+        customerRepository.findById(55L).map(elem -> {
+            elem.getUsers().forEach(u -> {
+                if (status && !elem.isActive() && u.getRole() == Role.ROLE_ADMIN) {
+                    userService.changeActiveStatus(u.getId(), status);
+                }
+                if (!status) {
+                    userService.changeActiveStatus(u.getId(), status);
+                }
+            });
+            return elem;
+        });
         customerRepository.setStatus(status, id);
     }
 }
