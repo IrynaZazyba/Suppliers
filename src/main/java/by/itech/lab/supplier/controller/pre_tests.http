@@ -58,7 +58,7 @@ Cookie: {{test}}
 
 {
   "name": "SomeCompany2",
-  "adminEmail": "1233@gmail.com"
+  "adminEmail": "12323@gmail.com"
 }
 
 ###
@@ -206,9 +206,9 @@ Cookie: {{test}}
   "name": "Bobik",
   "surname": "Roberts",
   "birthday": "1990-10-15",
-  "username": "administrator",
+  "username": "administrator1",
   "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
-  "email": "zazybo11.17@gmail.com",
+  "email": "zazybo1211.17@gmail.com",
   "role": "ROLE_SYSTEM_ADMIN",
   "addressDto": {
     "id": 3,
