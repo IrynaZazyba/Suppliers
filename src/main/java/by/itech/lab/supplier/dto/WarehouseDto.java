@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -29,6 +28,5 @@ public class WarehouseDto implements BaseDto {
     private Double totalCapacity;
     @NotBlank
     private AddressDto addressDto;
-    @OneToMany(mappedBy = "warehouse")
     private Set<UserDto> usersDto = new HashSet<>();
 }
