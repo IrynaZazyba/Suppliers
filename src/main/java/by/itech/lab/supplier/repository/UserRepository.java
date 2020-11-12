@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Query("update User set active = :active where id = :id")
-    boolean setStatus(@Param("active") boolean active, @Param("id") Long id);
+    int setStatus(@Param("active") boolean active, @Param("id") Long id);
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 

@@ -58,7 +58,7 @@ Cookie: {{test}}
 
 {
   "name": "SomeCompany2",
-  "adminEmail": "123@gmail.com"
+  "adminEmail": "12323@gmail.com"
 }
 
 ###
@@ -205,16 +205,16 @@ Cookie: {{test}}
 
 ###
 
-#GET http://localhost:8080/users/5555
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#> {%
-#    client.test("Request executed successfully", function() {
-#        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
-#    });
-#%}
+GET http://localhost:8080/users/5555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
 
 ###
 
@@ -231,40 +231,60 @@ Cookie: {{test}}
 
 ###
 
-#DELETE http://localhost:8080/users/2
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#> {%
-#    client.test("Request executed successfully", function() {
-#        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
-#    });
-#%}
+DELETE http://localhost:8080/users/2
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
 
 ###
 
-#PUT http://localhost:8080/users/1/false
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
+PUT http://localhost:8080/users/1/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
 ###
 
-#POST http://localhost:8080/users
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#{"name": "Lewis", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_power", "email": "zazybo1.17@gmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+POST http://localhost:8080/users
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
+{
+  "active": true,
+  "deletedAt": null,
+  "name": "Bobik",
+  "surname": "Roberts",
+  "birthday": "1990-10-15",
+  "username": "administrator1",
+  "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
+  "email": "zazybo1211.17@gmail.com",
+  "role": "ROLE_SYSTEM_ADMIN",
+  "addressDto": {
+    "id": 3,
+    "city": "NY",
+    "addressLine1": "Lexington Avenue",
+    "addressLine2": "Slobodskaya str.",
+    "state": {
+      "id": 4,
+      "state": "Alabama"
+    }
+  }
+}
 ###
-#PUT http://localhost:8080/users/18
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#
-#//todo add body
+PUT http://localhost:8080/users/18
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{"name": "Lewis", "role": "ROLE_SYSTEM_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_powera", "email": "zazybo1q1.17@gfmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+
 ###
 
 #---------------------------------------------------Category----------------------------------------------------------
@@ -325,7 +345,7 @@ Cookie: {{test}}
 %}
 
 ###
-DELETE http://localhost:8080/category/4
+DELETE http://localhost:8080/category/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -425,7 +445,7 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/item/2
+DELETE http://localhost:8080/item/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -452,24 +472,22 @@ Cookie: {{test}}
   "lastUpdated": "2020-11-04",
   "sourceLocationAddressDto": {
     "id": 3,
-    "state": "USA",
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
-    "zoneDto": {
-      "id": 3,
-      "zone": "NY"
+    "state": {
+      "id": 4,
+      "state": "Alabama"
     }
   },
   "destinationLocationAddressDto": {
     "id": 3,
-    "state": "USA",
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
-    "zoneDto": {
-      "id": 3,
-      "zone": "NY"
+    "state": {
+      "id": 4,
+      "state": "Alabama"
     }
   },
   "createdByUsersDto": {
@@ -483,15 +501,14 @@ Cookie: {{test}}
     "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
-    "address": {
+    "addressDto": {
       "id": 3,
-      "state": "USA",
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
-      "zone": {
-        "id": 3,
-        "zone": "NY"
+      "state": {
+        "id": 4,
+        "state": "Alabama"
       }
     },
     "customerDto": {
@@ -514,15 +531,14 @@ Cookie: {{test}}
     "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
-    "address": {
+    "addressDto": {
       "id": 3,
-      "state": "USA",
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
-      "zone": {
-        "id": 3,
-        "zone": "NY"
+      "state": {
+        "id": 4,
+        "state": "Alabama"
       }
     },
     "customerDto": {
@@ -535,183 +551,21 @@ Cookie: {{test}}
     "warehouse": null
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": {
-    "id": 1,
-    "createdByUsersDto": {
-      "active": true,
-      "deletedAt": null,
-      "id": 1,
-      "name": "Bob",
-      "surname": "Roberts",
-      "birthday": "1990-10-15",
-      "username": "admin",
-      "password": null,
-      "email": "zazybo1.17@gmail.com",
-      "role": "ROLE_SYSTEM_ADMIN",
-      "address": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zone": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      },
-      "warehouse": null
-    },
-    "updatedByUsersDto": {
-      "active": true,
-      "deletedAt": null,
-      "id": 1,
-      "name": "Bob",
-      "surname": "Roberts",
-      "birthday": "1990-10-15",
-      "username": "admin",
-      "password": null,
-      "email": "zazybo1.17@gmail.com",
-      "role": "ROLE_SYSTEM_ADMIN",
-      "address": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zone": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      },
-      "warehouse": null
-    },
-    "sourceLocationAddressDto": {
-      "id": 3,
-      "state": "USA",
-      "city": "NY",
-      "addressLine1": "Lexington Avenue",
-      "addressLine2": "Slobodskaya str.",
-      "zoneDto": {
-        "id": 3,
-        "zone": "NY"
-      }
-    },
-    "carDto": {
-      "addressDto": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zoneDto": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      }
-    },
-    "driverDto": {
-      "active": true,
-      "deletedAt": null,
-      "id": 1,
-      "name": "Bob",
-      "surname": "Roberts",
-      "birthday": "1990-10-15",
-      "username": "admin",
-      "password": null,
-      "email": "zazybo1.17@gmail.com",
-      "role": "ROLE_SYSTEM_ADMIN",
-      "address": {
-        "id": 3,
-        "state": "USA",
-        "city": "NY",
-        "addressLine1": "Lexington Avenue",
-        "addressLine2": "Slobodskaya str.",
-        "zone": {
-          "id": 3,
-          "zone": "NY"
-        }
-      },
-      "customerDto": {
-        "id": 3,
-        "name": "SystemCompany",
-        "registrationDate": "2020-10-19",
-        "active": true,
-        "adminEmail": null
-      },
-      "warehouse": null
-    }
-  },
+  "wayBillDto": null,
   "deletedAt": null,
   "items": [
-    {
-      "cost": 35.0,
-      "amount": 77,
-      "itemDto": {
-        "id": 2,
-        "upc": 5,
-        "label": "Apple",
-        "units": 10.0,
-        "categoryDto": {
-          "id": 1,
-          "category": "Fruit",
-          "taxRate": 20,
-          "deletedAt": null
-        },
-        "deletedAt": null
-      },
-      "deletedAt": null
-    },
-    {
-      "cost": 45.0,
-      "amount": 88,
-      "itemDto": {
-        "id": 3,
-        "upc": 5,
-        "label": "Pear",
-        "units": 10.0,
-        "categoryDto": {
-          "id": 1,
-          "category": "Fruit",
-          "taxRate": 20,
-          "deletedAt": null
-        },
-        "deletedAt": null
-      },
-      "deletedAt": null
-    },
     {
       "cost": 55.0,
       "amount": 99,
       "itemDto": {
-        "id": 2,
-        "upc": 5,
-        "label": "Apple",
-        "units": 10.0,
+        "id": 1,
+        "upc": 8.5,
+        "label": "label",
+        "units": 80.5,
         "categoryDto": {
           "id": 1,
-          "category": "Fruit",
-          "taxRate": 20,
+          "category": "someType",
+          "taxRate": 8,
           "deletedAt": null
         },
         "deletedAt": null
@@ -819,5 +673,3 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
-
-###

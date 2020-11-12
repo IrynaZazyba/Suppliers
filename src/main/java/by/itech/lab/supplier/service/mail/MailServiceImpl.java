@@ -14,7 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Service
 public class MailServiceImpl implements MailService {
-    private static final String HTML_TEMPLATE_NAME = "html/email-simple";
+    private static final String HTML_TEMPLATE_NAME = "email-simple";
     private final TemplateEngine templateEngine;
     private final Sender sender;
 
@@ -22,7 +22,7 @@ public class MailServiceImpl implements MailService {
         Map<String, Object> emailMap = new HashMap<>();
         emailMap.put("firstName", userDto.getName());
         emailMap.put("lastName", userDto.getSurname());
-        emailMap.put("activationLink", "localhost:8080/users/" + userDto.getId() + "/true");
+        emailMap.put("activationLink", "localhost:8080/users/" + userDto.getId() + "/1");
         emailMap.put("title", "Registration email");
         Context ctx = new Context(LocaleContextHolder.getLocale());
         ctx.setVariables(emailMap);

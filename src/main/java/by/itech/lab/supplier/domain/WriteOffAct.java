@@ -4,58 +4,36 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
-import java.sql.Date;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "write_off_act")
-public class WriteOffAct {
-    private Long id;
-    private Double totalSum;
-    private Date date;
-    private WriteOffActReason writeOffActReason;
+@Table
+@Where(clause = "deleted_at is null")
+public class WriteOffAct implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Column(name = "total_sum")
-    public Double getTotalSum() {
-        return totalSum;
-    }
-
-    public void setTotalSum(Double totalSum) {
-        this.totalSum = totalSum;
-    }
-
-    @Column(name = "date")
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    @ManyToOne
+    private Long id;
+    private BigDecimal totalSum;
+    private LocalDate date;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reason_id")
-    public WriteOffActReason getWriteOffActReason() {
-        return writeOffActReason;
-    }
-
-    public void setWriteOffActReason(WriteOffActReason writeOffActReason) {
-        this.writeOffActReason = writeOffActReason;
-    }
+    private WriteOffActReason writeOffActReason;
+    private LocalDate deletedAt;
 
 }

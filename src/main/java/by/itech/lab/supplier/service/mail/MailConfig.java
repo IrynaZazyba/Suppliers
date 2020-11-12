@@ -16,9 +16,9 @@ import java.util.Properties;
 @Configuration
 public class MailConfig {
     private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
-    @Value("${admin.email}:Itechart2020JavaLab@gmail.com")
+    @Value("${admin.email:Itechart2020JavaLab@gmail.com}")
     private String email;
-    @Value("${admin.password}:Itechart2020java")
+    @Value("${admin.password:Itechart2020java}")
     private String password;
 
     @Bean
@@ -41,6 +41,10 @@ public class MailConfig {
     private ITemplateResolver htmlTemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setOrder(1);
+        templateResolver.setPrefix("templates/");
+        templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding(EMAIL_TEMPLATE_ENCODING);
         return templateResolver;
     }
