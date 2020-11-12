@@ -141,6 +141,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
+  "id" : "1",
   "type" : "anotherType",
   "totalCapacity" : "10",
   "addressDto" : {
