@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -50,33 +47,17 @@ public class User implements BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    @JsonManagedReference
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
-
-    @OneToMany(mappedBy = "createdByUsers")
-    private Set<WayBill> creatorWayBills = new HashSet<>();
-
-    @OneToMany(mappedBy = "updatedByUsers")
-    private Set<WayBill> updatorWayBills = new HashSet<>();
-
-    @OneToMany(mappedBy = "driver")
-    private Set<WayBill> driverWayBills = new HashSet<>();
-
-    @OneToMany(mappedBy = "createdByUsers")
-    private Set<Application> creatorApplications = new HashSet<>();
-
-    @OneToMany(mappedBy = "lastUpdatedByUsers")
-    private Set<Application> updatorApplications = new HashSet<>();
 
     private boolean active;
 

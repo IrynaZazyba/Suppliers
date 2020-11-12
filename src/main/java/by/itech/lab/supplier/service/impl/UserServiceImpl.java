@@ -26,14 +26,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-
-    public Page<UserDto> findAllByActive(final Pageable pageable, final Boolean status) {
-        return userRepository.findByStatus(pageable, status).map(userMapper::map);
-    }
-
     @Override
     public Optional<UserDto> findById(Long id) {
-        return userRepository.findOneWithRolesById(id).map(userMapper::map);
+        return Optional.of(userRepository.findOneWithRolesById(id).map(userMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist")));
     }
 
     @Override
@@ -46,24 +42,27 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
     }
 
+    @Transactional
     public UserDto save(UserDto userDTO) {
         User user = Optional.ofNullable(userDTO.getId())
                 .map(item -> {
                     final User existing = userRepository
                             .findById(userDTO.getId())
-                            .orElseThrow();
+                            .orElseThrow(() -> new ResourceNotFoundException("User with id=" + userDTO.getId() + " doesn't exist"));
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
                 .orElseGet(() -> userMapper.map(userDTO));
-
+        if (Objects.isNull(user.getId())) {
+            mailService.sendMail(userDTO);
+        }
         final User saved = userRepository.save(user);
         return userMapper.map(saved);
     }
 
     @Override
     @Transactional
-    public boolean changeActiveStatus(Long id, boolean status) {
+    public int changeActiveStatus(Long id, boolean status) {
         return userRepository.setStatus(status, id);
     }
 
@@ -78,7 +77,6 @@ public class UserServiceImpl implements UserService {
         return UserDto.builder()
                 .name("Name")
                 .surname("Surname")
-                .username("User name")
                 .email(customerDto.getAdminEmail())
                 .role(Role.ROLE_ADMIN)
                 .customerDto(customerDto)

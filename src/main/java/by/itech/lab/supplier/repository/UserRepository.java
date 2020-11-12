@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
@@ -24,8 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void delete(@Param("id") Long id);
 
     @Modifying
-    @Query("update User set active = :isActive where id = :id")
-    boolean setStatus(@Param("isActive") boolean isActive, @Param("id") Long id);
+    @Query("update User set active = :active where id = :id")
+    int setStatus(@Param("active") boolean active, @Param("id") Long id);
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 

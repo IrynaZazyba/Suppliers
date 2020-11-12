@@ -1,11 +1,11 @@
 package by.itech.lab.supplier.dto;
 
 
-import by.itech.lab.supplier.domain.Category;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -15,7 +15,7 @@ public class ItemDto implements BaseDto {
     private BigDecimal upc;
     private String label;
     private Double units;
-    private Category category;
-    private boolean active;
+    private CategoryDto categoryDto;
+    private LocalDate deletedAt;
 
 }

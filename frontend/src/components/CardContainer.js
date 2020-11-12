@@ -2,23 +2,17 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 
-const CardContainer = props => {
-
-    const {
-        modals,
-        header,
-        body,
-    } = props;
+const CardContainer = ({modals,header,body})=> {
 
     return (
         <Container fluid className="mainContainer">
-            {modals()}
+            {modals}
             <Card className="shadow-sm bg-white rounded">
                 <Card.Header className="tableHead">
-                    {header()}
+                    {header}
                 </Card.Header>
                 <Card.Body>
-                    {body()}
+                    {body}
                 </Card.Body>
             </Card>
         </Container>

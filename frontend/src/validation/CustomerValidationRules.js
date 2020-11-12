@@ -20,5 +20,3 @@ export function validateCustomerName(dto) {
     }
     return errorsFields;
 }
-
-
