@@ -1,12 +1,16 @@
 package by.itech.lab.supplier.dto;
 
+import by.itech.lab.supplier.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -24,5 +28,7 @@ public class WarehouseDto implements BaseDto {
     @NotBlank
     private Double totalCapacity;
     @NotBlank
-    private AddressDto address;
+    private AddressDto addressDto;
+    @OneToMany(mappedBy = "warehouse")
+    private Set<UserDto> usersDto = new HashSet<>();
 }

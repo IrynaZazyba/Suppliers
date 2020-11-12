@@ -6,11 +6,14 @@ import by.itech.lab.supplier.dto.WarehouseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @Component
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
     private final AddressMapper addressMapper;
+    private final UserMapper userMapper;
 
     @Override
     public Warehouse map(WarehouseDto dto) {
@@ -19,7 +22,8 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .identifier(dto.getIdentifier())
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
-                .address(addressMapper.map(dto.getAddress()))
+                .address(addressMapper.map(dto.getAddressDto()))
+                .users(dto.getUsersDto().stream().map(userMapper::map).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -30,13 +34,15 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .identifier(entity.getIdentifier())
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
-                .address(addressMapper.map(entity.getAddress()))
+                .addressDto(addressMapper.map(entity.getAddress()))
+                .usersDto(entity.getUsers().stream().map(userMapper::map).collect(Collectors.toSet()))
                 .build();
     }
 
     public void map(final WarehouseDto from, final Warehouse to) {
         to.setType(from.getType());
         to.setTotalCapacity(from.getTotalCapacity());
-        to.setAddress(addressMapper.map(from.getAddress()));
+        to.setAddress(addressMapper.map(from.getAddressDto()));
+        to.setUsers(from.getUsersDto().stream().map(userMapper::map).collect(Collectors.toSet()));
     }
 }

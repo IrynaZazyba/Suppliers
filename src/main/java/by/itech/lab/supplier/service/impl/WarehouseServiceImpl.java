@@ -2,6 +2,7 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Customer;
+import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.AddressDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
@@ -10,6 +11,7 @@ import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.AddressRepository;
 import by.itech.lab.supplier.repository.CustomerRepository;
+import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
@@ -29,8 +31,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final CustomerRepository customerRepository;
     private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
     private final WarehouseMapper warehouseMapper;
     private final AddressMapper addressMapper;
+
 
     @Override
     public Page<WarehouseDto> findAll(Pageable pageable) {
@@ -48,15 +52,21 @@ public class WarehouseServiceImpl implements WarehouseService {
     public WarehouseDto save(Long customerId, WarehouseDto warehouseDto) {
         if (warehouseDto.getIdentifier() == null) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, "You can't delete \"identifier\" field");
+                    HttpStatus.NOT_ACCEPTABLE, "\"Identifier\" can't be null");
         }
 
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
-        Address savedAddress = addressCreate(warehouseDto.getAddress());
+        Address savedAddress = addressCreate(warehouseDto.getAddressDto());
         warehouse.setAddress(savedAddress);
         Optional<Customer> customer = customerRepository.findById(customerId);
         customer.ifPresent(warehouse::setCustomer);
         final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
+
+        for (User user : warehouse.getUsers()) {
+            user.setWarehouse(warehouse);
+            userRepository.save(user);
+        }
+
         return warehouseMapper.map(savedWarehouse);
     }
 
@@ -70,8 +80,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
 
         final Address existingAddress = addressRepository.findById(entity.getAddress().getId()).orElseThrow();
-        warehouseDto.getAddress().setId(existingAddress.getId());
-        addressMapper.map(warehouseDto.getAddress(), existingAddress);
+        warehouseDto.getAddressDto().setId(existingAddress.getId());
+        addressMapper.map(warehouseDto.getAddressDto(), existingAddress);
         addressRepository.save(existingAddress);
 
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())

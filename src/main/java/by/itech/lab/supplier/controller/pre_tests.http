@@ -98,16 +98,71 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "identifier": "someIdentifier",
-  "type" : "someType",
+  "identifier": "100",
+  "type" : "CCC",
+  "totalCapacity" : "44",
+  "addressDto" : {
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "44",
+    "state" : {
+      "id" : "5",
+      "state": "Alaska"
+    }
+  },
+  "usersDto" : [
+    {
+      "active": true,
+      "deletedAt": null,
+      "id": 1,
+      "name": "Bob",
+      "surname": "Roberts",
+      "birthday": "1990-10-15",
+      "username": "admin",
+      "password": null,
+      "email": "zazybo1.17@gmail.com",
+      "role": "ROLE_SYSTEM_ADMIN",
+      "address": {
+        "id": 3,
+        "city": "NY",
+        "addressLine1": "Lexington Avenue",
+        "addressLine2": "Slobodskaya str.",
+        "state": {
+          "id": 4,
+          "state": "Alabama",
+          "taxes": []
+        }
+      },
+      "customerDto": {
+        "id": 3,
+        "name": "SystemCompany",
+        "registrationDate": "2020-10-19",
+        "active": true,
+        "adminEmail": null
+      },
+      "warehouse": null
+    }
+  ]
+}
+
+###
+
+PUT http://localhost:8080/customers/3/warehouses/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "identifier": "100",
+  "type" : "anotherType",
   "totalCapacity" : "10",
   "addressDto" : {
     "city" : "Kanzas",
     "addressLine1" : "Linkoln Str.",
-    "addressLine2" : "55",
+    "addressLine2" : "66",
     "state" : {
-      "id" : "5",
-      "state": "Alaska"
+      "id" : "6",
+      "state": "Arizona"
     }
   }
 }
