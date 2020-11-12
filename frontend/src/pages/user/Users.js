@@ -25,15 +25,15 @@ export default () => {
     const [lgShow, setLgShow] = useState(false);
     const [editUser, setEditUser] = useState({
         editShow: false,
-        customer: []
+        user: []
     });
     const [errorMessage, setErrors] = useState('');
+    const filterOptions = {'All': '', 'Active': true, 'Disabled': false};
 
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getUsers('/users?status=' + e.target.value + '&size=' + page.countPerPage);
-
+        getUsers(`/users?status=${e.target.value}&size=${page.countPerPage}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -42,13 +42,13 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getUsers('/users?size=' + e.target.value + '&status=' + filter);
+        getUsers(`/users?size=${e.target.value}&status=${filter}`);
     };
 
     const handleChangeStatus = (e) => {
         let status = e.target.value !== 'true';
         let id = e.target.id;
-        fetch('/users/' + id + '/status', {
+        fetch(`/users/${id}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ export default () => {
     const changePage = (e) => {
         e.preventDefault();
         let page = e.target.innerHTML - 1;
-        getUsers('/users?page=' + page + '&status=' + filter);
+        getUsers(`/users?page=${page}&status=${filter}`);
     };
 
     useEffect(() => {
@@ -98,7 +98,7 @@ export default () => {
     const closeModalAdd = (e, customerDto) => {
         setLgShow(e);
         if (customerDto) {
-            getUsers('/users?status=' + filter + '&size=' + page.countPerPage);
+            getUsers(`/users?status=${filter}&size=${page.countPerPage}`);
         }
     };
 
@@ -109,89 +109,93 @@ export default () => {
                 editShow: false
             }));
         if (customerDto) {
-            getUsers('/users?status=' + filter + '&size=' + page.countPerPage);
+            getUsers(`/users?status=${filter}&size=${page.countPerPage}`);
         }
     };
 
 
+    const tableRows = users.map(custom => (
+        <tr key={custom.id}>
+            <td>{custom.name} {custom.surname}</td>
+            <td>{custom.birthday}</td>
+            <td>{custom.role}</td>
+            <td><Form.Check
+                type="switch"
+                id={custom.id}
+                style={{width: '25px'}}
+                onChange={handleChangeStatus}
+                checked={custom.active}
+                value={custom.active}
+            />
+            </td>
+            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+                        size={'1.3em'}
+                        onClick={() => {
+                            setEditUser({
+                                editShow: true,
+                                customer: custom
+                            });
+                        }}/>
+            </td>
+        </tr>
+    ));
+
+    const modals =
+        <React.Fragment>
+            {errorMessage && <ErrorMessage message={errorMessage}/>}
+            <ModalAddUser props={lgShow} onChange={closeModalAdd}/>
+            <ModalEditUser props={editUser} onChange={closeModalEdit}/>
+        </React.Fragment>;
+
+    const header =
+        <React.Fragment>
+            <Row>
+                <Col md={2}>
+                    <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
+                        Add
+                    </Button>
+                </Col>
+                <Col md={7}></Col>
+                <Col md={2}>
+                    <Form.Control size="sm" as="select"
+                                  value={filter}
+                                  defaultValue="Choose..."
+                                  onChange={onChangeFilter}>
+                        {Object.entries(filterOptions).map(([k, v]) => (
+                            <option value={v}>{k}</option>
+                        ))}
+                    </Form.Control>
+                </Col>
+                <Col md={1}>
+                    <TogglePage props={page} onChange={handleCountPerPage}/>
+                </Col>
+            </Row>
+        </React.Fragment>;
+
+    const body =
+        <React.Fragment>
+            <Table hover size="sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Bithday</th>
+                        <th>Role</th>
+                        <th>status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tableRows}
+                </tbody>
+            </Table>
+            <Page page={page} onChange={changePage}/>
+        </React.Fragment>;
+
     return (
         <CardContainer
-            modals={() => (
-                <React.Fragment>
-                    {errorMessage && <ErrorMessage message={errorMessage}/>}
-                    <ModalAddUser props={lgShow} onChange={closeModalAdd}/>
-                    <ModalEditUser props={editUser} onChange={closeModalEdit}/>
-                </React.Fragment>
-            )}
-            header={() => (
-                <React.Fragment>
-                    <Row>
-                        <Col md={2}>
-                            <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
-                                Add
-                            </Button>
-                        </Col>
-                        <Col md={7}></Col>
-                        <Col md={2}>
-                            <Form.Control size="sm" as="select"
-                                          value={filter}
-                                          defaultValue="Choose..."
-                                          onChange={onChangeFilter}>
-                                <option value={''}>All</option>
-                                <option value={true}>Active</option>
-                                <option value={false}>Disabled</option>
-                            </Form.Control>
-                        </Col>
-                        <Col md={1}>
-                            <TogglePage props={page} onChange={handleCountPerPage}/>
-                        </Col>
-                    </Row>
-                </React.Fragment>
-            )}
-            body={() => (
-                <React.Fragment>
-                    <Table hover size="sm" style={{marginTop: '25px'}}>
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Birthday</th>
-                            <th>Role</th>
-                        
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {users.map(custom => (
-                            <tr key={custom.id}>
-                                <td>{custom.name} {custom.surname}</td>
-                                <td>{custom.birthday}</td>
-                                <td>{custom.role}</td>
-                                <td><Form.Check
-                                    type="switch"
-                                    id={custom.id}
-                                    style={{width: '25px'}}
-                                    onChange={handleChangeStatus}
-                                    checked={custom.active}
-                                    value={custom.active}
-                                />
-                                </td>
-                                <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
-                                            size={'1.3em'}
-                                            onClick={() => {
-                                                setEditUser({
-                                                    editShow: true,
-                                                    customer: custom
-                                                });
-                                            }}/>
-                                </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </Table>
-                    <Page page={page} onChange={changePage}/>
-                </React.Fragment>
-            )}/>
-
+            modals={modals}
+            header={header}
+            body={body}/>
     );
 
 }

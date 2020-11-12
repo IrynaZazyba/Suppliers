@@ -10,7 +10,7 @@ function ModalEditCustomer(props) {
     const [userDto, setUser] = useState({
         id: '',
         name: '',
-        adminEmail: ''
+        birthday: ''
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');

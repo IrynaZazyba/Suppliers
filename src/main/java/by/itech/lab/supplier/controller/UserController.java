@@ -38,11 +38,6 @@ public class UserController {
     }
 
 
-    @GetMapping
-    public Page<UserDto> getAllUsers(@PageableDefault Pageable pageable) {
-        return userService.findAll(pageable);
-    }
-
     @GetMapping(ApiConstants.URL_FILTERED)
     public Page<UserDto> getAllEnabledUsers(@PageableDefault Pageable pageable) {
         return userService.getAllActive(pageable);
@@ -54,17 +49,19 @@ public class UserController {
         return userService.save(userDto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    public int changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
-        return userService.changeActiveStatus(id, status);
-    }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
         return userService.save(userDTO);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
+    public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
+        userService.changeActiveStatus(id, status);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
