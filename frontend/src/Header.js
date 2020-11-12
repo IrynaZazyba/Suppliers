@@ -12,6 +12,8 @@ function Header() {
 
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const usersClass = window.location.pathname === "/users" ? "active" : "";
+
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -24,6 +26,8 @@ function Header() {
                     </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
+                    {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
+                    <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
