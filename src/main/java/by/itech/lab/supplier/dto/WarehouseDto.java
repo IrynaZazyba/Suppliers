@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.dto;
 
-import by.itech.lab.supplier.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class WarehouseDto implements BaseDto {
     private Long id;
+    private Long customerId;
     @Size(min = 1, max = 50, message = "Your identifier should contains at least 1 letter")
     @NotBlank
     private String identifier;

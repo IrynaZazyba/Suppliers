@@ -17,10 +17,8 @@ import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -37,48 +35,37 @@ public class WarehouseServiceImpl implements WarehouseService {
 
 
     @Override
-    public Page<WarehouseDto> findAll(Pageable pageable) {
+    public Page<WarehouseDto> findAll(final Pageable pageable) {
         return warehouseRepository.findAll(pageable).map(warehouseMapper::map);
     }
 
     @Override
-    public WarehouseDto findById(Long warehouseId) {
+    public WarehouseDto findById(final Long warehouseId) {
         return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 
     @Transactional
     @Override
-    public WarehouseDto save(Long customerId, WarehouseDto warehouseDto) {
-        if (warehouseDto.getIdentifier() == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, "\"Identifier\" can't be null");
-        }
-
+    public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
         Address savedAddress = addressCreate(warehouseDto.getAddressDto());
         warehouse.setAddress(savedAddress);
-        Optional<Customer> customer = customerRepository.findById(customerId);
-        customer.ifPresent(warehouse::setCustomer);
+        Customer customer = customerRepository.findById(warehouseDto.getCustomerId()).orElseThrow();
+        warehouse.setCustomer(customer);
         final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
 
         for (User user : warehouse.getUsers()) {
             user.setWarehouse(warehouse);
             userRepository.save(user);
         }
-
         return warehouseMapper.map(savedWarehouse);
     }
 
     @Transactional
     @Override
-    public WarehouseDto update(WarehouseDto warehouseDto) {
+    public WarehouseDto update(final WarehouseDto warehouseDto) {
         Warehouse entity = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
-        if (!warehouseDto.getIdentifier().equals(entity.getIdentifier())) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE, "You can't change \"identifier\" field");
-        }
-
         final Address existingAddress = addressRepository.findById(entity.getAddress().getId()).orElseThrow();
         warehouseDto.getAddressDto().setId(existingAddress.getId());
         addressMapper.map(warehouseDto.getAddressDto(), existingAddress);
@@ -98,7 +85,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseMapper.map(savedWarehouse);
     }
 
-    private Address addressCreate(AddressDto addressDto) {
+    private Address addressCreate(final AddressDto addressDto) {
         Address address = addressMapper.map(addressDto);
         return addressRepository.save(address);
     }
@@ -107,10 +94,5 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id);
-    }
-
-    @Override
-    public WarehouseDto save(WarehouseDto dto) {
-        return null;
     }
 }

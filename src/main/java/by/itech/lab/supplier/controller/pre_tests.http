@@ -77,20 +77,7 @@ Cookie: {{test}}
 {"name":"New name"}
 
 ###
-
-#GET http://localhost:8080/customers/3/warehouses
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-
-###
-
-#GET http://localhost:8080/customers/3/warehouses/2
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-
-###
+#---------------------------------------------Warehouse----------------------------------------------------------------
 
 POST http://localhost:8080/customers/3/warehouses
 Content-Type: application/json
@@ -98,6 +85,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
+  "customerId": "3",
   "identifier": "100",
   "type" : "CCC",
   "totalCapacity" : "44",
@@ -153,7 +141,6 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "identifier": "100",
   "type" : "anotherType",
   "totalCapacity" : "10",
   "addressDto" : {
@@ -169,25 +156,17 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/customers/3/warehouses/1
+GET http://localhost:8080/customers/3/warehouses
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{
-  "identifier": "someIdentifier",
-  "type" : "anotherType",
-  "totalCapacity" : "10",
-  "addressDto" : {
-    "city" : "Kanzas",
-    "addressLine1" : "Linkoln Str.",
-    "addressLine2" : "66",
-    "state" : {
-      "id" : "6",
-      "state": "Arizona"
-    }
-  }
-}
+###
+
+GET http://localhost:8080/customers/3/warehouses/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
 ###
 
@@ -197,6 +176,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
+#----------------------------------------------------------------------------------------------------------------------
 
 GET http://localhost:8080/users
 Content-Type: application/json

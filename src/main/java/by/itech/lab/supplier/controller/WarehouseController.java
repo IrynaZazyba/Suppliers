@@ -40,14 +40,13 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WarehouseDto save(@PathVariable Long customerId, @Valid @RequestBody WarehouseDto warehouseDto) {
-        return warehouseService.save(customerId, warehouseDto);
+    public WarehouseDto save(@Valid @RequestBody WarehouseDto warehouseDto) {
+        return warehouseService.save(warehouseDto);
     }
 
     @PutMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public WarehouseDto updateWarehouse(@PathVariable Long id, @Valid @RequestBody WarehouseDto warehouseDto) {
-        warehouseDto.setId(id);
+    public WarehouseDto updateWarehouse(@Valid @RequestBody WarehouseDto warehouseDto) {
         return warehouseService.update(warehouseDto);
     }
 
