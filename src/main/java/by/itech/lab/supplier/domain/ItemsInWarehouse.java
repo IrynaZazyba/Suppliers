@@ -4,44 +4,39 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "items_in_warehouse")
-public class ItemsInWarehouse {
+@Table
+@Where(clause = "deleted_at is null")
+public class ItemsInWarehouse implements BaseEntity {
 
-    private Long id;
-
-    //todo it is necessary to check the relationship between entities,
-    // should be considered in SUP-10
-
-//    private Double amount;
-//    private Warehouse warehouse;
-//    private Item item;
-//
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-//
-//    @Column(name = "amount", nullable = false)
-//    public Double getAmount() {
-//        return amount;
-//    }
-//
-//    public void setAmount(Double amount) {
-//        this.amount = amount;
-//    }
-
+    private Long id;
+    @Column(nullable = false)
+    private Double amount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+    private LocalDate deletedAt;
 
 }

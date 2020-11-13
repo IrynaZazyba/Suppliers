@@ -23,7 +23,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
 
     @Override
     public Application map(final ApplicationDto dto) {
-        return Application.builder()
+        final Application application = Application.builder()
                 .id(dto.getId())
                 .applicationStatus(dto.getApplicationStatus())
                 .number(dto.getNumber())
@@ -33,15 +33,18 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .destinationLocationAddress(addressMapper.map(dto.getDestinationLocationAddressDto()))
                 .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
                 .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
-                .wayBill(wayBillMapper.map(dto.getWayBillDto()))
                 .deletedAt(dto.getDeletedAt())
                 .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
                 .build();
+        if (Objects.nonNull(dto.getWayBillDto())) {
+            application.setWayBill(wayBillMapper.map(dto.getWayBillDto()));
+        }
+        return application;
     }
 
     @Override
     public ApplicationDto map(final Application application) {
-        return ApplicationDto.builder()
+        final ApplicationDto applicationDto = ApplicationDto.builder()
                 .id(application.getId())
                 .applicationStatus(application.getApplicationStatus())
                 .number(application.getNumber())
@@ -51,10 +54,13 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .destinationLocationAddressDto(addressMapper.map(application.getDestinationLocationAddress()))
                 .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
                 .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
-                .wayBillDto(wayBillMapper.map(application.getWayBill()))
                 .deletedAt(application.getDeletedAt())
                 .items(application.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
                 .build();
+        if (Objects.nonNull(application.getWayBill())) {
+            applicationDto.setWayBillDto(wayBillMapper.map(application.getWayBill()));
+        }
+        return applicationDto;
     }
 
     public void map(final ApplicationDto from, final Application to) {
@@ -66,9 +72,11 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setDestinationLocationAddress(addressMapper.map(from.getDestinationLocationAddressDto()));
         to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
         to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
-        to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
         to.setDeletedAt(from.getDeletedAt());
         updateItems(to.getItems(), from.getItems());
+        if (Objects.nonNull(from.getWayBillDto())) {
+            to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
+        }
     }
 
     public Application mapItems(final Application application) {
