@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.advisor.SecurityAnnotation;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
@@ -39,6 +40,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @SecurityAnnotation
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         return userService.save(userDto);
     }

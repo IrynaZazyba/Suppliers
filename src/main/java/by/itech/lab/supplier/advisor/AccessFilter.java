@@ -35,20 +35,16 @@ public class AccessFilter {
     @Around(value = "any()")
     public Object accessFilter(final ProceedingJoinPoint point) throws Throwable {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.isNull(authentication)) {
+        if (Objects.isNull(authentication) || !authentication.getPrincipal().getClass().isAssignableFrom(UserImpl.class)) {
             return point.proceed();
         }
 
-        if (!authentication.getPrincipal().getClass().isAssignableFrom(UserImpl.class)) {
-            return point.proceed();
-        }
         UserImpl principal = (UserImpl) authentication.getPrincipal();
-
         if (principal.getAuthorities().contains(Role.ROLE_SYSTEM_ADMIN)) {
             return point.proceed();
         }
-        Long customerId = (Long) threadLocal.get();
 
+        Long customerId = (Long) threadLocal.get();
         if (!principal.atCustomer(customerId)) {
             throw new AccessDeniedException("No access");
         }
@@ -60,5 +56,23 @@ public class AccessFilter {
         delegate.disableFilter(FILTER_NAME);
         return proceed;
     }
+
+    @Pointcut("@annotation(SecurityAnnotation)")
+    public void callAtControllerSecurityAnnotation() {
+    }
+
+    @Around("callAtControllerSecurityAnnotation()")
+    public Object aroundCallAt(ProceedingJoinPoint point) throws Throwable {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserImpl principal = (UserImpl) authentication.getPrincipal();
+        Long customerId = (Long) threadLocal.get();
+        if (principal.getAuthorities().contains(Role.ROLE_SYSTEM_ADMIN)
+                || principal.getAuthorities().contains(Role.ROLE_ADMIN) && principal.atCustomer(customerId)) {
+            return point.proceed();
+        } else {
+            throw new AccessDeniedException("No access");
+        }
+    }
+
 
 }
