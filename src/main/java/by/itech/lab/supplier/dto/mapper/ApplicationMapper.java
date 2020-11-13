@@ -1,7 +1,7 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Application;
-import by.itech.lab.supplier.domain.ItemsInApplication;
+import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ItemsInApplicationDto;
 import lombok.AllArgsConstructor;
@@ -80,15 +80,15 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     }
 
     public Application mapItems(final Application application) {
-        for (ItemsInApplication item : application.getItems()) {
+        for (ApplicationItem item : application.getItems()) {
             item.setApplication(application);
         }
         return application;
     }
 
-    private void updateItems(Set<ItemsInApplication> forUpdate, Set<ItemsInApplicationDto> update) {
+    private void updateItems(Set<ApplicationItem> forUpdate, Set<ItemsInApplicationDto> update) {
         for (ItemsInApplicationDto item : update) {
-            ItemsInApplication result = forUpdate.stream()
+            ApplicationItem result = forUpdate.stream()
                     .filter(Objects::nonNull)
                     .filter(p -> p.getId().equals(item.getId()))
                     .findAny()
