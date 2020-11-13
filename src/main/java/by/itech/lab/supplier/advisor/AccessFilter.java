@@ -48,7 +48,10 @@ public class AccessFilter {
         if (!principal.atCustomer(customerId)) {
             throw new AccessDeniedException("No access");
         }
+        return enableFilter(point, customerId);
+    }
 
+    private Object enableFilter(final ProceedingJoinPoint point, Long customerId) throws Throwable {
         SessionImpl delegate = (SessionImpl) entityManager.getDelegate();
         Filter accessFilter = delegate.enableFilter(FILTER_NAME);
         accessFilter.setParameter(FILTER_PARAMETER, customerId);

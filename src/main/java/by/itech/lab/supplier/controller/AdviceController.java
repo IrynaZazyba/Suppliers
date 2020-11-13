@@ -36,5 +36,4 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         }
     }
 
-
 }
