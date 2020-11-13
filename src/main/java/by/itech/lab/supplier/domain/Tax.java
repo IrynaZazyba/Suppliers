@@ -1,9 +1,6 @@
 package by.itech.lab.supplier.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +25,7 @@ public class Tax implements BaseEntity {
     private BigDecimal amount;
     private Double percentage;
     private String name;
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;
