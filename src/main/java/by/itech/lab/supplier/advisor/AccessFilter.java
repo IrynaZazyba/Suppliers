@@ -34,28 +34,29 @@ public class AccessFilter {
 
     @Around(value = "any()")
     public Object accessFilter(final ProceedingJoinPoint point) throws Throwable {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.isNull(authentication) || !authentication.getPrincipal().getClass().isAssignableFrom(UserImpl.class)) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication)
+                || !authentication.getPrincipal().getClass().isAssignableFrom(UserImpl.class)) {
             return point.proceed();
         }
 
-        UserImpl principal = (UserImpl) authentication.getPrincipal();
+        final UserImpl principal = (UserImpl) authentication.getPrincipal();
         if (principal.getAuthorities().contains(Role.ROLE_SYSTEM_ADMIN)) {
             return point.proceed();
         }
 
-        Long customerId = (Long) threadLocal.get();
+        final Long customerId = (Long) threadLocal.get();
         if (!principal.atCustomer(customerId)) {
             throw new AccessDeniedException("No access");
         }
         return enableFilter(point, customerId);
     }
 
-    private Object enableFilter(final ProceedingJoinPoint point, Long customerId) throws Throwable {
-        SessionImpl delegate = (SessionImpl) entityManager.getDelegate();
-        Filter accessFilter = delegate.enableFilter(FILTER_NAME);
+    private Object enableFilter(final ProceedingJoinPoint point, final Long customerId) throws Throwable {
+        final SessionImpl delegate = (SessionImpl) entityManager.getDelegate();
+        final Filter accessFilter = delegate.enableFilter(FILTER_NAME);
         accessFilter.setParameter(FILTER_PARAMETER, customerId);
-        Object proceed = point.proceed();
+        final Object proceed = point.proceed();
         delegate.disableFilter(FILTER_NAME);
         return proceed;
     }
@@ -65,10 +66,10 @@ public class AccessFilter {
     }
 
     @Around("callAtControllerAdminAccess()")
-    public Object aroundCallAt(ProceedingJoinPoint point) throws Throwable {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserImpl principal = (UserImpl) authentication.getPrincipal();
-        Long customerId = (Long) threadLocal.get();
+    public Object aroundCallAt(final ProceedingJoinPoint point) throws Throwable {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final UserImpl principal = (UserImpl) authentication.getPrincipal();
+        final Long customerId = (Long) threadLocal.get();
         if (principal.getAuthorities().contains(Role.ROLE_SYSTEM_ADMIN)
                 || principal.getAuthorities().contains(Role.ROLE_ADMIN) && principal.atCustomer(customerId)) {
             return point.proceed();
