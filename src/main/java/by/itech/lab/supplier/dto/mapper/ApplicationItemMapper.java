@@ -1,19 +1,19 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.ApplicationItem;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 
 @Component
 @AllArgsConstructor
-public class ItemsInApplicationMapper implements BaseMapper<ApplicationItem, ItemsInApplicationDto> {
+public class ApplicationItemMapper implements BaseMapper<ApplicationItem, ApplicationItemDto> {
 
     private final ItemMapper itemMapper;
 
     @Override
-    public ApplicationItem map(final ItemsInApplicationDto dto) {
+    public ApplicationItem map(final ApplicationItemDto dto) {
         return ApplicationItem.builder()
                 .id(dto.getId())
                 .amount(dto.getAmount())
@@ -24,8 +24,8 @@ public class ItemsInApplicationMapper implements BaseMapper<ApplicationItem, Ite
     }
 
     @Override
-    public ItemsInApplicationDto map(final ApplicationItem entity) {
-        return ItemsInApplicationDto.builder()
+    public ApplicationItemDto map(final ApplicationItem entity) {
+        return ApplicationItemDto.builder()
                 .id(entity.getId())
                 .amount(entity.getAmount())
                 .cost(entity.getCost())
@@ -34,7 +34,7 @@ public class ItemsInApplicationMapper implements BaseMapper<ApplicationItem, Ite
                 .build();
     }
 
-    public void map(final ItemsInApplicationDto from, final ApplicationItem to) {
+    public void map(final ApplicationItemDto from, final ApplicationItem to) {
         to.setAmount(from.getAmount());
         to.setCost(from.getCost());
         to.setItem(itemMapper.map(from.getItemDto()));
