@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: IN-CCA-333
+      id: IN-CCA-337
       author: alesia_hlushakova
       changes:
         -  sqlFile:
