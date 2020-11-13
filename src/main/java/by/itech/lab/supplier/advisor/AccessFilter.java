@@ -57,11 +57,11 @@ public class AccessFilter {
         return proceed;
     }
 
-    @Pointcut("@annotation(SecurityAnnotation)")
-    public void callAtControllerSecurityAnnotation() {
+    @Pointcut("@annotation(by.itech.lab.supplier.advisor.AdminAccess)")
+    public void callAtControllerAdminAccess() {
     }
 
-    @Around("callAtControllerSecurityAnnotation()")
+    @Around("callAtControllerAdminAccess()")
     public Object aroundCallAt(ProceedingJoinPoint point) throws Throwable {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserImpl principal = (UserImpl) authentication.getPrincipal();
@@ -73,6 +73,5 @@ public class AccessFilter {
             throw new AccessDeniedException("No access");
         }
     }
-
 
 }

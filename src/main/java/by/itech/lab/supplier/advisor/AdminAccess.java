@@ -8,5 +8,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface SecurityAnnotation {
+public @interface AdminAccess {
 }
