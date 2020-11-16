@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -38,5 +39,7 @@ public class ItemsInWarehouse implements BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
     private LocalDate deletedAt;
+    @Column(nullable = false)
+    private BigDecimal cost;
 
 }

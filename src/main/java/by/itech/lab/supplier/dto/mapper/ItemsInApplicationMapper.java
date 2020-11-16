@@ -5,6 +5,8 @@ import by.itech.lab.supplier.dto.ItemsInApplicationDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 
 @Component
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, 
                 .amount(dto.getAmount())
                 .cost(dto.getCost())
                 .item(itemMapper.map(dto.getItemDto()))
-                .deletedAt(dto.getDeletedAt())
+                .acceptedAt(dto.getAcceptedAt())
                 .build();
     }
 
@@ -30,7 +32,7 @@ public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, 
                 .amount(entity.getAmount())
                 .cost(entity.getCost())
                 .itemDto(itemMapper.map(entity.getItem()))
-                .deletedAt(entity.getDeletedAt())
+                .acceptedAt(entity.getAcceptedAt())
                 .build();
     }
 
@@ -38,6 +40,6 @@ public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, 
         to.setAmount(from.getAmount());
         to.setCost(from.getCost());
         to.setItem(itemMapper.map(from.getItemDto()));
-        to.setDeletedAt(from.getDeletedAt());
+        to.setAcceptedAt(from.getAcceptedAt());
     }
 }

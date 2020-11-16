@@ -27,4 +27,5 @@ public final class ApiConstants {
     public final static String URL_NUMBER = "/number";
     public final static String URL_LABEL = "/label";
     public final static String URL_STATUS = "/status";
+    public final static String URL_CAPACITY="/capacity";
 }

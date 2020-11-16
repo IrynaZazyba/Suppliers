@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,4 +48,7 @@ public class Warehouse implements BaseEntity {
     @OneToMany(mappedBy = "warehouse")
     @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
+    @OneToMany(mappedBy = "warehouse", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @EqualsAndHashCode.Exclude
+    private Set<ItemsInWarehouse> items=new HashSet<>();
 }

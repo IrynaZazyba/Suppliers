@@ -30,4 +30,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("update Application set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
 
+    Optional<Application> findById(Long id);
+
+
 }

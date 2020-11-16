@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
@@ -8,9 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 
@@ -30,4 +34,18 @@ public class WarehouseController {
     public WarehouseDto findById(@PathVariable final Long id) {
         return warehouseService.findById(id);
     }
+
+
+    @PostMapping("/{id}/items")
+    public void acceptItem(@PathVariable Long id, @RequestBody ApplicationDto applicationDto) {
+        //todo check url id with application destination
+        warehouseService.acceptItems(applicationDto);
+    }
+
+    @GetMapping(URL_ID_PARAMETER+URL_CAPACITY)
+    public Double getAvailableCapacity(@PathVariable Long id) {
+        return warehouseService.getAvailableCapacity(id);
+    }
+
+
 }

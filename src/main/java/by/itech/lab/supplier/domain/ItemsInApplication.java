@@ -24,7 +24,6 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table
-@Where(clause = "deleted_at is null")
 public class ItemsInApplication implements BaseEntity {
 
     @Id
@@ -43,6 +42,6 @@ public class ItemsInApplication implements BaseEntity {
     private BigDecimal cost;
     @Column(nullable = false)
     private Double amount;
-    private LocalDate deletedAt;
+    private LocalDate acceptedAt;
 
 }

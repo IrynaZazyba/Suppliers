@@ -42,11 +42,11 @@ public class Application implements BaseEntity {
     @Column(nullable = false)
     private LocalDate lastUpdated;
     @ManyToOne
-    @JoinColumn(name = "source_location_address_id")
-    private Address sourceLocationAddress;
+    @JoinColumn(name = "source_location_warehouse_id")
+    private Warehouse sourceLocationAddress;
     @ManyToOne
-    @JoinColumn(name = "destination_location_address_id")
-    private Address destinationLocationAddress;
+    @JoinColumn(name = "destination_location_warehouse_id")
+    private Warehouse destinationLocationAddress;
     @ManyToOne
     @JoinColumn(name = "created_by_users_id")
     private User createdByUsers;
