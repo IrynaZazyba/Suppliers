@@ -31,7 +31,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final UserRepository userRepository;
     private final WarehouseMapper warehouseMapper;
     private final AddressMapper addressMapper;
-    private final UserMapper userMapper;
 
     @Override
     public Page<WarehouseDto> findAll(final Pageable pageable) {
