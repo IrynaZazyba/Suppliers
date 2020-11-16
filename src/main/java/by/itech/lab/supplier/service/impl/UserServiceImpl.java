@@ -88,4 +88,9 @@ public class UserServiceImpl implements UserService {
                 .active(false)
                 .build();
     }
+
+    @Override
+    public Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable) {
+        return userRepository.getAllDispatchers(customerId, pageable, Role.ROLE_DISPATCHER).map(userMapper::map);
+    }
 }

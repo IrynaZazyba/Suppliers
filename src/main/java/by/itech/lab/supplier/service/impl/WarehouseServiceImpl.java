@@ -2,11 +2,10 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Customer;
-import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.Warehouse;
-import by.itech.lab.supplier.dto.AddressDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.AddressMapper;
+import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.AddressRepository;
@@ -32,7 +31,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final UserRepository userRepository;
     private final WarehouseMapper warehouseMapper;
     private final AddressMapper addressMapper;
-
+    private final UserMapper userMapper;
 
     @Override
     public Page<WarehouseDto> findAll(final Pageable pageable) {
@@ -45,49 +44,32 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 
-    @Transactional
     @Override
+    @Transactional
     public WarehouseDto save(final WarehouseDto warehouseDto) {
-        Warehouse warehouse = warehouseMapper.map(warehouseDto);
-        Address savedAddress = addressCreate(warehouseDto.getAddressDto());
-        warehouse.setAddress(savedAddress);
-        Customer customer = customerRepository.findById(warehouseDto.getCustomerId()).orElseThrow();
-        warehouse.setCustomer(customer);
-        final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
-
-        for (User user : warehouse.getUsers()) {
-            user.setWarehouse(warehouse);
-            userRepository.save(user);
-        }
-        return warehouseMapper.map(savedWarehouse);
+        Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
+                .map(item -> update(warehouseDto))
+                .orElseGet(() -> create(warehouseDto));
+        return warehouseMapper.map(warehouse);
     }
 
-    @Transactional
-    @Override
-    public WarehouseDto update(final WarehouseDto warehouseDto) {
-        Warehouse entity = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
-        final Address existingAddress = addressRepository.findById(entity.getAddress().getId()).orElseThrow();
+    private Warehouse create(final WarehouseDto warehouseDto) {
+        Warehouse warehouse = warehouseMapper.map(warehouseDto);
+        Customer customer = customerRepository.findById(warehouseDto.getCustomerId()).orElseThrow();
+        warehouse.setCustomer(customer);
+        Warehouse saved = warehouseRepository.save(warehouse);
+        userRepository.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
+        return saved;
+    }
+
+    private Warehouse update(final WarehouseDto warehouseDto) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
+        final Address existingAddress = addressRepository.findById(warehouse.getAddress().getId()).orElseThrow();
         warehouseDto.getAddressDto().setId(existingAddress.getId());
         addressMapper.map(warehouseDto.getAddressDto(), existingAddress);
         addressRepository.save(existingAddress);
-
-        Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
-                .map(item -> {
-                    final Warehouse existingWarehouse = warehouseRepository
-                            .findById(warehouseDto.getId())
-                            .orElseThrow();
-                    warehouseMapper.map(warehouseDto, existingWarehouse);
-                    return existingWarehouse;
-                })
-                .orElseThrow();
-
-        final Warehouse savedWarehouse = warehouseRepository.save(warehouse);
-        return warehouseMapper.map(savedWarehouse);
-    }
-
-    private Address addressCreate(final AddressDto addressDto) {
-        Address address = addressMapper.map(addressDto);
-        return addressRepository.save(address);
+        warehouseMapper.map(warehouseDto, warehouse);
+        return warehouseRepository.save(warehouse);
     }
 
     @Transactional

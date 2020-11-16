@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -28,5 +28,6 @@ public class WarehouseDto implements BaseDto {
     private Double totalCapacity;
     @NotBlank
     private AddressDto addressDto;
-    private Set<UserDto> usersDto = new HashSet<>();
+    @NotBlank(message = "You must have at least one dispatcher selected")
+    private List<Long> usersId = new ArrayList<>();
 }

@@ -8,5 +8,4 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Page<WarehouseDto> findAll(Pageable pageable);
 
-    WarehouseDto update(WarehouseDto warehouseDto);
 }

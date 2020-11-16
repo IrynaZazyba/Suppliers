@@ -21,8 +21,8 @@ import javax.validation.Valid;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
-import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 
 @RestController
 @AllArgsConstructor
@@ -49,8 +49,8 @@ public class WarehouseController {
 
     @PutMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public WarehouseDto updateWarehouse(@Valid @RequestBody WarehouseDto warehouseDto) {
-        return warehouseService.update(warehouseDto);
+    public WarehouseDto update(@Valid @RequestBody WarehouseDto warehouseDto) {
+        return warehouseService.save(warehouseDto);
     }
 
     @DeleteMapping(URL_ID_PARAMETER)

@@ -25,4 +25,5 @@ public interface UserService {
 
     Page<UserDto> getAllActive(Pageable pageable);
 
+    Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable);
 }
