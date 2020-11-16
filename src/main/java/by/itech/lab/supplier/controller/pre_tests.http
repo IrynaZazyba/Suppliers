@@ -132,7 +132,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/warehouses/1
+GET http://localhost:8080/customers/3/warehouses/6
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}

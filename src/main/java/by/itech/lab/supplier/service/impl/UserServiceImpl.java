@@ -2,6 +2,7 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
+import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -91,5 +94,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable) {
         return userRepository.getAllDispatchers(customerId, pageable, Role.ROLE_DISPATCHER).map(userMapper::map);
+    }
+
+    @Override
+    public void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId) {
+        userRepository.setWarehouseIntoUser(warehouse, usersId);
     }
 }

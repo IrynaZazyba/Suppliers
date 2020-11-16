@@ -36,7 +36,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByActiveEquals(Pageable pageable, Boolean active);
 
     @Modifying
-    @Query("update User set warehouse = :warehouse where id IN :usersId")
+    @Query("update User set warehouse = :warehouse where id in :usersId")
     void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId);
 
     @Query("select u from User u where u.customer.id = :customerId " +

@@ -1,17 +1,14 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Address;
-import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.AddressMapper;
-import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.AddressRepository;
-import by.itech.lab.supplier.repository.CustomerRepository;
-import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
+import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,9 +23,8 @@ import java.util.Optional;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
-    private final CustomerRepository customerRepository;
     private final AddressRepository addressRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final WarehouseMapper warehouseMapper;
     private final AddressMapper addressMapper;
 
@@ -54,10 +50,9 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private Warehouse create(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
-        Customer customer = customerRepository.findById(warehouseDto.getCustomerId()).orElseThrow();
-        warehouse.setCustomer(customer);
+        warehouse.getCustomer().setId(warehouseDto.getCustomerId());
         Warehouse saved = warehouseRepository.save(warehouse);
-        userRepository.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
+        userService.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
         return saved;
     }
 
