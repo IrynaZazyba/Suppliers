@@ -31,10 +31,10 @@ public class UserServiceImpl implements UserService {
     private final MailService mailService;
 
     @Override
-    public Page<UserDto> findAllByActive( Pageable pageable,  boolean status) {
+    public Page<UserDto> findAllByActive( Pageable pageable,  Boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
-    private final MailService mailService;
+
 
     @Override
     public Optional<UserDto> findById(Long id) {
