@@ -1,7 +1,6 @@
 
 package by.itech.lab.supplier.dto.mapper;
 
-import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import lombok.AllArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
     private final AddressMapper addressMapper;
+    private final CustomerMapper customerMapper;
 
     @Override
     public Warehouse map(WarehouseDto dto) {
@@ -21,7 +21,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
                 .address(addressMapper.map(dto.getAddressDto()))
-                .customer(new Customer())
+                .customer(customerMapper.map(dto.getCustomerId()))
                 .build();
     }
 
