@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-//import validateUser from "../../validation/UserValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
 
 function ModalAddUser(props) {
@@ -79,8 +78,8 @@ function ModalAddUser(props) {
     };
     const addUserHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateUser(userDto);
-        setError(validationResult);
+     //   let validationResult = validateUser(userDto);
+       // setError(validationResult);
       //  if (validationResult.length === 0) {
             fetch('/users', {
                 method: 'POST',

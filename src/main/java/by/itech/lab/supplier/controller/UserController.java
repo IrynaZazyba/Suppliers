@@ -57,11 +57,6 @@ public class UserController {
         return userService.save(userDto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    public int changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
-        return userService.changeActiveStatus(id, status);
-    }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
@@ -74,6 +69,12 @@ public class UserController {
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
         return userService.save(userDTO);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
+    public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
+        userService.changeActiveStatus(id, status);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)

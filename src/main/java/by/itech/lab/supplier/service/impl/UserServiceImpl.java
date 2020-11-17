@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> findAllByActive( Pageable pageable,  boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
+    private final MailService mailService;
 
     @Override
     public Optional<UserDto> findById(Long id) {
@@ -51,8 +52,6 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> getAllActive(Pageable pageable) {
         return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
     }
-
-
 
     @Transactional
     public UserDto save(UserDto userDTO) {

@@ -10,6 +10,7 @@ import ProtectedComponent from "./components/ProtectedComponent";
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
+import Users from "./pages/user/Users"
 import {AuthContext} from "./context/authContext";
 
 function App() {
@@ -29,6 +30,13 @@ function App() {
         })}/>
     };
 
+    const renderUser = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+            return <Users/>
+        })}/>
+    };
+
+
     return (
         <UserContext>
             <Header/>
@@ -36,6 +44,7 @@ function App() {
                 <Route exact path='/' component={Login}/>
                 <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
                 <Route path={'/customers'} render={renderCustomer}/>
+                <Route path={'/users'} render={renderUser}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>
