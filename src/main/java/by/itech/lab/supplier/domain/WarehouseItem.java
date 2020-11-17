@@ -24,7 +24,7 @@ import java.time.LocalDate;
 @Entity
 @Table
 @Where(clause = "deleted_at is null")
-public class ItemsInWarehouse implements BaseEntity {
+public class WarehouseItem implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

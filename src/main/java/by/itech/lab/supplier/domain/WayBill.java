@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +27,8 @@ import java.sql.Date;
 @Builder
 @Entity
 @Table(name = "waybill")
+@FilterDef(name = "accessFilter", parameters = @ParamDef(name = "companyId", type = "long"))
+@Filter(name = "accessFilter", condition = "customer_id = :companyId")
 public class WayBill implements BaseEntity {
 
     @Id
@@ -53,5 +58,6 @@ public class WayBill implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "car_driver_id")
     private User driver;
+    private Long customerId;
 
 }

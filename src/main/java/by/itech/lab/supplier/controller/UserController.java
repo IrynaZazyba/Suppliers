@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
@@ -39,16 +41,19 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @AdminAccess
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         return userService.save(userDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
+    @AdminAccess
     public int changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
         return userService.changeActiveStatus(id, status);
     }
 
+    //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
@@ -58,6 +63,7 @@ public class UserController {
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
     }
