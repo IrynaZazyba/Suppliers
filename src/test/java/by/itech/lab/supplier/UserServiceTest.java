@@ -6,9 +6,11 @@ import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.impl.UserServiceImpl;
+import by.itech.lab.supplier.service.mail.MailServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -31,11 +33,11 @@ public class UserServiceTest {
     private static final String USERNAME = "johndoe";
     private static final String EMAIL = "johndoe@localhost";
     @Mock
-    DateTimeProvider dateTimeProvider;
-    @Mock
     private UserRepository userRepository;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    private MailServiceImpl mailService;
     @InjectMocks
     private UserServiceImpl userService;
     private UserDto userDto;
@@ -44,7 +46,7 @@ public class UserServiceTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository, userMapper);
+        userService = new UserServiceImpl(userRepository, userMapper, mailService);
         Address address = new Address();
         address.setAddressLine1("address1");
         address.setAddressLine2("address2");
@@ -60,9 +62,7 @@ public class UserServiceTest {
         userDto.setName("john");
         userDto.setRole(Role.ROLE_ADMIN);
         userDto.setSurname("doe");
-        userDto.setAddress(address);
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
-//        userDto.setCustomerDto(customerDto);
         user = new User();
         user.setUsername(USERNAME);
         user.setPassword("password");
@@ -71,7 +71,7 @@ public class UserServiceTest {
         user.setName("john");
         user.setRole(Role.ROLE_ADMIN);
         user.setSurname("doe");
-        user.setAddress(address);
+
         user.setBirthday(LocalDate.of(1999, 11, 15));
         user.setCustomer(customer);
 

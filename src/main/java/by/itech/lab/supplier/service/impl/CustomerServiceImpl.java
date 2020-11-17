@@ -1,6 +1,8 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Customer;
+import by.itech.lab.supplier.domain.Role;
+import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -37,22 +40,28 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerDto save(CustomerDto customerDto) {
+    public CustomerDto save(final CustomerDto customerDto) {
         Customer customer = Optional.ofNullable(customerDto.getId())
-                .map(item -> {
-                    final Customer existing = customerRepository
-                            .findById(customerDto.getId())
-                            .orElseThrow();
-                    customerMapper.map(customerDto, existing);
-                    return existing;
-                })
-                .orElseGet(() -> customerMapper.map(customerDto));
+                .map(item -> update(customerDto))
+                .orElseGet(() -> create(customerDto));
+        return customerMapper.map(customer);
+    }
 
-        customer.setRegistrationDate(LocalDate.now());
-        final Customer saved = customerRepository.save(customer);
+    private Customer create(CustomerDto customerDto) {
+        Customer newCustomer = customerMapper.map(customerDto);
+        newCustomer.setRegistrationDate(LocalDate.now());
+        final Customer saved = customerRepository.save(newCustomer);
         customerDto.setId(saved.getId());
         userService.save(userService.createAdmin(customerDto));
-        return customerMapper.map(saved);
+        return saved;
+    }
+
+    private Customer update(CustomerDto customerDto) {
+        final Customer existing = customerRepository
+                .findById(customerDto.getId())
+                .orElseThrow();
+        customerMapper.map(customerDto, existing);
+        return customerRepository.save(existing);
     }
 
     @Transactional
@@ -63,6 +72,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public void changeActive(Long id, boolean status) {
+        Optional<Customer> customerById = customerRepository.findById(id);
+        if (customerById.isEmpty()) {
+            return;
+        }
+        Customer customer = customerById.get();
+        Set<User> users = customer.getUsers();
+        for (User u : users) {
+            if (!status || (!customer.isActive() && u.getRole() == Role.ROLE_ADMIN)) {
+                userService.changeActiveStatus(u.getId(), status);
+            }
+        }
         customerRepository.setStatus(status, id);
     }
 }

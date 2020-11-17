@@ -9,7 +9,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper implements BaseMapper<User, UserDto> {
 
-    private final CustomerMapper customerMapper;
+    private final AddressMapper addressMapper;
+
+    private CustomerMapper customerMapper;
 
     @Override
     public UserDto map(User user) {
@@ -21,14 +23,11 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .email(user.getEmail())
                 .birthday(user.getBirthday())
                 .active(user.isActive())
+                .password(user.getPassword())
                 .role(user.getRole())
+                .customerDto(user.getCustomer() != null ? customerMapper.map(user.getCustomer()) : null)
                 .deletedAt(user.getDeletedAt())
-                .creatorApplications(user.getCreatorApplications())
-                .updatorApplications(user.getUpdatorApplications())
-                .creatorWayBills(user.getCreatorWayBills())
-                .driverWayBills(user.getDriverWayBills())
-                .address(user.getAddress())
-                .customerDto(customerMapper.map(user.getCustomer()))
+                .addressDto(user.getAddress() != null ? addressMapper.map(user.getAddress()) : null)
                 .build();
     }
 
@@ -39,31 +38,25 @@ public class UserMapper implements BaseMapper<User, UserDto> {
         to.setActive(from.isActive());
         to.setDeletedAt(from.getDeletedAt());
         to.setRole(from.getRole());
-        to.setCreatorApplications(from.getCreatorApplications());
-        to.setUpdatorApplications(from.getUpdatorApplications());
-        to.setCreatorWayBills(from.getCreatorWayBills());
-        to.setDriverWayBills(from.getDriverWayBills());
-        to.setAddress(from.getAddress());
-        to.setCustomer(customerMapper.map(from.getCustomerDto()));
+        to.setAddress(addressMapper.map(from.getAddressDto()));
     }
 
     @Override
     public User map(UserDto userDTO) {
         return User.builder()
+                .id(userDTO.getId())
                 .username(userDTO.getUsername())
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
                 .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
                 .birthday(userDTO.getBirthday())
                 .active(userDTO.isActive())
                 .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
-                .creatorApplications(userDTO.getCreatorApplications())
-                .updatorApplications(userDTO.getUpdatorApplications())
-                .creatorWayBills(userDTO.getCreatorWayBills())
-                .driverWayBills(userDTO.getDriverWayBills())
-                .address(userDTO.getAddress())
-                .customer(customerMapper.map(userDTO.getCustomerDto()))
+                .customer(userDTO.getCustomerDto() != null ? customerMapper.map(userDTO.getCustomerDto()) : null)
+                .address(userDTO.getAddressDto() != null ? addressMapper.map(userDTO.getAddressDto()) : null)
                 .build();
     }
+
 }

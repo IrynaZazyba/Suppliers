@@ -32,6 +32,10 @@ code {
     color: white !important;
 }
 
+.navigation{
+    height: 45px;
+}
+
 .mainButton {
     background-color: #1A7FA8 !important;
 }
@@ -85,6 +89,10 @@ code {
     padding-left: 5px !important;
 }
 
+.card-body .table{
+    margin-top: 25px;
+}
+
 .pagination span{
     background-color:  #1A7FA8 !important;
     border-color: #1A7FA8 !important;
@@ -121,6 +129,9 @@ a.page-link{
 
 .modal-content{
     border-radius: .2rem !important;
+}
 
+.nav-link.active{
+    color: #009edd !important;
 }
 

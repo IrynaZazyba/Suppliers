@@ -6,7 +6,6 @@ import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,14 +30,12 @@ import java.util.Optional;
 @RequestMapping(ApiConstants.URL_USER)
 public class UserController {
 
-    @Autowired
     private final UserService userService;
-
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public Optional<UserDto> getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
-       return userService.findById(id);
+        return userService.findById(id);
     }
 
     @GetMapping
@@ -62,8 +59,14 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
-    public boolean changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
+    public int changeActiveStatus(@PathVariable Long id, @PathVariable boolean status) {
         return userService.changeActiveStatus(id, status);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
+    public int changePassword(@PathVariable Long id, @PathVariable String password) {
+        return userService.changePassword(id, password);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)

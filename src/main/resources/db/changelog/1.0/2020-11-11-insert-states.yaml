@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: IN-CSA-1
+      author: iryna_zazybo
+      changes:
+        -  sqlFile:
+             dbms:  '!h2,  oracle,  mysql'
+             encoding:  UTF-8
+             endDelimiter: ;
+             path: ../sql/2020-11-11-usa-states.sql
+             relativeToChangelogFile: true
+             splitStatements:  true
+             stripComments:  true
+  - changeSet:
+      id: IN-CSA-2
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-11-11-update-address.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true

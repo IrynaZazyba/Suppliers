@@ -1,26 +1,23 @@
 package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Category;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
+@Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    Optional<Category> findByCategory(final String categoryName);
 
-    @Query("select c from Category c where :active is null or c.active=:active")
-    Page<Category> findAllByActive(Pageable pageable, @Param("active") Boolean active);
-
-    @Modifying
-    @Query("update Category set active = false where id = :id")
-    void delete(@Param("id") Long id);
+    @Query("select c from Category c where c.category = :category")
+    Optional<Category> findByCategory(@Param("category") final String categoryName);
 
     @Modifying
-    @Query("update Category set active = true where id = :id")
-    void activate(@Param("id") Long id);
+    @Query("update Category set deletedAt = :deletedTime where id = :id")
+    void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
+
 }
