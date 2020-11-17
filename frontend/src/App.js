@@ -18,6 +18,8 @@ function App() {
     const {user, setUser} = useContext(AuthContext);
     const currentCustomerId = user && user.currentCustomerId ? user.currentCustomerId : 0;
 
+    localStorage.setItem("currentCustomerId", currentCustomerId);
+
     const renderProfile = () => {
         return <ProtectedComponent conditions={user} render={(() => {
             return <Profile/>

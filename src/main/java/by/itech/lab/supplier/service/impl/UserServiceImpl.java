@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
     public Page<UserDto> findAllByActive( Pageable pageable,  boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
-    private final MailService mailService;
 
     @Override
     public Optional<UserDto> findById(Long id) {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -6,24 +6,44 @@ import ErrorMessage from "../../messages/errorMessage";
 
 function ModalAddUser(props) {
 
-    const [userDto,setUser] = useState({
-        name: '',
-        surname:'',
-        birthday:'',
-        address:null,
-        role:'',
-        username:'',
-        email: ''
+
+    const currentCustomerId = localStorage.
+    getItem("currentCustomerId") != null ? localStorage.
+    getItem("currentCustomerId"): 0;
+
+
+    const [customerDto, setCustomer] = useState({
+        id: '',
+        name: ''
     });
-     const [address,setAddress] = useState({
+
+    const [addressDto,setAddress] = useState({
         city: '',
         state:'',
         addressLine1:'',
         addressLine2:''
     });
+    const [userDto,setUser] = useState({
+        name: '',
+        surname:'',
+        birthday:'',
+        addressDto:null,
+        role:'',
+        username:'',
+        email: '',
+        customerDto:null
+    });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
+    useEffect(() => {
 
+            fetch("/customers/" + currentCustomerId)
+                .then(response => response.json())
+                .then(res => {
+                    setCustomer(res);
+                });
+
+    });
     const handleName = (e) => {
     setUser(preState => ({
             ...preState,
@@ -73,7 +93,7 @@ function ModalAddUser(props) {
         }));
         setUser(preState => ({
             ...preState,
-           address: address
+           address: addressDto
         }));
     };
     const addUserHandler = (e) => {
