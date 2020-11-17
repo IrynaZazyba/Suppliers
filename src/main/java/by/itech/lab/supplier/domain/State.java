@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class State implements BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String state;
+    @JsonIgnore
     @OneToMany(mappedBy = "state")
     private Set<Tax> taxes = new HashSet<>();
 

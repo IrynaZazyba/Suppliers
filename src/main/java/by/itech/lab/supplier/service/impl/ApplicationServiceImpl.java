@@ -2,7 +2,6 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
-import by.itech.lab.supplier.domain.ItemsInApplication;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ItemsInApplicationDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
@@ -113,6 +112,11 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .stream()
                 .map(itemsInApplicationMapper::map)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public void setItemInApplicationAcceptedAt(List<Long> ids) {
+       itemInApplicationRepository.setAcceptedAtForItemsInApplication(ids);
     }
 
 }

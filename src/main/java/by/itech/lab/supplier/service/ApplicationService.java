@@ -23,4 +23,5 @@ public interface ApplicationService extends BaseSimpleService<ApplicationDto> {
 
     Set<ItemsInApplicationDto> getItemsById(List<Long> itemsId, Long applicationId);
 
+    void setItemInApplicationAcceptedAt(List<Long> ids);
 }

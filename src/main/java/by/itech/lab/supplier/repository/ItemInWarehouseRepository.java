@@ -12,7 +12,7 @@ public interface ItemInWarehouseRepository extends JpaRepository<ItemsInWarehous
     @Query("select i from ItemsInWarehouse i where i.item.id=:id and i.warehouse.id=:warehouseId")
     Optional<ItemsInWarehouse> findByItemId(@Param("id") Long id, @Param("warehouseId") Long warehouseId);
 
-    @Query("select i.warehouse.totalCapacity-sum(i.amount*i.item.units) " +
+    @Query("select i.warehouse.totalCapacity-COALESCE(sum(i.amount*i.item.units),0) " +
             "from ItemsInWarehouse as i where i.warehouse.id=:warehouseId")
     Double getAvailableCapacity(@Param("warehouseId") Long warehouseId);
 }

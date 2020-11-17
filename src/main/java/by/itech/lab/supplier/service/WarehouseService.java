@@ -9,7 +9,7 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Page<WarehouseDto> findAll(Pageable pageable);
 
-    void acceptItems(ApplicationDto applicationDto);
+    void acceptItems(ApplicationDto applicationDto, Long warehouseId);
 
     Double getAvailableCapacity(Long warehouseId);
 }

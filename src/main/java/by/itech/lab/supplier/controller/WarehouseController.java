@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEMS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 
 @RestController
@@ -36,10 +37,9 @@ public class WarehouseController {
     }
 
 
-    @PostMapping("/{id}/items")
+    @PostMapping(URL_ID_PARAMETER+URL_ITEMS)
     public void acceptItem(@PathVariable Long id, @RequestBody ApplicationDto applicationDto) {
-        //todo check url id with application destination
-        warehouseService.acceptItems(applicationDto);
+        warehouseService.acceptItems(applicationDto,id);
     }
 
     @GetMapping(URL_ID_PARAMETER+URL_CAPACITY)

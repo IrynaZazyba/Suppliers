@@ -21,7 +21,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
                 .address(dto.getAddress())
-                .customer(customerMapper.map(dto.getCustomerDto()))
+                .customer(dto.getCustomerDto()!=null?customerMapper.map(dto.getCustomerDto()):null)
                 .build();
     }
 
@@ -33,7 +33,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
                 .address(entity.getAddress())
-                .customerDto(customerMapper.map(entity.getCustomer()))
+                .customerDto(entity.getCustomer()!=null?customerMapper.map(entity.getCustomer()):null)
                 .build();
     }
 }

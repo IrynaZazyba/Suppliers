@@ -122,6 +122,43 @@ Cookie: {{test}}
 #Cookie: {{test}}
 
 ###
+POST http://localhost:8080/warehouses/20/items
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "items": [
+    {
+      "id": 34
+    },
+    {
+      "id": 38
+    }
+  ],
+  "id": 10
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+GET http://localhost:8080/warehouses/2/capacity
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
 
 GET http://localhost:8080/users
 Content-Type: application/json
@@ -414,25 +451,11 @@ Cookie: {{test}}
   "number": "Test",
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
-  "sourceLocationAddressDto": {
-    "id": 3,
-    "city": "NY",
-    "addressLine1": "Lexington Avenue",
-    "addressLine2": "Slobodskaya str.",
-    "state": {
-      "id": 4,
-      "state": "Alabama"
-    }
+  "sourceLocationDto": {
+    "id":1
   },
-  "destinationLocationAddressDto": {
-    "id": 3,
-    "city": "NY",
-    "addressLine1": "Lexington Avenue",
-    "addressLine2": "Slobodskaya str.",
-    "state": {
-      "id": 4,
-      "state": "Alabama"
-    }
+  "destinationLocationDto": {
+    "id": 3
   },
   "createdByUsersDto": {
     "active": true,
@@ -617,3 +640,5 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
+###

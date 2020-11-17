@@ -9,3 +9,6 @@ UPDATE application SET source_location_warehouse_id=11, destination_location_war
 UPDATE application SET source_location_warehouse_id=13, destination_location_warehouse_id=14 where id between 67 and 77;
 UPDATE application SET source_location_warehouse_id=15, destination_location_warehouse_id=16 where id between 78 and 88;
 UPDATE application SET source_location_warehouse_id=17, destination_location_warehouse_id=18 where id between 89 and 100;
+
+UPDATE warehouse SET total_capacity= 100000000 where id between 1 and 20;
+

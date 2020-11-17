@@ -17,11 +17,13 @@ import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -64,21 +66,22 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional
-    public void acceptItems(final ApplicationDto appDto) {
-        //todo think about warehouseId
+    public void acceptItems(final ApplicationDto appDto, final Long warehouseId) {
         lock.lock();
         try {
             applicationService.changeStatus(appDto.getId(), ApplicationStatus.STARTED_PROCESSING);
             final ApplicationDto appFromDb = applicationService.findById(appDto.getId());
-            final Set<ItemsInApplicationDto> acceptedToWarehouse = getItemsToAccept(appDto.getItems(), appDto.getId());
-
-            final Double capacityApp = applicationService.getCapacityItemInApplication(acceptedToWarehouse);
-            if (getAvailableCapacity(4L) < capacityApp) {
-                throw new ConflictWithTheCurrentStateException("Warehouse capacity not allow to accept items");
+            final Long destinationLocationId = appFromDb.getDestinationLocationDto().getId();
+            if (!destinationLocationId.equals(warehouseId)) {
+                throw new AccessDeniedException("Application doesn't belong to the requested warehouse");
             }
-            acceptToWarehouse(acceptedToWarehouse, appFromDb);
-            if (applicationService.isApplicationFullySatisfied(appFromDb.getId())) {
-                applicationService.changeStatus(appDto.getId(), ApplicationStatus.FINISHED_PROCESSING);
+            final Long appId = appFromDb.getId();
+            final Set<ItemsInApplicationDto> acceptedToWarehouse = getItemsToAccept(appDto.getItems(), appId);
+
+            checkWarehouseCapacity(acceptedToWarehouse, destinationLocationId);
+            acceptToWarehouse(acceptedToWarehouse, destinationLocationId);
+            if (applicationService.isApplicationFullySatisfied(appId)) {
+                applicationService.changeStatus(appId, ApplicationStatus.FINISHED_PROCESSING);
             }
         } finally {
             lock.unlock();
@@ -87,36 +90,39 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Double getAvailableCapacity(final Long warehouseId) {
-        return itemInWarehouseRepository.getAvailableCapacity(warehouseId);
+        Double availableCapacity = itemInWarehouseRepository.getAvailableCapacity(warehouseId);
+        return Objects.isNull(availableCapacity) ?
+                warehouseRepository.getTotalCapacity(warehouseId)
+                : availableCapacity;
     }
 
     private Set<ItemsInApplicationDto> getItemsToAccept(final Set<ItemsInApplicationDto> itemToAccept,
                                                         final Long appId) {
         final List<Long> acceptedItemInAppId = itemToAccept
-                .stream().map(ItemsInApplicationDto::getId).collect(Collectors.toList());
+                .stream()
+                .map(ItemsInApplicationDto::getId)
+                .collect(Collectors.toList());
         final Set<ItemsInApplicationDto> acceptedItemFromDb = applicationService
                 .getItemsById(acceptedItemInAppId, appId);
         if (acceptedItemFromDb.size() != itemToAccept.size()) {
-            throw new ConflictWithTheCurrentStateException(
-                    "Attempt to accept doesn't exist or already accepted item");
+            throw new ConflictWithTheCurrentStateException("Attempt to accept doesn't exist or already accepted item");
         }
         return acceptedItemFromDb;
     }
 
     private void acceptToWarehouse(final Set<ItemsInApplicationDto> acceptedToWarehouse,
-                                   final ApplicationDto app) {
-        final Long warehouseId = app.getDestinationLocationDto().getId();
+                                   final Long warehouseId) {
+        List<Long> acceptedIds = new ArrayList<>();
         acceptedToWarehouse.forEach(itemToAccept -> {
             final Long itemId = itemToAccept.getItemDto().getId();
             final Optional<ItemsInWarehouse> iiw = itemInWarehouseRepository.findByItemId(itemId, warehouseId);
             final ItemsInWarehouse itemsInWarehouse = iiw.map(
                     items -> updateItemInWarehouse(items, itemToAccept))
                     .orElseGet(() -> createItemInWarehouse(warehouseId, itemToAccept));
-            itemToAccept.setAcceptedAt(LocalDate.now());
+            acceptedIds.add(itemToAccept.getId());
             itemInWarehouseRepository.save(itemsInWarehouse);
         });
-        //todo save itemInApplication acceptedAt
-        //applicationService.saveItemInApplication(acceptedToWarehouse);
+        applicationService.setItemInApplicationAcceptedAt(acceptedIds);
     }
 
     private ItemsInWarehouse updateItemInWarehouse(final ItemsInWarehouse itemsInWarehouse,
@@ -137,6 +143,14 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .cost(itemsInApplication.getCost())
                 .warehouse(Warehouse.builder().id(warehouseId).build())
                 .build();
+    }
+
+    private void checkWarehouseCapacity(Set<ItemsInApplicationDto> acceptedToWarehouse,
+                                        Long destinationLocationId) {
+        final Double capacityApp = applicationService.getCapacityItemInApplication(acceptedToWarehouse);
+        if (getAvailableCapacity(destinationLocationId) < capacityApp) {
+            throw new ConflictWithTheCurrentStateException("Warehouse capacity not allow to accept items");
+        }
     }
 
 }

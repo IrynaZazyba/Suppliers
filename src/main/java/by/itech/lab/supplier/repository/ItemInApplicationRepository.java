@@ -2,6 +2,7 @@ package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.ItemsInApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,5 +15,9 @@ public interface ItemInApplicationRepository extends JpaRepository<ItemsInApplic
 
     @Query("select count(i) from ItemsInApplication i where i.application.id=:appId and i.acceptedAt is null")
     int getCountUnsatisfiedItems(@Param("appId") Long appId);
+
+    @Modifying
+    @Query("update ItemsInApplication i set i.acceptedAt= current_timestamp where i.id in (:appsId)")
+    int setAcceptedAtForItemsInApplication(@Param("appsId") List<Long> appsId);
 
 }
