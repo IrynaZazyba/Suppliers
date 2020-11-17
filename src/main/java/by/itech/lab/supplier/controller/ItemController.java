@@ -28,7 +28,9 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto save(@Valid @RequestBody ItemDto itemDto) {
+    public ItemDto save(@Valid @RequestBody ItemDto itemDto,
+                        @PathVariable Long customerId) {
+        itemDto.setCustomerId(customerId);
         return itemService.save(itemDto);
     }
 

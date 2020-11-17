@@ -15,3 +15,11 @@ databaseChangeLog:
             columns:
               - column:
                   name: customer_id
+  - changeSet:
+      id: SUP-78-3
+      author: alexander_popovich
+      changes:
+        - dropUniqueConstraint:
+            constraintName: categoty
+            tableName: category
+            uniqueColumns: category
