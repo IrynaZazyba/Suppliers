@@ -220,7 +220,7 @@ Cookie: {{test}}
 
 ###
 
-POST http://localhost:8080/customers/3/customers/3/users
+POST http://localhost:8080/customers/3/users
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -261,6 +261,7 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
+###
 #---------------------------------------------------Category----------------------------------------------------------
 
 POST http://localhost:8080/category
