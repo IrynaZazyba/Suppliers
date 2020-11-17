@@ -38,7 +38,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
         to.setActive(from.isActive());
         to.setDeletedAt(from.getDeletedAt());
         to.setRole(from.getRole());
-        to.setAddress(addressMapper.map(from.getAddressDto()));
+        to.setAddress(from.getAddressDto() != null ? addressMapper.map(from.getAddressDto()) : null);
     }
 
     @Override
