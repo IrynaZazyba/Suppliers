@@ -22,13 +22,15 @@ import javax.validation.Valid;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(ApiConstants.URL_CATEGORY)
+@RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + ApiConstants.URL_CATEGORY)
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     @PostMapping
-    public CategoryDto save(@Valid @RequestBody CategoryDto categoryDto) {
+    public CategoryDto save(@Valid @RequestBody CategoryDto categoryDto,
+                            @PathVariable Long customerId) {
+        categoryDto.setCustomerId(customerId);
         return categoryService.save(categoryDto);
     }
 

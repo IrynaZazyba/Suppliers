@@ -19,12 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEM;
-
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(URL_ITEM)
+@RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + ApiConstants.URL_ITEM)
 public class ItemController {
 
     private final ItemService itemService;
