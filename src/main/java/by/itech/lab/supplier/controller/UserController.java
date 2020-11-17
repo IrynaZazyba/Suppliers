@@ -49,6 +49,12 @@ public class UserController {
         return userService.changeActiveStatus(id, status);
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
+    public int changePassword(@PathVariable Long id, @PathVariable String password) {
+        return userService.changePassword(id, password);
+    }
+
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {

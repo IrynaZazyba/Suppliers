@@ -73,6 +73,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public int changePassword(Long id, String password) {
+        return userRepository.changePassword(password, id);
+    }
+
+    @Override
+    @Transactional
     public void delete(Long id) {
         userRepository.delete(id);
     }

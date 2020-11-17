@@ -23,6 +23,8 @@ public interface UserService {
 
     int changeActiveStatus(Long id, boolean status);
 
+    int changePassword(Long id, String password);
+
     Page<UserDto> getAllActive(Pageable pageable);
 
 }

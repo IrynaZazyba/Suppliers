@@ -23,6 +23,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User set active = :active where id = :id")
     int setStatus(@Param("active") boolean active, @Param("id") Long id);
 
+    @Modifying
+    @Query("update User set password = :password where id = :id")
+    int changePassword(@Param("password") String password, @Param("id") Long id);
+
     Optional<User> findOneByEmailIgnoreCase(String email);
 
     Optional<User> findOneWithRolesById(Long id);
