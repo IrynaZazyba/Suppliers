@@ -77,53 +77,78 @@ Cookie: {{test}}
 {"name":"New name"}
 
 ###
+#---------------------------------------------Warehouse----------------------------------------------------------------
 
-#GET http://localhost:8080/customers/3/warehouses
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
+POST http://localhost:8080/customers/3/warehouses
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
-###
-
-#GET http://localhost:8080/customers/3/warehouses/2
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-
-###
-
-#POST http://localhost:8080/customers/3/warehouses
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#{
-#  "identifier": "someIdentifier",
-#  "type": "someType",
-#  "totalCapacity": "8"
-#}
-
-###
-
-#PUT http://localhost:8080/customers/3/warehouses/8
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
-#{
-#  "identifier": "777",
-#  "type": "C",
-#  "totalCapacity": "7"
-#}
+{
+  "customerId": "3",
+  "identifier": "199",
+  "type" : "CCC",
+  "totalCapacity" : "44",
+  "addressDto" : {
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "44",
+    "state" : {
+      "id" : "5",
+      "state": "Alaska"
+    }
+  },
+  "usersId" : [3]
+}
 
 ###
 
-#DELETE http://localhost:8080/customers/3/warehouses/8
-#Content-Type: application/json
-#Connection: keep-alive
-#Cookie: {{test}}
+PUT http://localhost:8080/customers/3/warehouses/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "id" : "21",
+  "type" : "anotherType",
+  "totalCapacity" : "1",
+  "addressDto" : {
+    "id" : "104",
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "66",
+    "state" : {
+      "id" : "6",
+      "state": "Arizona"
+    }
+  }
+}
 
 ###
 
-GET http://localhost:8080/users
+GET http://localhost:8080/customers/3/warehouses
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/customers/3/warehouses/6
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+DELETE http://localhost:8080/customers/3/warehouses/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+#--------------------------------------------------Users---------------------------------------------------------------
+
+GET http://localhost:8080/customers/3/users
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -136,7 +161,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/users/1
+GET http://localhost:8080/customers/3/users/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -149,7 +174,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/users/5555
+GET http://localhost:8080/customers/3/users/5555
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -162,7 +187,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/users/companies
+GET http://localhost:8080/customers/3/users/companies
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -175,7 +200,7 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/users/2
+DELETE http://localhost:8080/customers/3/users/2
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -188,14 +213,14 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/users/1/1
+PUT http://localhost:8080/customers/3/users/1/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
 ###
 
-POST http://localhost:8080/users
+POST http://localhost:8080/customers/3/users
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -222,7 +247,7 @@ Cookie: {{test}}
   }
 }
 ###
-PUT http://localhost:8080/users/18
+PUT http://localhost:8080/customers/3/users/18
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -231,6 +256,12 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/customers/3/users/dispatchers
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
 #---------------------------------------------------Category----------------------------------------------------------
 
 POST http://localhost:8080/category
