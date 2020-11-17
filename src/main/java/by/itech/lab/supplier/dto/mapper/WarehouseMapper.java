@@ -14,7 +14,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
     private final CustomerMapper customerMapper;
 
     @Override
-    public Warehouse map(WarehouseDto dto) {
+    public Warehouse map(final WarehouseDto dto) {
         return Warehouse.builder()
                 .id(dto.getId())
                 .identifier(dto.getIdentifier())
@@ -26,7 +26,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
     }
 
     @Override
-    public WarehouseDto map(Warehouse entity) {
+    public WarehouseDto map(final Warehouse entity) {
         return WarehouseDto.builder()
                 .id(entity.getId())
                 .identifier(entity.getIdentifier())

@@ -86,7 +86,7 @@ Cookie: {{test}}
 
 {
   "customerId": "3",
-  "identifier": "127",
+  "identifier": "199",
   "type" : "CCC",
   "totalCapacity" : "44",
   "addressDto" : {
@@ -98,7 +98,7 @@ Cookie: {{test}}
       "state": "Alaska"
     }
   },
-  "usersId" : []
+  "usersId" : [3]
 }
 
 ###
@@ -109,10 +109,11 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "id" : "1",
+  "id" : "21",
   "type" : "anotherType",
-  "totalCapacity" : "10",
+  "totalCapacity" : "1",
   "addressDto" : {
+    "id" : "104",
     "city" : "Kanzas",
     "addressLine1" : "Linkoln Str.",
     "addressLine2" : "66",
@@ -145,7 +146,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
-#----------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------Users---------------------------------------------------------------
 
 GET http://localhost:8080/customers/3/users
 Content-Type: application/json

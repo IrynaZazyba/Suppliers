@@ -43,19 +43,19 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WarehouseDto save(@Valid @RequestBody WarehouseDto warehouseDto) {
+    public WarehouseDto save(@Valid @RequestBody final WarehouseDto warehouseDto) {
         return warehouseService.save(warehouseDto);
     }
 
     @PutMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public WarehouseDto update(@Valid @RequestBody WarehouseDto warehouseDto) {
+    public WarehouseDto update(@Valid @RequestBody final WarehouseDto warehouseDto) {
         return warehouseService.save(warehouseDto);
     }
 
     @DeleteMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable final Long id) {
         warehouseService.delete(id);
     }
 }

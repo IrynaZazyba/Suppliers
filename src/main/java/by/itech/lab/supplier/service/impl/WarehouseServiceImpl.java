@@ -1,12 +1,9 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
-import by.itech.lab.supplier.dto.mapper.AddressMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
-import by.itech.lab.supplier.repository.AddressRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
@@ -23,10 +20,8 @@ import java.util.Optional;
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
-    private final AddressRepository addressRepository;
-    private final UserService userService;
     private final WarehouseMapper warehouseMapper;
-    private final AddressMapper addressMapper;
+    private final UserService userService;
 
     @Override
     public Page<WarehouseDto> findAll(final Pageable pageable) {
@@ -57,10 +52,6 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private Warehouse update(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
-        final Address existingAddress = addressRepository.findById(warehouse.getAddress().getId()).orElseThrow();
-        warehouseDto.getAddressDto().setId(existingAddress.getId());
-        addressMapper.map(warehouseDto.getAddressDto(), existingAddress);
-        addressRepository.save(existingAddress);
         warehouseMapper.map(warehouseDto, warehouse);
         return warehouseRepository.save(warehouse);
     }
