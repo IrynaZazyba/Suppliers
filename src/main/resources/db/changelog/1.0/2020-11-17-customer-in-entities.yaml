@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-78-1
+      author: alexander_popovich
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: address
+            constraintName: fk_address_customer
+  - changeSet:
+      id: SUP-78-2
+      author: alexander_popovich
+      changes:
+        - dropColumn:
+            tableName: address
+            columns:
+              - column:
+                  name: customer_id
