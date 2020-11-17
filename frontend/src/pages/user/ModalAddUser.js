@@ -13,11 +13,13 @@ function ModalAddUser(props) {
 
 
     const [customerDto, setCustomer] = useState({
-        id: '',
+        id:  currentCustomerId,
         name: ''
     });
 
-    const [addressDto,setAddress] = useState({
+    const [states, setStates] = useState([]);
+
+    const [addressDto,setAddressDto] = useState({
         city: '',
         state:'',
         addressLine1:'',
@@ -27,23 +29,23 @@ function ModalAddUser(props) {
         name: '',
         surname:'',
         birthday:'',
-        addressDto:null,
-        role:'',
+        addressDto:addressDto,
+        role:'ROLE_SYSTEM_ADMIN',
         username:'',
         email: '',
-        customerDto:null
+        customerDto: customerDto
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
-    useEffect(() => {
-
-            fetch("/customers/" + currentCustomerId)
-                .then(response => response.json())
-                .then(res => {
-                    setCustomer(res);
-                });
-
-    });
+    // useEffect(() => {
+    //
+    //         fetch("/customers/" + currentCustomerId)
+    //             .then(response => response.json())
+    //             .then(res => {
+    //                 setCustomer(res);
+    //             });
+    //
+    // });
     const handleName = (e) => {
     setUser(preState => ({
             ...preState,
@@ -54,6 +56,12 @@ function ModalAddUser(props) {
     setUser(preState => ({
             ...preState,
             surname: e.target.value
+        }));
+    };
+    const handleUsername = (e) => {
+        setUser(preState => ({
+            ...preState,
+            username: e.target.value
         }));
     };
        const handleBirthday = (e) => {
@@ -69,35 +77,46 @@ function ModalAddUser(props) {
         }));
     };
     const handleState = (e) => {
-    setAddress(preState => ({
+    setAddressDto(preState => ({
             ...preState,
             state: e.target.value
         }));
     };
     const handleCity = (e) => {
-    setAddress(preState => ({
+    setAddressDto(preState => ({
             ...preState,
             city: e.target.value
         }));
     };
     const handleaddressLine1 = (e) => {
-    setAddress(preState => ({
+    setAddressDto(preState => ({
             ...preState,
             addressLine1: e.target.value
         }));
     };
     const handleaddressLine2 = (e) => {
-    setAddress(preState => ({
+    setAddressDto(preState => ({
             ...preState,
             addressLine2: e.target.value
         }));
         setUser(preState => ({
             ...preState,
-           address: addressDto
+           addressDto: addressDto
         }));
     };
     const addUserHandler = (e) => {
         e.preventDefault();
+        console.log(currentCustomerId);
+        console.log(userDto);
+        console.log(addressDto);
+        console.log(customerDto);
+        fetch('/states')
+            .then(response => response.json())
+            .then(commits => {
+                setStates(commits.content);
+            console.log(commits);
+            console.log(states);
+            });
      //   let validationResult = validateUser(userDto);
        // setError(validationResult);
       //  if (validationResult.length === 0) {
@@ -157,6 +176,18 @@ function ModalAddUser(props) {
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid surname.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="username" onChange={handleUsername}
+                                          className={
+                                              validError.includes("surnname")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid username.
                             </Form.Control.Feedback>
                         </Form.Group>
 
@@ -224,30 +255,7 @@ function ModalAddUser(props) {
                         </Form.Group>
                         
 
-    <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="role" onChange={handleName}
-                                          className={
-                                              validError.includes("role")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid role.
-                            </Form.Control.Feedback>
-                        </Form.Group>
 
-                        
-    <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="username" onChange={handleName}
-                                          className={
-                                              validError.includes("username")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid username.
-                            </Form.Control.Feedback>
-                        </Form.Group>
 
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
                             <Form.Control type="email" placeholder="email" onChange={handleEmail}

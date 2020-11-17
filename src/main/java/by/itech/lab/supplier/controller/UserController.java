@@ -2,6 +2,7 @@ package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.CustomerDto;
+import by.itech.lab.supplier.dto.StateDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.UserService;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class UserController {
         log.debug("request to get User : {}", id);
         return userService.findById(id);
     }
+
 
     @GetMapping
     public Page<UserDto> getAllByActive(

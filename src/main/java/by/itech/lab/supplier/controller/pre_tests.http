@@ -74,7 +74,9 @@ PUT http://localhost:8080/customers/4
 Content-Type: application/json
 Cookie: {{test}}
 
-{"name":"New name"}
+{
+  "name": "New name"
+}
 
 ###
 
@@ -133,7 +135,17 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+###
+GET http://localhost:8080/states
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}+
 ###
 
 GET http://localhost:8080/users/1
@@ -221,13 +233,27 @@ Cookie: {{test}}
     }
   }
 }
+
 ###
 PUT http://localhost:8080/users/18
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{"name": "Lewis", "role": "ROLE_SYSTEM_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_powera", "email": "zazybo1q1.17@gfmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+{
+  "name": "Lewis",
+  "role": "ROLE_SYSTEM_ADMIN",
+  "surname": "Hamilton",
+  "birthday": "1985-07-01",
+  "username": "lh_powera",
+  "email": "zazybo1q1.17@gfmail.com",
+  "address": {
+    "state": "GB",
+    "city": "London",
+    "addressLine1": "address 1",
+    "addressLine2": "address 2"
+  }
+}
 
 ###
 
@@ -605,6 +631,7 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
 ###
 
 DELETE http://localhost:8080/application/1
