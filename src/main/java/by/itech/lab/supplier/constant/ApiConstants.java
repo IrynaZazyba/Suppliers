@@ -22,6 +22,7 @@ public final class ApiConstants {
     public final static String URL_LABEL_PARAMETER = "/{label}";
     public final static String URL_FILTERED = "/companies";
     public final static String URL_ID_PARAMETER = "/{id}";
+    public final static String URL_CUSTOMER_ID_PARAMETER = "/{customerId}";
     public final static String URL_STATUS_PARAMETER = "/{status}";
     public final static String URL_PASSWORD_PARAMETER = "/{password}";
     public final static String URL_NUMBER_PARAMETER = "/{number}";
