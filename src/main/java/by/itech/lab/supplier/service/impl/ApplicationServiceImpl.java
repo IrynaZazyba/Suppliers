@@ -91,7 +91,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Double getCapacityItemInApplication(Set<ItemsInApplicationDto> items) {
+    public Double getCapacityItemInApplication(final Set<ItemsInApplicationDto> items) {
         Double capacityApp = 0.0;
         for (ItemsInApplicationDto itemInAppDto : items) {
             capacityApp = capacityApp + (itemInAppDto.getAmount() * itemInAppDto.getItemDto().getUnits());
@@ -100,13 +100,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public boolean isApplicationFullySatisfied(Long applicationId) {
-        int unsatisfiedItems = itemInApplicationRepository.getCountUnsatisfiedItems(applicationId);
-        return unsatisfiedItems == 0;
+    public boolean isApplicationFullySatisfied(final Long applicationId) {
+        return itemInApplicationRepository.getCountUnsatisfiedItems(applicationId) == 0;
     }
 
     @Override
-    public Set<ItemsInApplicationDto> getItemsById(List<Long> itemsId, Long applicationId) {
+    public Set<ItemsInApplicationDto> getItemsById(final List<Long> itemsId, final Long applicationId) {
         return itemInApplicationRepository
                 .findByApplicationIdAndIdIn(applicationId, itemsId)
                 .stream()
@@ -115,7 +114,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void setItemInApplicationAcceptedAt(List<Long> ids) {
+    public void setItemInApplicationAcceptedAt(final List<Long> ids) {
        itemInApplicationRepository.setAcceptedAtForItemsInApplication(ids);
     }
 

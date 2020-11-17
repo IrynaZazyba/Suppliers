@@ -90,7 +90,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public Double getAvailableCapacity(final Long warehouseId) {
-        Double availableCapacity = itemInWarehouseRepository.getAvailableCapacity(warehouseId);
+        final Double availableCapacity = itemInWarehouseRepository.getAvailableCapacity(warehouseId);
         return Objects.isNull(availableCapacity) ?
                 warehouseRepository.getTotalCapacity(warehouseId)
                 : availableCapacity;
@@ -112,7 +112,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private void acceptToWarehouse(final Set<ItemsInApplicationDto> acceptedToWarehouse,
                                    final Long warehouseId) {
-        List<Long> acceptedIds = new ArrayList<>();
+        final List<Long> acceptedIds = new ArrayList<>();
         acceptedToWarehouse.forEach(itemToAccept -> {
             final Long itemId = itemToAccept.getItemDto().getId();
             final Optional<ItemsInWarehouse> iiw = itemInWarehouseRepository.findByItemId(itemId, warehouseId);
@@ -145,8 +145,8 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .build();
     }
 
-    private void checkWarehouseCapacity(Set<ItemsInApplicationDto> acceptedToWarehouse,
-                                        Long destinationLocationId) {
+    private void checkWarehouseCapacity(final Set<ItemsInApplicationDto> acceptedToWarehouse,
+                                        final Long destinationLocationId) {
         final Double capacityApp = applicationService.getCapacityItemInApplication(acceptedToWarehouse);
         if (getAvailableCapacity(destinationLocationId) < capacityApp) {
             throw new ConflictWithTheCurrentStateException("Warehouse capacity not allow to accept items");
