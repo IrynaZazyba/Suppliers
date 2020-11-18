@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
 import {AuthContext} from "./context/authContext";
+import Warehouses from "./pages/warehouse/Warehouses";
 
 function App() {
 
@@ -29,6 +30,12 @@ function App() {
         })}/>
     };
 
+    const renderWarehouse = () => {
+        return <ProtectedComponent conditions={user} render={(() => {
+            return <Warehouses/>
+        })}/>
+    };
+
     return (
         <UserContext>
             <Header/>
@@ -36,6 +43,7 @@ function App() {
                 <Route exact path='/' component={Login}/>
                 <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
                 <Route path={'/customers'} render={renderCustomer}/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

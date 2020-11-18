@@ -3,6 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import UserProfile from "./components/UserProfile";
 import {AuthContext} from "./context/authContext";
+import Warehouse from "./pages/warehouse/Warehouses";
 
 function Header() {
 
@@ -12,6 +13,7 @@ function Header() {
 
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -24,6 +26,10 @@ function Header() {
                     </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
+
+                    <Nav.Link className={warehousesClass}
+                              href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
+                    </Nav.Link>
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
