@@ -14,6 +14,10 @@ import ErrorMessage from "../../messages/errorMessage";
 
 export default () => {
 
+    const currentCustomerId = localStorage.
+    getItem("currentCustomerId") != null ? localStorage.
+    getItem("currentCustomerId"): 0;
+
     const [page, setPage] = useState({
         active: 1,
         currentPage: 1,
@@ -33,7 +37,7 @@ export default () => {
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getUsers(`/users?status=${e.target.value}&size=${page.countPerPage}`);
+        getUsers(`/customers/${currentCustomerId}/users?status=${e.target.value}&size=${page.countPerPage}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -42,13 +46,13 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getUsers(`/users?size=${e.target.value}&status=${filter}`);
+        getUsers(`/customers/${currentCustomerId}/users?size=${e.target.value}&status=${filter}`);
     };
 
     const handleChangeStatus = (e) => {
         let status = e.target.value !== 'true';
         let id = e.target.id;
-        fetch(`/users/${id}/status`, {
+        fetch(`/customers/${currentCustomerId}/users/${id}/status`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -74,15 +78,18 @@ export default () => {
     const changePage = (e) => {
         e.preventDefault();
         let page = e.target.innerHTML - 1;
-        getUsers(`/users?page=${page}&status=${filter}`);
+        getUsers(`/customers/${currentCustomerId}/users?page=${page}&status=${filter}`);
     };
 
     useEffect(() => {
-        getUsers('/users');
+        console.log('/customers/'+currentCustomerId+'/users');
+
+        getUsers('/customers/'+currentCustomerId+'/users');
     }, []);
 
 
     function getUsers(url) {
+
         fetch(url)
             .then(response => response.json())
             .then(commits => {
@@ -98,7 +105,7 @@ export default () => {
     const closeModalAdd = (e, customerDto) => {
         setLgShow(e);
         if (customerDto) {
-            getUsers(`/users?status=${filter}&size=${page.countPerPage}`);
+            getUsers(`/customers/${currentCustomerId}/users?status=${filter}&size=${page.countPerPage}`);
         }
     };
 
@@ -109,7 +116,7 @@ export default () => {
                 editShow: false
             }));
         if (customerDto) {
-            getUsers(`/users?status=${filter}&size=${page.countPerPage}`);
+            getUsers(`/customers/${currentCustomerId}/users?status=${filter}&size=${page.countPerPage}`);
         }
     };
 

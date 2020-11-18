@@ -19,15 +19,17 @@ public interface UserService {
 
     Page<UserDto> findAll(Pageable pageable);
 
+    Page<UserDto> findAllByActive(Pageable pageable, Boolean status);
+
     UserDto save(UserDto userDTO);
 
     void delete(Long id);
 
-    int changeActiveStatus(Long id, boolean status);
+    int changeActiveStatus(Long id, Boolean status);
 
     int changePassword(Long id, String password);
 
-    Page<UserDto> getAllActive(Pageable pageable);
+    Page<UserDto> getAllActive(Pageable pageable, Boolean status);
 
     Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable);
 

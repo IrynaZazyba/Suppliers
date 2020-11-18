@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -49,8 +51,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> getAllActive(Pageable pageable) {
-        return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
+    public Page<UserDto> getAllActive(Pageable pageable, Boolean status) {
+        return userRepository.findAllByActiveEquals(pageable, status).map(userMapper::map);
     }
 
     @Transactional
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public int changeActiveStatus(Long id, boolean status) {
+    public int changeActiveStatus(Long id, Boolean status) {
         return userRepository.setStatus(status, id);
     }
 

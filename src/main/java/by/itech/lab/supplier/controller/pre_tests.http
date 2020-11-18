@@ -161,7 +161,7 @@ Cookie: {{test}}
     });
 %}
 ###
-GET http://localhost:8080/states
+GET http://localhost:8080/customers/3/states
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
