@@ -43,4 +43,3 @@ public class Customer implements BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }
-
