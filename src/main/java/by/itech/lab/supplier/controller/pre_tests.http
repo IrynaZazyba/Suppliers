@@ -89,18 +89,20 @@ Cookie: {{test}}
 {
   "customerId": "3",
   "identifier": "199",
-  "type" : "CCC",
-  "totalCapacity" : "44",
-  "addressDto" : {
-    "city" : "Kanzas",
-    "addressLine1" : "Linkoln Str.",
-    "addressLine2" : "44",
-    "state" : {
-      "id" : "5",
+  "type": "CCC",
+  "totalCapacity": "44",
+  "addressDto": {
+    "city": "Kanzas",
+    "addressLine1": "Linkoln Str.",
+    "addressLine2": "44",
+    "state": {
+      "id": "5",
       "state": "Alaska"
     }
   },
-  "usersId" : [3]
+  "usersId": [
+    3
+  ]
 }
 
 ###
@@ -111,16 +113,16 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "id" : "21",
-  "type" : "anotherType",
-  "totalCapacity" : "1",
-  "addressDto" : {
-    "id" : "104",
-    "city" : "Kanzas",
-    "addressLine1" : "Linkoln Str.",
-    "addressLine2" : "66",
-    "state" : {
-      "id" : "6",
+  "id": "21",
+  "type": "anotherType",
+  "totalCapacity": "1",
+  "addressDto": {
+    "id": "104",
+    "city": "Kanzas",
+    "addressLine1": "Linkoln Str.",
+    "addressLine2": "66",
+    "state": {
+      "id": "6",
       "state": "Arizona"
     }
   }
@@ -160,8 +162,9 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+
 ###
-GET http://localhost:8080/customers/3/states
+GET http://localhost:8080/states
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -170,7 +173,8 @@ Cookie: {{test}}
     client.test("Request executed successfully", function() {
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
-%}+
+%}
+
 ###
 
 GET http://localhost:8080/customers/3/users/1
@@ -231,7 +235,31 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
+POST http://localhost:8080/customers/3/users
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
+{
+  "addressDto": {
+    "addressLine1": "belskogo 12",
+    "addressLine2": "yhyh ",
+    "city": "minsk",
+    "state": {
+      "id": 46,
+      "state": "Texas"
+    }
+  },
+  "birthday": "2020-11-13",
+  "customerId": "3",
+  "email": "aleskahlushakova@gmail.com",
+  "name": "alesia hlushakova",
+  "role": "ROLE_SYSTEM_ADMIN",
+  "surname": "wd",
+  "username": "wdhnjn"
+}
+
+###
 POST http://localhost:8080/customers/3/users
 Content-Type: application/json
 Connection: keep-alive

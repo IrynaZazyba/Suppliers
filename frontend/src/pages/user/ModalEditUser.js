@@ -22,9 +22,14 @@ function ModalEditCustomer(props) {
         }));
     };
 
+
+    const currentCustomerId = localStorage.
+    getItem("currentCustomerId") != null ? localStorage.
+    getItem("currentCustomerId"): 0;
+
     useEffect(() => {
         if (props.props.editShow === true) {
-            fetch("/users/" + props.props.user.id)
+            fetch("customers/" +  currentCustomerId + "/users/" + props.props.user.id)
                 .then(response => response.json())
                 .then(res => {
                     setUser(res);
@@ -38,7 +43,7 @@ function ModalEditCustomer(props) {
         let validationResult = validateUserName(userDto);
         setError(validationResult);
            if (validationResult.length === 0) {
-               fetch('/users/' + userDto.id, {
+               fetch("customers/" +  currentCustomerId + "/users/" + userDto.id, {
                    method: 'PUT',
                    headers: {
                        'Content-Type': 'application/json'

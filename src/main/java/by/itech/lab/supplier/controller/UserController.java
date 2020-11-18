@@ -4,6 +4,7 @@ import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.StateDto;
 import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.service.CustomerService;
 import by.itech.lab.supplier.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 public class UserController {
 
     private final UserService userService;
+    private final CustomerService customerService;
 
     @GetMapping("/dispatchers")
     public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
@@ -53,13 +55,15 @@ public class UserController {
     public Page<UserDto> getAllByActive(
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
             @RequestParam(required = false) final Boolean status) {
-        return userService.getAllActive(pageable, status);
+        return userService.findAllByActive(pageable, status);
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+       CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
+       userDto.setCustomerDto(customerDto);
         return userService.save(userDto);
     }
 

@@ -1,9 +1,6 @@
 package by.itech.lab.supplier.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +25,7 @@ public class State implements BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String state;
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "state")
     private Set<Tax> taxes = new HashSet<>();
 

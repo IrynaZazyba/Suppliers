@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -7,53 +7,62 @@ import ErrorMessage from "../../messages/errorMessage";
 function ModalAddUser(props) {
 
 
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
-
-    const [customerDto, setCustomer] = useState({
-        id:  currentCustomerId,
-        name: ''
-    });
+    const [state, setState] = useState([]);
 
     const [states, setStates] = useState([]);
 
-    const [addressDto,setAddressDto] = useState({
+    const [addressDto, setAddressDto] = useState({
         city: '',
-        state:'',
-        addressLine1:'',
-        addressLine2:''
+        state: null,
+        addressLine1: '',
+        addressLine2: ''
     });
-    const [userDto,setUser] = useState({
+    const [userDto, setUser] = useState({
         name: '',
-        surname:'',
-        birthday:'',
-        addressDto:addressDto,
-        role:'ROLE_SYSTEM_ADMIN',
-        username:'',
+        surname: '',
+        birthday: '',
+        addressDto: addressDto,
+        role: 'ROLE_SYSTEM_ADMIN',
+        username: '',
         email: '',
-        customerDto: customerDto
+        customerId: currentCustomerId
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
-    // useEffect(() => {
-    //
-    //         fetch("/customers/" + currentCustomerId)
-    //             .then(response => response.json())
-    //             .then(res => {
-    //                 setCustomer(res);
-    //             });
-    //
-    // });
+
+    const onChangeState = (e) => {
+        const selectedState = states.find(state => state.state === e.target.value);
+
+        setState(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+        console.log(selectedState);
+        setAddressDto(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+    };
+    useEffect(() => {
+
+
+        fetch('/states')
+            .then(response => response.json())
+            .then(commits => {
+                setStates(commits.content);
+            });
+    });
+
     const handleName = (e) => {
-    setUser(preState => ({
+        setUser(preState => ({
             ...preState,
             name: e.target.value
         }));
     };
-       const handleSurname = (e) => {
-    setUser(preState => ({
+    const handleSurname = (e) => {
+        setUser(preState => ({
             ...preState,
             surname: e.target.value
         }));
@@ -64,44 +73,38 @@ function ModalAddUser(props) {
             username: e.target.value
         }));
     };
-       const handleBirthday = (e) => {
-    setUser(preState => ({
+    const handleBirthday = (e) => {
+        setUser(preState => ({
             ...preState,
             birthday: e.target.value
         }));
     };
     const handleEmail = (e) => {
-    setUser(preState => ({
+        setUser(preState => ({
             ...preState,
             email: e.target.value
         }));
     };
-    const handleState = (e) => {
-    setAddressDto(preState => ({
-            ...preState,
-            state: e.target.value
-        }));
-    };
     const handleCity = (e) => {
-    setAddressDto(preState => ({
+        setAddressDto(preState => ({
             ...preState,
             city: e.target.value
         }));
     };
     const handleaddressLine1 = (e) => {
-    setAddressDto(preState => ({
+        setAddressDto(preState => ({
             ...preState,
             addressLine1: e.target.value
         }));
     };
     const handleaddressLine2 = (e) => {
-    setAddressDto(preState => ({
+        setAddressDto(preState => ({
             ...preState,
             addressLine2: e.target.value
         }));
         setUser(preState => ({
             ...preState,
-           addressDto: addressDto
+            addressDto: addressDto
         }));
     };
     const addUserHandler = (e) => {
@@ -109,34 +112,24 @@ function ModalAddUser(props) {
         console.log(currentCustomerId);
         console.log(userDto);
         console.log(addressDto);
-        console.log(customerDto);
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setStates(commits.content);
-            console.log(commits);
-            console.log(states);
+
+
+        fetch('customers/' + currentCustomerId + '/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userDto)
+        })
+            .then(function (response) {
+                if (response.status !== 201) {
+                    setError('');
+                    setErrors("Something go wrong, try later");
+                } else {
+                    setError('');
+                    props.onChange(false, userDto);
+                }
             });
-     //   let validationResult = validateUser(userDto);
-       // setError(validationResult);
-      //  if (validationResult.length === 0) {
-            fetch('/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userDto)
-            })
-                .then(function (response) {
-                    if (response.status !== 201) {
-                        setError('');
-                        setErrors("Something go wrong, try later");
-                    } else {
-                        setError('');
-                        props.onChange(false, userDto);
-                    }
-                });
-        //}
     };
 
     return (
@@ -167,7 +160,7 @@ function ModalAddUser(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                          <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="surname" onChange={handleSurname}
                                           className={
                                               validError.includes("surnname")
@@ -191,7 +184,7 @@ function ModalAddUser(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-  <Form.Group controlId="formBasicDate" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicDate" style={{padding: '5px 10px'}}>
                             <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
                                           className={
                                               validError.includes("birthday")
@@ -203,20 +196,18 @@ function ModalAddUser(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
 
+                        <Form.Control style={{padding: '5px 10px'}} as="select"
+                                      defaultValue="Choose..."
+                                      onChange={onChangeState}>
+                            {Object.entries(states).map(([k, v]) => (
 
-                          <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="state" onChange={handleState}
-                                          className={
-                                              validError.includes("state")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid state.
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                                <option>{v.state}</option>
 
-                            <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            ))}
+                        </Form.Control>
+
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="city" onChange={handleCity}
                                           className={
                                               validError.includes("city")
@@ -229,7 +220,7 @@ function ModalAddUser(props) {
                         </Form.Group>
 
 
-    <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="addressLine1" onChange={handleaddressLine1}
                                           className={
                                               validError.includes("addressLine1")
@@ -242,7 +233,7 @@ function ModalAddUser(props) {
                         </Form.Group>
 
 
-    <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="addressLine2" onChange={handleaddressLine2}
                                           className={
                                               validError.includes("addressLine2")
@@ -253,8 +244,6 @@ function ModalAddUser(props) {
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        
-
 
 
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
