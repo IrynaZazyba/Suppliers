@@ -37,12 +37,12 @@ public class WarehouseController {
     }
 
 
-    @PostMapping(URL_ID_PARAMETER+URL_ITEMS)
+    @PostMapping(URL_ID_PARAMETER + URL_ITEMS)
     public void acceptItem(@PathVariable Long id, @RequestBody ApplicationDto applicationDto) {
-        warehouseService.acceptItems(applicationDto,id);
+        warehouseService.acceptItems(applicationDto, id);
     }
 
-    @GetMapping(URL_ID_PARAMETER+URL_CAPACITY)
+    @GetMapping(URL_ID_PARAMETER + URL_CAPACITY)
     public Double getAvailableCapacity(@PathVariable Long id) {
         return warehouseService.getAvailableCapacity(id);
     }

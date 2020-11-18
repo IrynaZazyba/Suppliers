@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 public class ApplicationDto implements BaseDto {
 
-    Set<ItemsInApplicationDto> items = new HashSet<>();
+    Set<ApplicationItemDto> items = new HashSet<>();
     private Long id;
     private String number;
     private LocalDate registrationDate;

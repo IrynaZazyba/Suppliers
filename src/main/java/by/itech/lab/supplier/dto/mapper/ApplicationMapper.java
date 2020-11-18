@@ -1,9 +1,9 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Application;
-import by.itech.lab.supplier.domain.ItemsInApplication;
+import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     private final WarehouseMapper warehouseMapper;
     private final UserMapper userMapper;
     private final WayBillMapper wayBillMapper;
-    private final ItemsInApplicationMapper itemsInApplicationMapper;
+    private final ApplicationItemMapper itemsInApplicationMapper;
     private final ItemMapper itemMapper;
 
     @Override
@@ -80,15 +80,15 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     }
 
     public Application mapItems(final Application application) {
-        for (ItemsInApplication item : application.getItems()) {
+        for (ApplicationItem item : application.getItems()) {
             item.setApplication(application);
         }
         return application;
     }
 
-    private void updateItems(Set<ItemsInApplication> forUpdate, Set<ItemsInApplicationDto> update) {
-        for (ItemsInApplicationDto item : update) {
-            ItemsInApplication result = forUpdate.stream()
+    private void updateItems(Set<ApplicationItem> forUpdate, Set<ApplicationItemDto> update) {
+        for (ApplicationItemDto item : update) {
+            ApplicationItem result = forUpdate.stream()
                     .filter(Objects::nonNull)
                     .filter(p -> p.getId().equals(item.getId()))
                     .findAny()

@@ -5,8 +5,6 @@ import by.itech.lab.supplier.dto.WarehouseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @AllArgsConstructor
 @Component
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
@@ -21,7 +19,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
                 .address(dto.getAddress())
-                .customer(dto.getCustomerDto()!=null?customerMapper.map(dto.getCustomerDto()):null)
+                .customer(dto.getCustomerDto() != null ? customerMapper.map(dto.getCustomerDto()) : null)
                 .build();
     }
 
@@ -33,7 +31,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
                 .address(entity.getAddress())
-                .customerDto(entity.getCustomer()!=null?customerMapper.map(entity.getCustomer()):null)
+                .customerDto(entity.getCustomer() != null ? customerMapper.map(entity.getCustomer()) : null)
                 .build();
     }
 }

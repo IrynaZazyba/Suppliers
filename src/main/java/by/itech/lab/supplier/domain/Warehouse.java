@@ -50,5 +50,5 @@ public class Warehouse implements BaseEntity {
     private Set<User> users = new HashSet<>();
     @OneToMany(mappedBy = "warehouse", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude
-    private Set<ItemsInWarehouse> items=new HashSet<>();
+    private Set<WarehouseItem> items = new HashSet<>();
 }

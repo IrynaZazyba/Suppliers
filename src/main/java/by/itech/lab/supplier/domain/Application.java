@@ -61,6 +61,6 @@ public class Application implements BaseEntity {
     private LocalDate deletedAt;
     @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude
-    private Set<ItemsInApplication> items = new HashSet<>();
+    private Set<ApplicationItem> items = new HashSet<>();
 
 }

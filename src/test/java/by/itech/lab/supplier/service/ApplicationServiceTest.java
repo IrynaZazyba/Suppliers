@@ -5,10 +5,10 @@ import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
-import by.itech.lab.supplier.dto.mapper.ItemsInApplicationMapper;
+import by.itech.lab.supplier.dto.mapper.ApplicationItemMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationRepository;
-import by.itech.lab.supplier.repository.ItemInApplicationRepository;
+import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.service.impl.ApplicationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -129,10 +129,10 @@ public class ApplicationServiceTest {
         private ApplicationMapper applicationMapper;
 
         @MockBean
-        private ItemInApplicationRepository itemInApplicationRepository;
+        private ApplicationItemRepository itemInApplicationRepository;
 
         @MockBean
-        private ItemsInApplicationMapper itemsInApplicationMapper;
+        private ApplicationItemMapper itemsInApplicationMapper;
 
         @Bean
         public ApplicationService applicationService() {

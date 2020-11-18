@@ -2,7 +2,7 @@ package by.itech.lab.supplier.service;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,11 +17,11 @@ public interface ApplicationService extends BaseSimpleService<ApplicationDto> {
 
     void changeStatus(Long appId, ApplicationStatus applicationStatus);
 
-    Double getCapacityItemInApplication(Set<ItemsInApplicationDto> items);
+    Double getCapacityItemInApplication(Set<ApplicationItemDto> items);
 
     boolean isApplicationFullySatisfied(Long applicationId);
 
-    Set<ItemsInApplicationDto> getItemsById(List<Long> itemsId, Long applicationId);
+    Set<ApplicationItemDto> getItemsById(List<Long> itemsId, Long applicationId);
 
     void setItemInApplicationAcceptedAt(List<Long> ids);
 }
