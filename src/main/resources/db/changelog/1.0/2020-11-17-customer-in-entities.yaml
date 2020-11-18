@@ -23,3 +23,20 @@ databaseChangeLog:
             constraintName: categoty
             tableName: category
             uniqueColumns: category
+  - changeSet:
+      id: SUP-78-4
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: warehouse
+            columns:
+              - column:
+                  name: retailer_id
+                  type: BIGINT
+  - changeSet:
+      id: SUP-78-5
+      author: alexander_popovich
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: retailer_warehouse

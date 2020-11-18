@@ -29,14 +29,16 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATION;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(URL_APPLICATION)
+@RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + URL_APPLICATION)
 public class ApplicationController {
 
     private final ApplicationService applicationService;
 
     @PostMapping
     @Secured({"ROLE_DISPATCHER, ROLE_LOGISTICS_SPECIALIST"})
-    public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
+    public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto,
+                               @PathVariable Long customerId) {
+        applicationDto.setCustomerId(customerId);
         return applicationService.save(applicationDto);
     }
 

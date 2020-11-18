@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static by.itech.lab.supplier.constant.ApiConstants.URL_CATEGORY;
+
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + ApiConstants.URL_CATEGORY)
+@RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + URL_CATEGORY)
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -44,7 +46,7 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
+    @GetMapping(URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
     public CategoryDto getByName(@PathVariable String category) {
         return categoryService.findByCategory(category);
     }
