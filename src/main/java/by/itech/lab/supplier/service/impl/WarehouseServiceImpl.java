@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseItem;
@@ -13,8 +12,8 @@ import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateExcep
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WarehouseItemRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
-import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.ApplicationService;
+import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

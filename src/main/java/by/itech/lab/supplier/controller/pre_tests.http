@@ -139,7 +139,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
-POST http://localhost:8080/warehouses/20/items
+POST http://localhost:8080/customers/16/warehouses/20/items
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -163,7 +163,7 @@ Cookie: {{test}}
 %}
 
 ###
-GET http://localhost:8080/warehouses/2/capacity
+GET http://localhost:8080/customers/4/warehouses/2/capacity
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -671,3 +671,5 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
+###

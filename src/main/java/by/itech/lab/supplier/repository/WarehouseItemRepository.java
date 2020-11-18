@@ -15,4 +15,5 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
     @Query("select i.warehouse.totalCapacity-COALESCE(sum(i.amount*i.item.units),0) " +
             "from WarehouseItem as i where i.warehouse.id=:warehouseId")
     Double getAvailableCapacity(@Param("warehouseId") Long warehouseId);
+
 }
