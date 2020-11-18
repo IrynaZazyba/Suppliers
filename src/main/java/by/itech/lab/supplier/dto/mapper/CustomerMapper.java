@@ -12,7 +12,7 @@ import java.util.EnumSet;
 @Component
 public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
 
-    private EnumSet<Role> ADMIN_ROLES = EnumSet.of(Role.ROLE_ADMIN, Role.ROLE_SYSTEM_ADMIN);
+    private final EnumSet<Role> ADMIN_ROLES = EnumSet.of(Role.ROLE_ADMIN, Role.ROLE_SYSTEM_ADMIN);
 
     @Override
     public Customer map(CustomerDto dto) {
@@ -37,6 +37,12 @@ public class CustomerMapper implements BaseMapper<Customer, CustomerDto> {
     public void map(final CustomerDto from, final Customer to) {
         to.setName(from.getName());
         to.setActive(from.isActive());
+    }
+
+    public Customer map(final Long id) {
+        Customer customer = new Customer();
+        customer.setId(id);
+        return customer;
     }
 
     public CustomerDto mapToCustomerView(Customer entity) {
