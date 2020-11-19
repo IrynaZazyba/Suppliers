@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from 'react-bootstrap/Form'
 import ErrorMessage from "../../messages/errorMessage";
@@ -18,25 +18,54 @@ function ModalAddApplication(props) {
         serverErrors: ''
     });
     const [options, setOptions] = useState([]);
-    const [item, setItems] = useState({
-        upc: '',
-        label: '',
-        amount: '',
-        cost: ''
+    const [item, setItems] = useState([]);
+    const [currentItem, setCurrentItem] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [totalValues, setTotalValues] = useState({
+        totalAmount: '',
+        totalUnits: ''
     });
 
-    const handleSearch = () => {
-        fetch(`/`)
-            .then((resp) => resp.json())
-            .then(({items}) => {
-                const options = items.map((i) => ({
+    const handleSearch = (query) => {
+        setIsLoading(true);
+        fetch(`/item/upc?upc=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                const optionsFromBack = res.map((i) => ({
                     id: i.id,
-                    name: i.upc,
+                    upc: i.upc,
+                    label: i.label
                 }));
 
-                setOptions(options);
+                setOptions(optionsFromBack);
+                setIsLoading(false);
+
             });
     };
+    const filterBy = () => true;
+
+    const onChangeUpc = (e) => {
+        e.length > 0 ? setCurrentItem(e[0]) : setCurrentItem('');
+    };
+
+    const handleInput = (fieldName) =>
+        (e) => {
+            const value = e.target.value;
+            console.log(currentItem);
+            setCurrentItem(preState => ({
+                ...preState,
+                [fieldName]: value
+            }))
+        };
+
+    useEffect(() => {
+        setCurrentItem('');
+        setTotalValues(preState => ({
+                ...preState,
+                totalAmount: item.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0)
+            })
+        );
+    }, [item]);
 
 
     return (
@@ -92,6 +121,14 @@ function ModalAddApplication(props) {
                                 </Form.Control>
                             </Col>
                         </Form.Group>
+                        <Form.Group as={Row} controlId="totalAmount">
+                            <Form.Label column sm="2">Total amount of items</Form.Label>
+                            <Col sm="5">
+                                <Form.Control disabled placeholder="Total amount of items" type="text"
+                                              value={totalValues.totalAmount}/>
+                            </Col>
+                        </Form.Group>
+
 
                         {/*<Row style={{padding: '0px 10px'}}>*/}
                         {/*    <Col>*/}
@@ -125,27 +162,39 @@ function ModalAddApplication(props) {
                                     <Row>
                                         <Col sm="3">
                                             <AsyncTypeahead
+                                                filterBy={filterBy}
                                                 id="async-example"
-                                                labelKey="item"
+                                                labelKey="upc"
+                                                isLoading={isLoading}
                                                 minLength={3}
-                                                options={["Alabama", "Nebraska", "Malibu"]}
+                                                options={options}
                                                 placeholder="Search item..."
                                                 onSearch={handleSearch}
-                                            /></Col>
+                                                onChange={onChangeUpc}
+                                            />
+
+
+                                        </Col>
                                         <Col sm="3">
-                                            <Form.Control disabled placeholder="label" type="text"/>
+                                            <Form.Control disabled placeholder="label" type="text"
+                                                          value={currentItem && currentItem.label}/>
                                             <Form.Control.Feedback type="invalid">
                                                 Please provide a valid number.
                                             </Form.Control.Feedback>
                                         </Col>
                                         <Col sm="2">
-                                            <Form.Control placeholder="amount" type="text"/>
+                                            <Form.Control placeholder="amount" type="text"
+                                                          value={currentItem && currentItem.amount}
+                                                          onChange={handleInput('amount')}/>
                                             <Form.Control.Feedback type="invalid">
                                                 Please provide a valid number.
                                             </Form.Control.Feedback>
                                         </Col>
                                         <Col sm="2">
-                                            <Form.Control placeholder="cost" type="text"/>
+                                            <Form.Control placeholder="cost" type="text"
+                                                          value={currentItem && currentItem.cost}
+                                                          onChange={handleInput('cost')}
+                                            />
                                             <Form.Control.Feedback type="invalid">
                                                 Please provide a valid number.
                                             </Form.Control.Feedback>
@@ -153,12 +202,14 @@ function ModalAddApplication(props) {
                                         <Col sm="1">
                                             <Button type="submit" variant="outline-primary"
                                                     className="primaryButton"
-                                                    onClick={() => setItems({
-                                                        upc: '1254789630',
-                                                        label: 'some',
-                                                        amount: 'amount',
-                                                        cost: 'cost'
-                                                    })}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        //todo validate empty field
+                                                        setItems([
+                                                            ...item, currentItem
+                                                        ]);
+                                                        setCurrentItem('');
+                                                    }}
                                             >
                                                 Add
                                             </Button>
@@ -171,16 +222,20 @@ function ModalAddApplication(props) {
                                         <thead>
                                         <tr>
                                             <th>Item upc</th>
+                                            <th>Label</th>
                                             <th>Amount</th>
                                             <th>Cost</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {/*<tr>*/}
-                                        {/*    <td>Mark</td>*/}
-                                        {/*    <td>Otto</td>*/}
-                                        {/*    <td>@mdo</td>*/}
-                                        {/*</tr>*/}
+                                        {item.map(i => (
+                                            <tr id={i.id} key={i.id}>
+                                                <td>{i.upc}</td>
+                                                <td>{i.label}</td>
+                                                <td>{i.amount}</td>
+                                                <td>{i.cost}</td>
+                                            </tr>
+                                        ))}
                                         </tbody>
                                     </Table>}
                                 </Card.Text>
@@ -188,13 +243,13 @@ function ModalAddApplication(props) {
                         </Card>
 
 
-                        <div className="float-right" style={{paddingRight: '10px'}}>
-                            {/*<Button type="submit" className="mainButton pull-right"*/}
-                            {/*    // onClick={addCustomerHandler}*/}
-                            {/*>*/}
-                            {/*    Save*/}
-                            {/*</Button>*/}
-                        </div>
+                        {/*<div className="float-right" style={{paddingRight: '10px'}}>*/}
+                        {/*    /!*<Button type="submit" className="mainButton pull-right"*!/*/}
+                        {/*    /!*    // onClick={addCustomerHandler}*!/*/}
+                        {/*    /!*>*!/*/}
+                        {/*    /!*    Save*!/*/}
+                        {/*    /!*</Button>*!/*/}
+                        {/*</div>*/}
                     </Form>
                 </Modal.Body>
             </Modal>

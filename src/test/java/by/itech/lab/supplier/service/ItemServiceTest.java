@@ -63,7 +63,7 @@ public class ItemServiceTest {
           .id(10L)
           .label("Apple")
           .units(5.0)
-          .upc(new BigDecimal(0.5))
+          .upc("1234567")
           .deletedAt(LocalDate.now())
           .category(category)
           .build();
@@ -71,7 +71,7 @@ public class ItemServiceTest {
           .id(10L)
           .label("Apple")
           .units(5.0)
-          .upc(new BigDecimal(0.5))
+          .upc("12345678")
           .deletedAt(LocalDate.now())
           .categoryDto(categoryDto)
           .build();

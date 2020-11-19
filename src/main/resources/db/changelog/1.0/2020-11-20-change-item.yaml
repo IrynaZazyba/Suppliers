@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: CH-I-1
+      author: iryna_zazybo
+      changes:
+        - modifyDataType:
+            columnName: upc
+            newDataType: varchar(50)
+            tableName: item
+

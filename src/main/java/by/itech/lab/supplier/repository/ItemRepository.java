@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
@@ -23,5 +24,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Modifying
     @Query("update Item set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
+
+//    @Query("select i from Item i where i.upc LIKE :upc%")
+    List<Item> findByUpcStartsWith(String upc);
 
 }

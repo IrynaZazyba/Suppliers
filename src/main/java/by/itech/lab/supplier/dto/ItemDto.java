@@ -4,7 +4,6 @@ package by.itech.lab.supplier.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -12,7 +11,7 @@ import java.time.LocalDate;
 public class ItemDto implements BaseDto {
 
     private Long id;
-    private BigDecimal upc;
+    private String upc;
     private String label;
     private Double units;
     private CategoryDto categoryDto;
