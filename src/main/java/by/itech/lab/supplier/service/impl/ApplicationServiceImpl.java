@@ -61,8 +61,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public ApplicationDto findById(Long id) {
-        Optional<Application> byId = applicationRepository.findById(id);
-        Optional<ApplicationDto> applicationDto = byId.map(applicationMapper::map);
         return applicationRepository.findById(id).map(applicationMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Application with id=" + id + " doesn't exist"));
     }

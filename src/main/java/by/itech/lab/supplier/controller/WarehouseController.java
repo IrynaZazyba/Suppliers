@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
@@ -65,12 +66,12 @@ public class WarehouseController {
 
     @PostMapping(URL_ID_PARAMETER + URL_ITEMS)
     public void acceptItem(@PathVariable Long id, @RequestBody ApplicationDto applicationDto) {
-        warehouseService.acceptItems(applicationDto, id);
+        warehouseService.acceptApplication(applicationDto, id);
     }
 
     @GetMapping(URL_ID_PARAMETER + URL_CAPACITY)
-    public Double getAvailableCapacity(@PathVariable Long id) {
-        return warehouseService.getAvailableCapacity(id);
+    public BigDecimal getAvailableCapacity(@PathVariable Long id) {
+        return new BigDecimal(warehouseService.getAvailableCapacity(id));
     }
 
 

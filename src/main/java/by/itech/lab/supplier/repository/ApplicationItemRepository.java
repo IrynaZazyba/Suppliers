@@ -11,7 +11,9 @@ import java.util.Set;
 
 public interface ApplicationItemRepository extends JpaRepository<ApplicationItem, Long> {
 
-    Set<ApplicationItem> findByApplicationIdAndIdIn(Long applicationId, List<Long> id);
+    @Query("select i from ApplicationItem i where i.application.id=:appId and i.id in (:appsId) and i.acceptedAt is null")
+    Set<ApplicationItem> findByApplicationIdAndIdIn(@Param("appId") Long applicationId,
+                                                    @Param("appsId") List<Long> id);
 
     @Query("select count(i) from ApplicationItem i where i.application.id=:appId and i.acceptedAt is null")
     int getUnsatisfiedItemsCount(@Param("appId") Long appId);
