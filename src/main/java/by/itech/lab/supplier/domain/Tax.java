@@ -3,6 +3,7 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -28,6 +29,7 @@ public class Tax implements BaseEntity {
     private BigDecimal amount;
     private Double percentage;
     private String name;
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;

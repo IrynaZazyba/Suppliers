@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.Address;
+import by.itech.lab.supplier.domain.WarehouseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class WarehouseDto implements BaseDto {
     private String identifier;
     @Size(min = 1, max = 50, message = "Your type should contains at least 1 letter")
     @NotBlank
-    private String type;
+    private WarehouseType type;
     @Size(min = 1, max = 10000, message = "Your totalCapacity shouldn't be empty")
     @NotBlank
     private Double totalCapacity;
@@ -30,5 +31,6 @@ public class WarehouseDto implements BaseDto {
     @NotBlank
     private Address address;
     private CustomerDto customerDto;
+    private Long retailerId;
     private Set<UserDto> usersDto = new HashSet<>();
 }

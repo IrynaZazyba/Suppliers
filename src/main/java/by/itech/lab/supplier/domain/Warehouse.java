@@ -11,6 +11,8 @@ import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,7 +41,8 @@ public class Warehouse implements BaseEntity {
     @Column(nullable = false)
     private String identifier;
     @Column(nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private WarehouseType type;
     @Column(nullable = false)
     private Double totalCapacity;
     private LocalDate deletedAt;
@@ -49,6 +52,7 @@ public class Warehouse implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+    private Long retailerId;
     @OneToMany(mappedBy = "warehouse")
     @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();

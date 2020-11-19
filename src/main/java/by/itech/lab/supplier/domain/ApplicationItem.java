@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(name = "items_in_application")
 @Where(clause = "deleted_at is null")
 public class ApplicationItem implements BaseEntity {
 
