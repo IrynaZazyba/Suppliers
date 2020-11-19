@@ -1,8 +1,6 @@
 package by.itech.lab.supplier.dto;
 
-import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Role;
-import by.itech.lab.supplier.domain.Warehouse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
