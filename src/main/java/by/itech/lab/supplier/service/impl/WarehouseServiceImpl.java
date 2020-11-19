@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -151,6 +152,30 @@ public class WarehouseServiceImpl implements WarehouseService {
         if (getAvailableCapacity(destinationLocationId) < capacityApp) {
             throw new ConflictWithTheCurrentStateException("Warehouse capacity not allow to accept items");
         }
+    }
+
+    @Override
+    public void removeItemFromWarehouse(final List<ApplicationDto> applicationDto) {
+        List<ItemsInWarehouse> collect = applicationDto.parallelStream()
+                .map(application -> application.getItems()
+                        .stream()
+                        .map(item -> {
+                            final ItemsInWarehouse itemInWarehouse = itemInWarehouseRepository
+                                    .findByItemId(item.getId(), application.getDestinationLocationDto().getId())
+                                    .orElseThrow(() ->
+                                            new ConflictWithTheCurrentStateException("Warehouse doesn't have such item"));
+
+                            final Double amount = itemInWarehouse.getAmount();
+                            final Double currentValue = amount - item.getAmount();
+                            itemInWarehouse.setAmount(currentValue);
+                            return currentValue > amount ? itemInWarehouse : null;
+                        }).collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.toList());
+
+        if (collect.contains(null)) {
+            throw new ConflictWithTheCurrentStateException(
+                    "Required amount of items bigger than existing at warehouse");
+        }
+        itemInWarehouseRepository.saveAll(collect);
     }
 
 }
