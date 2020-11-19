@@ -32,7 +32,7 @@ function App() {
 
     const renderWarehouse = () => {
         return <ProtectedComponent conditions={user} render={(() => {
-            return <Warehouses/>
+            return <Warehouses currentCustomerId={currentCustomerId}/>
         })}/>
     };
 
@@ -41,9 +41,9 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>/>
                 <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
                 <Route path={'/customers'} render={renderCustomer}/>
-                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

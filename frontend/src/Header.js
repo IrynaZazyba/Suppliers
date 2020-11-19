@@ -26,10 +26,10 @@ function Header() {
                     </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-
+                    {checkPermission &&
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
-                    </Nav.Link>
+                    </Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
