@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+    Optional<User> findByEmail(String email);
+
     @Query("select c from User c where :active is null or c.active=:active")
     Page<User> findByStatus(Pageable pageable, @Param("active") Boolean active);
 

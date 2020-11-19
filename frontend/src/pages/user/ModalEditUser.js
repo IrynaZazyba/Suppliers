@@ -10,6 +10,7 @@ function ModalEditCustomer(props) {
     const [userDto, setUser] = useState({
         id: '',
         name: '',
+        surname:'',
         birthday: ''
     });
     const [validError, setError] = useState([]);
@@ -21,7 +22,19 @@ function ModalEditCustomer(props) {
             name: e.target.value
         }));
     };
+    const handleSurname = (e) => {
+        setUser(preState => ({
+            ...preState,
+            surname: e.target.value
+        }));
+    };
 
+    const handleBirthday = (e) => {
+        setUser(preState => ({
+            ...preState,
+            birthday: e.target.value
+        }));
+    };
 
     const currentCustomerId = localStorage.
     getItem("currentCustomerId") != null ? localStorage.
@@ -40,9 +53,7 @@ function ModalEditCustomer(props) {
 
     const editUserHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateUserName(userDto);
-        setError(validationResult);
-           if (validationResult.length === 0) {
+
                fetch("customers/" +  currentCustomerId + "/users/" + userDto.id, {
                    method: 'PUT',
                    headers: {
@@ -59,7 +70,7 @@ function ModalEditCustomer(props) {
                            props.onChange(false, userDto);
                        }
                    });
-           }
+
     };
 
     return (
@@ -78,7 +89,7 @@ function ModalEditCustomer(props) {
                 <Modal.Body>
                     {errorMessage && <ErrorMessage message={errorMessage}/>}
                     <Form>
-                        <Form.Group controlId="editCustomer" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="editUserr" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"
                                           placeholder="name"
                                           onChange={handleName}
@@ -92,13 +103,33 @@ function ModalEditCustomer(props) {
                                 Please provide a valid  name.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Control type="email"
-                                          value={userDto.adminEmail}
-                                          placeholder="Admin email"
-                                          disabled
-                            />
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text"
+                                          placeholder="surname"
+                                          onChange={handleSurname}
+                                          value={userDto.surname}
+                                          className={
+                                              validError.includes("surname")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid  surname.
+                            </Form.Control.Feedback>
                         </Form.Group>
+
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
+                                          className={
+                                              validError.includes("birthday")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid date.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
                                     onClick={editUserHandler}>

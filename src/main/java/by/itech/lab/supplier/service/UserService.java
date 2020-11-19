@@ -17,6 +17,8 @@ public interface UserService {
 
     Optional<UserDto> findById(Long id);
 
+    Optional<UserDto> findByUsername(String username);
+
     Page<UserDto> findAll(Pageable pageable);
 
     Page<UserDto> findAllByActive(Pageable pageable, Boolean status);

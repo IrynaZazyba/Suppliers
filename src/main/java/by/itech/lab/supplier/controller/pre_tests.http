@@ -190,7 +190,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/users/5555
+GET http://localhost:8080/customers/3/users/username/zazybo1.17@gmail.com
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -300,11 +300,15 @@ Cookie: {{test}}
   "birthday": "1985-07-01",
   "username": "lh_powera",
   "email": "zazybo1q1.17@gfmail.com",
-  "address": {
-    "state": "GB",
-    "city": "London",
-    "addressLine1": "address 1",
-    "addressLine2": "address 2"
+  "addressDto": {
+    "id": 3,
+    "city": "NY",
+    "addressLine1": "Lexington Avenue",
+    "addressLine2": "Slobodskaya str.",
+    "state": {
+      "id": 4,
+      "state": "Alabama"
+    }
   }
 }
 

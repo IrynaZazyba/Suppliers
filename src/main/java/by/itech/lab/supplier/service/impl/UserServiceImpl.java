@@ -46,6 +46,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserDto> findByUsername(String username) {
+        return Optional.of(userRepository.findByEmail(username).map(userMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username=" + username + " doesn't exist")));
+    }
+
+    @Override
     public Page<UserDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::map);
     }

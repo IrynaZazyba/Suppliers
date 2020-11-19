@@ -50,6 +50,12 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
+    public Optional<UserDto> getUseByUsername(@PathVariable String username) {
+        log.debug("request to get User : {}", username);
+        return userService.findByUsername(username);
+    }
+
 
     @GetMapping
     public Page<UserDto> getAllByActive(

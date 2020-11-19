@@ -27,6 +27,7 @@ function ModalAddUser(props) {
         role: 'ROLE_SYSTEM_ADMIN',
         username: '',
         email: '',
+        password:'',
         customerId: currentCustomerId
     });
     const [validError, setError] = useState([]);
@@ -61,6 +62,12 @@ function ModalAddUser(props) {
             name: e.target.value
         }));
     };
+    const handlePassword = (e) => {
+        setUser(preState => ({
+            ...preState,
+            password: e.target.value
+        }));
+    };
     const handleSurname = (e) => {
         setUser(preState => ({
             ...preState,
@@ -77,6 +84,13 @@ function ModalAddUser(props) {
         setUser(preState => ({
             ...preState,
             birthday: e.target.value
+        }));
+    };
+    const handleRole = (e) => {
+        console.log(e.target.value);
+        setUser(preState => ({
+            ...preState,
+            role: e.target.value
         }));
     };
     const handleEmail = (e) => {
@@ -175,12 +189,24 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="username" onChange={handleUsername}
                                           className={
-                                              validError.includes("surnname")
+                                              validError.includes("surname")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid username.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="password" onChange={handlePassword}
+                                          className={
+                                              validError.includes("password")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid password.
                             </Form.Control.Feedback>
                         </Form.Group>
 
@@ -195,6 +221,18 @@ function ModalAddUser(props) {
                                 Please provide a valid date.
                             </Form.Control.Feedback>
                         </Form.Group>
+
+                        <Form.Control style={{padding: '5px 10px '}} as="select"
+                                      defaultValue="Choose..."
+                                      onChange={handleRole}>
+
+                            <option value={"ROLE_SYSTEM_ADMIN"}>ROLE_SYSTEM_ADMIN</option>
+                            <option value={"ROLE_ADMIN"}>ROLE_ADMIN</option>
+                            <option value={"ROLE_DISPATCHER"}>ROLE_DISPATCHER</option>
+                            <option value={"ROLE_LOGISTICS_SPECIALIST"}>ROLE_LOGISTICS_SPECIALIST</option>
+                            <option value={"ROLE_DRIVER"}>ROLE_DRIVER</option>
+                            <option value={"ROLE_DIRECTOR"}>ROLE_DIRECTOR</option>
+                        </Form.Control>
 
                         <Form.Control style={{padding: '5px 10px'}} as="select"
                                       defaultValue="Choose..."

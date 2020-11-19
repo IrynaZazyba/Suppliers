@@ -140,7 +140,7 @@ export default () => {
                         onClick={() => {
                             setEditUser({
                                 editShow: true,
-                                customer: custom
+                                user: custom
                             });
                         }}/>
             </td>
