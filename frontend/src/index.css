@@ -135,3 +135,7 @@ a.page-link{
     color: #009edd !important;
 }
 
+.app-modal{
+    min-width: 75% !important;
+}
+

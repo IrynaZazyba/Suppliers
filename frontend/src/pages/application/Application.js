@@ -9,7 +9,6 @@ import TogglePage from "../../components/TogglePage";
 import Page from "../../components/Page";
 import Form from 'react-bootstrap/Form'
 import ErrorMessage from "../../messages/errorMessage";
-import ModalEditApplication from "./ModalEditApplication";
 import ModalAddApplication from "./ModalAddApplication";
 
 export default () => {
@@ -116,7 +115,7 @@ export default () => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalEditApplication props={editApplication} onChange={closeModalEdit}/>
+            {/*<ModalEditApplication props={editApplication} onChange={closeModalEdit}/>*/}
             <ModalAddApplication props={lgShow} onChange={closeModalAdd}/>
 
         </React.Fragment>;
