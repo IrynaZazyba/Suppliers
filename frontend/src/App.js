@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
 import {AuthContext} from "./context/authContext";
+import Application from "./pages/application/Application";
 
 function App() {
 
@@ -29,6 +30,12 @@ function App() {
         })}/>
     };
 
+    const renderApplication = () => {
+        return <ProtectedComponent conditions={user} render={(() => {
+            return <Application/>
+        })}/>
+    };
+
     return (
         <UserContext>
             <Header/>
@@ -36,6 +43,7 @@ function App() {
                 <Route exact path='/' component={Login}/>
                 <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
                 <Route path={'/customers'} render={renderCustomer}/>
+                <Route path={'/application'} render={renderApplication}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

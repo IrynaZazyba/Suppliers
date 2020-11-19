@@ -46,29 +46,29 @@ public class ApplicationServiceTest {
     @BeforeEach
     void initializeFields() {
         application = Application.builder()
-          .id(17L)
-          .number("Test")
-          .wayBill(null)
-          //.lastUpdatedByUsers(null)
-          .lastUpdated(LocalDate.now())
-          //.createdByUsers(null)
-          .sourceLocationAddress(null)
-          .registrationDate(LocalDate.now())
-          .applicationStatus(ApplicationStatus.OPEN)
-          .deletedAt(LocalDate.now())
-          .build();
+                .id(17L)
+                .number("Test")
+                .wayBill(null)
+                //.lastUpdatedByUsers(null)
+                .lastUpdated(LocalDate.now())
+                //.createdByUsers(null)
+                .sourceLocationAddress(null)
+                .registrationDate(LocalDate.now())
+                .applicationStatus(ApplicationStatus.OPEN)
+                .deletedAt(LocalDate.now())
+                .build();
         applicationDto = ApplicationDto.builder()
-          .id(17L)
-          .number("Test")
-          .wayBillDto(null)
-          //.lastUpdatedByUsersDto(null)
-          .lastUpdated(LocalDate.now())
-          //.createdByUsersDto(null)
-          .sourceLocationAddressDto(null)
-          .registrationDate(LocalDate.now())
-          .applicationStatus(ApplicationStatus.OPEN)
-          .deletedAt(LocalDate.now())
-          .build();
+                .id(17L)
+                .number("Test")
+                .wayBillDto(null)
+                //.lastUpdatedByUsersDto(null)
+                .lastUpdated(LocalDate.now())
+                //.createdByUsersDto(null)
+                .sourceLocationAddressDto(null)
+                .registrationDate(LocalDate.now())
+                .applicationStatus(ApplicationStatus.OPEN)
+                .deletedAt(LocalDate.now())
+                .build();
         pageRequest = PageRequest.of(0, 10);
     }
 
@@ -79,10 +79,10 @@ public class ApplicationServiceTest {
         Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
-        Mockito.when(applicationRepository.findAll(pageRequest, true)).thenReturn(applicationPage);
+        Mockito.when(applicationRepository.findAll(pageRequest, true, null)).thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest, true));
+        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest, true, null));
 
     }
 
