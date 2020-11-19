@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
-import Form from "react-bootstrap/Form";
-import {FaEdit} from "react-icons/fa";
 import Table from "react-bootstrap/Table";
 import Page from "../../components/Page";
 import CardContainer from "../../components/CardContainer";
+import ErrorMessage from "../../messages/errorMessage";
+import ModalEditWarehouse from "./ModalEditWarehouse";
+import {errorMessage} from "jest-validate";
+import {FaEdit} from "react-icons/fa";
 
 export default (props) => {
 
@@ -15,10 +17,9 @@ export default (props) => {
     });
 
     const [warehouses, setWarehouse] = useState([]);
-    const [filter, setFilter] = useState([]);
-    const [editCustomer, setEditCustomer] = useState({
+    const [editWarehouse, setEditWarehouse] = useState({
         editShow: false,
-        customer: []
+        warehouse: []
     });
 
     const changePage = (e) => {
@@ -44,22 +45,43 @@ export default (props) => {
             });
     }
 
+    const closeModalEdit = (e, warehouseDto) => {
+        setEditWarehouse(
+            preState => ({
+                ...preState,
+                editShow: false
+            }));
+        if (warehouseDto) {
+            getWarehouses(`/customers/${props.currentCustomerId}/warehouses/?size=${page.countPerPage}`);
+        }
+    };
+
+    debugger;
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
             <td>{warehouse.type}</td>
-            <td>{warehouse.address}</td>
+            <td/>
+            {/*<td>{warehouse.address.city}</td>*/}
             <td>{warehouse.totalCapacity}</td>
-            {/*<td><Form.Check*/}
-            {/*    type="switch"*/}
-            {/*    id={warehouse.id}*/}
-            {/*    style={{width: '25px'}}*/}
-            {/*    checked={warehouse.active}*/}
-            {/*    value={warehouse.active}*/}
-            {/*/>*/}
-            {/*</td>*/}
+            <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
+                        size={'1.3em'}
+                        onClick={() => {
+                            setEditWarehouse({
+                                editShow: true,
+                                warehouse: warehouse
+                            });
+                        }}/>
+            </td>
         </tr>
     ));
+
+
+    const modals =
+        <React.Fragment>
+            {errorMessage && <ErrorMessage message={errorMessage}/>}
+            <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}/>
+        </React.Fragment>;
 
     const body =
         <React.Fragment>
@@ -81,6 +103,7 @@ export default (props) => {
 
     return (
         <CardContainer
+            modals={modals}
             body={body}/>
     );
 }
