@@ -68,5 +68,8 @@ public class Application implements BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<ApplicationItem> items = new HashSet<>();
     private Long customerId;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ApplicationType type;
 
 }
