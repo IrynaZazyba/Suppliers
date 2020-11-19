@@ -6,17 +6,11 @@ import ErrorMessage from "../../messages/errorMessage";
 
 function ModalEditWarehouse(props) {
 
-    // const address = [addressDto, setAddress] = useState({
-    //     city: '',
-    //     AddressLine1: '',
-    //     AddressLine2: '',
-    //     state: ''
-    // });
     const [warehouseDto, setWarehouse] = useState({
         id: '',
         identifier: '',
         type: '',
-        // address,
+        address: '',
         totalCapacity: ''
     });
     const [customerDto, setCustomer] = useState({
@@ -24,18 +18,23 @@ function ModalEditWarehouse(props) {
         name: '',
         adminEmail: ''
     });
-
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
 
-    const handleName = (e) => {
-        setWarehouse(preState => ({
-            ...preState,
-            identifier: e.target.value
-        }));
-    };
+    // const handleName = (e) => {
+    //     setWarehouse(preState => ({
+    //         ...preState,
+    //         // identifier: e.target.value,
+    //         id: e.id,
+    //         identifier: e.identifier,
+    //         type: e.type,
+    //         address: e.address,
+    //         totalCapacity: e.totalCapacity
+    //         // type: e.target.value,
+    //     }));
+    // };
 
     // useEffect(() => {
     //     if (props.props.editShow === true) {
@@ -100,28 +99,43 @@ function ModalEditWarehouse(props) {
                     <Form>
                         <Form.Group controlId="editWarehouse" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"
-                                          placeholder="Identifier"
                                           disabled
-                                          onChange={handleName}
+                                          // onChange={handleName}
                                           value={warehouseDto.identifier}
-                                          className={
-                                              errors.validationErrors.includes("identifier")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid warehouse identifier.
-                            </Form.Control.Feedback>
+                                          placeholder="Identifier"
+                                          // className={
+                                          //     errors.validationErrors.includes("identifier")
+                                          //         ? "form-control is-invalid"
+                                          //         : "form-control"
+                            //               // }/>
+                            // <Form.Control.Feedback type="invalid">
+                            //     Please provide a valid warehouse identifier.
+                            // </Form.Control.Feedback>
+                            />
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"
                                           value={warehouseDto.type}
-                                          placeholder="type"
+                                          placeholder={props.type}
                             />
-
-                            //todo address lines for edit
-
-
+                        </Form.Group>
+                        <Form.Group controlId="city" style={{padding: '5px 10px'}}>
+                            <Form.Control type="number"
+                                          value={warehouseDto.address.city}
+                                          placeholder="city"
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="address" style={{padding: '5px 10px'}}>
+                            <Form.Control type="number"
+                                          value={warehouseDto.address.addressLine}
+                                          placeholder="address"
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
+                            <Form.Control type="number"
+                                          value={warehouseDto.address.state}
+                                          placeholder="state"
+                            />
                         </Form.Group>
                         <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
                             <Form.Control type="number"
@@ -129,6 +143,7 @@ function ModalEditWarehouse(props) {
                                           placeholder="total capacity"
                             />
                         </Form.Group>
+
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
                                     onClick={editWarehouseHandler}>

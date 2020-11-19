@@ -6,21 +6,46 @@ import ErrorMessage from "../../messages/errorMessage";
 import ModalEditWarehouse from "./ModalEditWarehouse";
 import {errorMessage} from "jest-validate";
 import {FaEdit} from "react-icons/fa";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import TogglePage from "../../components/TogglePage";
 
 export default (props) => {
 
     const [page, setPage] = useState({
-        active: 1,
+        // active: 1,
         currentPage: 1,
         countPerPage: 10,
         countPages: 1
     });
 
     const [warehouses, setWarehouse] = useState([]);
+    const [filter, setFilter] = useState([]);
+    const [lgShow, setLgShow] = useState(false);
     const [editWarehouse, setEditWarehouse] = useState({
         editShow: false,
         warehouse: []
     });
+    // const filterOptions = {'All': '', 'Active': true, 'Disabled': false};
+
+    const onChangeFilter = (e) => {
+        e.preventDefault();
+        setFilter(e.target.value);
+        getWarehouses(`/customers/${props.currentCustomerId}
+        /warehouses/?status=${e.target.value}&size=${page.countPerPage}`);
+    };
+
+    const handleCountPerPage = (e) => {
+        e.preventDefault();
+        setPage(preState => ({
+            ...preState,
+            countPerPage: e.target.value
+        }));
+        getWarehouses(`/customers/${props.currentCustomerId}
+        /warehouses/?size=${e.target.value}&status=${filter}`);
+    };
 
     const changePage = (e) => {
         e.preventDefault();
@@ -38,7 +63,7 @@ export default (props) => {
             .then(commits => {
                 setWarehouse(commits.content);
                 setPage({
-                    active: (commits.pageable.pageNumber + 1),
+                    // active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
                     countPages: commits.totalPages
                 });
@@ -56,7 +81,6 @@ export default (props) => {
         }
     };
 
-    debugger;
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
@@ -83,6 +107,20 @@ export default (props) => {
             <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}/>
         </React.Fragment>;
 
+    const header =
+        <React.Fragment>
+            <Row>
+                <Col>
+                    <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
+                        Add
+                    </Button>
+                </Col>
+                <Col md={14}>
+                    <TogglePage props={page} onChange={handleCountPerPage}/>
+                </Col>
+            </Row>
+        </React.Fragment>;
+
     const body =
         <React.Fragment>
             <Table hover size="sm">
@@ -104,6 +142,7 @@ export default (props) => {
     return (
         <CardContainer
             modals={modals}
+            header={header}
             body={body}/>
     );
 }
