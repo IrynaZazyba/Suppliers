@@ -18,7 +18,12 @@ function ModalAddApplication(props) {
         serverErrors: ''
     });
     const [options, setOptions] = useState([]);
-    const [item, setItems] = useState([]);
+    const [item, setItems] = useState({
+        upc: '',
+        label: '',
+        amount: '',
+        cost: ''
+    });
 
     const handleSearch = () => {
         fetch(`/`)
@@ -146,8 +151,14 @@ function ModalAddApplication(props) {
                                             </Form.Control.Feedback>
                                         </Col>
                                         <Col sm="1">
-                                            <Button type="submit" className="primaryButton pull-right"
-                                                // onClick={addCustomerHandler}
+                                            <Button type="submit" variant="outline-primary"
+                                                    className="primaryButton"
+                                                    onClick={() => setItems({
+                                                        upc: '1254789630',
+                                                        label: 'some',
+                                                        amount: 'amount',
+                                                        cost: 'cost'
+                                                    })}
                                             >
                                                 Add
                                             </Button>
