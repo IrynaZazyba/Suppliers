@@ -28,11 +28,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -194,33 +196,38 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     @Transactional
     public void shipItemsAccordingApplications(List<ApplicationDto> applicationDto) {
-        final List<WarehouseItem> warehouseItems = applicationDto.parallelStream()
-                .map(application -> application.getItems()
-                        .stream()
-                        .map(item -> reduceItemsAmountAtWarehouse(application, item))
-                        .collect(Collectors.toList()))
+        final List<WarehouseItem> warehouseItems = applicationDto.stream()
+                .map(this::reduceItemsAmountAtWarehouse)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-
-        if (warehouseItems.contains(null)) {
-            throw new ConflictWithTheCurrentWarehouseStateException(
-                    "Required amount of items bigger than existing at warehouse");
-        }
         itemInWarehouseRepository.saveAll(warehouseItems);
     }
 
-    private WarehouseItem reduceItemsAmountAtWarehouse(final ApplicationDto application,
-                                                       final ApplicationItemDto item) {
+    private List<WarehouseItem> reduceItemsAmountAtWarehouse(final ApplicationDto application) {
+        final Map<Long, WarehouseItem> itemMaps = itemInWarehouseRepository
+                .getAllByWarehouseId(application.getDestinationLocationDto().getId()).stream()
+                .collect(Collectors.toMap(WarehouseItem::getId, Function.identity()));
+        return application.getItems()
+                .stream()
+                .map(item -> reduceItemAmount(item, itemMaps))
+                .collect(Collectors.toList());
+    }
+
+    private WarehouseItem reduceItemAmount(final ApplicationItemDto item,
+                                           final Map<Long, WarehouseItem> itemMaps) {
         final Long itemDtoId = item.getItemDto().getId();
-        final WarehouseItem itemInWarehouse = itemInWarehouseRepository
-                .findByItemId(itemDtoId, application.getDestinationLocationDto().getId())
-                .orElseThrow(() ->
-                        new ConflictWithTheCurrentWarehouseStateException(
-                                "Warehouse doesn't have item with id=" + itemDtoId));
+        final WarehouseItem itemInWarehouse = itemMaps.get(itemDtoId);
+        if (Objects.isNull(itemInWarehouse)) {
+            throw new ConflictWithTheCurrentWarehouseStateException("Warehouse doesn't have item with id=" + itemDtoId);
+        }
         final Double amountAtWarehouse = itemInWarehouse.getAmount();
         final Double amountAfterReducing = amountAtWarehouse - item.getAmount();
+        if (amountAfterReducing < 0) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Required amount of items bigger than existing at warehouse");
+        }
         itemInWarehouse.setAmount(amountAfterReducing);
-        return amountAfterReducing > 0 ? itemInWarehouse : null;
+        return itemInWarehouse;
     }
 
 }

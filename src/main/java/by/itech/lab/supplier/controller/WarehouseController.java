@@ -63,7 +63,6 @@ public class WarehouseController {
         warehouseService.delete(id);
     }
 
-
     @PostMapping(URL_ID_PARAMETER + URL_ITEMS)
     public void acceptItem(@PathVariable Long id, @RequestBody ApplicationDto applicationDto) {
         warehouseService.acceptApplication(applicationDto, id);
@@ -73,6 +72,5 @@ public class WarehouseController {
     public BigDecimal getAvailableCapacity(@PathVariable Long id) {
         return new BigDecimal(warehouseService.getAvailableCapacity(id));
     }
-
 
 }
