@@ -23,9 +23,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
+@Table(name = "items_in_application")
 @Where(clause = "deleted_at is null")
-public class ItemsInApplication implements BaseEntity {
+public class ApplicationItem implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

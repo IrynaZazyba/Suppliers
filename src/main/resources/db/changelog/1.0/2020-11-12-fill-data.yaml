@@ -1,5 +1,17 @@
 databaseChangeLog:
   - changeSet:
+      id: SUP-78-6
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: application
+            columns:
+              - column:
+                  name: type
+                  type: VARCHAR(15)
+                  constraints:
+                    nullable: false
+  - changeSet:
       id: IN-CCA-337
       author: alesia_hlushakova
       changes:
