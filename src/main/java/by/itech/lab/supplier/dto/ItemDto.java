@@ -17,5 +17,6 @@ public class ItemDto implements BaseDto {
     private Double units;
     private CategoryDto categoryDto;
     private LocalDate deletedAt;
+    private Long customerId;
 
 }

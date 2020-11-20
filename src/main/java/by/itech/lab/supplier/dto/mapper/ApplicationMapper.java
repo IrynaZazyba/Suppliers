@@ -35,6 +35,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
                 .deletedAt(dto.getDeletedAt())
                 .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .customerId(dto.getCustomerId())
+                .type(dto.getType())
                 .build();
         if (Objects.nonNull(dto.getWayBillDto())) {
             application.setWayBill(wayBillMapper.map(dto.getWayBillDto()));
@@ -56,6 +58,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
                 .deletedAt(application.getDeletedAt())
                 .items(application.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .customerId(application.getCustomerId())
+                .type(application.getType())
                 .build();
         if (Objects.nonNull(application.getWayBill())) {
             applicationDto.setWayBillDto(wayBillMapper.map(application.getWayBill()));
@@ -73,6 +77,8 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
         to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
         to.setDeletedAt(from.getDeletedAt());
+        to.setCustomerId(from.getCustomerId());
+        to.setType(from.getType());
         updateItems(to.getItems(), from.getItems());
         if (Objects.nonNull(from.getWayBillDto())) {
             to.setWayBill(wayBillMapper.map(from.getWayBillDto()));

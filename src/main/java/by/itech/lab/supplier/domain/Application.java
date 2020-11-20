@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
@@ -30,6 +33,8 @@ import java.util.Set;
 @Entity
 @Table
 @Where(clause = "deleted_at is null")
+@FilterDef(name = "accessFilter", parameters = @ParamDef(name = "companyId", type = "long"))
+@Filter(name = "accessFilter", condition = "customer_id = :companyId")
 public class Application implements BaseEntity {
 
     @Id
@@ -62,5 +67,9 @@ public class Application implements BaseEntity {
     @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude
     private Set<ApplicationItem> items = new HashSet<>();
+    private Long customerId;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ApplicationType type;
 
 }

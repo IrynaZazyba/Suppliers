@@ -14,5 +14,6 @@ public class CategoryDto implements BaseDto {
     private String category;
     private BigDecimal taxRate;
     private LocalDate deletedAt;
+    private Long customerId;
 
 }
