@@ -1,10 +1,12 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseItem;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
+import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -24,6 +26,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -195,30 +199,43 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional
-    public void shipItemsAccordingApplications(List<ApplicationDto> applicationDto) {
-        final List<WarehouseItem> warehouseItems = applicationDto.stream()
-                .map(this::reduceItemsAmountAtWarehouse)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+    public void shipItemsAccordingApplications(final List<ApplicationDto> applicationsDto) {
+        final Map<Long, Map<Long, WarehouseItem>> whItemByWhAndItem = findOnlyRelatedItems(applicationsDto);
+        final List<WarehouseItem> warehouseItems = applicationsDto.stream().map(app -> app.getItems().stream()
+                .map(appItem -> reduceItemAmount(appItem, whItemByWhAndItem
+                        .get(app.getDestinationLocationDto().getId())
+                        .get(appItem.getItemDto().getId())))
+                .collect(Collectors.toList())
+        ).flatMap(Collection::stream).collect(Collectors.toList());
         itemInWarehouseRepository.saveAll(warehouseItems);
     }
 
-    private List<WarehouseItem> reduceItemsAmountAtWarehouse(final ApplicationDto application) {
-        final Map<Long, WarehouseItem> itemMaps = itemInWarehouseRepository
-                .getAllByWarehouseId(application.getDestinationLocationDto().getId()).stream()
-                .collect(Collectors.toMap(i -> i.getItem().getId(), Function.identity()));
-        return application.getItems()
-                .stream()
-                .map(item -> reduceItemAmount(item, itemMaps))
-                .collect(Collectors.toList());
+    private Map<Long, Map<Long, WarehouseItem>> findOnlyRelatedItems(final List<ApplicationDto> apps) {
+        return itemInWarehouseRepository.findAll((root, cq, cb) -> {
+            Join<WarehouseItem, Warehouse> whJoin = root.join("warehouse");
+            Join<WarehouseItem, Item> itemJoin = root.join("item");
+            return cb.or(apps.stream().map(app -> {
+                Long whId = app.getDestinationLocationDto().getId();
+                // getting all related items
+                List<Long> itemIds = app.getItems().stream()
+                        .map(ApplicationItemDto::getItemDto).map(ItemDto::getId).collect(Collectors.toList());
+                return cb.and(cb.equal(
+                        whJoin.get("id"), whId),
+                        itemJoin.get("id").in(itemIds)
+                );
+            }).toArray(Predicate[]::new));
+        }).stream()
+                // mapping by warehouse id
+                .collect(Collectors.groupingBy(item -> item.getWarehouse().getId(),
+                        // mapping by item id
+                        Collectors.toMap(item -> item.getItem().getId(), Function.identity())));
     }
 
     private WarehouseItem reduceItemAmount(final ApplicationItemDto item,
-                                           final Map<Long, WarehouseItem> itemMaps) {
-        final Long itemDtoId = item.getItemDto().getId();
-        final WarehouseItem itemInWarehouse = itemMaps.get(itemDtoId);
+                                           final WarehouseItem itemInWarehouse) {
         if (Objects.isNull(itemInWarehouse)) {
-            throw new ConflictWithTheCurrentWarehouseStateException("Warehouse doesn't have item with id=" + itemDtoId);
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Warehouse doesn't have item with id=" + item.getItemDto().getId());
         }
         final Double amountAtWarehouse = itemInWarehouse.getAmount();
         final Double amountAfterReducing = amountAtWarehouse - item.getAmount();

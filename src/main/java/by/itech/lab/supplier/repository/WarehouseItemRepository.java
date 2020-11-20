@@ -2,13 +2,14 @@ package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.WarehouseItem;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Long> {
+public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Long>,
+        JpaSpecificationExecutor<WarehouseItem> {
 
     @Query("select i from WarehouseItem i where i.item.id=:id and i.warehouse.id=:warehouseId")
     Optional<WarehouseItem> findByItemId(@Param("id") Long id, @Param("warehouseId") Long warehouseId);
@@ -17,5 +18,4 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
             "from WarehouseItem as i where i.warehouse.id=:warehouseId")
     Double getAvailableCapacity(@Param("warehouseId") Long warehouseId);
 
-    List<WarehouseItem> getAllByWarehouseId(Long id);
 }
