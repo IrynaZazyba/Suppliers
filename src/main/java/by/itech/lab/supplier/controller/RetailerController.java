@@ -3,6 +3,7 @@ package by.itech.lab.supplier.controller;
 import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.Retailer;
+import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.RetailerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.RetailerService;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -33,10 +35,14 @@ public class RetailerController {
         return retailerService.findById(id);
     }
 
+
     @GetMapping
-    public Page<RetailerDto> getAllRetailers(@PageableDefault Pageable pageable) {
-        return retailerService.findAll(pageable);
+    public Page<RetailerDto> getAllByActive(
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
+            @RequestParam(required = false) final Boolean status) {
+        return retailerService.findAllByActive(pageable, status);
     }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

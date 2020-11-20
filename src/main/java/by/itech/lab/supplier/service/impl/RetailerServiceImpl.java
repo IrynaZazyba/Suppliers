@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Retailer;
+import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.RetailerDto;
 import by.itech.lab.supplier.dto.mapper.RetailerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -31,6 +32,11 @@ public class RetailerServiceImpl implements by.itech.lab.supplier.service.Retail
     @Override
     public Page<RetailerDto> findAll(Pageable pageable) {
         return retailerRepository.findAll(pageable).map(retailerMapper::map);
+    }
+
+    @Override
+    public Page<RetailerDto> findAllByActive(final Pageable pageable, final Boolean status) {
+        return retailerRepository.findByStatus(pageable, status).map(retailerMapper::map);
     }
 
     @Override

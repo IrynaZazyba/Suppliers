@@ -17,4 +17,6 @@ public interface RetailerService {
 
     @Transactional
     void delete(Long id);
+
+    Page<RetailerDto> findAllByActive(final Pageable pageable, final Boolean status);
 }
