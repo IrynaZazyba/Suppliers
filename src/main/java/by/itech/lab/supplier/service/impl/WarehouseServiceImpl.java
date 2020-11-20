@@ -193,8 +193,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional
-    public void shipItemsAccordingApplications(final List<ApplicationDto> applicationDto) {
-        final List<WarehouseItem> collect = applicationDto.parallelStream()
+    public void shipItemsAccordingApplications(List<ApplicationDto> applicationDto) {
+        final List<WarehouseItem> warehouseItems = applicationDto.parallelStream()
                 .map(application -> application.getItems()
                         .stream()
                         .map(item -> reduceItemsAmountAtWarehouse(application, item))
@@ -202,11 +202,11 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        if (collect.contains(null)) {
+        if (warehouseItems.contains(null)) {
             throw new ConflictWithTheCurrentWarehouseStateException(
                     "Required amount of items bigger than existing at warehouse");
         }
-        itemInWarehouseRepository.saveAll(collect);
+        itemInWarehouseRepository.saveAll(warehouseItems);
     }
 
     private WarehouseItem reduceItemsAmountAtWarehouse(final ApplicationDto application,
@@ -217,10 +217,10 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .orElseThrow(() ->
                         new ConflictWithTheCurrentWarehouseStateException(
                                 "Warehouse doesn't have item with id=" + itemDtoId));
-        final Double amount = itemInWarehouse.getAmount();
-        final Double currentValue = amount - item.getAmount();
-        itemInWarehouse.setAmount(currentValue);
-        return currentValue < amount ? itemInWarehouse : null;
+        final Double amountAtWarehouse = itemInWarehouse.getAmount();
+        final Double amountAfterReducing = amountAtWarehouse - item.getAmount();
+        itemInWarehouse.setAmount(amountAfterReducing);
+        return amountAfterReducing > 0 ? itemInWarehouse : null;
     }
 
 }
