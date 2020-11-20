@@ -480,6 +480,7 @@ Cookie: {{test}}
 
 {
   "number": "Test",
+  "customerId": 3,
   "type": "SUPPLY",
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",

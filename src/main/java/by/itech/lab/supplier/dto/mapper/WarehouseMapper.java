@@ -35,7 +35,6 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
                 .addressDto(!Objects.isNull(entity.getAddress())?addressMapper.map(entity.getAddress()):null)
-                .addressDto(addressMapper.map(entity.getAddress()))
                 .retailerId(entity.getRetailerId())
                 .build();
     }
