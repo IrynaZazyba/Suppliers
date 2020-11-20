@@ -24,6 +24,8 @@ import java.time.LocalDate;
 @Entity
 @Table
 @Where(clause = "deleted_at is null")
+@FilterDef(name = "accessFilter", parameters = @ParamDef(name = "companyId", type = "long"))
+@Filter(name = "accessFilter", condition = "customer_id = :companyId")
 public class Item implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +40,6 @@ public class Item implements BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
     private LocalDate deletedAt;
+    private Long customerId;
 
 }

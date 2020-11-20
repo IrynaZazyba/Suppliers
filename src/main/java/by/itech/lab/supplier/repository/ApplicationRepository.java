@@ -28,6 +28,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("select app from Application app where :status is null or app.applicationStatus=:status")
     Page<Application> findAll(Pageable pageable,
                               @Param("status") ApplicationStatus status);
+    @Query("select app from Application app where :flag = true or (:flag = false and app.type like 'TRAFFIC')")
+    Page<Application> findAllByUserRole(Pageable pageable, @Param("flag") Boolean roleFlag);
 
     @Modifying
     @Query("update Application set applicationStatus = :status where id = :id")

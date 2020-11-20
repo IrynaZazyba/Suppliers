@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,26 +22,22 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
-@Where(clause = "deleted_at is null")
-public class ItemsInApplication implements BaseEntity {
+@Table(name = "items_in_warehouse")
+public class WarehouseItem implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
+    private Double amount;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "application_id")
-    private Application application;
-
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
-
+    private LocalDate deletedAt;
     @Column(nullable = false)
     private BigDecimal cost;
-    @Column(nullable = false)
-    private Double amount;
-    private LocalDate deletedAt;
 
 }

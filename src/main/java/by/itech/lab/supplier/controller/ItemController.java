@@ -26,13 +26,15 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEM;
 @RestController
 @AllArgsConstructor
 @Slf4j
-@RequestMapping(URL_ITEM)
+@RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + URL_ITEM)
 public class ItemController {
 
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto save(@Valid @RequestBody ItemDto itemDto) {
+    public ItemDto save(@Valid @RequestBody ItemDto itemDto,
+                        @PathVariable Long customerId) {
+        itemDto.setCustomerId(customerId);
         return itemService.save(itemDto);
     }
 

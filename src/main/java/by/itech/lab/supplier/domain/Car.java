@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -24,6 +27,8 @@ import java.time.LocalDate;
 @Entity
 @Table
 @Where(clause = "deleted_at is null")
+@FilterDef(name = "accessFilter", parameters = @ParamDef(name = "companyId", type = "long"))
+@Filter(name = "accessFilter", condition = "customer_id = :companyId")
 public class Car implements BaseEntity {
 
     @Id
