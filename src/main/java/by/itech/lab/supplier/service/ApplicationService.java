@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Set;
 
-public interface ApplicationService extends BaseSimpleService<ApplicationDto> {
 public interface ApplicationService extends BaseService<ApplicationDto> {
 
     Page<ApplicationDto> findAll(Pageable pageable, Boolean roleFlag, ApplicationStatus status);

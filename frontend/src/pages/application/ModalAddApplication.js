@@ -26,15 +26,21 @@ function ModalAddApplication(props) {
         totalUnits: ''
     });
 
+    const [warehouses, setWarehouses] = useState({
+        source: '',
+        destination: ''
+    });
+
     const handleSearch = (query) => {
         setIsLoading(true);
-        fetch(`/item/upc?upc=${query}`)
+        fetch(`customers/3/item/upc?upc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
                     id: i.id,
                     upc: i.upc,
-                    label: i.label
+                    label: i.label,
+                    units: i.units
                 }));
 
                 setOptions(optionsFromBack);
@@ -62,10 +68,22 @@ function ModalAddApplication(props) {
         setCurrentItem('');
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: item.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0)
+                totalAmount: item.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
+                totalUnits: item.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
             })
         );
     }, [item]);
+
+
+    useEffect(() => {
+        if (props.props.editShow === true) {
+            fetch(`/customers/${props.props.customer.id}/warehouses/type?type=`)
+                .then(response => response.json())
+                .then(res => {
+                    console.log(res);
+                });
+        }
+    }, []);
 
 
     return (
@@ -128,32 +146,13 @@ function ModalAddApplication(props) {
                                               value={totalValues.totalAmount}/>
                             </Col>
                         </Form.Group>
-
-
-                        {/*<Row style={{padding: '0px 10px'}}>*/}
-                        {/*    <Col>*/}
-                        {/*        <h6>Items</h6>*/}
-                        {/*    </Col>*/}
-                        {/*    <Col style={{textAlign: 'end'}}>*/}
-                        {/*        <FaPlus style={{color: '#1A7FA8'}}*/}
-                        {/*                size={'1.3em'}*/}
-                        {/*            //         onClick={() => {*/}
-                        {/*            //             setEditCustomer({*/}
-                        {/*            //                 editShow: true,*/}
-                        {/*            //                 customer: custom*/}
-                        {/*            //             });*/}
-                        {/*            //         }}*/}
-                        {/*        />*/}
-                        {/*    </Col>*/}
-                        {/*</Row>*/}
-                        {/*<Typeahead*/}
-                        {/*    minLength={3}*/}
-                        {/*    onChange={(selected) => {*/}
-                        {/*        // Handle selections...*/}
-                        {/*    }}*/}
-                        {/*    options={[ "Alabama", "Nebraska", "Malibu"]}*/}
-                        {/*/>*/}
-
+                        <Form.Group as={Row} controlId="totalUnits">
+                            <Form.Label column sm="2">Total number of items</Form.Label>
+                            <Col sm="5">
+                                <Form.Control disabled placeholder="Total amount of units" type="text"
+                                              value={totalValues.totalUnits}/>
+                            </Col>
+                        </Form.Group>
                         <Card border="primary" style={{width: '100%'}}>
                             <Card.Header>Items
                             </Card.Header>
@@ -171,6 +170,7 @@ function ModalAddApplication(props) {
                                                 placeholder="Search item..."
                                                 onSearch={handleSearch}
                                                 onChange={onChangeUpc}
+                                                value={currentItem.upc}
                                             />
 
 
@@ -182,7 +182,7 @@ function ModalAddApplication(props) {
                                                 Please provide a valid number.
                                             </Form.Control.Feedback>
                                         </Col>
-                                        <Col sm="2">
+                                        <Col>
                                             <Form.Control placeholder="amount" type="text"
                                                           value={currentItem && currentItem.amount}
                                                           onChange={handleInput('amount')}/>
@@ -190,7 +190,7 @@ function ModalAddApplication(props) {
                                                 Please provide a valid number.
                                             </Form.Control.Feedback>
                                         </Col>
-                                        <Col sm="2">
+                                        <Col>
                                             <Form.Control placeholder="cost" type="text"
                                                           value={currentItem && currentItem.cost}
                                                           onChange={handleInput('cost')}

@@ -66,7 +66,7 @@ public class ApplicationServiceTest {
                 //.lastUpdatedByUsersDto(null)
                 .lastUpdated(LocalDate.now())
                 //.createdByUsersDto(null)
-                .sourceLocationAddressDto(null)
+                .sourceLocationDto(null)
                 .registrationDate(LocalDate.now())
                 .applicationStatus(ApplicationStatus.OPEN)
                 .deletedAt(LocalDate.now())

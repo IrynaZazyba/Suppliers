@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.service.WarehouseService;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
@@ -72,6 +75,11 @@ public class WarehouseController {
     @GetMapping(URL_ID_PARAMETER + URL_CAPACITY)
     public BigDecimal getAvailableCapacity(@PathVariable Long id) {
         return new BigDecimal(warehouseService.getAvailableCapacity(id));
+    }
+
+    @GetMapping("/type")
+    public List<WarehouseDto> findByType(@PathVariable final WarehouseType type) {
+        return warehouseService.findAllByType(type);
     }
 
 

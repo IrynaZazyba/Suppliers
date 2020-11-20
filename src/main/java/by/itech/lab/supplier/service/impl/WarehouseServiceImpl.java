@@ -3,6 +3,7 @@ package by.itech.lab.supplier.service.impl;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseItem;
+import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
@@ -60,6 +61,13 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
+
+    @Override
+    public List<WarehouseDto> findAllByType(final WarehouseType warehouseType) {
+        return warehouseRepository.findAllByType(warehouseType)
+                .stream().map(warehouseMapper::map).collect(Collectors.toList());
+    }
+
 
     @Override
     @Transactional

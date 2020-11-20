@@ -35,7 +35,7 @@ export default () => {
 
 
     useEffect(() => {
-        getApplications(`/application/admin`);
+        getApplications(`/customers/3/application/admin`);
     }, []);
 
 
@@ -43,6 +43,8 @@ export default () => {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
+                console.log(commits);
+
                 setApplications(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
@@ -55,7 +57,7 @@ export default () => {
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getApplications(`/application/admin?status=${e.target.value}&size=${page.countPerPage}`);
+        getApplications(`/customers/3/application/admin?status=${e.target.value}&size=${page.countPerPage}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -64,13 +66,13 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getApplications(`/application/admin?size=${e.target.value}`);
+        getApplications(`/customers/3/application/admin?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApplications(`/application/admin?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
+        getApplications(`/customers/3/application/admin?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
     };
 
     const closeModalEdit = (e, appDto) => {
@@ -80,22 +82,22 @@ export default () => {
                 editShow: false
             }));
         if (appDto) {
-            getApplications(`/application/admin?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/3/application/admin?page=${page.currentPage}&size=${page.countPerPage}`);
         }
     };
 
     const closeModalAdd = (e, appDto) => {
         setLgShow(e);
         if (appDto) {
-            getApplications(`/application/admin?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/3/application/admin?page=${page.currentPage}&size=${page.countPerPage}`);
         }
     };
 
     const tableRows = applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
-            <td></td>
-            <td></td>
+            <td>{app.sourceLocationDto.identifier}</td>
+            <td>{app.destinationLocationDto.identifier}</td>
             <td>{app.lastUpdated}</td>
             <td>{app.lastUpdatedByUsersDto.surname}</td>
             <td>{app.applicationStatus}</td>
@@ -123,12 +125,17 @@ export default () => {
     const header =
         <React.Fragment>
             <Row>
-                <Col md={2}>
+                <Col md={'auto'}>
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
-                        Add
+                        Add supply
                     </Button>
                 </Col>
-                <Col md={7}></Col>
+                <Col md={'auto'}>
+                    <Button className="mainButton" size="sm">
+                        Add shipment
+                    </Button>
+                </Col>
+                <Col md={6}></Col>
                 <Col md={2}>
                     <Form.Control size="sm" as="select"
                                   value={filter}
