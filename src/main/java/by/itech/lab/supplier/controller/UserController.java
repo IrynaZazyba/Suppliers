@@ -76,7 +76,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
-    public int changePassword(@PathVariable Long id, @PathVariable String password) {
+    public int changePassword(@PathVariable Long id, @RequestBody String password) {
         return userService.changePassword(id, password);
     }
 

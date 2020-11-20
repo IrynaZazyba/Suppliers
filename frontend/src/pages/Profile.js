@@ -6,6 +6,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {AuthContext} from "../context/authContext";
 import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import TogglePage from "../components/TogglePage";
 
 
 export default () => {
@@ -20,15 +23,19 @@ export default () => {
         addressLine2: ''
     });
     const [userDto, setUserDto] = useState({
-        id: user.id,
-        name: user.name,
-        surname: user.surname,
-        birthday: user.birthday,
-        addressDto: user.addressDto,
-        role: user.role,
-        username: user.username,
-        email: user.email,
-        customerId: currentCustomerId
+        id: '',
+        name: '',
+        surname: '',
+        birthday: '',
+        addressDto:'',
+        role: '',
+        password:'',
+        username: '',
+        email: ''
+    });
+    const [state, setState] = useState({
+        id: '',
+        state: ''
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
@@ -45,6 +52,14 @@ export default () => {
         }));
     };
 
+    const handlePassword = (e) => {
+        setUserDto(preState => ({
+            ...preState,
+            password: e.target.value
+        }));
+    };
+
+
     const handleBirthday = (e) => {
         setUserDto(preState => ({
             ...preState,
@@ -54,15 +69,22 @@ export default () => {
 
 
     useEffect(() => {
-console.log(user.username);
 
-    }, );
+    fetch("http://localhost:8080/customers/" + currentCustomerId + "/users/username/" + user.username)
+        .then(response => response.json())
+        .then(res => {
+            setUserDto(res);
+            setState(res.addressDto.state);
+        });
+
+
+    }, []);
 
 
     const editUserHandler = (e) => {
         e.preventDefault();
 
-        fetch("customers/" +  currentCustomerId + "/users/" + userDto.id, {
+        fetch("http://localhost:8080/customers/" +  currentCustomerId + "/users/" + userDto.id, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -81,15 +103,40 @@ console.log(user.username);
 
     };
 
+    const editPasswordHandler = (e) => {
+        e.preventDefault();
+
+        fetch("http://localhost:8080/customers/" +  currentCustomerId + "/users/" + userDto.id + "/password", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userDto.password)
+        })
+            .then(function (response) {
+                if (response.status !== 200) {
+                    setError('');
+                    setErrors("Something go wrong, try later");
+                } else {
+                    setError('');
+
+                }
+            });
+
+    };
+
     return (
         <div style={{
             margin: '70px 10px',
             height: '40px'
         }}>
-            <Alert variant="success">
-                <Alert.Heading>Welcome</Alert.Heading>
+            <Alert variant="success" >
+                <Alert.Heading  >  Info about user </Alert.Heading>
             </Alert>
-            <div className="ProfileCard">
+            <div className="ProfileCard" style={{
+              alignSelf: "center",
+                padding: "2px 300px 400px 500px"
+            }}>
 
                 <Card style={{width: '25rem'}}
                       className="shadow p-3 mb-5 bg-white rounded">
@@ -98,10 +145,11 @@ console.log(user.username);
                     </Card.Header>
                     <Card.Body>  <Form>
                         <Form.Group controlId="editUserr" style={{padding: '5px 10px'}}>
+                            <Form.Label>Name</Form.Label>
                             <Form.Control type="text"
                                           placeholder="name"
                                           onChange={handleName}
-                                          value={user.name}
+                                          value={userDto.name}
                                           className={
                                               validError.includes("name")
                                                   ? "form-control is-invalid"
@@ -112,10 +160,11 @@ console.log(user.username);
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Label>Surname</Form.Label>
                             <Form.Control type="text"
                                           placeholder="surname"
                                           onChange={handleSurname}
-                                          value={user.surname}
+                                          value={userDto.surname}
                                           className={
                                               validError.includes("surname")
                                                   ? "form-control is-invalid"
@@ -124,14 +173,125 @@ console.log(user.username);
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid  surname.
                             </Form.Control.Feedback>
-                            <div className="float-right" style={{paddingRight: '10px'}}>
-                                <Button type="submit" className="mainButton pull-right"
-                                        onClick={editUserHandler}>
-                                    Save
-                                </Button>
-                            </div>
+
+                        </Form.Group>
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="username"
+                                         readOnly={true}
+                                          value={userDto.username}
+                                          className={
+                                              validError.includes("surname")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid  username.
+                            </Form.Control.Feedback>
+
+                        </Form.Group>
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Label>Birthday date</Form.Label>
+                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday} onChange={handleBirthday}
+                                          className={
+                                              validError.includes("birthday")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid date.
+                            </Form.Control.Feedback>
                         </Form.Group>
 
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control type="email" placeholder="email" value={userDto.email} readOnly={true}
+                                          className={
+                                              validError.includes("email")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid email.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>Role</Form.Label>
+                            <Form.Control type="email" placeholder="role" value={userDto.role} readOnly={true}
+                                          className={
+                                              validError.includes("email")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid role.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>City</Form.Label>
+                            <Form.Control type="email" placeholder="city" value={userDto.addressDto.city} readOnly={true}
+                                          className={
+                                              validError.includes("email")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 1</Form.Label>
+                            <Form.Control type="email" placeholder="address line 1" value={userDto.addressDto.addressLine1} readOnly={true}
+                                          className={
+                                              validError.includes("email")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 2</Form.Label>
+                            <Form.Control type="email" placeholder="address line 2" value={userDto.addressDto.addressLine2} readOnly={true}
+                                          className={
+                                              validError.includes("email")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+
+                        </Form.Group>
+
+
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>State</Form.Label>
+                            <Form.Control type="email" placeholder="state" value={state.state} readOnly={true}
+                                          className={
+                                              validError.includes("email")
+                                                  ? "form-control is-invalid"
+                                                  : "form-control"
+                                          }/>
+
+                        </Form.Group>
+                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Control type="password" placeholder="change password"  onChange={handlePassword}
+                                         />
+
+                        </Form.Group>
+
+
+                        <div className="float-right" style={{paddingRight: '10px'}}>
+                            <Button type="submit" className="mainButton pull-right"
+                                    onClick={editUserHandler}>
+                                Save
+                            </Button>
+                        </div>
+                        <div className="float-right" style={{paddingRight: '10px'}}>
+                            <Button type="submit" className="mainButton pull-right"
+                                    onClick={editPasswordHandler}>
+                                Change Password
+                            </Button>
+                        </div>
                     </Form>
                     </Card.Body>
                 </Card>

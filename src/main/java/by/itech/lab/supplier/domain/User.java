@@ -36,6 +36,7 @@ public class User implements BaseEntity {
 
     @OneToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "address_id")
+    @EqualsAndHashCode.Exclude
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)

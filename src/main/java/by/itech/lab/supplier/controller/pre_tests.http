@@ -234,6 +234,16 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
+
+###
+PUT http://localhost:8080/customers/3/users/1/password
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "password": "password"
+}
 ###
 POST http://localhost:8080/customers/3/users
 Content-Type: application/json

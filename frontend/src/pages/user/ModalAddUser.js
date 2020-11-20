@@ -54,7 +54,7 @@ function ModalAddUser(props) {
             .then(commits => {
                 setStates(commits.content);
             });
-    });
+    }, []);
 
     const handleName = (e) => {
         setUser(preState => ({
