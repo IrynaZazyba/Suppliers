@@ -15,7 +15,6 @@ import CardContainer from "../../components/CardContainer";
 
 export default () => {
 
-    const {user, setUser} = useContext(AuthContext);
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
     const [page, setPage] = useState({
@@ -44,11 +43,11 @@ export default () => {
     const changePage = (e) => {
         e.preventDefault();
         let page = e.target.innerHTML - 1;
-        getItems(`/item?page=${page}`);
+        getItems(`/item?page=${page}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getItems(`/item`);
+        getItems(`/item?size=${page.countPerPage}`);
     }, []);
 
     function getItems(url) {
@@ -86,7 +85,7 @@ export default () => {
         <tr key={item.id}>
             <td>{item.label}</td>
             <td>{item.units}</td>
-            <td>{item.category}</td>
+            <td>{item.categoryDto.category}</td>
             <td>{item.upc}</td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
