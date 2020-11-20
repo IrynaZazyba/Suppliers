@@ -5,10 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,6 +33,9 @@ import java.util.Set;
 @Builder
 @Entity
 @Table
+@FilterDef(name = "accessFilter", parameters = @ParamDef(name = "companyId", type = "long"))
+@Filter(name = "accessFilter", condition = "customer_id = :companyId")
+@Where(clause = "deleted_at is null")
 public class Warehouse implements BaseEntity {
 
     @Id
@@ -35,20 +44,19 @@ public class Warehouse implements BaseEntity {
     @Column(nullable = false)
     private String identifier;
     @Column(nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private WarehouseType type;
     @Column(nullable = false)
     private Double totalCapacity;
     private LocalDate deletedAt;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @OneToMany(mappedBy = "warehouse")
-    @EqualsAndHashCode.Exclude
-    private Set<User> users = new HashSet<>();
+    private Long retailerId;
     @OneToMany(mappedBy = "warehouse", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude
-    private Set<ItemsInWarehouse> items=new HashSet<>();
+    private Set<WarehouseItem> items = new HashSet<>();
 }

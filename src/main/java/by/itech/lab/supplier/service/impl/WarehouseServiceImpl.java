@@ -1,26 +1,30 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
-import by.itech.lab.supplier.domain.ItemsInWarehouse;
 import by.itech.lab.supplier.domain.Warehouse;
+import by.itech.lab.supplier.domain.WarehouseItem;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
-import by.itech.lab.supplier.exception.ConflictWithTheCurrentStateException;
+import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateException;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
-import by.itech.lab.supplier.repository.ItemInWarehouseRepository;
+import by.itech.lab.supplier.repository.WarehouseItemRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.service.ApplicationService;
+import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,126 +36,159 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class WarehouseServiceImpl implements WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
     private final ItemMapper itemMapper;
     private final ApplicationService applicationService;
-    private final ItemInWarehouseRepository itemInWarehouseRepository;
+    private final WarehouseItemRepository itemInWarehouseRepository;
     private final Lock lock = new ReentrantLock();
+    private final UserService userService;
+
+    @Lazy
+    @Autowired
+    private WarehouseService _self;
 
     @Override
-    public Page<WarehouseDto> findAll(Pageable pageable) {
+    public Page<WarehouseDto> findAll(final Pageable pageable) {
         return warehouseRepository.findAll(pageable).map(warehouseMapper::map);
     }
 
     @Override
-    public WarehouseDto findById(Long warehouseId) {
+    public WarehouseDto findById(final Long warehouseId) {
         return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 
-    // TODO: 11/4/20
-    @Override
-    public WarehouseDto save(WarehouseDto dto) {
-        return null;
-    }
-
-    // TODO: 11/4/20
-    @Override
-    public void delete(Long id) {
-
-    }
-
     @Override
     @Transactional
-    public void acceptItems(final ApplicationDto appDto, final Long warehouseId) {
+    public WarehouseDto save(final WarehouseDto warehouseDto) {
+        Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
+                .map(item -> update(warehouseDto))
+                .orElseGet(() -> create(warehouseDto));
+        return warehouseMapper.map(warehouse);
+    }
+
+    private Warehouse create(final WarehouseDto warehouseDto) {
+        Warehouse warehouse = warehouseMapper.map(warehouseDto);
+        Warehouse saved = warehouseRepository.save(warehouse);
+        userService.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
+        return saved;
+    }
+
+    private Warehouse update(final WarehouseDto warehouseDto) {
+        Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
+        warehouseMapper.map(warehouseDto, warehouse);
+        return warehouseRepository.save(warehouse);
+    }
+
+    @Transactional
+    @Override
+    public void delete(final Long id) {
+        warehouseRepository.delete(id);
+    }
+
+    @Override
+    public void acceptApplication(final ApplicationDto appDto, final Long warehouseId) {
         lock.lock();
         try {
-            applicationService.changeStatus(appDto.getId(), ApplicationStatus.STARTED_PROCESSING);
             final ApplicationDto appFromDb = applicationService.findById(appDto.getId());
+            ApplicationStatus applicationStatus = appFromDb.getApplicationStatus();
+            if (applicationStatus != ApplicationStatus.OPEN
+                    && applicationStatus != ApplicationStatus.STARTED_PROCESSING) {
+                throw new ConflictWithTheCurrentWarehouseStateException("Application couldn't be accepted");
+            }
             final Long destinationLocationId = appFromDb.getDestinationLocationDto().getId();
             if (!destinationLocationId.equals(warehouseId)) {
                 throw new AccessDeniedException("Application doesn't belong to the requested warehouse");
             }
-            final Long appId = appFromDb.getId();
-            final Set<ItemsInApplicationDto> acceptedToWarehouse = getItemsToAccept(appDto.getItems(), appId);
-
-            checkWarehouseCapacity(acceptedToWarehouse, destinationLocationId);
-            acceptToWarehouse(acceptedToWarehouse, destinationLocationId);
-            if (applicationService.isApplicationFullySatisfied(appId)) {
-                applicationService.changeStatus(appId, ApplicationStatus.FINISHED_PROCESSING);
-            }
+            _self.acceptItems(appDto.getItems(), appFromDb);
         } finally {
             lock.unlock();
         }
     }
 
     @Override
+    @Transactional
+    public void acceptItems(final Set<ApplicationItemDto> itemsToAccept, final ApplicationDto appFromDb) {
+        final Long appId = appFromDb.getId();
+        final Long destinationLocationId = appFromDb.getDestinationLocationDto().getId();
+        final Set<ApplicationItemDto> acceptedToWarehouse = getItemsToAccept(itemsToAccept, appId);
+
+        if (isWarehouseFull(acceptedToWarehouse, destinationLocationId)) {
+            throw new ConflictWithTheCurrentWarehouseStateException("Warehouse capacity not allow to accept items");
+        }
+        acceptToWarehouse(acceptedToWarehouse, destinationLocationId);
+        final ApplicationStatus status = applicationService.isApplicationFullySatisfied(appId) ?
+                ApplicationStatus.FINISHED_PROCESSING :
+                ApplicationStatus.STARTED_PROCESSING;
+        applicationService.changeStatus(appId, status);
+    }
+
+    @Override
     public Double getAvailableCapacity(final Long warehouseId) {
         final Double availableCapacity = itemInWarehouseRepository.getAvailableCapacity(warehouseId);
         return Objects.isNull(availableCapacity) ?
-                warehouseRepository.getTotalCapacity(warehouseId)
-                : availableCapacity;
+                warehouseRepository.getTotalCapacity(warehouseId) :
+                availableCapacity;
     }
 
-    private Set<ItemsInApplicationDto> getItemsToAccept(final Set<ItemsInApplicationDto> itemToAccept,
-                                                        final Long appId) {
-        final List<Long> acceptedItemInAppId = itemToAccept
+    private Set<ApplicationItemDto> getItemsToAccept(final Set<ApplicationItemDto> itemsToAccept,
+                                                     final Long appId) {
+        final List<Long> acceptedItemInAppId = itemsToAccept
                 .stream()
-                .map(ItemsInApplicationDto::getId)
+                .map(ApplicationItemDto::getId)
                 .collect(Collectors.toList());
-        final Set<ItemsInApplicationDto> acceptedItemFromDb = applicationService
+        final Set<ApplicationItemDto> acceptedItemFromDb = applicationService
                 .getItemsById(acceptedItemInAppId, appId);
-        if (acceptedItemFromDb.size() != itemToAccept.size()) {
-            throw new ConflictWithTheCurrentStateException("Attempt to accept doesn't exist or already accepted item");
+        if (acceptedItemFromDb.size() != itemsToAccept.size()) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Attempt to accept doesn't exist or already accepted item");
         }
         return acceptedItemFromDb;
     }
 
-    private void acceptToWarehouse(final Set<ItemsInApplicationDto> acceptedToWarehouse,
+    private void acceptToWarehouse(final Set<ApplicationItemDto> itemsToAccept,
                                    final Long warehouseId) {
         final List<Long> acceptedIds = new ArrayList<>();
-        acceptedToWarehouse.forEach(itemToAccept -> {
+        for (ApplicationItemDto itemToAccept : itemsToAccept) {
             final Long itemId = itemToAccept.getItemDto().getId();
-            final Optional<ItemsInWarehouse> iiw = itemInWarehouseRepository.findByItemId(itemId, warehouseId);
-            final ItemsInWarehouse itemsInWarehouse = iiw.map(
+            final Optional<WarehouseItem> iiw = itemInWarehouseRepository.findByItemId(itemId, warehouseId);
+            final WarehouseItem itemsInWarehouse = iiw.map(
                     items -> updateItemInWarehouse(items, itemToAccept))
                     .orElseGet(() -> createItemInWarehouse(warehouseId, itemToAccept));
             acceptedIds.add(itemToAccept.getId());
             itemInWarehouseRepository.save(itemsInWarehouse);
-        });
+        }
         applicationService.setItemInApplicationAcceptedAt(acceptedIds);
     }
 
-    private ItemsInWarehouse updateItemInWarehouse(final ItemsInWarehouse itemsInWarehouse,
-                                                   final ItemsInApplicationDto itemsInApplication) {
+    private WarehouseItem updateItemInWarehouse(final WarehouseItem itemsInWarehouse,
+                                                final ApplicationItemDto itemsInApplication) {
         itemsInWarehouse.setAmount(itemsInWarehouse.getAmount() + itemsInApplication.getAmount());
-        itemsInWarehouse.setCost(
-                itemsInWarehouse.getCost().compareTo(itemsInApplication.getCost()) >= 0 ?
-                        itemsInWarehouse.getCost() :
-                        itemsInApplication.getCost());
+        final BigDecimal existingCost = itemsInWarehouse.getCost();
+        final BigDecimal newCost = itemsInApplication.getCost();
+        itemsInWarehouse.setCost(existingCost.compareTo(newCost) >= 0 ? existingCost : newCost);
         return itemsInWarehouse;
     }
 
-    private ItemsInWarehouse createItemInWarehouse(final Long warehouseId,
-                                                   final ItemsInApplicationDto itemsInApplication) {
-        return ItemsInWarehouse.builder()
+    private WarehouseItem createItemInWarehouse(final Long warehouseId,
+                                                final ApplicationItemDto itemsInApplication) {
+        final Warehouse warehouse = Warehouse.builder().id(warehouseId).build();
+        return WarehouseItem.builder()
                 .item(itemMapper.map(itemsInApplication.getItemDto()))
                 .amount(itemsInApplication.getAmount())
                 .cost(itemsInApplication.getCost())
-                .warehouse(Warehouse.builder().id(warehouseId).build())
+                .warehouse(warehouse)
                 .build();
     }
 
-    private void checkWarehouseCapacity(final Set<ItemsInApplicationDto> acceptedToWarehouse,
-                                        final Long destinationLocationId) {
+    private boolean isWarehouseFull(final Set<ApplicationItemDto> acceptedToWarehouse,
+                                    final Long destinationLocationId) {
         final Double capacityApp = applicationService.getCapacityItemInApplication(acceptedToWarehouse);
-        if (getAvailableCapacity(destinationLocationId) < capacityApp) {
-            throw new ConflictWithTheCurrentStateException("Warehouse capacity not allow to accept items");
-        }
+        return getAvailableCapacity(destinationLocationId) < capacityApp;
     }
 
     @Override

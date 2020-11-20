@@ -3,12 +3,12 @@ package by.itech.lab.supplier.service.impl;
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
+import by.itech.lab.supplier.dto.mapper.ApplicationItemMapper;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
-import by.itech.lab.supplier.dto.mapper.ItemsInApplicationMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ApplicationRepository;
-import by.itech.lab.supplier.repository.ItemInApplicationRepository;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,8 +28,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
     private final ApplicationMapper applicationMapper;
-    private final ItemInApplicationRepository itemInApplicationRepository;
-    private final ItemsInApplicationMapper itemsInApplicationMapper;
+    private final ApplicationItemRepository itemInApplicationRepository;
+    private final ApplicationItemMapper itemsInApplicationMapper;
 
     @Override
     @Transactional
@@ -72,9 +72,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAll(Pageable pageable, Boolean roleFlag) {
-        return applicationRepository.findAll(pageable, roleFlag)
-                .map(applicationMapper::map);
+    public Page<ApplicationDto> findAll(final Pageable pageable, final Boolean roleFlag) {
+        return applicationRepository.findAllByUserRole(pageable, roleFlag)
+          .map(applicationMapper::map);
     }
 
     @Override
@@ -91,21 +91,19 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Double getCapacityItemInApplication(final Set<ItemsInApplicationDto> items) {
-        Double capacityApp = 0.0;
-        for (ItemsInApplicationDto itemInAppDto : items) {
-            capacityApp = capacityApp + (itemInAppDto.getAmount() * itemInAppDto.getItemDto().getUnits());
-        }
-        return capacityApp;
+    public Double getCapacityItemInApplication(final Set<ApplicationItemDto> items) {
+        return items.stream()
+                .map(ob -> (ob.getAmount() * ob.getItemDto().getUnits()))
+                .reduce(0.0, Double::sum);
     }
 
     @Override
     public boolean isApplicationFullySatisfied(final Long applicationId) {
-        return itemInApplicationRepository.getCountUnsatisfiedItems(applicationId) == 0;
+        return itemInApplicationRepository.getUnsatisfiedItemsCount(applicationId) == 0;
     }
 
     @Override
-    public Set<ItemsInApplicationDto> getItemsById(final List<Long> itemsId, final Long applicationId) {
+    public Set<ApplicationItemDto> getItemsById(final List<Long> itemsId, final Long applicationId) {
         return itemInApplicationRepository
                 .findByApplicationIdAndIdIn(applicationId, itemsId)
                 .stream()
@@ -115,7 +113,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public void setItemInApplicationAcceptedAt(final List<Long> ids) {
-       itemInApplicationRepository.setAcceptedAtForItemsInApplication(ids);
+        itemInApplicationRepository.setAcceptedAtForItemsInApplication(ids);
     }
 
 }

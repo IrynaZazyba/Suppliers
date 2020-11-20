@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class ItemsInApplicationDto implements BaseDto {
+public class ApplicationItemDto implements BaseDto {
     private Long id;
     private ItemDto itemDto;
     private ApplicationDto applicationDto;

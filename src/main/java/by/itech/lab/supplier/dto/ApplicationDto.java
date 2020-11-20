@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.ApplicationType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,7 +13,7 @@ import java.util.Set;
 @Data
 public class ApplicationDto implements BaseDto {
 
-    Set<ItemsInApplicationDto> items = new HashSet<>();
+    Set<ApplicationItemDto> items = new HashSet<>();
     private Long id;
     private String number;
     private LocalDate registrationDate;
@@ -24,5 +25,7 @@ public class ApplicationDto implements BaseDto {
     private ApplicationStatus applicationStatus;
     private WayBillDto wayBillDto;
     private LocalDate deletedAt;
+    private Long customerId;
+    private ApplicationType type;
 
 }
