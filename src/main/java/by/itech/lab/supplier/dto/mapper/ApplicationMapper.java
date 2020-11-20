@@ -1,9 +1,9 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Application;
-import by.itech.lab.supplier.domain.ItemsInApplication;
+import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ApplicationMapper implements BaseMapper<Application, ApplicationDto> {
 
-    private final AddressMapper addressMapper;
+    private final WarehouseMapper warehouseMapper;
     private final UserMapper userMapper;
     private final WayBillMapper wayBillMapper;
-    private final ItemsInApplicationMapper itemsInApplicationMapper;
+    private final ApplicationItemMapper itemsInApplicationMapper;
     private final ItemMapper itemMapper;
 
     @Override
@@ -29,12 +29,14 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .number(dto.getNumber())
                 .registrationDate(dto.getRegistrationDate())
                 .lastUpdated(dto.getLastUpdated())
-                .sourceLocationAddress(addressMapper.map(dto.getSourceLocationAddressDto()))
-                .destinationLocationAddress(addressMapper.map(dto.getDestinationLocationAddressDto()))
+                .sourceLocationAddress(warehouseMapper.map(dto.getSourceLocationDto()))
+                .destinationLocationAddress(warehouseMapper.map(dto.getDestinationLocationDto()))
                 .createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
                 .lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
                 .deletedAt(dto.getDeletedAt())
                 .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .customerId(dto.getCustomerId())
+                .type(dto.getType())
                 .build();
         if (Objects.nonNull(dto.getWayBillDto())) {
             application.setWayBill(wayBillMapper.map(dto.getWayBillDto()));
@@ -50,12 +52,14 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .number(application.getNumber())
                 .registrationDate(application.getRegistrationDate())
                 .lastUpdated(application.getLastUpdated())
-                .sourceLocationAddressDto(addressMapper.map(application.getSourceLocationAddress()))
-                .destinationLocationAddressDto(addressMapper.map(application.getDestinationLocationAddress()))
+                .sourceLocationDto(warehouseMapper.map(application.getSourceLocationAddress()))
+                .destinationLocationDto(warehouseMapper.map(application.getDestinationLocationAddress()))
                 .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
                 .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
                 .deletedAt(application.getDeletedAt())
                 .items(application.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .customerId(application.getCustomerId())
+                .type(application.getType())
                 .build();
         if (Objects.nonNull(application.getWayBill())) {
             applicationDto.setWayBillDto(wayBillMapper.map(application.getWayBill()));
@@ -68,11 +72,13 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setNumber(from.getNumber());
         to.setRegistrationDate(from.getRegistrationDate());
         to.setLastUpdated(from.getLastUpdated());
-        to.setSourceLocationAddress(addressMapper.map(from.getSourceLocationAddressDto()));
-        to.setDestinationLocationAddress(addressMapper.map(from.getDestinationLocationAddressDto()));
+        to.setSourceLocationAddress(warehouseMapper.map(from.getSourceLocationDto()));
+        to.setDestinationLocationAddress(warehouseMapper.map(from.getDestinationLocationDto()));
         to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
         to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
         to.setDeletedAt(from.getDeletedAt());
+        to.setCustomerId(from.getCustomerId());
+        to.setType(from.getType());
         updateItems(to.getItems(), from.getItems());
         if (Objects.nonNull(from.getWayBillDto())) {
             to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
@@ -80,15 +86,15 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     }
 
     public Application mapItems(final Application application) {
-        for (ItemsInApplication item : application.getItems()) {
+        for (ApplicationItem item : application.getItems()) {
             item.setApplication(application);
         }
         return application;
     }
 
-    private void updateItems(Set<ItemsInApplication> forUpdate, Set<ItemsInApplicationDto> update) {
-        for (ItemsInApplicationDto item : update) {
-            ItemsInApplication result = forUpdate.stream()
+    private void updateItems(Set<ApplicationItem> forUpdate, Set<ApplicationItemDto> update) {
+        for (ApplicationItemDto item : update) {
+            ApplicationItem result = forUpdate.stream()
                     .filter(Objects::nonNull)
                     .filter(p -> p.getId().equals(item.getId()))
                     .findAny()
@@ -96,7 +102,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
             if (Objects.nonNull(result)) {
                 result.setAmount(item.getAmount());
                 result.setCost(item.getCost());
-                result.setDeletedAt(item.getDeletedAt());
+                result.setAcceptedAt(item.getAcceptedAt());
                 result.setItem(itemMapper.map(item.getItemDto()));
             } else {
                 forUpdate.add(itemsInApplicationMapper.map(item));

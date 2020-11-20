@@ -1,43 +1,43 @@
 package by.itech.lab.supplier.dto.mapper;
 
-import by.itech.lab.supplier.domain.ItemsInApplication;
-import by.itech.lab.supplier.dto.ItemsInApplicationDto;
+import by.itech.lab.supplier.domain.ApplicationItem;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 
 @Component
 @AllArgsConstructor
-public class ItemsInApplicationMapper implements BaseMapper<ItemsInApplication, ItemsInApplicationDto> {
+public class ApplicationItemMapper implements BaseMapper<ApplicationItem, ApplicationItemDto> {
 
     private final ItemMapper itemMapper;
 
     @Override
-    public ItemsInApplication map(final ItemsInApplicationDto dto) {
-        return ItemsInApplication.builder()
+    public ApplicationItem map(final ApplicationItemDto dto) {
+        return ApplicationItem.builder()
                 .id(dto.getId())
                 .amount(dto.getAmount())
                 .cost(dto.getCost())
                 .item(itemMapper.map(dto.getItemDto()))
-                .deletedAt(dto.getDeletedAt())
+                .acceptedAt(dto.getAcceptedAt())
                 .build();
     }
 
     @Override
-    public ItemsInApplicationDto map(final ItemsInApplication entity) {
-        return ItemsInApplicationDto.builder()
+    public ApplicationItemDto map(final ApplicationItem entity) {
+        return ApplicationItemDto.builder()
                 .id(entity.getId())
                 .amount(entity.getAmount())
                 .cost(entity.getCost())
                 .itemDto(itemMapper.map(entity.getItem()))
-                .deletedAt(entity.getDeletedAt())
+                .acceptedAt(entity.getAcceptedAt())
                 .build();
     }
 
-    public void map(final ItemsInApplicationDto from, final ItemsInApplication to) {
+    public void map(final ApplicationItemDto from, final ApplicationItem to) {
         to.setAmount(from.getAmount());
         to.setCost(from.getCost());
         to.setItem(itemMapper.map(from.getItemDto()));
-        to.setDeletedAt(from.getDeletedAt());
+        to.setAcceptedAt(from.getAcceptedAt());
     }
 }

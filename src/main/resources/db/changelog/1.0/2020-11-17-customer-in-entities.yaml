@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-78-1
+      author: alexander_popovich
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: address
+            constraintName: fk_address_customer
+  - changeSet:
+      id: SUP-78-2
+      author: alexander_popovich
+      changes:
+        - dropColumn:
+            tableName: address
+            columns:
+              - column:
+                  name: customer_id
+  - changeSet:
+      id: SUP-78-3
+      author: alexander_popovich
+      changes:
+        - dropUniqueConstraint:
+            constraintName: categoty
+            tableName: category
+            uniqueColumns: category
+  - changeSet:
+      id: SUP-78-4
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: warehouse
+            columns:
+              - column:
+                  name: retailer_id
+                  type: BIGINT
+  - changeSet:
+      id: SUP-78-5
+      author: alexander_popovich
+      changes:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: retailer_warehouse
