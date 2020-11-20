@@ -1,0 +1,119 @@
+databaseChangeLog:
+  - changeSet:
+      id: IN-IW-1
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: items_in_warehouse
+            columns:
+              - column:
+                  name: cost
+                  type: numeric
+                  defaultValue: 0.0
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: IN-IW-2
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: date
+            newColumnName: accepted_at
+            oldColumnName: deleted_at
+            tableName: items_in_application
+  - changeSet:
+      id: IN-A-7
+      author: iryna_zazybo
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: bigint
+            columnName: source_location_address_id
+            tableName: application
+  - changeSet:
+      id: IN-A-8
+      author: iryna_zazybo
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: bigint
+            columnName: destination_location_address_id
+            tableName: application
+  - changeSet:
+      id: IN-A-1
+      author: iryna_zazybo
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: application
+            constraintName: fk_application_source_address
+  - changeSet:
+      id: IN-A-2
+      author: iryna_zazybo
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: application
+            constraintName: fk_application_destination_address
+  - changeSet:
+      id: IN-A-3
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: bigint
+            newColumnName: source_location_warehouse_id
+            oldColumnName: source_location_address_id
+            tableName: application
+  - changeSet:
+      id: IN-A-4
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: bigint
+            newColumnName: destination_location_warehouse_id
+            oldColumnName: destination_location_address_id
+            tableName: application
+  - changeSet:
+      id: IN-DA-1
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-11-17-update-application.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true
+  - changeSet:
+      id: IN-A-5
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: source_location_warehouse_id
+            baseTableName: application
+            constraintName: fk_application_source_warehouse
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: warehouse
+  - changeSet:
+      id: IN-A-6
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: destination_location_warehouse_id
+            baseTableName: application
+            constraintName: fk_application_destination_warehouse
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: warehouse
+  - changeSet:
+      id: IN-DA-2
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-11-17-update-application-data.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true

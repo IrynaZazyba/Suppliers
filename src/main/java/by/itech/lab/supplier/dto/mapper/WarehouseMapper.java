@@ -1,10 +1,11 @@
-
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @AllArgsConstructor
 @Component
@@ -20,7 +21,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .identifier(dto.getIdentifier())
                 .type(dto.getType())
                 .totalCapacity(dto.getTotalCapacity())
-                .address(addressMapper.map(dto.getAddressDto()))
+                .address(!Objects.isNull(dto.getAddressDto())?addressMapper.map(dto.getAddressDto()):null)
                 .customer(customerMapper.map(dto.getCustomerId()))
                 .retailerId(dto.getRetailerId())
                 .build();
@@ -33,7 +34,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .identifier(entity.getIdentifier())
                 .type(entity.getType())
                 .totalCapacity(entity.getTotalCapacity())
-                .addressDto(addressMapper.map(entity.getAddress()))
+                .addressDto(!Objects.isNull(entity.getAddress())?addressMapper.map(entity.getAddress()):null)
                 .retailerId(entity.getRetailerId())
                 .build();
     }

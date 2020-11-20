@@ -3,6 +3,7 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -19,9 +20,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -52,5 +56,7 @@ public class Warehouse implements BaseEntity {
     @JoinColumn(name = "customer_id")
     private Customer customer;
     private Long retailerId;
-
+    @OneToMany(mappedBy = "warehouse", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @EqualsAndHashCode.Exclude
+    private Set<WarehouseItem> items = new HashSet<>();
 }

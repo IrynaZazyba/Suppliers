@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateException;
 import by.itech.lab.supplier.exception.DefaultExceptionInfo;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
@@ -33,6 +35,12 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         if (split.length >= 3) {
             threadLocal.set(Long.parseLong(split[2]));
         }
+    }
+
+    @ExceptionHandler(ConflictWithTheCurrentWarehouseStateException.class)
+    public ResponseEntity<Object> handleConflict(ConflictWithTheCurrentWarehouseStateException ex) {
+        return new ResponseEntity<>(
+                new DefaultExceptionInfo(ex.getMessage(), CONFLICT.value()), new HttpHeaders(), CONFLICT);
     }
 
 }

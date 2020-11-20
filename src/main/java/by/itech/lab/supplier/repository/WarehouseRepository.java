@@ -13,4 +13,8 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
     @Modifying
     @Query("update Warehouse set deletedAt = current_timestamp where id = :id")
     void delete(@Param("id") Long id);
+
+    @Query("select totalCapacity from Warehouse where id=:warehouseId")
+    Double getTotalCapacity(@Param("warehouseId") Long warehouseId);
+
 }

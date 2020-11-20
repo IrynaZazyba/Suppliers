@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -22,8 +22,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table
-@Where(clause = "deleted_at is null")
+@Table(name = "items_in_warehouse")
 public class WarehouseItem implements BaseEntity {
 
     @Id
@@ -38,5 +37,7 @@ public class WarehouseItem implements BaseEntity {
     @JoinColumn(name = "item_id")
     private Item item;
     private LocalDate deletedAt;
+    @Column(nullable = false)
+    private BigDecimal cost;
 
 }

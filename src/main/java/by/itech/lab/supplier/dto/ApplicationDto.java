@@ -18,8 +18,8 @@ public class ApplicationDto implements BaseDto {
     private String number;
     private LocalDate registrationDate;
     private LocalDate lastUpdated;
-    private AddressDto sourceLocationAddressDto;
-    private AddressDto destinationLocationAddressDto;
+    private WarehouseDto sourceLocationDto;
+    private WarehouseDto destinationLocationDto;
     private UserDto createdByUsersDto;
     private UserDto lastUpdatedByUsersDto;
     private ApplicationStatus applicationStatus;
