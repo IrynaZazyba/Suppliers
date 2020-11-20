@@ -12,7 +12,6 @@ public class RetailerDto implements BaseDto {
     private Long id;
     private String fullName;
     private String identifier;
-    private String retailersCol;
     private LocalDate deletedAt;
     private Boolean active;
     private Long customerId;

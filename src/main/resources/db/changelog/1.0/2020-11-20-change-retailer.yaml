@@ -9,11 +9,12 @@ databaseChangeLog:
             oldColumnName: fullname
             tableName: retailer
   - changeSet:
-      id: SUP-RETAILER-12
+      id: SUP-RETAILER-13
       author: alesia_hlushakova
       changes:
-        - renameColumn:
-            columnDataType: VARCHAR(50)
-            newColumnName: retailers_col
-            oldColumnName: retailerscol
-            tableName: retailer
+    changes:
+      - dropColumn:
+          tableName: retailer
+          columns:
+            - column:
+                name: retailers_col

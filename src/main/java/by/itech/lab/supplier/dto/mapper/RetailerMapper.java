@@ -15,7 +15,6 @@ public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
                 .id(retailer.getId())
                 .fullName(retailer.getFullName())
                 .identifier(retailer.getIdentifier())
-                .retailersCol(retailer.getRetailersCol())
                 .deletedAt(retailer.getDeletedAt())
                 .active(retailer.getActive())
                 .customerId(retailer.getCustomerId())
@@ -25,7 +24,6 @@ public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
     public void update(final RetailerDto from, final Retailer to) {
         to.setIdentifier(from.getIdentifier());
         to.setFullName(from.getFullName());
-        to.setRetailersCol(from.getRetailersCol());
         to.setDeletedAt(from.getDeletedAt());
         to.setActive(from.getActive());
         to.setCustomerId(from.getCustomerId());
@@ -37,7 +35,6 @@ public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
                 .id(retailerDto.getId())
                 .fullName(retailerDto.getFullName())
                 .identifier(retailerDto.getIdentifier())
-                .retailersCol(retailerDto.getRetailersCol())
                 .deletedAt(retailerDto.getDeletedAt())
                 .active(retailerDto.getActive())
                 .customerId(retailerDto.getCustomerId())
