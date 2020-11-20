@@ -206,7 +206,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private List<WarehouseItem> reduceItemsAmountAtWarehouse(final ApplicationDto application) {
         final Map<Long, WarehouseItem> itemMaps = itemInWarehouseRepository
                 .getAllByWarehouseId(application.getDestinationLocationDto().getId()).stream()
-                .collect(Collectors.toMap(WarehouseItem::getId, Function.identity()));
+                .collect(Collectors.toMap(i -> i.getItem().getId(), Function.identity()));
         return application.getItems()
                 .stream()
                 .map(item -> reduceItemAmount(item, itemMaps))
