@@ -1,18 +1,10 @@
 package by.itech.lab.supplier.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 
 @Data
 @AllArgsConstructor
@@ -31,8 +23,10 @@ public class Address implements BaseEntity {
     private String addressLine1;
     @Column(nullable = false, name = "address_line_2")
     private String addressLine2;
-    @ManyToOne
+    @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "state_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private State state;
 
 }

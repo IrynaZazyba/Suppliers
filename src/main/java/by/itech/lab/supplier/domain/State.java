@@ -26,6 +26,7 @@ public class State implements BaseEntity {
     @Column(nullable = false)
     private String state;
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "state")
     private Set<Tax> taxes = new HashSet<>();
 

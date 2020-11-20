@@ -1,10 +1,6 @@
 package by.itech.lab.supplier.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +36,7 @@ public class Customer implements BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }

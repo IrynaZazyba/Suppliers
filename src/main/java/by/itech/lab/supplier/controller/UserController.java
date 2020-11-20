@@ -41,6 +41,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final CustomerService customerService;
+
     @GetMapping("/dispatchers")
     public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
         return userService.getAllDispatchers(customerId, pageable);
@@ -70,13 +72,18 @@ public class UserController {
     }
 
 
+    @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
+    public Optional<UserDto> getUseByUsername(@PathVariable String username) {
+        log.debug("request to get User : {}", username);
+        return userService.findByUsername(username);
+    }
+
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public int changePassword(@PathVariable Long id, @RequestBody String password) {
         return userService.changePassword(id, password);
+    }
 
-
-    //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
