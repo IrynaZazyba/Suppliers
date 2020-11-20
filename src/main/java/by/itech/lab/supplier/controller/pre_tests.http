@@ -89,20 +89,18 @@ Cookie: {{test}}
 {
   "customerId": "3",
   "identifier": "199",
-  "type": "CCC",
-  "totalCapacity": "44",
-  "addressDto": {
-    "city": "Kanzas",
-    "addressLine1": "Linkoln Str.",
-    "addressLine2": "44",
-    "state": {
-      "id": "5",
+  "type" : "CCC",
+  "totalCapacity" : "44",
+  "addressDto" : {
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "44",
+    "state" : {
+      "id" : "5",
       "state": "Alaska"
     }
   },
-  "usersId": [
-    3
-  ]
+  "usersId" : [3]
 }
 
 ###
@@ -113,16 +111,16 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "id": "21",
-  "type": "anotherType",
-  "totalCapacity": "1",
-  "addressDto": {
-    "id": "104",
-    "city": "Kanzas",
-    "addressLine1": "Linkoln Str.",
-    "addressLine2": "66",
-    "state": {
-      "id": "6",
+  "id" : "21",
+  "type" : "anotherType",
+  "totalCapacity" : "1",
+  "addressDto" : {
+    "id" : "104",
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "66",
+    "state" : {
+      "id" : "6",
       "state": "Arizona"
     }
   }
@@ -164,18 +162,6 @@ Cookie: {{test}}
 %}
 
 ###
-GET http://localhost:8080/states
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
-    });
-%}
-
-###
 
 GET http://localhost:8080/customers/3/users/1
 Content-Type: application/json
@@ -190,7 +176,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/users/username/zazybo1.17@gmail.com
+GET http://localhost:8080/customers/3/users/5555
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -234,42 +220,8 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-
 ###
-PUT http://localhost:8080/customers/3/users/1/password
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
 
-{
-  "password": "password"
-}
-###
-POST http://localhost:8080/customers/3/users
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-{
-  "addressDto": {
-    "addressLine1": "belskogo 12",
-    "addressLine2": "yhyh ",
-    "city": "minsk",
-    "state": {
-      "id": 46,
-      "state": "Texas"
-    }
-  },
-  "birthday": "2020-11-13",
-  "customerId": "3",
-  "email": "aleskahlushakova@gmail.com",
-  "name": "alesia hlushakova",
-  "role": "ROLE_SYSTEM_ADMIN",
-  "surname": "wd",
-  "username": "wdhnjn"
-}
-
-###
 POST http://localhost:8080/customers/3/users
 Content-Type: application/json
 Connection: keep-alive
@@ -296,31 +248,13 @@ Cookie: {{test}}
     }
   }
 }
-
 ###
 PUT http://localhost:8080/customers/3/users/18
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{
-  "name": "Lewis",
-  "role": "ROLE_SYSTEM_ADMIN",
-  "surname": "Hamilton",
-  "birthday": "1985-07-01",
-  "username": "lh_powera",
-  "email": "zazybo1q1.17@gfmail.com",
-  "addressDto": {
-    "id": 3,
-    "city": "NY",
-    "addressLine1": "Lexington Avenue",
-    "addressLine2": "Slobodskaya str.",
-    "state": {
-      "id": 4,
-      "state": "Alabama"
-    }
-  }
-}
+{"name": "Lewis", "role": "ROLE_SYSTEM_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_powera", "email": "zazybo1q1.17@gfmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
 
 ###
 
@@ -332,7 +266,7 @@ Cookie: {{test}}
 ###
 #---------------------------------------------------Category----------------------------------------------------------
 
-POST http://localhost:8080/category
+POST http://localhost:8080/customers/3/category
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -350,7 +284,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/category/1
+GET http://localhost:8080/customers/3/category/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -363,7 +297,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/category/555
+GET http://localhost:8080/customers/3/category/555
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -376,7 +310,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/category/category/someType
+GET http://localhost:8080/customers/3/category/category/someType
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -388,7 +322,7 @@ Cookie: {{test}}
 %}
 
 ###
-DELETE http://localhost:8080/category/1
+DELETE http://localhost:8080/customers/3/category/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -401,7 +335,7 @@ Cookie: {{test}}
 
 ###
 #-----------------------------------------------------Item------------------------------------------------------------
-POST http://localhost:8080/item
+POST http://localhost:8080/customers/3/item
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -411,7 +345,7 @@ Cookie: {{test}}
   "label": "label",
   "units": "80.5",
   "categoryDto": {
-    "id": 1
+    "id": 2
   }
 }
 
@@ -423,7 +357,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/item
+GET http://localhost:8080/customers/3/item
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -436,7 +370,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/item/category/someType
+GET http://localhost:8080/customers/3/item/category/someType
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -449,7 +383,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/item/1
+GET http://localhost:8080/customers/3/item/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -462,7 +396,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/item/555
+GET http://localhost:8080/customers/3/item/555
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -475,7 +409,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/item/label/label
+GET http://localhost:8080/customers/3/item/label/label
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -488,7 +422,7 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/item/1
+DELETE http://localhost:8080/customers/3/item/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -504,13 +438,14 @@ Cookie: {{test}}
 #-------------------------------------------------------Application---------------------------------------------------
 # Note: put commentaries before @Secured in ApplicationController
 
-POST http://localhost:8080/application
+POST http://localhost:8080/customers/3/application
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
 {
   "number": "Test",
+  "type": "SUPPLY",
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
   "sourceLocationAddressDto": {
@@ -606,9 +541,9 @@ Cookie: {{test}}
         "label": "label",
         "units": 80.5,
         "categoryDto": {
-          "id": 1,
-          "category": "someType",
-          "taxRate": 8,
+          "id": 2,
+          "category": "EL",
+          "taxRate": 11,
           "deletedAt": null
         },
         "deletedAt": null
@@ -629,7 +564,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/application/admin
+GET http://localhost:8080/customers/3/application/admin
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -642,7 +577,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/application/number/Test
+GET http://localhost:8080/customers/3/application/number/Test
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -655,7 +590,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/application/1
+GET http://localhost:8080/customers/3/application/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -668,7 +603,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/application/555
+GET http://localhost:8080/customers/3/application/555
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -681,7 +616,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/application/number/Blablabla
+GET http://localhost:8080/customers/3/application/number/Blablabla
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -694,7 +629,19 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/application/1/STARTED_PROCESSING
+PUT http://localhost:8080/customers/3/application/1/STARTED_PROCESSING
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+###
+
+DELETE http://localhost:8080/customers/3/application/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -706,14 +653,3 @@ Cookie: {{test}}
 %}
 
 ###
-
-DELETE http://localhost:8080/application/1
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
-    });
-%}

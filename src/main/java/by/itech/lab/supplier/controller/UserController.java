@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.StateDto;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +40,6 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 public class UserController {
 
     private final UserService userService;
-    private final CustomerService customerService;
 
     @GetMapping("/dispatchers")
     public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
@@ -50,13 +52,6 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
-    public Optional<UserDto> getUseByUsername(@PathVariable String username) {
-        log.debug("request to get User : {}", username);
-        return userService.findByUsername(username);
-    }
-
-
     @GetMapping
     public Page<UserDto> getAllByActive(
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
@@ -67,6 +62,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @AdminAccess
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
        CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
        userDto.setCustomerDto(customerDto);
@@ -78,8 +74,9 @@ public class UserController {
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public int changePassword(@PathVariable Long id, @RequestBody String password) {
         return userService.changePassword(id, password);
-    }
 
+
+    //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
@@ -88,6 +85,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @AdminAccess
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
         userService.changeActiveStatus(id, status);
@@ -95,8 +93,8 @@ public class UserController {
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
     }
-
 }
