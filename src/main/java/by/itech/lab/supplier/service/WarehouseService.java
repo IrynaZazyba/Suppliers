@@ -20,5 +20,5 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Double getAvailableCapacity(Long warehouseId);
 
-    void removeItemFromWarehouse(List<ApplicationDto> applicationDto);
+    void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 }

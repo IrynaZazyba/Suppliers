@@ -192,27 +192,35 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public void removeItemFromWarehouse(final List<ApplicationDto> applicationDto) {
-        List<ItemsInWarehouse> collect = applicationDto.parallelStream()
+    @Transactional
+    public void shipItemsAccordingApplications(final List<ApplicationDto> applicationDto) {
+        final List<WarehouseItem> collect = applicationDto.parallelStream()
                 .map(application -> application.getItems()
                         .stream()
-                        .map(item -> {
-                            final ItemsInWarehouse itemInWarehouse = itemInWarehouseRepository
-                                    .findByItemId(item.getId(), application.getDestinationLocationDto().getId())
-                                    .orElseThrow(() ->
-                                            new ConflictWithTheCurrentStateException("Warehouse doesn't have such item"));
-
-                            final Double amount = itemInWarehouse.getAmount();
-                            final Double currentValue = amount - item.getAmount();
-                            itemInWarehouse.setAmount(currentValue);
-                            return currentValue > amount ? itemInWarehouse : null;
-                        }).collect(Collectors.toList())).flatMap(Collection::stream).collect(Collectors.toList());
+                        .map(item -> reduceItemsAmountAtWarehouse(application, item))
+                        .collect(Collectors.toList()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
 
         if (collect.contains(null)) {
-            throw new ConflictWithTheCurrentStateException(
+            throw new ConflictWithTheCurrentWarehouseStateException(
                     "Required amount of items bigger than existing at warehouse");
         }
         itemInWarehouseRepository.saveAll(collect);
+    }
+
+    private WarehouseItem reduceItemsAmountAtWarehouse(final ApplicationDto application,
+                                                       final ApplicationItemDto item) {
+        final Long itemDtoId = item.getItemDto().getId();
+        final WarehouseItem itemInWarehouse = itemInWarehouseRepository
+                .findByItemId(itemDtoId, application.getDestinationLocationDto().getId())
+                .orElseThrow(() ->
+                        new ConflictWithTheCurrentWarehouseStateException(
+                                "Warehouse doesn't have item with id=" + itemDtoId));
+        final Double amount = itemInWarehouse.getAmount();
+        final Double currentValue = amount - item.getAmount();
+        itemInWarehouse.setAmount(currentValue);
+        return currentValue < amount ? itemInWarehouse : null;
     }
 
 }
