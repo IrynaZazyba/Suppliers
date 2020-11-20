@@ -1,5 +1,10 @@
 package by.itech.lab.supplier.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum WarehouseType {
     FACTORY("Factory"),
     WAREHOUSE("Warehouse"),
@@ -7,11 +12,4 @@ public enum WarehouseType {
 
     private String type;
 
-    WarehouseType(final String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
 }
