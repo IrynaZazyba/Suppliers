@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-RETAILER-11
+      author: alesia_hlushakova
+      changes:
+        - renameColumn:
+            columnDataType: VARCHAR(50)
+            newColumnName: full_name
+            oldColumnName: fullname
+            tableName: retailer
+  - changeSet:
+      id: SUP-RETAILER-12
+      author: alesia_hlushakova
+      changes:
+        - renameColumn:
+            columnDataType: VARCHAR(50)
+            newColumnName: retailers_col
+            oldColumnName: retailerscol
+            tableName: retailer
