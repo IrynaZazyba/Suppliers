@@ -2,6 +2,7 @@ package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.ApplicationType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 

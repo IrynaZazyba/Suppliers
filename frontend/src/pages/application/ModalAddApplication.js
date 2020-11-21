@@ -1,19 +1,25 @@
 import React, {useContext, useEffect, useState} from 'react';
-import Modal from "react-bootstrap/Modal";
 import Form from 'react-bootstrap/Form'
-import ErrorMessage from "../../messages/errorMessage";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import Card from "react-bootstrap/Card";
 import {AuthContext} from "../../context/authContext";
 import {FaTrash} from "react-icons/fa";
+import Card from "react-bootstrap/Card";
+import Modal from "react-bootstrap/Modal";
+import ErrorMessage from "../../messages/errorMessage";
+import validateItem from "../../validation/ItemValidationRules";
 
 function ModalAddApplication(props) {
 
-    const [appDto, setApp] = useState({});
+    const [appDto, setApp] = useState({
+        number: '',
+        sourceId: '',
+        destinationId: '',
+        items: []
+    });
     const {user, setUser} = useContext(AuthContext);
     const [errors, setErrors] = useState({
         validationErrors: [],
@@ -27,7 +33,6 @@ function ModalAddApplication(props) {
         totalAmount: '',
         totalUnits: ''
     });
-
     const [warehouses, setWarehouses] = useState({
         source: [],
         destination: []
@@ -35,7 +40,7 @@ function ModalAddApplication(props) {
 
     const handleSearch = (query) => {
         setIsLoading(true);
-        fetch(`customers/3/item/upc?upc=${query}`)
+        fetch(`customers/${user.currentCustomerId}/item/upc?upc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
@@ -50,20 +55,43 @@ function ModalAddApplication(props) {
             });
     };
     const filterBy = () => true;
-
     const onChangeUpc = (e) => {
-        e.length > 0 ? setCurrentItem(e[0]) : setCurrentItem('');
+        e.length > 0 ?
+            setCurrentItem(preState => ({
+                ...preState,
+                id: e[0].id,
+                upc: e[0].upc,
+                label: e[0].label,
+                units: e[0].units
+            })) :
+            setCurrentItem('');
     };
 
     const handleInput = (fieldName) =>
         (e) => {
             const value = e.target.value;
-            console.log(currentItem);
             setCurrentItem(preState => ({
                 ...preState,
                 [fieldName]: value
             }))
         };
+
+    const handleAppLocations = (fieldName) =>
+        (e) => {
+            const value = e.currentTarget.value;
+            setApp(preState => ({
+                ...preState,
+                [fieldName]: value
+            }))
+        };
+
+    const handleAppNumber = (e) => {
+        const value = e.target.value;
+        setApp(preState => ({
+            ...preState,
+            number: value
+        }))
+    };
 
     const deleteItem = (e) => {
         let afterDelete = [];
@@ -107,6 +135,92 @@ function ModalAddApplication(props) {
             });
     }, []);
 
+    const addItemHandler = (e) => {
+        e.preventDefault();
+        let validationResult = validateItem(currentItem);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: validationResult
+        }));
+
+        if (validationResult.length === 0) {
+            setItems([
+                ...item, currentItem
+            ]);
+            setCurrentItem('');
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: []
+            }));
+        }
+    };
+
+    function prepareAppDto() {
+        let itemInApp = [];
+        item.forEach(i => {
+            let itemApp = {
+                cost: i.cost,
+                amount: i.amount,
+                itemDto: {
+                    id: i.id,
+                }
+            };
+            itemInApp.push(itemApp);
+        });
+
+        return {
+            number: appDto.number,
+            sourceLocationDto: {
+                id: appDto.sourceId,
+            },
+            destinationLocationDto: {
+                id: appDto.destinationId
+            },
+            items: itemInApp,
+            customerId: user.currentCustomerId,
+            type: 'SUPPLY'
+        };
+    }
+
+    const addAppHandler = (e) => {
+        e.preventDefault();
+        let numberInvalid;
+        //todo check warehouses
+        if (!appDto.number) {
+            numberInvalid = "number";
+        }
+
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: ([...errors.validationErrors, numberInvalid])
+        }));
+
+        if (!numberInvalid) {
+            let application = prepareAppDto();
+            fetch(`/customers/${user.currentCustomerId}/application`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(application)
+            })
+                .then(function (response) {
+                    if (response.status !== 200) {
+                        setErrors({
+                            serverErrors: "Something go wrong, try later",
+                            validationErrors: ''
+                        });
+                    } else {
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: []
+                        }));
+                        props.onChange(false, appDto);
+                    }
+                });
+
+        }
+    };
 
     const itemsTable =
         <React.Fragment>
@@ -146,6 +260,7 @@ function ModalAddApplication(props) {
         <Row>
             <Col sm="3">
                 <AsyncTypeahead
+                    name="upc"
                     filterBy={filterBy}
                     id="async-example"
                     labelKey="upc"
@@ -155,46 +270,47 @@ function ModalAddApplication(props) {
                     placeholder="Search item..."
                     onSearch={handleSearch}
                     onChange={onChangeUpc}
-                    value={currentItem.upc}
-                />
+                >
+                    <div style={{color: '#dc3545', fontSize: '80%'}}>
+                        {errors.validationErrors.includes("upc") ? "Please provide a value" : ""}
+                    </div>
+                </AsyncTypeahead>
             </Col>
             <Col sm="3">
-                <Form.Control disabled placeholder="label" type="text"
+                <Form.Control name="label" disabled placeholder="label" type="text"
                               value={currentItem && currentItem.label}/>
-                <Form.Control.Feedback type="invalid">
-                    Please provide a valid number.
-                </Form.Control.Feedback>
             </Col>
             <Col>
-                <Form.Control placeholder="amount" type="text"
+                <Form.Control name="amount" placeholder="amount" type="number"
                               value={currentItem && currentItem.amount}
-                              onChange={handleInput('amount')}/>
+                              onChange={handleInput('amount')}
+                              className={
+                                  errors.validationErrors.includes("amount")
+                                      ? "form-control is-invalid"
+                                      : "form-control"
+                              }/>
                 <Form.Control.Feedback type="invalid">
-                    Please provide a valid number.
+                    Please provide a value.
                 </Form.Control.Feedback>
             </Col>
             <Col>
-                <Form.Control placeholder="cost" type="text"
+                <Form.Control name="cost" placeholder="cost" type="number"
                               value={currentItem && currentItem.cost}
                               onChange={handleInput('cost')}
-                />
+                              className={
+                                  errors.validationErrors.includes("cost")
+                                      ? "form-control is-invalid"
+                                      : "form-control"
+                              }/>
                 <Form.Control.Feedback type="invalid">
-                    Please provide a valid number.
+                    Please provide a value.
                 </Form.Control.Feedback>
             </Col>
             <Col sm="1">
                 <Button id={currentItem && currentItem.id} type="submit"
                         variant="outline-primary"
                         className="primaryButton"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            //todo validate empty field
-                            setItems([
-                                ...item, currentItem
-                            ]);
-                            setCurrentItem('');
-                        }}
-                >
+                        onClick={addItemHandler}>
                     Add
                 </Button>
             </Col>
@@ -206,18 +322,23 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="appNumber">
                     <Form.Label column sm="3">Number</Form.Label>
                     <Col sm="7">
-                        <Form.Control type="text"/>
+                        <Form.Control type="text" onChange={handleAppNumber}
+                                      className={
+                                          errors.validationErrors.includes("number")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }/>
                         <Form.Control.Feedback type="invalid">
-                            Please provide a valid number.
+                            Please provide a number.
                         </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="sourceLocation">
                     <Form.Label column sm="3">Source location</Form.Label>
                     <Col sm="7">
-                        <Form.Control as="select">
+                        <Form.Control onChange={handleAppLocations('sourceId')} as="select">
                             {warehouses.source.map(f =>
-                                <option id={f.id} key={f.id}>{f.identifier}{', '}
+                                <option value={f.id} key={f.id}>{f.identifier}{', '}
                                     {f.addressDto.city}{', '}
                                     {f.addressDto.addressLine1}</option>
                             )}
@@ -227,9 +348,9 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="destinationLocation">
                     <Form.Label column sm="3">Destination location</Form.Label>
                     <Col sm="7">
-                        <Form.Control as="select">
+                        <Form.Control onChange={handleAppLocations('destinationId')} as="select">
                             {warehouses.destination.map(f =>
-                                <option id={f.id} key={f.id}>{f.identifier}{', '}
+                                <option value={f.id} key={f.id}>{f.identifier}{', '}
                                     {f.addressDto.city}{', '}
                                     {f.addressDto.addressLine1}</option>
                             )}
@@ -252,14 +373,14 @@ function ModalAddApplication(props) {
                     <Card.Body>
                         <h6>Total number of units</h6>
                         <Card.Text>
-
                             <h3> {totalValues.totalUnits}</h3>
                         </Card.Text>
                     </Card.Body>
                 </Card>
             </Col>
-        </Row>
-    ;
+        </Row>;
+
+
     return (
         <>
             <Modal
@@ -276,8 +397,7 @@ function ModalAddApplication(props) {
                 className="shadow"
                 dialogClassName="app-modal"
                 centered
-                backdrop="static"
-            >
+                backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
                         Create supply application
@@ -298,9 +418,7 @@ function ModalAddApplication(props) {
                             </Card.Body>
                         </Card>
                         <div className="float-right" style={{padding: '10px'}}>
-                            <Button type="submit" className="mainButton pull-right"
-                                // onClick={addCustomerHandler}
-                            >
+                            <Button type="submit" className="mainButton pull-right" onClick={addAppHandler}>
                                 Create
                             </Button>
                         </div>

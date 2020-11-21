@@ -67,7 +67,7 @@ public class ApplicationController {
     @Secured("ROLE_SYSTEM_ADMIN")
     public Page<ApplicationDto> getAllAdmin(@PageableDefault final Pageable pageable,
                                             @RequestParam(required = false) final ApplicationStatus status) {
-        return applicationService.findAll(pageable,status);
+        return applicationService.findAll(pageable, status);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
