@@ -78,7 +78,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/type")
-    public List<WarehouseDto> findByType(@PathVariable final WarehouseType type) {
+    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type) {
         return warehouseService.findAllByType(type);
     }
 
