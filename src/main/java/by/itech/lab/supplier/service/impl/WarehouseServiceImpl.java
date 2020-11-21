@@ -1,12 +1,10 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
-import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseItem;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
-import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -14,6 +12,7 @@ import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateExcep
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WarehouseItemRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
+import by.itech.lab.supplier.repository.specification.WarehouseItemFilter;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
@@ -26,8 +25,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +49,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseItemRepository itemInWarehouseRepository;
     private final Lock lock = new ReentrantLock();
     private final UserService userService;
+    private final WarehouseItemFilter warehouseItemFilter;
 
     @Lazy
     @Autowired
@@ -199,7 +197,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional
-    public void shipItemsAccordingApplications(final List<ApplicationDto> applicationsDto) {
+    public void shipItemsAccordingApplications(List<ApplicationDto> applicationsDto) {
         final Map<Long, Map<Long, WarehouseItem>> whItemByWhAndItem = findOnlyRelatedItems(applicationsDto);
         final List<WarehouseItem> warehouseItems = applicationsDto.stream().map(app -> app.getItems().stream()
                 .map(appItem -> reduceItemAmount(appItem, whItemByWhAndItem
@@ -211,20 +209,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     private Map<Long, Map<Long, WarehouseItem>> findOnlyRelatedItems(final List<ApplicationDto> apps) {
-        return itemInWarehouseRepository.findAll((root, cq, cb) -> {
-            Join<WarehouseItem, Warehouse> whJoin = root.join("warehouse");
-            Join<WarehouseItem, Item> itemJoin = root.join("item");
-            return cb.or(apps.stream().map(app -> {
-                Long whId = app.getDestinationLocationDto().getId();
-                // getting all related items
-                List<Long> itemIds = app.getItems().stream()
-                        .map(ApplicationItemDto::getItemDto).map(ItemDto::getId).collect(Collectors.toList());
-                return cb.and(cb.equal(
-                        whJoin.get("id"), whId),
-                        itemJoin.get("id").in(itemIds)
-                );
-            }).toArray(Predicate[]::new));
-        }).stream()
+        return itemInWarehouseRepository.findAll(warehouseItemFilter.buildSearchSpecification(apps)).stream()
                 // mapping by warehouse id
                 .collect(Collectors.groupingBy(item -> item.getWarehouse().getId(),
                         // mapping by item id
