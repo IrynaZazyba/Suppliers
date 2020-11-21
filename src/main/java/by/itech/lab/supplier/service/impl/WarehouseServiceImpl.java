@@ -12,7 +12,7 @@ import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateExcep
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WarehouseItemRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
-import by.itech.lab.supplier.repository.specification.WarehouseItemFilter;
+import by.itech.lab.supplier.repository.filter.WarehouseItemFilter;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;

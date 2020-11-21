@@ -1,4 +1,4 @@
-package by.itech.lab.supplier.repository.specification;
+package by.itech.lab.supplier.repository.filter;
 
 import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.domain.Item_;
@@ -29,8 +29,7 @@ public class WarehouseItemFilter {
                 // getting all related items
                 List<Long> itemIds = app.getItems().stream()
                         .map(ApplicationItemDto::getItemDto).map(ItemDto::getId).collect(Collectors.toList());
-                return cb.and(cb.equal(
-                        whJoin.get(Warehouse_.id), whId),
+                return cb.and(cb.equal(whJoin.get(Warehouse_.id), whId),
                         itemJoin.get(Item_.id).in(itemIds)
                 );
             }).toArray(Predicate[]::new));
