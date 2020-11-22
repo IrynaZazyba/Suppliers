@@ -418,6 +418,7 @@ function ModalAddApplication(props) {
                         validationErrors: []
                     });
                     setItems([]);
+                    setApp([]);
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
