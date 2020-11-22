@@ -11,8 +11,11 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
 import validateItem from "../../validation/ItemValidationRules";
+import validateApplication from "../../validation/ApplicationValidationRules";
 
 function ModalAddApplication(props) {
+
+    const ref = React.createRef();
 
     const [appDto, setApp] = useState({
         number: '',
@@ -28,7 +31,6 @@ function ModalAddApplication(props) {
     const [options, setOptions] = useState([]);
     const [item, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [totalValues, setTotalValues] = useState({
         totalAmount: '',
         totalUnits: ''
@@ -39,7 +41,6 @@ function ModalAddApplication(props) {
     });
 
     const handleSearch = (query) => {
-        setIsLoading(true);
         fetch(`customers/${user.currentCustomerId}/item/upc?upc=${query}`)
             .then(resp => resp.json())
             .then(res => {
@@ -51,11 +52,15 @@ function ModalAddApplication(props) {
                 }));
 
                 setOptions(optionsFromBack);
-                setIsLoading(false);
             });
     };
     const filterBy = () => true;
     const onChangeUpc = (e) => {
+
+        setErrors({
+            setErrors: '',
+            validationErrors: []
+        });
         e.length > 0 ?
             setCurrentItem(preState => ({
                 ...preState,
@@ -137,7 +142,7 @@ function ModalAddApplication(props) {
 
     const addItemHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateItem(currentItem);
+        let validationResult = validateItem(currentItem, item);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validationResult
@@ -152,6 +157,7 @@ function ModalAddApplication(props) {
                 ...prevState,
                 validationErrors: []
             }));
+            ref.current.clear();
         }
     };
 
@@ -184,18 +190,14 @@ function ModalAddApplication(props) {
 
     const addAppHandler = (e) => {
         e.preventDefault();
-        let numberInvalid;
-        //todo check warehouses
-        if (!appDto.number) {
-            numberInvalid = "number";
-        }
 
+        let validErrors = validateApplication(appDto, item);
         setErrors(prevState => ({
             ...prevState,
-            validationErrors: ([...errors.validationErrors, numberInvalid])
+            validationErrors: validErrors
         }));
 
-        if (!numberInvalid) {
+        if (validErrors.length === 0) {
             let application = prepareAppDto();
             fetch(`/customers/${user.currentCustomerId}/application`, {
                 method: 'POST',
@@ -215,10 +217,11 @@ function ModalAddApplication(props) {
                             ...preState,
                             validationErrors: []
                         }));
+                        setApp([]);
+                        setItems([]);
                         props.onChange(false, appDto);
                     }
                 });
-
         }
     };
 
@@ -257,64 +260,69 @@ function ModalAddApplication(props) {
 
 
     const inputsAddItems =
-        <Row>
-            <Col sm="3">
-                <AsyncTypeahead
-                    name="upc"
-                    filterBy={filterBy}
-                    id="async-example"
-                    labelKey="upc"
-                    isLoading={isLoading}
-                    minLength={3}
-                    options={options}
-                    placeholder="Search item..."
-                    onSearch={handleSearch}
-                    onChange={onChangeUpc}
-                >
-                    <div style={{color: '#dc3545', fontSize: '80%'}}>
-                        {errors.validationErrors.includes("upc") ? "Please provide a value" : ""}
-                    </div>
-                </AsyncTypeahead>
-            </Col>
-            <Col sm="3">
-                <Form.Control name="label" disabled placeholder="label" type="text"
-                              value={currentItem && currentItem.label}/>
-            </Col>
-            <Col>
-                <Form.Control name="amount" placeholder="amount" type="number"
-                              value={currentItem && currentItem.amount}
-                              onChange={handleInput('amount')}
-                              className={
-                                  errors.validationErrors.includes("amount")
-                                      ? "form-control is-invalid"
-                                      : "form-control"
-                              }/>
-                <Form.Control.Feedback type="invalid">
-                    Please provide a value.
-                </Form.Control.Feedback>
-            </Col>
-            <Col>
-                <Form.Control name="cost" placeholder="cost" type="number"
-                              value={currentItem && currentItem.cost}
-                              onChange={handleInput('cost')}
-                              className={
-                                  errors.validationErrors.includes("cost")
-                                      ? "form-control is-invalid"
-                                      : "form-control"
-                              }/>
-                <Form.Control.Feedback type="invalid">
-                    Please provide a value.
-                </Form.Control.Feedback>
-            </Col>
-            <Col sm="1">
-                <Button id={currentItem && currentItem.id} type="submit"
-                        variant="outline-primary"
-                        className="primaryButton"
-                        onClick={addItemHandler}>
-                    Add
-                </Button>
-            </Col>
-        </Row>;
+        <>
+            <Row>
+                <Col sm="3">
+                    <AsyncTypeahead
+                        ref={ref}
+                        name="upc"
+                        filterBy={filterBy}
+                        id="async-example"
+                        labelKey="upc"
+                        minLength={3}
+                        options={options}
+                        placeholder="Search item..."
+                        onSearch={handleSearch}
+                        onChange={onChangeUpc}
+                    >
+                        <div style={{color: '#dc3545', fontSize: '80%'}}>
+                            {errors.validationErrors.includes("upc") ? "Please provide a value" : ""}
+                        </div>
+                        <div style={{color: '#dc3545', fontSize: '80%'}}>
+                            {errors.validationErrors.includes("exist") ? "Such item already exists" : ""}
+                        </div>
+                    </AsyncTypeahead>
+                </Col>
+                <Col sm="3">
+                    <Form.Control name="label" disabled placeholder="label" type="text"
+                                  value={currentItem && currentItem.label}/>
+                </Col>
+                <Col>
+                    <Form.Control name="amount" placeholder="amount" type="number" min='1'
+                                  value={currentItem && currentItem.amount}
+                                  onChange={handleInput('amount')}
+                                  className={
+                                      errors.validationErrors.includes("amount")
+                                          ? "form-control is-invalid"
+                                          : "form-control"
+                                  }/>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                    </Form.Control.Feedback>
+                </Col>
+                <Col>
+                    <Form.Control name="cost" placeholder="cost" type="number" min='1'
+                                  value={currentItem && currentItem.cost}
+                                  onChange={handleInput('cost')}
+                                  className={
+                                      errors.validationErrors.includes("cost")
+                                          ? "form-control is-invalid"
+                                          : "form-control"
+                                  }/>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                    </Form.Control.Feedback>
+                </Col>
+                <Col sm="1">
+                    <Button id={currentItem && currentItem.id} type="submit"
+                            variant="outline-primary"
+                            className="primaryButton"
+                            onClick={addItemHandler}>
+                        Add
+                    </Button>
+                </Col>
+            </Row>
+        </>;
 
     const appDataFields =
         <Row>
@@ -336,25 +344,44 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="sourceLocation">
                     <Form.Label column sm="3">Source location</Form.Label>
                     <Col sm="7">
-                        <Form.Control onChange={handleAppLocations('sourceId')} as="select">
+                        <Form.Control onChange={handleAppLocations('sourceId')} as="select"
+                                      className={
+                                          errors.validationErrors.includes("sourceId")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }>
+                            <option hidden>Choose...</option>
                             {warehouses.source.map(f =>
                                 <option value={f.id} key={f.id}>{f.identifier}{', '}
                                     {f.addressDto.city}{', '}
                                     {f.addressDto.addressLine1}</option>
                             )}
                         </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a value.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="destinationLocation">
                     <Form.Label column sm="3">Destination location</Form.Label>
                     <Col sm="7">
-                        <Form.Control onChange={handleAppLocations('destinationId')} as="select">
+                        <Form.Control onChange={handleAppLocations('destinationId')} as="select"
+                                      className={
+                                          errors.validationErrors.includes("destinationId")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }>
+                            <option hidden>Choose...</option>
                             {warehouses.destination.map(f =>
                                 <option value={f.id} key={f.id}>{f.identifier}{', '}
                                     {f.addressDto.city}{', '}
                                     {f.addressDto.addressLine1}</option>
                             )}
+
                         </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a value.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
             </Col>
@@ -407,6 +434,9 @@ function ModalAddApplication(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         {appDataFields}
+                        <div style={{color: '#dc3545', fontSize: '80%'}}>
+                            {errors.validationErrors.includes("items") ? "Items shouldn't be empty" : ""}
+                        </div>
                         <Card border="primary" style={{width: '100%'}}>
                             <Card.Header>
                                 {inputsAddItems}
@@ -427,7 +457,6 @@ function ModalAddApplication(props) {
             </Modal>
         </>
     );
-
 
 }
 

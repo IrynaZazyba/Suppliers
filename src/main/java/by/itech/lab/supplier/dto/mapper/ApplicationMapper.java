@@ -31,8 +31,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .lastUpdated(dto.getLastUpdated())
                 .sourceLocationAddress(warehouseMapper.map(dto.getSourceLocationDto()))
                 .destinationLocationAddress(warehouseMapper.map(dto.getDestinationLocationDto()))
-                //.createdByUsers(userMapper.map(dto.getCreatedByUsersDto()))
-                //.lastUpdatedByUsers(userMapper.map(dto.getLastUpdatedByUsersDto()))
                 .deletedAt(dto.getDeletedAt())
                 .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
                 .customerId(dto.getCustomerId())

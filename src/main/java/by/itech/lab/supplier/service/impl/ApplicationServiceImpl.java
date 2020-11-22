@@ -43,27 +43,32 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationDto save(final ApplicationDto dto) {
         UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userMapper.map(userService.findById(principal.getId()).orElseThrow());
+
         Application application = Optional.ofNullable(dto.getId())
-                .map(appToSave -> {
-                    final Application existing = applicationRepository
-                            .findById(dto.getId())
-                            .orElseThrow();
-                    applicationMapper.map(dto, existing);
-                    return existing;
-                })
-                .orElseGet(() -> {
-                    Application app = applicationMapper.map(dto);
-                    app.setApplicationStatus(ApplicationStatus.OPEN);
-                    app.setRegistrationDate(LocalDate.now());
-                    app.setCreatedByUsers(user);
-                    return app;
-                });
+                .map(appToSave -> buildApplicationForUpdate(dto))
+                .orElseGet(() -> buildApplicationToCreate(dto, user));
 
         application.setLastUpdated(LocalDate.now());
         application.setLastUpdatedByUsers(user);
         application = applicationMapper.mapItems(application);
         final Application saved = applicationRepository.save(application);
         return applicationMapper.map(saved);
+    }
+
+    private Application buildApplicationForUpdate(final ApplicationDto dto) {
+        final Application existing = applicationRepository
+                .findById(dto.getId())
+                .orElseThrow();
+        applicationMapper.map(dto, existing);
+        return existing;
+    }
+
+    private Application buildApplicationToCreate(final ApplicationDto dto, final User user) {
+        final Application app = applicationMapper.map(dto);
+        app.setApplicationStatus(ApplicationStatus.OPEN);
+        app.setRegistrationDate(LocalDate.now());
+        app.setCreatedByUsers(user);
+        return app;
     }
 
     @Override
@@ -86,7 +91,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Page<ApplicationDto> findAll(Pageable pageable, Boolean roleFlag, ApplicationStatus status) {
-        Page<Application> all = applicationRepository.findAll(pageable, roleFlag, status);
         return applicationRepository.findAll(pageable, roleFlag, status)
                 .map(applicationMapper::map);
     }
