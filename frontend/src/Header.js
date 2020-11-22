@@ -25,7 +25,7 @@ function Header() {
                     </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission &&
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
                     <Nav.Link className={appClass} href="/application">Application</Nav.Link>}
                     <UserProfile/>
                 </Nav>

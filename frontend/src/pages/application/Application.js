@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import CardContainer from "../../components/CardContainer";
 import Table from "react-bootstrap/Table";
 import {FaEdit} from "react-icons/fa";
@@ -10,8 +10,12 @@ import Page from "../../components/Page";
 import Form from 'react-bootstrap/Form'
 import ErrorMessage from "../../messages/errorMessage";
 import ModalAddApplication from "./ModalAddApplication";
+import {AuthContext} from "../../context/authContext";
 
 export default () => {
+
+    const {user, setUser} = useContext(AuthContext);
+    const customerId = user.currentCustomerId;
 
     const [applications, setApplications] = useState([]);
     const [page, setPage] = useState({
@@ -35,7 +39,7 @@ export default () => {
 
 
     useEffect(() => {
-        getApplications(`/customers/3/application/admin`);
+        getApplications(`/customers/${customerId}/application`);
     }, []);
 
 
@@ -43,8 +47,6 @@ export default () => {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                console.log(commits);
-
                 setApplications(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
@@ -57,7 +59,7 @@ export default () => {
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getApplications(`/customers/3/application/admin?status=${e.target.value}&size=${page.countPerPage}`);
+        getApplications(`/customers/${customerId}/application?status=${e.target.value}&size=${page.countPerPage}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -66,13 +68,13 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getApplications(`/customers/3/application/admin?size=${e.target.value}`);
+        getApplications(`/customers/${customerId}/application?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApplications(`/customers/3/application/admin?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
+        getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
     };
 
     const closeModalEdit = (e, appDto) => {
@@ -82,14 +84,14 @@ export default () => {
                 editShow: false
             }));
         if (appDto) {
-            getApplications(`/customers/3/application/admin?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }
     };
 
     const closeModalAdd = (e, appDto) => {
         setLgShow(e);
         if (appDto) {
-            getApplications(`/customers/3/application/admin?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }
     };
 

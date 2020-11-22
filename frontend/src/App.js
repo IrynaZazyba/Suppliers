@@ -31,7 +31,8 @@ function App() {
     };
 
     const renderApplication = () => {
-        return <ProtectedComponent conditions={user} render={(() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_LOGISTICS_SPECIALIST" ||
+        user.role === "ROLE_DISPATCHER"} render={(() => {
             return <Application/>
         })}/>
     };
