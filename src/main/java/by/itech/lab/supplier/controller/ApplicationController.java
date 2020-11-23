@@ -37,54 +37,54 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @PostMapping
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+//    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
         return applicationService.save(applicationDto);
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+//    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
     public void changeStatus(@PathVariable Long id,
                              @PathVariable String status) {
         applicationService.changeStatus(id, ApplicationStatus.valueOf(status));
     }
 
     @GetMapping
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
-    public Page<ApplicationDto> getAll(@PageableDefault final Pageable pageable,
-                                       @RequestParam(required = false) final ApplicationStatus status) {
+//    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+    public Page<ApplicationDto> getAllByStatus(@PageableDefault final Pageable pageable,
+                                               @RequestParam(required = false) final ApplicationStatus status) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Boolean roleFlag = null;
         if (authentication.getPrincipal() instanceof UserImpl) {
             UserImpl user = (UserImpl) authentication.getPrincipal();
             roleFlag = user.getAuthorities().contains(Role.ROLE_DISPATCHER);
         }
-        return applicationService.findAll(pageable, roleFlag, status);
+        return applicationService.findAllByRoleAndStatus(pageable, roleFlag, status);
     }
 
     @GetMapping(ApiConstants.URL_ADMIN)
-    @Secured("ROLE_SYSTEM_ADMIN")
-    public Page<ApplicationDto> getAllAdmin(@PageableDefault final Pageable pageable,
-                                            @RequestParam(required = false) final ApplicationStatus status) {
-        return applicationService.findAll(pageable, status);
+//    @Secured("ROLE_SYSTEM_ADMIN")
+    public Page<ApplicationDto> getAllAdminByStatus(@PageableDefault final Pageable pageable,
+                                                    @RequestParam(required = false) final ApplicationStatus status) {
+        return applicationService.findAllByStatus(pageable, status);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+//    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto getById(@PathVariable Long id) {
         return applicationService.findById(id);
     }
 
     @GetMapping(ApiConstants.URL_NUMBER + ApiConstants.URL_NUMBER_PARAMETER)
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+//    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
     public ApplicationDto getByNumber(@PathVariable String number) {
         return applicationService.findByNumber(number);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+//    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
     public void delete(@PathVariable Long id) {
         applicationService.delete(id);
     }

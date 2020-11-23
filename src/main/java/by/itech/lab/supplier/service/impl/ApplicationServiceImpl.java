@@ -72,8 +72,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAll(final Pageable pageable, ApplicationStatus status) {
-        return applicationRepository.findAll(pageable, status)
+    public Page<ApplicationDto> findAllByStatus(final Pageable pageable, ApplicationStatus status) {
+        return applicationRepository.findAllByStatus(pageable, status)
                 .map(applicationMapper::map);
     }
 
@@ -90,8 +90,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAll(Pageable pageable, Boolean roleFlag, ApplicationStatus status) {
-        return applicationRepository.findAll(pageable, roleFlag, status).map(applicationMapper::map);
+    public Page<ApplicationDto> findAllByRoleAndStatus(Pageable pageable, Boolean roleFlag, ApplicationStatus status) {
+        return applicationRepository.findAllByRoleAndStatus(pageable, roleFlag, status).map(applicationMapper::map);
     }
 
     @Override

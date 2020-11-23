@@ -275,10 +275,10 @@ function ModalAddApplication(props) {
                         onSearch={handleSearch}
                         onChange={onChangeUpc}
                     >
-                        <div className="validationError">
+                        <div className="validation-error">
                             {errors.validationErrors.includes("upc") ? "Please provide a value" : ""}
                         </div>
-                        <div className="validationError">
+                        <div className="validation-error">
                             {errors.validationErrors.includes("exist") ? "Such item already exists" : ""}
                         </div>
                     </AsyncTypeahead>
@@ -386,7 +386,7 @@ function ModalAddApplication(props) {
                 </Form.Group>
             </Col>
             <Col sm={2} style={{marginLeft: '-25px'}}>
-                <Card className="totalCard">
+                <Card className="total-card">
                     <Card.Body>
                         <h6>Total amount of items</h6>
                         <Card.Text>
@@ -396,7 +396,7 @@ function ModalAddApplication(props) {
                 </Card>
             </Col>
             <Col sm={2}>
-                <Card className="totalCard">
+                <Card className="total-card">
                     <Card.Body>
                         <h6>Total number of units</h6>
                         <Card.Text>
@@ -435,7 +435,7 @@ function ModalAddApplication(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         {appDataFields}
-                        <div className="validationError">
+                        <div className="validation-error">
                             {errors.validationErrors.includes("items") ? "Items shouldn't be empty" : ""}
                         </div>
                         <Card border="primary" style={{width: '100%'}}>

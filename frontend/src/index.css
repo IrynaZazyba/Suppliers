@@ -139,12 +139,12 @@ a.page-link {
     min-width: 75% !important;
 }
 
-.validationError {
+.validation-error {
     color: #dc3545;
     font-size: 80%
 }
 
-.totalCard {
+.total-card {
     width: 11rem;
     border-left: 3px solid #009edd;
 }

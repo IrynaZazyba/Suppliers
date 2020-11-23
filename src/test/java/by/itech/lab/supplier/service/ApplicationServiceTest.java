@@ -82,10 +82,12 @@ public class ApplicationServiceTest {
         Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
-        Mockito.when(applicationRepository.findAll(pageRequest, true, null)).thenReturn(applicationPage);
+        Mockito.when(applicationRepository
+                .findAllByRoleAndStatus(pageRequest, true, null)).thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest, true, null));
+        Assertions.assertEquals(applicationDtoPage,
+                applicationService.findAllByRoleAndStatus(pageRequest, true, null));
 
     }
 
