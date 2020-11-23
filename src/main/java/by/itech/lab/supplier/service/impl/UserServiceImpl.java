@@ -33,10 +33,10 @@ public class UserServiceImpl implements UserService {
 
     private final MailService mailService;
 
-    @Override
-    public Optional<UserDto> findById(Long id) {
-        return Optional.of(userRepository.findOneWithRolesById(id).map(userMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist")));
+
+    public UserDto findById(Long id) {
+        return userRepository.findOneWithRolesById(id).map(userMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist"));
     }
 
     @Override

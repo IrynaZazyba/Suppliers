@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
-    public Optional<UserDto> getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
         return userService.findById(id);
     }
