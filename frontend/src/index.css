@@ -146,7 +146,7 @@ a.page-link {
 
 .total-card {
     width: 11rem;
-    border-left: 3px solid #009edd;
+    border-left: 3px solid #009edd !important;
 }
 
 .table-text-center {
