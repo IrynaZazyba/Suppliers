@@ -84,14 +84,16 @@ function ModalAddApplication(props) {
     const handleAppLocations = (fieldName) =>
         (e) => {
             const value = e.currentTarget.value;
+            checkValidationErrors(fieldName);
             setApp(preState => ({
                 ...preState,
                 [fieldName]: value
             }))
         };
 
-    const handleAppNumber = (e) => {
+    const AppNumberOnChange = (e) => {
         const value = e.target.value;
+        checkValidationErrors("number");
         setApp(preState => ({
             ...preState,
             number: value
@@ -107,6 +109,14 @@ function ModalAddApplication(props) {
         });
         setItems(afterDelete);
     };
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
 
     useEffect(() => {
         setCurrentItem('');
@@ -330,7 +340,7 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="appNumber">
                     <Form.Label column sm="3">Number</Form.Label>
                     <Col sm="7">
-                        <Form.Control type="text" onChange={handleAppNumber}
+                        <Form.Control type="text" onChange={AppNumberOnChange}
                                       className={
                                           errors.validationErrors.includes("number")
                                               ? "form-control is-invalid"
