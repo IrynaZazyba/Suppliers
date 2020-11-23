@@ -38,7 +38,6 @@ export default () => {
         getApplications(`/customers/${customerId}/application`);
     }, []);
 
-
     function getApplications(url) {
         fetch(url)
             .then(response => response.json())
@@ -98,7 +97,6 @@ export default () => {
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
-
             />
             </td>
         </tr>
@@ -169,6 +167,5 @@ export default () => {
             header={header}
             body={body}/>
     );
-
 
 }

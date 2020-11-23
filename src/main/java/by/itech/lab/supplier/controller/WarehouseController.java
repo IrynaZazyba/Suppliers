@@ -83,5 +83,4 @@ public class WarehouseController {
         return warehouseService.findAllByType(type);
     }
 
-
 }
