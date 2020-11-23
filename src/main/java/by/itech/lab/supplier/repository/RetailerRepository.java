@@ -16,8 +16,6 @@ import java.util.Optional;
 
 @Repository
 public interface RetailerRepository extends JpaRepository<Retailer, Long> {
-    Optional<Retailer> findById(Long id);
-
     @Modifying
     @Query("update Retailer set deletedAt = current_timestamp where id = :id")
     void delete(@Param("id") Long id);

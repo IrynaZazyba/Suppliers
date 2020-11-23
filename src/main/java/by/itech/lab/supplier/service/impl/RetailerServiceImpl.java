@@ -1,32 +1,33 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Retailer;
-import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.RetailerDto;
 import by.itech.lab.supplier.dto.mapper.RetailerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.RetailerRepository;
+import by.itech.lab.supplier.service.RetailerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Optional;
 
 @Service
-@Transactional
 @Slf4j
 @AllArgsConstructor
-public class RetailerServiceImpl implements by.itech.lab.supplier.service.RetailerService {
+public class RetailerServiceImpl implements RetailerService {
     private final RetailerRepository retailerRepository;
 
     private final RetailerMapper retailerMapper;
 
     @Override
     public Optional<RetailerDto> findById(Long id) {
-        return Optional.of(retailerRepository.findById(id).map(retailerMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("Retailer with id=" + id + " doesn't exist")));
+        RetailerDto retailerDto =retailerRepository.findById(id).map(retailerMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Retailer with id=" + id + " doesn't exist"));
+        return Optional.of(retailerDto);
     }
 
     @Override
@@ -40,7 +41,6 @@ public class RetailerServiceImpl implements by.itech.lab.supplier.service.Retail
     }
 
     @Override
-    @Transactional
     public RetailerDto save(RetailerDto retailerDto) {
         Retailer retailer = Optional.ofNullable(retailerDto.getId())
                 .map(item -> {
