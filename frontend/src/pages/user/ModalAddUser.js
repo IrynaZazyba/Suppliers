@@ -9,9 +9,9 @@ function ModalAddUser(props) {
 
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
-    const [state, setState] = useState([]);
+    const [zone, setZone] = useState([]);
 
-    const [states, setStates] = useState([]);
+    const [zones, setZones] = useState([]);
 
     const [addressDto, setAddressDto] = useState({
         city: '',
@@ -34,13 +34,12 @@ function ModalAddUser(props) {
     const [errorMessage, setErrors] = useState('');
 
     const onChangeState = (e) => {
-        const selectedState = states.find(state => state.state === e.target.value);
+        const selectedState = zones.find(state => state.state === e.target.value);
 
-        setState(preState => ({
+        setZone(preState => ({
             ...preState,
             state: selectedState
         }));
-        console.log(selectedState);
         setAddressDto(preState => ({
             ...preState,
             state: selectedState
@@ -52,7 +51,7 @@ function ModalAddUser(props) {
         fetch('/states')
             .then(response => response.json())
             .then(commits => {
-                setStates(commits.content);
+                setZones(commits.content);
             });
     }, []);
 
@@ -87,7 +86,6 @@ function ModalAddUser(props) {
         }));
     };
     const handleRole = (e) => {
-        console.log(e.target.value);
         setUser(preState => ({
             ...preState,
             role: e.target.value
@@ -123,9 +121,6 @@ function ModalAddUser(props) {
     };
     const addUserHandler = (e) => {
         e.preventDefault();
-        console.log(currentCustomerId);
-        console.log(userDto);
-        console.log(addressDto);
 
 
         fetch('customers/' + currentCustomerId + '/users', {
@@ -237,7 +232,7 @@ function ModalAddUser(props) {
                         <Form.Control style={{padding: '5px 10px'}} as="select"
                                       defaultValue="Choose..."
                                       onChange={onChangeState}>
-                            {Object.entries(states).map(([k, v]) => (
+                            {Object.entries(zones).map(([k, v]) => (
 
                                 <option>{v.state}</option>
 

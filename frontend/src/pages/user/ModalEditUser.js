@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import validateUserName from "../../validation/UserValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
 
-function ModalEditCustomer(props) {
+function ModalEditUser(props) {
 
     const [userDto, setUser] = useState({
         id: '',
@@ -37,11 +37,10 @@ function ModalEditCustomer(props) {
     };
 
     const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId"): 0;
 
     useEffect(() => {
-        if (props.props.editShow === true) {
+        if (props.props.editShow) {
             fetch("customers/" +  currentCustomerId + "/users/" + props.props.user.id)
                 .then(response => response.json())
                 .then(res => {
@@ -61,7 +60,7 @@ function ModalEditCustomer(props) {
                    },
                    body: JSON.stringify(userDto)
                })
-                   .then(function (response) {
+                   .then((response) => {
                        if (response.status !== 200) {
                            setError('');
                            setErrors("Something go wrong, try later");
@@ -143,4 +142,4 @@ function ModalEditCustomer(props) {
     );
 }
 
-export default ModalEditCustomer;
+export default ModalEditUser;

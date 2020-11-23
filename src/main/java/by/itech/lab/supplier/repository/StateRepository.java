@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StateRepository  extends JpaRepository<State, Long> {
-    @Query("select s from State s")
+
     Page<State> findAll(Pageable pageable);
 }

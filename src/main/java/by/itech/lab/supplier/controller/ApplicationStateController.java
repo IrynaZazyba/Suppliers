@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping(ApiConstants.URL_STATES)
-public class StateController {
+public class ApplicationStateController {
 
     private final StateService stateService;
 

@@ -1,19 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react';
 import Alert from 'react-bootstrap/Alert'
-import Modal from "react-bootstrap/Modal";
-import ErrorMessage from "../messages/errorMessage";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {AuthContext} from "../context/authContext";
 import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import TogglePage from "../components/TogglePage";
 
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
-    const [states, setStates] = useState([]);
+    const [zones, setZones] = useState([]);
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     const [addressDto, setAddressDto] = useState({
@@ -27,9 +22,9 @@ export default () => {
         name: '',
         surname: '',
         birthday: '',
-        addressDto:'',
+        addressDto: '',
         role: '',
-        password:'',
+        password: '',
         username: '',
         email: ''
     });
@@ -70,12 +65,12 @@ export default () => {
 
     useEffect(() => {
 
-    fetch("http://localhost:8080/customers/" + currentCustomerId + "/users/username/" + user.username)
-        .then(response => response.json())
-        .then(res => {
-            setUserDto(res);
-            setState(res.addressDto.state);
-        });
+        fetch('http://localhost:8080/customers/{currentCustomerId}/users/username/${user.username}')
+            .then(response => response.json())
+            .then(res => {
+                setUserDto(res);
+                setState(res.addressDto.state);
+            });
 
 
     }, []);
@@ -84,7 +79,7 @@ export default () => {
     const editUserHandler = (e) => {
         e.preventDefault();
 
-        fetch("http://localhost:8080/customers/" +  currentCustomerId + "/users/" + userDto.id, {
+        fetch('http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -106,7 +101,7 @@ export default () => {
     const editPasswordHandler = (e) => {
         e.preventDefault();
 
-        fetch("http://localhost:8080/customers/" +  currentCustomerId + "/users/" + userDto.id + "/password", {
+        fetch('http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}/password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -130,11 +125,11 @@ export default () => {
             margin: '70px 10px',
             height: '40px'
         }}>
-            <Alert variant="success" >
-                <Alert.Heading  >  Info about user </Alert.Heading>
+            <Alert variant="success">
+                <Alert.Heading> Info about user </Alert.Heading>
             </Alert>
             <div className="ProfileCard" style={{
-              alignSelf: "center",
+                alignSelf: "center",
                 padding: "2px 300px 400px 500px"
             }}>
 
@@ -143,8 +138,8 @@ export default () => {
                     <Card.Header className="text-center border-bottom border-primary" style={{'background': 'white'}}>
                         Info about user
                     </Card.Header>
-                    <Card.Body>  <Form>
-                        <Form.Group controlId="editUserr" style={{padding: '5px 10px'}}>
+                    <Card.Body> <Form>
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Name</Form.Label>
                             <Form.Control type="text"
                                           placeholder="name"
@@ -156,7 +151,7 @@ export default () => {
                                                   : "form-control"
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  name.
+                                Please provide a valid name.
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
@@ -171,7 +166,7 @@ export default () => {
                                                   : "form-control"
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  surname.
+                                Please provide a valid surname.
                             </Form.Control.Feedback>
 
                         </Form.Group>
@@ -179,7 +174,7 @@ export default () => {
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text"
                                           placeholder="username"
-                                         readOnly={true}
+                                          readOnly={true}
                                           value={userDto.username}
                                           className={
                                               validError.includes("surname")
@@ -187,13 +182,14 @@ export default () => {
                                                   : "form-control"
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  username.
+                                Please provide a valid username.
                             </Form.Control.Feedback>
 
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Birthday date</Form.Label>
-                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday} onChange={handleBirthday}
+                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday}
+                                          onChange={handleBirthday}
                                           className={
                                               validError.includes("birthday")
                                                   ? "form-control is-invalid"
@@ -216,66 +212,46 @@ export default () => {
                                 Please provide a valid email.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Role</Form.Label>
-                            <Form.Control type="email" placeholder="role" value={userDto.role} readOnly={true}
-                                          className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid role.
-                            </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Label>City</Form.Label>
-                            <Form.Control type="email" placeholder="city" value={userDto.addressDto.city} readOnly={true}
-                                          className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="email" placeholder="address line 1" value={userDto.addressDto.addressLine1} readOnly={true}
-                                          className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="email" placeholder="address line 2" value={userDto.addressDto.addressLine2} readOnly={true}
-                                          className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-
-                        </Form.Group>
-
-
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Label>State</Form.Label>
-                            <Form.Control type="email" placeholder="state" value={state.state} readOnly={true}
-                                          className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-
-                        </Form.Group>
-                        <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Control type="password" placeholder="change password"  onChange={handlePassword}
+                            <Form.Control type="text" placeholder="role" value={userDto.role} readOnly={true}
                                          />
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicCity" style={{padding: '5px 10px'}}>
+                            <Form.Label>City</Form.Label>
+                            <Form.Control type="text" placeholder="city" value={userDto.addressDto.city}
+                                          readOnly={true}
+                                        />
+
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicAddress" style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 1</Form.Label>
+                            <Form.Control type="text" placeholder="address line 1"
+                                          value={userDto.addressDto.addressLine1} readOnly={true}
+                            />
+
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicAddress" style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 2</Form.Label>
+                            <Form.Control type="text" placeholder="address line 2"
+                                          value={userDto.addressDto.addressLine2} readOnly={true}
+                            />
+
+                        </Form.Group>
+
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Label>State</Form.Label>
+                            <Form.Control type="text" placeholder="state" value={state.state} readOnly={true}
+                            />
+
+                        </Form.Group>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="password" placeholder="change password" onChange={handlePassword}
+                            />
 
                         </Form.Group>
 

@@ -26,7 +26,7 @@ export default () => {
     });
     const [users, setUsers] = useState([]);
     const [filter, setFilter] = useState([]);
-    const [lgShow, setLgShow] = useState(false);
+    const [addUserShow, setAddUserShow] = useState(false);
     const [editUser, setEditUser] = useState({
         editShow: false,
         user: []
@@ -82,8 +82,6 @@ export default () => {
     };
 
     useEffect(() => {
-        console.log('/customers/'+currentCustomerId+'/users');
-
         getUsers('/customers/'+currentCustomerId+'/users');
     }, []);
 
@@ -103,7 +101,7 @@ export default () => {
     }
 
     const closeModalAdd = (e, customerDto) => {
-        setLgShow(e);
+        setAddUserShow(e);
         if (customerDto) {
             getUsers(`/customers/${currentCustomerId}/users?status=${filter}&size=${page.countPerPage}`);
         }
@@ -150,7 +148,7 @@ export default () => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalAddUser props={lgShow} onChange={closeModalAdd}/>
+            <ModalAddUser props={addUserShow} onChange={closeModalAdd}/>
             <ModalEditUser props={editUser} onChange={closeModalEdit}/>
         </React.Fragment>;
 
@@ -158,7 +156,7 @@ export default () => {
         <React.Fragment>
             <Row>
                 <Col md={2}>
-                    <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
+                    <Button className="mainButton" size="sm" onClick={() => setAddUserShow(true)}>
                         Add
                     </Button>
                 </Col>
