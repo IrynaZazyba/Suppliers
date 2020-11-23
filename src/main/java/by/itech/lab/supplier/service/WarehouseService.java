@@ -4,6 +4,7 @@ import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.WarehouseItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,4 +22,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     void acceptItems(Set<ApplicationItemDto> itemsToAccept, ApplicationDto appFromDb);
 
     Double getAvailableCapacity(Long warehouseId);
+
+    List<WarehouseItemDto> getWarehouseItemsByUpc(Long id, String itemUpc);
 }

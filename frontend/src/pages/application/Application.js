@@ -12,6 +12,7 @@ import ErrorMessage from "../../messages/errorMessage";
 import ModalAddApplication from "./ModalAddApplication";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
+import ModalAddShipmentApplication from "./ModalAddShipmentApplication";
 
 export default () => {
 
@@ -33,7 +34,7 @@ export default () => {
     };
     const [errorMessage, setErrors] = useState('');
     const [lgShow, setLgShow] = useState(false);
-
+    const [openShipmentModal, setOpenShipment] = useState(false);
 
     useEffect(() => {
         getApplications(`/customers/${customerId}/application`);
@@ -80,6 +81,13 @@ export default () => {
         }
     };
 
+    const closeModalAddShipment = (e, appDto) => {
+        setOpenShipment(e);
+        if (appDto) {
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
+        }
+    };
+
     const tableRows = applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
@@ -110,7 +118,7 @@ export default () => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <ModalAddApplication props={lgShow} onChange={closeModalAdd}/>
-
+            <ModalAddShipmentApplication props={openShipmentModal} onChange={closeModalAddShipment}/>
         </React.Fragment>;
 
     const header =
@@ -122,7 +130,7 @@ export default () => {
                     </Button>
                 </Col>
                 <Col md={'auto'}>
-                    <Button className="mainButton" size="sm">
+                    <Button className="mainButton" size="sm" onClick={() => setOpenShipment(true)}>
                         Add shipment
                     </Button>
                 </Col>

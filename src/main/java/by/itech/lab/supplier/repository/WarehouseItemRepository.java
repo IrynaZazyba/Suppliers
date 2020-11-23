@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Long> {
@@ -15,5 +16,7 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
     @Query("select i.warehouse.totalCapacity-COALESCE(sum(i.amount*i.item.units),0) " +
             "from WarehouseItem as i where i.warehouse.id=:warehouseId")
     Double getAvailableCapacity(@Param("warehouseId") Long warehouseId);
+
+    List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemUpcStartsWith(Long id, String upc);
 
 }

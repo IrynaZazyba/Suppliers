@@ -9,7 +9,9 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.WarehouseItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
+import by.itech.lab.supplier.dto.mapper.WarehouseItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateException;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -50,6 +52,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseItemRepository itemInWarehouseRepository;
     private final Lock lock = new ReentrantLock();
     private final UserService userService;
+    private final WarehouseItemMapper warehouseItemMapper;
 
     @Lazy
     @Autowired
@@ -148,6 +151,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         return Objects.isNull(availableCapacity) ?
                 warehouseRepository.getTotalCapacity(warehouseId) :
                 availableCapacity;
+    }
+
+    @Override
+    public List<WarehouseItemDto> getWarehouseItemsByUpc(final Long id, final String itemUpc) {
+        return itemInWarehouseRepository
+                .getWarehouseItemByWarehouseIdAndItemUpcStartsWith(id, itemUpc)
+                .stream()
+                .map(warehouseItemMapper::map)
+                .collect(Collectors.toList());
     }
 
     private Set<ApplicationItemDto> getItemsToAccept(final Set<ApplicationItemDto> itemsToAccept,
