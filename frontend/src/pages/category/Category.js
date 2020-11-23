@@ -90,7 +90,7 @@ export default () => {
                         onClick={() => {
                             setEditCategory({
                                 editShow: true,
-                                item: category
+                                category: category
                             });
                         }}/>
             </td>

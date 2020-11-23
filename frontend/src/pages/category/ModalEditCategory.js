@@ -35,7 +35,7 @@ function ModalEditCategory(props) {
 
     useEffect(() => {
         if (props.props.editShow === true) {
-            fetch(`/customers/${currentCustomerId}/category`)
+            fetch(`/customers/${currentCustomerId}/category/${props.props.category.id}`)
                 .then(response => response.json())
                 .then(res => {
                     setCategory(res);
@@ -43,8 +43,7 @@ function ModalEditCategory(props) {
         }
     }, [props.props.editShow]);
 
-
-    const editCustomerHandler = (e) => {
+    const editCategoryHandler = (e) => {
         e.preventDefault();
         let validationResult = validateCategory(categoryDto);
         setErrors(preState => ({
@@ -97,7 +96,7 @@ function ModalEditCategory(props) {
                             <Form.Control type="text"
                                           placeholder="Category"
                                           onChange={handleCategoryName}
-                                          value={categoryDto.name}
+                                          value={categoryDto.category}
                                           className={
                                               errors.validationErrors.includes("category")
                                                   ? "form-control is-invalid"
@@ -108,7 +107,10 @@ function ModalEditCategory(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editTaxRate" style={{padding: '5px 10px'}}>
-                            <Form.Control type="number" step="0.001" placeholder="Tax rate(per km)" onChange={handleTaxRate}
+                            <Form.Control type="number" step="0.001"
+                                          placeholder="Tax rate(per km)"
+                                          onChange={handleTaxRate}
+                                          value={categoryDto.taxRate}
                                           className={
                                               errors.validationErrors.includes("taxRate")
                                                   ? "form-control is-invalid"
@@ -120,7 +122,7 @@ function ModalEditCategory(props) {
                         </Form.Group>
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
-                                    onClick={editCustomerHandler}>
+                                    onClick={editCategoryHandler}>
                                 Save
                             </Button>
                         </div>

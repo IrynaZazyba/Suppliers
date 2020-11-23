@@ -5,7 +5,7 @@ import {FaEdit} from "react-icons/fa";
 import React from "react";
 import ErrorMessage from "../../messages/errorMessage";
 import ModalAddItem from "./ModalAddItem";
-import ModalEditItem from "./../customer/ModalEditCustomer";
+import ModalEditItem from "./ModalEditItem";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -42,8 +42,8 @@ export default () => {
 
     const changePage = (e) => {
         e.preventDefault();
-        let page = e.target.innerHTML - 1;
-        getItems(`/customers/${currentCustomerId}/item?page=${page}&size=${page.countPerPage}`);
+        let currentPage = e.target.innerHTML - 1;
+        getItems(`/customers/${currentCustomerId}/item?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {

@@ -405,10 +405,18 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/item/category/someType
+GET http://localhost:8080/customers/3/item/category
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+{
+  "id": 5,
+  "category": "MG",
+  "taxRate": 42,
+  "deletedAt": null,
+  "customerId": 3
+}
 
 > {%
     client.test("Request executed successfully", function() {
