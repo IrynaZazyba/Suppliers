@@ -4,11 +4,12 @@ package by.itech.lab.supplier.service;
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.ApplicationItemMapper;
+import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
+import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
-import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.repository.ApplicationItemRepository;
+import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.service.impl.ApplicationServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,10 +82,12 @@ public class ApplicationServiceTest {
         Page<ApplicationDto> applicationDtoPage = new PageImpl<>(applicationDtoList);
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
-        Mockito.when(applicationRepository.findAllByUserRole(pageRequest, true)).thenReturn(applicationPage);
+        Mockito.when(applicationRepository
+                .findAllByRoleAndStatus(pageRequest, true, null)).thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
-        Assertions.assertEquals(applicationDtoPage, applicationService.findAll(pageRequest, true));
+        Assertions.assertEquals(applicationDtoPage,
+                applicationService.findAllByRoleAndStatus(pageRequest, true, null));
 
     }
 
@@ -134,12 +137,20 @@ public class ApplicationServiceTest {
         @MockBean
         private ApplicationItemMapper itemsInApplicationMapper;
 
+        @MockBean
+        private UserService userService;
+
+        @MockBean
+        private UserMapper userMapper;
+
         @Bean
         public ApplicationService applicationService() {
             return new ApplicationServiceImpl(applicationRepository,
                     applicationMapper,
                     itemInApplicationRepository,
-                    itemsInApplicationMapper);
+                    itemsInApplicationMapper,
+                    userService,
+                    userMapper);
         }
 
     }

@@ -12,6 +12,7 @@ function Header() {
 
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const appClass = window.location.pathname.match( /.application/)? "active" : "";
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -22,6 +23,9 @@ function Header() {
                     <Nav.Link className={profileClass}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
+                    <Nav.Link className={appClass}
+                              href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     <UserProfile/>
