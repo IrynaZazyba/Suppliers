@@ -12,6 +12,7 @@ function Header() {
 
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const categoryClass = window.location.pathname.match(/.category/) ? "active" : "";
     const itemClass = window.location.pathname.match(/.item/) ? "active" : "";
 
     return (
@@ -26,7 +27,12 @@ function Header() {
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     {checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_DISPATCHER" ||
-                        user.role === "ROLE_LOGISTICS_SPECIALIST") &&
+                        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN") &&
+                    <Nav.Link className={categoryClass} href={`/customers/${user.currentCustomerId}/category`}>
+                        Categories
+                    </Nav.Link>}
+                    {checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_DISPATCHER" ||
+                        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN") &&
                     <Nav.Link className={itemClass} href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
                     <UserProfile/>

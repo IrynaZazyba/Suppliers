@@ -4,8 +4,8 @@ import Page from "../../components/Page";
 import {FaEdit} from "react-icons/fa";
 import React from "react";
 import ErrorMessage from "../../messages/errorMessage";
-import ModalAddItem from "./ModalAddItem";
-import ModalEditItem from "./../customer/ModalEditCustomer";
+import ModalAddCategory from "./ModalAddCategory";
+import ModalEditCategory from "./ModalEditCategory";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
@@ -23,9 +23,9 @@ export default () => {
         countPerPage: 10,
         countPages: 1
     });
-    const [items, setItems] = useState([]);
+    const [categories, setCategory] = useState([]);
     const [lgShow, setLgShow] = useState(false);
-    const [editItem, setEditItem] = useState({
+    const [editCategory, setEditCategory] = useState({
         editShow: false,
         customer: []
     });
@@ -37,24 +37,24 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getItems(`/customers/${currentCustomerId}/item?size=${e.target.value}`);
+        getCategories(`/customers/${currentCustomerId}/category?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
-        let page = e.target.innerHTML - 1;
-        getItems(`/customers/${currentCustomerId}/item?page=${page}&size=${page.countPerPage}`);
+        let currentPage = e.target.innerHTML - 1;
+        getCategories(`/customers/${currentCustomerId}/category?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getItems(`/customers/${currentCustomerId}/item?size=${page.countPerPage}`);
+        getCategories(`/customers/${currentCustomerId}/category?size=${page.countPerPage}`);
     }, []);
 
-    function getItems(url) {
+    function getCategories(url) {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                setItems(commits.content);
+                setCategory(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
@@ -63,36 +63,34 @@ export default () => {
             });
     }
 
-    const closeModalAdd = (e, itemDto) => {
+    const closeModalAdd = (e, categoryDto) => {
         setLgShow(e);
-        if (itemDto) {
-            getItems(`/customers/${currentCustomerId}/item?size=${page.countPerPage}`);
+        if (categoryDto) {
+            getCategories(`/customers/${currentCustomerId}/category?size=${page.countPerPage}`);
         }
     };
 
-    const closeModalEdit = (e, itemDto) => {
-        setEditItem(
+    const closeModalEdit = (e, categoryDto) => {
+        setEditCategory(
             preState => ({
                 ...preState,
                 editShow: false
             }));
-        if (itemDto) {
-            getItems(`/customers/${currentCustomerId}/item?size=${page.countPerPage}`);
+        if (categoryDto) {
+            getCategories(`/customers/${currentCustomerId}/category?size=${page.countPerPage}`);
         }
     };
 
-    const tableRows = items.map(item => (
-        <tr key={item.id}>
-            <td>{item.label}</td>
-            <td>{item.units}</td>
-            <td>{item.categoryDto.category}</td>
-            <td>{item.upc}</td>
+    const tableRows = categories.map(category => (
+        <tr key={category.id}>
+            <td>{category.category}</td>
+            <td>{category.taxRate}</td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
                         onClick={() => {
-                            setEditItem({
+                            setEditCategory({
                                 editShow: true,
-                                item: item
+                                item: category
                             });
                         }}/>
             </td>
@@ -102,8 +100,8 @@ export default () => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalAddItem props={lgShow} onChange={closeModalAdd}/>
-            <ModalEditItem props={editItem} onChange={closeModalEdit}/>
+            <ModalAddCategory props={lgShow} onChange={closeModalAdd}/>
+            <ModalEditCategory props={editCategory} onChange={closeModalEdit}/>
         </React.Fragment>;
 
     const header =
@@ -126,10 +124,8 @@ export default () => {
             <Table hover size="sm">
                 <thead>
                 <tr>
-                    <th>Label</th>
-                    <th>Units</th>
                     <th>Category</th>
-                    <th>Cost per unit</th>
+                    <th>Tax Rate(per km)</th>
                     <th></th>
                 </tr>
                 </thead>

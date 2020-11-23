@@ -10,7 +10,8 @@ import ProtectedComponent from "./components/ProtectedComponent";
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
-import Items from "./pages/item/ItemsOfCustomer"
+import Items from "./pages/item/ItemsOfCustomer";
+import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 
 function App() {
@@ -31,9 +32,16 @@ function App() {
     };
 
     const renderItems = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
         || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
             return <Items/>
+        })}/>
+    };
+
+    const renderCategory = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
+            return <Category/>
         })}/>
     };
 
@@ -42,6 +50,7 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={'/customers/' + currentCustomerId + '/category'} render={renderCategory}/>/>
                 <Route path={'/customers/' + currentCustomerId + '/item'} render={renderItems}/>/>
                 <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
                 <Route path={'/customers'} render={renderCustomer}/>

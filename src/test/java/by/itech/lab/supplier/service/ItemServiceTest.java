@@ -38,9 +38,6 @@ public class ItemServiceTest {
     private ItemRepository itemRepository;
 
     @Autowired
-    private CategoryService categoryService;
-
-    @Autowired
     private ItemMapper itemMapper;
 
     private Category category;
@@ -108,30 +105,6 @@ public class ItemServiceTest {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> itemService.findById(10L));
     }
 
-    @Test
-    void getItemByCategoryTest_Positive() {
-        List<Item> itemList = Collections.singletonList(item);
-        List<ItemDto> itemDtoList = Collections.singletonList(itemDto);
-        Page<ItemDto> itemDtoPage = new PageImpl<>(itemDtoList);
-        Page<Item> itemPage = new PageImpl<>(itemList);
-
-        Mockito.when(itemRepository.findAllByCategory(categoryDto.getId(), pageRequest)).thenReturn(itemPage);
-        Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
-        Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
-        Page<ItemDto> found = itemService.findAllByCategory("Fruit", pageRequest);
-        Assertions.assertEquals(itemDtoPage, found);
-    }
-
-    @Test
-    void getItemByCategoryTest_Negative() {
-        Mockito.when(itemRepository.findAllByCategory(categoryDto.getId(), pageRequest)).thenReturn(Page.empty());
-        Mockito.when(itemMapper.map(item)).thenReturn(itemDto);
-        Mockito.when(categoryService.findByCategory("Fruit")).thenReturn(categoryDto);
-
-        Assertions.assertEquals(new PageImpl<ItemDto>(new ArrayList<>()),
-          itemService.findAllByCategory("Fruit", pageRequest));
-    }
-
     @TestConfiguration
     static class Config {
 
@@ -141,12 +114,9 @@ public class ItemServiceTest {
         @MockBean
         private ItemMapper itemMapper;
 
-        @MockBean
-        private CategoryService categoryService;
-
         @Bean
         public ItemService itemService() {
-            return new ItemServiceImpl(itemRepository, itemMapper, categoryService);
+            return new ItemServiceImpl(itemRepository, itemMapper);
         }
 
     }

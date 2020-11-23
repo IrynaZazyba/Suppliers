@@ -25,17 +25,14 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemMapper itemMapper;
 
-    private final CategoryService categoryService;
-
     @Override
     public Page<ItemDto> findByLabel(final String label, final Pageable pageable) {
         return itemRepository.findByLabel(label, pageable)
           .map(itemMapper::map);
     }
 
-    public Page<ItemDto> findAllByCategory(final String categoryName, final Pageable pageable) {
-        CategoryDto found = categoryService.findByCategory(categoryName);
-        return itemRepository.findAllByCategory(found.getId(), pageable)
+    public Page<ItemDto> findAllByCategory(final CategoryDto categoryDto, final Pageable pageable) {
+        return itemRepository.findAllByCategory(categoryDto.getId(), pageable)
           .map(itemMapper::map);
     }
 

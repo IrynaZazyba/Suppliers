@@ -58,7 +58,7 @@ Cookie: {{test}}
 
 {
   "name": "SomeCompany2",
-  "adminEmail": "1j323@gmail.com"
+  "taxRate": "1j323@gmail.com"
 }
 
 ###
@@ -485,7 +485,7 @@ Cookie: {{test}}
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
   "sourceLocationDto": {
-    "id":1
+    "id": 1
   },
   "destinationLocationDto": {
     "id": 3
@@ -516,7 +516,7 @@ Cookie: {{test}}
       "name": "SystemCompany",
       "registrationDate": "2020-10-19",
       "active": true,
-      "adminEmail": null
+      "taxRate": null
     },
     "warehouse": null
   },
@@ -546,7 +546,7 @@ Cookie: {{test}}
       "name": "SystemCompany",
       "registrationDate": "2020-10-19",
       "active": true,
-      "adminEmail": null
+      "taxRate": null
     },
     "warehouse": null
   },
