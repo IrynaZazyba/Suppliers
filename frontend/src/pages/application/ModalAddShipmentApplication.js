@@ -65,11 +65,7 @@ function ModalAddApplication(props) {
     const filterBy = () => true;
     const onChangeUpc = (e) => {
         console.log(e[0]);
-
-        setErrors({
-            setErrors: '',
-            validationErrors: []
-        });
+        checkValidationErrors('upc');
         e.length > 0 ?
             setCurrentItem(preState => ({
                 ...preState,
@@ -87,35 +83,70 @@ function ModalAddApplication(props) {
     const handleInput = (fieldName) =>
         (e) => {
             const value = e.target.value;
+            checkValidationErrors(fieldName);
             setCurrentItem(preState => ({
                 ...preState,
                 [fieldName]: value
             }));
         };
 
-    const handleAppLocations = (fieldName) =>
-        (e) => {
-            const value = e.currentTarget.value;
-            setApp(preState => ({
-                ...preState,
-                [fieldName]: value
-            }));
+    const handleAppSourceLocations = (e) => {
+        const value = e.currentTarget.value;
+        checkValidationErrors("sourceId");
+        setApp(preState => ({
+            ...preState,
+            sourceId: value
+        }));
+        if (appDto.destinationId && value && items.length !== 0) {
+            recalculatePrices(value, appDto.destinationId);
+        }
+    };
 
-            if (items.length !== 0 && appDto.destinationId && appDto.sourceId) {
-                let distance = calculateDistance();
-                let recalculatedItems = recalculateItems(items, taxes, distance, appDto.destinationId);
-                setItems(recalculatedItems);
-            }
+    const handleAppDestinationLocations = (e) => {
+        const value = e.currentTarget.value;
+        checkValidationErrors('destinationId');
+        setApp(preState => ({
+            ...preState,
+            destinationId: value
+        }));
 
-        };
+        if (appDto.sourceId && value && items.length !== 0) {
+            recalculatePrices(appDto.sourceId, value);
+        }
+    };
+
+    function recalculatePrices(sourceId, destinationId) {
+        let distance = calculateDistance(sourceId, destinationId);
+        let itemPrice = recalculateItems(items, taxes, distance, destinationId);
+        setItems(itemPrice);
+    }
+
+    function calculateDistance(sourceId, destinationId) {
+        let dest = warehouses.destination.find(i => i.id == destinationId);
+        let sour = warehouses.source.find(i => i.id == sourceId);
+        let distance = getDistance(
+            {latitude: dest.addressDto.latitude, longitude: dest.addressDto.longitude},
+            {latitude: sour.addressDto.latitude, longitude: sour.addressDto.longitude}
+        );
+        return distance / 1000;
+    }
 
     const handleAppNumber = (e) => {
         const value = e.target.value;
+        checkValidationErrors('number');
         setApp(preState => ({
             ...preState,
             number: value
         }))
     };
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
 
     const deleteItem = (e) => {
         let afterDelete = [];
@@ -136,7 +167,6 @@ function ModalAddApplication(props) {
             })
         );
     }, [items]);
-
 
     useEffect(() => {
 
@@ -188,17 +218,6 @@ function ModalAddApplication(props) {
             ref.current.clear();
         }
     };
-
-    function calculateDistance() {
-        let dest = warehouses.destination.find(i => i.id == appDto.destinationId);
-        let sour = warehouses.source.find(i => i.id == appDto.sourceId);
-
-        let distance = getDistance(
-            {latitude: dest.addressDto.latitude, longitude: dest.addressDto.longitude},
-            {latitude: sour.addressDto.latitude, longitude: sour.addressDto.longitude}
-        );
-        return distance / 1000;
-    }
 
     function prepareAppDto() {
         let itemInApp = [];
@@ -332,10 +351,8 @@ function ModalAddApplication(props) {
                                   onChange={handleInput('amount')}
                                   onBlur={() => {
                                       if (appDto.destinationId && appDto.sourceId) {
-                                          let distance = calculateDistance();
-                                          console.log(distance);
+                                          let distance = calculateDistance(appDto.sourceId, appDto.destinationId);
                                           let itemPrice = calculateItemPrice(currentItem, taxes, distance, appDto.destinationId);
-                                          console.log(itemPrice);
                                           setCurrentItem(prevState => ({
                                               ...prevState,
                                               price: itemPrice
@@ -390,7 +407,7 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="sourceLocation">
                     <Form.Label column sm="3">Source location</Form.Label>
                     <Col sm="7">
-                        <Form.Control onChange={handleAppLocations('sourceId')} as="select"
+                        <Form.Control onChange={handleAppSourceLocations} as="select"
                                       className={
                                           errors.validationErrors.includes("sourceId")
                                               ? "form-control is-invalid"
@@ -411,7 +428,7 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="destinationLocation">
                     <Form.Label column sm="3">Destination location</Form.Label>
                     <Col sm="7">
-                        <Form.Control onChange={handleAppLocations('destinationId')} as="select"
+                        <Form.Control onChange={handleAppDestinationLocations} as="select"
                                       className={
                                           errors.validationErrors.includes("destinationId")
                                               ? "form-control is-invalid"
@@ -488,7 +505,8 @@ function ModalAddApplication(props) {
                             <Card.Header>
                                 {inputsAddItems}
                             </Card.Header>
-                            <Card.Body>
+                            <Card.Body
+                            >
                                 <Card.Text>
                                     {itemsTable}
                                 </Card.Text>
