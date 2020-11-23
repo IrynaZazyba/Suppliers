@@ -19,6 +19,8 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine2(addressDto.getAddressLine2())
                 .id(addressDto.getId())
                 .state(stateMapper.map(addressDto.getState()))
+                .latitude(addressDto.getLatitude())
+                .longitude(addressDto.getLongitude())
                 .build();
     }
 
@@ -30,6 +32,8 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine2(address.getAddressLine2())
                 .id(address.getId())
                 .state(stateMapper.map(address.getState()))
+                .latitude(address.getLatitude())
+                .longitude(address.getLongitude())
                 .build();
     }
 
@@ -38,5 +42,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
         to.setAddressLine1(from.getAddressLine1());
         to.setAddressLine2(from.getAddressLine2());
         to.setState(stateMapper.map(from.getState()));
+        to.setLatitude(from.getLatitude());
+        to.setLongitude(from.getLongitude());
     }
 }
