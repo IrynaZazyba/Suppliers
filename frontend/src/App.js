@@ -42,9 +42,9 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
+                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>
+                <Route path={'/customers/' + currentCustomerId + '/application'} render={renderApplication}/>
                 <Route path={'/customers'} render={renderCustomer}/>
-                <Route path={'/application'} render={renderApplication}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

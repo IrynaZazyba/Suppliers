@@ -1,4 +1,4 @@
-export default function validateApplication(app, item) {
+export default function validateApplication(app, items) {
     let errorsFields = [];
 
     if (!app.number) {
@@ -13,7 +13,7 @@ export default function validateApplication(app, item) {
         errorsFields.push("destinationId");
     }
 
-    if (item.length === 0) {
+    if (items.length === 0) {
         errorsFields.push("items");
     }
 

@@ -29,7 +29,7 @@ function ModalAddApplication(props) {
         serverErrors: ''
     });
     const [options, setOptions] = useState([]);
-    const [item, setItems] = useState([]);
+    const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState([]);
     const [totalValues, setTotalValues] = useState({
         totalAmount: '',
@@ -100,7 +100,7 @@ function ModalAddApplication(props) {
 
     const deleteItem = (e) => {
         let afterDelete = [];
-        item.forEach(i => {
+        items.forEach(i => {
             if (i.id != e.currentTarget.id) {
                 afterDelete.push(i);
             }
@@ -112,11 +112,11 @@ function ModalAddApplication(props) {
         setCurrentItem('');
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: item.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: item.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
             })
         );
-    }, [item]);
+    }, [items]);
 
 
     useEffect(() => {
@@ -142,7 +142,7 @@ function ModalAddApplication(props) {
 
     const addItemHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateItem(currentItem, item);
+        let validationResult = validateItem(currentItem, items);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validationResult
@@ -150,7 +150,7 @@ function ModalAddApplication(props) {
 
         if (validationResult.length === 0) {
             setItems([
-                ...item, currentItem
+                ...items, currentItem
             ]);
             setCurrentItem('');
             setErrors(prevState => ({
@@ -163,7 +163,7 @@ function ModalAddApplication(props) {
 
     function prepareAppDto() {
         let itemInApp = [];
-        item.forEach(i => {
+        items.forEach(i => {
             let itemApp = {
                 cost: i.cost,
                 amount: i.amount,
@@ -191,7 +191,7 @@ function ModalAddApplication(props) {
     const addAppHandler = (e) => {
         e.preventDefault();
 
-        let validErrors = validateApplication(appDto, item);
+        let validErrors = validateApplication(appDto, items);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validErrors
@@ -227,7 +227,7 @@ function ModalAddApplication(props) {
 
     const itemsTable =
         <React.Fragment>
-            {item.length > 0 &&
+            {items.length > 0 &&
             <Table striped bordered hover size="sm">
                 <thead>
                 <tr>
@@ -240,7 +240,7 @@ function ModalAddApplication(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {item.map(i => (
+                {items.map(i => (
                     <tr id={i.id} key={i.id}>
                         <td>{i.upc}</td>
                         <td>{i.label}</td>
@@ -275,10 +275,10 @@ function ModalAddApplication(props) {
                         onSearch={handleSearch}
                         onChange={onChangeUpc}
                     >
-                        <div style={{color: '#dc3545', fontSize: '80%'}}>
+                        <div className="validationError">
                             {errors.validationErrors.includes("upc") ? "Please provide a value" : ""}
                         </div>
-                        <div style={{color: '#dc3545', fontSize: '80%'}}>
+                        <div className="validationError">
                             {errors.validationErrors.includes("exist") ? "Such item already exists" : ""}
                         </div>
                     </AsyncTypeahead>
@@ -386,7 +386,7 @@ function ModalAddApplication(props) {
                 </Form.Group>
             </Col>
             <Col sm={2} style={{marginLeft: '-25px'}}>
-                <Card style={{width: '11rem', borderLeft: '3px solid #009edd'}}>
+                <Card className="totalCard">
                     <Card.Body>
                         <h6>Total amount of items</h6>
                         <Card.Text>
@@ -396,7 +396,7 @@ function ModalAddApplication(props) {
                 </Card>
             </Col>
             <Col sm={2}>
-                <Card style={{width: '11rem', borderLeft: '3px solid #009edd'}}>
+                <Card className="totalCard">
                     <Card.Body>
                         <h6>Total number of units</h6>
                         <Card.Text>
@@ -435,7 +435,7 @@ function ModalAddApplication(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         {appDataFields}
-                        <div style={{color: '#dc3545', fontSize: '80%'}}>
+                        <div className="validationError">
                             {errors.validationErrors.includes("items") ? "Items shouldn't be empty" : ""}
                         </div>
                         <Card border="primary" style={{width: '100%'}}>

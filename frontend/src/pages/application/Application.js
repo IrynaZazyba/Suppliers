@@ -31,10 +31,6 @@ export default () => {
         'Finished processing': 'FINISHED_PROCESSING'
     };
     const [errorMessage, setErrors] = useState('');
-    const [editApplication, setEditApplication] = useState({
-        editShow: false,
-        application: []
-    });
     const [lgShow, setLgShow] = useState(false);
 
 
@@ -77,17 +73,6 @@ export default () => {
         getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
     };
 
-    const closeModalEdit = (e, appDto) => {
-        setEditApplication(
-            preState => ({
-                ...preState,
-                editShow: false
-            }));
-        if (appDto) {
-            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
-        }
-    };
-
     const closeModalAdd = (e, appDto) => {
         setLgShow(e);
         if (appDto) {
@@ -98,19 +83,22 @@ export default () => {
     const tableRows = applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
-            <td>{app.sourceLocationDto.identifier}</td>
-            <td>{app.destinationLocationDto.identifier}</td>
+            <td style={{fontSize: '0.9rem'}}>{app.sourceLocationDto.identifier}{','}<br/>
+                {app.sourceLocationDto.addressDto.city}{','}<br/>
+                {app.sourceLocationDto.addressDto.addressLine1}
+            </td>
+            <td style={{fontSize: '0.9rem'}}>{app.destinationLocationDto.identifier}{','}<br/>
+                {app.destinationLocationDto.addressDto.city}{','}<br/>
+                {app.destinationLocationDto.addressDto.addressLine1}
+            </td>
             <td>{app.lastUpdated}</td>
             <td>{app.lastUpdatedByUsersDto.surname}</td>
             <td>{app.applicationStatus}</td>
+            <td><Button variant="link">Accept</Button>
+            </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
-                        onClick={() => {
-                            setEditApplication({
-                                editShow: true,
-                                application: app
-                            });
-                        }}
+
             />
             </td>
         </tr>
@@ -119,7 +107,6 @@ export default () => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            {/*<ModalEditApplication props={editApplication} onChange={closeModalEdit}/>*/}
             <ModalAddApplication props={lgShow} onChange={closeModalAdd}/>
 
         </React.Fragment>;
@@ -165,6 +152,7 @@ export default () => {
                     <th>Last update date</th>
                     <th>Updated by</th>
                     <th>Status</th>
+                    <th></th>
                     <th></th>
                 </tr>
                 </thead>

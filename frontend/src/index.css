@@ -32,7 +32,7 @@ code {
     color: white !important;
 }
 
-.navigation{
+.navigation {
     height: 45px;
 }
 
@@ -71,17 +71,17 @@ code {
     margin-bottom: 70px !important;
 }
 
-.deleteButton{
+.deleteButton {
     margin-left: 10px;
     border: 1px solid #9D100D !important;
     color: black !important;
     background-color: #fcd9e0 !important;
 }
 
-.deleteButton:hover{
+.deleteButton:hover {
     border: 1px solid #9D100D !important;
     color: white !important;
-    background-color:  #9D100D !important;
+    background-color: #9D100D !important;
 }
 
 .table > tbody > tr > td {
@@ -89,53 +89,63 @@ code {
     padding-left: 5px !important;
 }
 
-.card-body .table{
+.card-body .table {
     margin-top: 25px;
 }
 
-.pagination span{
-    background-color:  #1A7FA8 !important;
+.pagination span {
+    background-color: #1A7FA8 !important;
     border-color: #1A7FA8 !important;
     color: #1A7FA8;
 }
 
-a.page-link{
+a.page-link {
     color: #1A7FA8;
 }
 
-.center{
+.center {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.tableHead{
+.tableHead {
     background-color: #eaf7fc !important;
 }
 
-.card-body{
-    padding-top:10px !important;
+.card-body {
+    padding-top: 10px !important;
 }
 
-.tableHead .mainButton:hover{
+.tableHead .mainButton:hover {
     background-color: #1993c4 !important;
     border: 1px solid #009edd !important;
     color: white;
 }
 
-.modal-header{
+.modal-header {
     border-bottom: 1px solid #009edd !important;
 }
 
-.modal-content{
+.modal-content {
     border-radius: .2rem !important;
 }
 
-.nav-link.active{
+.nav-link.active {
     color: #009edd !important;
 }
 
-.app-modal{
+.app-modal {
     min-width: 75% !important;
+}
+
+.validationError {
+    color: #dc3545;
+    font-size: 80%
+}
+
+.totalCard {
+    width: 11rem;
+    border-left: 3px solid #009edd;
 }
 

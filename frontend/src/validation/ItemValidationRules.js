@@ -1,19 +1,19 @@
-export default function validateItem(item, items) {
+export default function validateItem(currentItem, items) {
     let errorsFields = [];
-    if (!item.upc) {
+    if (!currentItem.upc) {
         errorsFields.push("upc");
     }
 
-    if (!item.amount) {
+    if (!currentItem.amount) {
         errorsFields.push("amount");
     }
 
-    if (!item.cost) {
+    if (!currentItem.cost) {
         errorsFields.push("cost");
     }
 
     items.forEach(i => {
-        if (i.id === item.id) {
+        if (i.id === currentItem.id) {
             errorsFields.push("exist")
         }
     });
