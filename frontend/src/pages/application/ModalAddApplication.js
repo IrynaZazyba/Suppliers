@@ -24,6 +24,7 @@ function ModalAddApplication(props) {
         items: []
     });
     const {user, setUser} = useContext(AuthContext);
+    const customerId = user.currentCustomerId;
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
@@ -41,7 +42,7 @@ function ModalAddApplication(props) {
     });
 
     const handleSearch = (query) => {
-        fetch(`customers/${user.currentCustomerId}/item/upc?upc=${query}`)
+        fetch(`/customers/${customerId}/item/upc?upc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
@@ -50,7 +51,6 @@ function ModalAddApplication(props) {
                     label: i.label,
                     units: i.units
                 }));
-
                 setOptions(optionsFromBack);
             });
     };
@@ -120,7 +120,7 @@ function ModalAddApplication(props) {
 
 
     useEffect(() => {
-        fetch(`/customers/${user.currentCustomerId}/warehouses/type?type=FACTORY`)
+        fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
             .then(response => response.json())
             .then(res => {
                 setWarehouses(preState => ({
@@ -129,7 +129,7 @@ function ModalAddApplication(props) {
                     })
                 );
             });
-        fetch(`/customers/${user.currentCustomerId}/warehouses/type?type=WAREHOUSE`)
+        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
             .then(response => response.json())
             .then(res => {
                 setWarehouses(preState => ({
@@ -199,7 +199,7 @@ function ModalAddApplication(props) {
 
         if (validErrors.length === 0) {
             let application = prepareAppDto();
-            fetch(`/customers/${user.currentCustomerId}/application`, {
+            fetch(`/customers/${customerId}/application`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

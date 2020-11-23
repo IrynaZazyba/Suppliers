@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form'
 import ErrorMessage from "../../messages/errorMessage";
 import ModalAddApplication from "./ModalAddApplication";
 import {AuthContext} from "../../context/authContext";
+import Badge from "react-bootstrap/Badge";
 
 export default () => {
 
@@ -91,8 +92,11 @@ export default () => {
                 {app.destinationLocationDto.addressDto.addressLine1}
             </td>
             <td>{app.lastUpdated}</td>
-            <td>{app.lastUpdatedByUsersDto.surname}</td>
-            <td>{app.applicationStatus}</td>
+            <td className="table-text-center">{app.lastUpdatedByUsersDto.surname}</td>
+            <td className="table-text-center" style={{width: '45px'}}>
+                <Badge className="badge-status">
+                    {app.applicationStatus.replace('_', ' ').toLowerCase()}
+                </Badge></td>
             <td><Button variant="link">Accept</Button>
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
@@ -148,8 +152,8 @@ export default () => {
                     <th>Source location</th>
                     <th>Destination location</th>
                     <th>Last update date</th>
-                    <th>Updated by</th>
-                    <th>Status</th>
+                    <th className="table-text-center">Updated by</th>
+                    <th className="table-text-center">Status</th>
                     <th></th>
                     <th></th>
                 </tr>

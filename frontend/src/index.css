@@ -149,3 +149,12 @@ a.page-link {
     border-left: 3px solid #009edd;
 }
 
+.table-text-center {
+    text-align: center;
+}
+
+.badge-status{
+    background-color: #E8E8EE;
+    text-align: center;
+}
+
