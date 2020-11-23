@@ -64,9 +64,9 @@ public class ItemController {
         itemService.delete(id);
     }
 
-    @GetMapping("/upc")
+    @GetMapping(ApiConstants.URL_UPC)
     public List<ItemDto> getItemByUpc(@RequestParam String upc) {
-        return itemService.findByUpcContaining(upc.trim());
+        return itemService.findByUpc(upc.trim());
     }
 
 }

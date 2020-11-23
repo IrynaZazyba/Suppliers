@@ -29,4 +29,8 @@ public final class ApiConstants {
     public final static String URL_STATUS = "/status";
     public final static String URL_CAPACITY = "/capacity";
     public final static String URL_ITEMS = "/items";
+    public final static String URL_UPC = "/upc";
+    public final static String URL_TYPE = "/type";
+
+
 }

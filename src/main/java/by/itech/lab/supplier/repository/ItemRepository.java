@@ -25,7 +25,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("update Item set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
 
-//    @Query("select i from Item i where i.upc LIKE :upc%")
     List<Item> findByUpcStartsWith(String upc);
 
 }

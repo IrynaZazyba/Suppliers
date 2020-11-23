@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findByUpcContaining(String upc) {
+    public List<ItemDto> findByUpc(String upc) {
         return itemRepository.findByUpcStartsWith(upc).stream().map(itemMapper::map).collect(Collectors.toList());
     }
 

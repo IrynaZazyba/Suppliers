@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
@@ -77,7 +78,7 @@ public class WarehouseController {
         return new BigDecimal(warehouseService.getAvailableCapacity(id));
     }
 
-    @GetMapping("/type")
+    @GetMapping(ApiConstants.URL_TYPE)
     public List<WarehouseDto> findByType(@RequestParam final WarehouseType type) {
         return warehouseService.findAllByType(type);
     }
