@@ -13,10 +13,9 @@ import ErrorMessage from "../../messages/errorMessage";
 import validateItem from "../../validation/ItemValidationRules";
 import validateApplication from "../../validation/ApplicationValidationRules";
 
-function ModalAddApplication(props) {
+function AddApplicationModal(props) {
 
     const ref = React.createRef();
-
     const [appDto, setApp] = useState({
         number: '',
         sourceId: '',
@@ -72,7 +71,7 @@ function ModalAddApplication(props) {
             setCurrentItem('');
     };
 
-    const handleInput = (fieldName) =>
+    const handleInputsAmountAndCost = (fieldName) =>
         (e) => {
             const value = e.target.value;
             setCurrentItem(preState => ({
@@ -91,7 +90,7 @@ function ModalAddApplication(props) {
             }))
         };
 
-    const AppNumberOnChange = (e) => {
+    const appNumberOnChange = (e) => {
         const value = e.target.value;
         checkValidationErrors("number");
         setApp(preState => ({
@@ -300,7 +299,7 @@ function ModalAddApplication(props) {
                 <Col>
                     <Form.Control name="amount" placeholder="amount" type="number" min='1'
                                   value={currentItem && currentItem.amount}
-                                  onChange={handleInput('amount')}
+                                  onChange={handleInputsAmountAndCost('amount')}
                                   className={
                                       errors.validationErrors.includes("amount")
                                           ? "form-control is-invalid"
@@ -313,7 +312,7 @@ function ModalAddApplication(props) {
                 <Col>
                     <Form.Control name="cost" placeholder="cost" type="number" min='1'
                                   value={currentItem && currentItem.cost}
-                                  onChange={handleInput('cost')}
+                                  onChange={handleInputsAmountAndCost('cost')}
                                   className={
                                       errors.validationErrors.includes("cost")
                                           ? "form-control is-invalid"
@@ -340,7 +339,7 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="appNumber">
                     <Form.Label column sm="3">Number</Form.Label>
                     <Col sm="7">
-                        <Form.Control type="text" onChange={AppNumberOnChange}
+                        <Form.Control type="text" onChange={appNumberOnChange}
                                       className={
                                           errors.validationErrors.includes("number")
                                               ? "form-control is-invalid"
@@ -471,4 +470,4 @@ function ModalAddApplication(props) {
 
 }
 
-export default ModalAddApplication;
+export default AddApplicationModal;

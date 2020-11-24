@@ -9,7 +9,7 @@ import TogglePage from "../../components/TogglePage";
 import Page from "../../components/Page";
 import Form from 'react-bootstrap/Form'
 import ErrorMessage from "../../messages/errorMessage";
-import ModalAddApplication from "./ModalAddApplication";
+import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
 
@@ -32,8 +32,7 @@ export default () => {
         'Finished processing': 'FINISHED_PROCESSING'
     };
     const [errorMessage, setErrors] = useState('');
-    const [lgShow, setLgShow] = useState(false);
-
+    const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
 
     useEffect(() => {
         getApplications(`/customers/${customerId}/application`);
@@ -73,8 +72,8 @@ export default () => {
         getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
     };
 
-    const closeModalAdd = (e, appDto) => {
-        setLgShow(e);
+    const closeAddSupplyModel = (e, appDto) => {
+        setModalAddSupplyOpen(e);
         if (appDto) {
             getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }
@@ -109,7 +108,7 @@ export default () => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalAddApplication props={lgShow} onChange={closeModalAdd}/>
+            <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
 
         </React.Fragment>;
 
@@ -117,7 +116,7 @@ export default () => {
         <React.Fragment>
             <Row>
                 <Col md={'auto'}>
-                    <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
+                    <Button className="mainButton" size="sm" onClick={() => setModalAddSupplyOpen(true)}>
                         Add supply
                     </Button>
                 </Col>

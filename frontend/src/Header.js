@@ -10,9 +10,9 @@ function Header() {
 
     const checkPermission = user && user.currentCustomerId;
 
-    const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
+    const profileClass = defineActiveClassWithMatch(/.profile/);
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
-    const appClass = window.location.pathname.match( /.application/)? "active" : "";
+    const appClass = defineActiveClassWithMatch(/.application/);
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -32,7 +32,11 @@ function Header() {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-    )
+    );
+
+    function defineActiveClassWithMatch(path) {
+        return window.location.pathname.match(path) ? "active" : "";
+    }
 }
 
 
