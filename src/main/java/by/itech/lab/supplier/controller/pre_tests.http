@@ -74,7 +74,9 @@ PUT http://localhost:8080/customers/4
 Content-Type: application/json
 Cookie: {{test}}
 
-{"name":"New name"}
+{
+  "name": "New name"
+}
 
 ###
 #---------------------------------------------Warehouse----------------------------------------------------------------
@@ -87,18 +89,22 @@ Cookie: {{test}}
 {
   "customerId": "3",
   "identifier": "199",
-  "type" : "FACTORY",
-  "totalCapacity" : "44",
-  "addressDto" : {
-    "city" : "Kanzas",
-    "addressLine1" : "Linkoln Str.",
-    "addressLine2" : "44",
-    "state" : {
-      "id" : "5",
+  "type": "FACTORY",
+  "totalCapacity": "44",
+  "addressDto": {
+    "city": "Kanzas",
+    "addressLine1": "Linkoln Str.",
+    "addressLine2": "44",
+    "state": {
+      "id": "5",
       "state": "Alaska"
-    }
+    },
+    "latitude": 40.854785,
+    "longitude": -75.85785
   },
-  "usersId" : [3]
+  "usersId": [
+    3
+  ]
 }
 
 ###
@@ -109,18 +115,20 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "id" : "21",
-  "type" : "FACTORY",
-  "totalCapacity" : "1",
-  "addressDto" : {
-    "id" : "104",
-    "city" : "Kanzas",
-    "addressLine1" : "Linkoln Str.",
-    "addressLine2" : "66",
-    "state" : {
-      "id" : "6",
+  "id": "21",
+  "type": "FACTORY",
+  "totalCapacity": "1",
+  "addressDto": {
+    "id": "104",
+    "city": "Kanzas",
+    "addressLine1": "Linkoln Str.",
+    "addressLine2": "66",
+    "state": {
+      "id": "6",
       "state": "Arizona"
-    }
+    },
+    "latitude": 40.854785,
+    "longitude": -75.85785
   }
 }
 
@@ -183,6 +191,12 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/customers/3/warehouses/8/items?itemUpc=829
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
 
 DELETE http://localhost:8080/customers/3/warehouses/1
 Content-Type: application/json
@@ -202,6 +216,7 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+
 ###
 GET http://localhost:8080/customers/3/retailers/1
 Content-Type: application/json
@@ -213,6 +228,7 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+
 ###
 
 DELETE http://localhost:8080/customers/3/retailers/2
@@ -225,6 +241,7 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
 ###
 
 POST http://localhost:8080/customers/3/retailers
@@ -233,13 +250,13 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-
   "fullName": "Tetya Motya",
   "identifier": "1615091480024",
   "deletedAt": null,
   "active": null,
   "customerId": 4
 }
+
 ###
 #--------------------------------------------------Users---------------------------------------------------------------
 
@@ -343,13 +360,27 @@ Cookie: {{test}}
     }
   }
 }
+
 ###
 PUT http://localhost:8080/customers/3/users/18
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-{"name": "Lewis", "role": "ROLE_SYSTEM_ADMIN", "surname": "Hamilton", "birthday": "1985-07-01", "username": "lh_powera", "email": "zazybo1q1.17@gfmail.com", "address": {"state": "GB", "city": "London", "addressLine1": "address 1", "addressLine2": "address 2"}}
+{
+  "name": "Lewis",
+  "role": "ROLE_SYSTEM_ADMIN",
+  "surname": "Hamilton",
+  "birthday": "1985-07-01",
+  "username": "lh_powera",
+  "email": "zazybo1q1.17@gfmail.com",
+  "address": {
+    "state": "GB",
+    "city": "London",
+    "addressLine1": "address 1",
+    "addressLine2": "address 2"
+  }
+}
 
 ###
 
@@ -558,7 +589,7 @@ Cookie: {{test}}
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
   "sourceLocationDto": {
-    "id":1
+    "id": 1
   },
   "destinationLocationDto": {
     "id": 3
@@ -734,6 +765,7 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
 ###
 
 DELETE http://localhost:8080/customers/3/application/1

@@ -115,11 +115,10 @@ function AddShipmentApplication(props) {
     };
 
     function recalculatePrices(sourceId, destinationId) {
-        let distance = calculateDistance(warehouses,sourceId, destinationId);
+        let distance = calculateDistance(warehouses, sourceId, destinationId);
         let itemPrice = recalculateItems(items, taxes, distance, destinationId);
         setItems(itemPrice);
     }
-
 
     const appNumberOnChange = (e) => {
         const value = e.target.value;
@@ -208,7 +207,6 @@ function AddShipmentApplication(props) {
 
     function prepareAppDto() {
         let itemInApp = [];
-        console.log(items);
         items.forEach(i => {
             let itemApp = {
                 cost: i.price,
@@ -337,7 +335,7 @@ function AddShipmentApplication(props) {
                                   onChange={handleInput('amount')}
                                   onBlur={() => {
                                       if (appDto.destinationId && appDto.sourceId) {
-                                          let distance = calculateDistance(warehouses,appDto.sourceId, appDto.destinationId);
+                                          let distance = calculateDistance(warehouses, appDto.sourceId, appDto.destinationId);
                                           let itemPrice = calculateItemPrice(currentItem, taxes, distance, appDto.destinationId);
                                           setCurrentItem(prevState => ({
                                               ...prevState,
@@ -393,6 +391,7 @@ function AddShipmentApplication(props) {
                     <Form.Label column sm="3">Source location</Form.Label>
                     <Col sm="7">
                         <Form.Control onChange={handleAppSourceLocations} as="select"
+                                      disabled={items.length > 0 ? true : false}
                                       className={
                                           errors.validationErrors.includes("sourceId")
                                               ? "form-control is-invalid"
