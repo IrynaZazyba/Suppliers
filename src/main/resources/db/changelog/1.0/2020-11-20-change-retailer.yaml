@@ -17,4 +17,4 @@ databaseChangeLog:
           tableName: retailer
           columns:
             - column:
-                name: retailers_col
+                name: retailerscol
