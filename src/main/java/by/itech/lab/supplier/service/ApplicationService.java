@@ -9,9 +9,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Set;
 
-public interface ApplicationService extends BaseSimpleService<ApplicationDto> {
+public interface ApplicationService extends BaseService<ApplicationDto> {
 
-    Page<ApplicationDto> findAll(Pageable pageable, Boolean roleFlag);
+    Page<ApplicationDto> findAllByRoleAndStatus(Pageable pageable, Boolean roleFlag, ApplicationStatus status);
+
+    Page<ApplicationDto> findAllByStatus(Pageable pageable, ApplicationStatus status);
 
     ApplicationDto findByNumber(String number);
 

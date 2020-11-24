@@ -133,6 +133,13 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/customers/3/warehouses/type?type=FACTORY
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
 GET http://localhost:8080/customers/3/warehouses/6
 Content-Type: application/json
 Connection: keep-alive
@@ -498,6 +505,19 @@ Cookie: {{test}}
 ###
 
 GET http://localhost:8080/customers/3/item/label/label
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/3/item/upc?upc=135
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
