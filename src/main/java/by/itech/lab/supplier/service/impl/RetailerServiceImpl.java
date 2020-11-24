@@ -24,10 +24,9 @@ public class RetailerServiceImpl implements RetailerService {
     private final RetailerMapper retailerMapper;
 
     @Override
-    public Optional<RetailerDto> findById(Long id) {
-        RetailerDto retailerDto =retailerRepository.findById(id).map(retailerMapper::map)
+    public RetailerDto findById(Long id) {
+        return retailerRepository.findById(id).map(retailerMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Retailer with id=" + id + " doesn't exist"));
-        return Optional.of(retailerDto);
     }
 
     @Override
@@ -40,6 +39,7 @@ public class RetailerServiceImpl implements RetailerService {
         return retailerRepository.findByStatus(pageable, status).map(retailerMapper::map);
     }
 
+    @Transactional
     @Override
     public RetailerDto save(RetailerDto retailerDto) {
         Retailer retailer = Optional.ofNullable(retailerDto.getId())
