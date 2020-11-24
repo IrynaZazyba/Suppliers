@@ -272,4 +272,12 @@ public class WarehouseServiceImpl implements WarehouseService {
         return itemInWarehouse;
     }
 
+    @Override
+    public List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId) {
+        return itemInWarehouseRepository
+                .getWarehouseItemByWarehouseIdAndItemIdIn(warehouseId, itemId)
+                .stream()
+                .map(warehouseItemMapper::map)
+                .collect(Collectors.toList());
+    }
 }

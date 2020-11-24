@@ -21,4 +21,7 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
 
     List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemUpcStartsWith(Long id, String upc);
 
+    List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemIdIn(Long id, List<Long> itemIds);
+
+
 }

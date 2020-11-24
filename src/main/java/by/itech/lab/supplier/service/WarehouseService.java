@@ -31,4 +31,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable);
 
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
+
+    List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
 }

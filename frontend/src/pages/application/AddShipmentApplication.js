@@ -228,7 +228,7 @@ function AddShipmentApplication(props) {
             },
             items: itemInApp,
             customerId: user.currentCustomerId,
-            type: 'SUPPLY'
+            type: 'TRAFFIC'
         };
     }
 
