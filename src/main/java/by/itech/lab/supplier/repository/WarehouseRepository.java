@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.repository;
 
-import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseType;
 import org.springframework.data.domain.Page;
@@ -12,8 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-import java.util.Optional;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
