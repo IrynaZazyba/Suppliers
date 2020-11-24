@@ -1,11 +1,10 @@
 package by.itech.lab.supplier.service;
 
 import by.itech.lab.supplier.dto.StateDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface StateService{
-    Page<StateDto> findAll(Pageable pageable);
 
-    Page<StateDto> findByState(String state, Pageable pageable);
+    List<StateDto> findListByState(String state);
 }

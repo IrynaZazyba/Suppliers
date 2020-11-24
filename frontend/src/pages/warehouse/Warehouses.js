@@ -34,15 +34,13 @@ export default (props) => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getWarehouses(`/customers/${props.currentCustomerId}
-        /warehouses?size=${e.target.value}`);
+        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getWarehouses(`/customers/${props.currentCustomerId}
-        /warehouses?page=${currentPage}&size=${page.countPerPage}`);
+        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
@@ -54,6 +52,7 @@ export default (props) => {
             .then(response => response.json())
             .then(commits => {
                 setWarehouses(commits.content);
+                console.log(commits.content)
                 setPage({
                         countPerPage: commits.size,
                         countPages: commits.totalPages
@@ -84,6 +83,7 @@ export default (props) => {
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
+            <td/>
             <td>{warehouse.type}</td>
             <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
                 {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
@@ -106,8 +106,8 @@ export default (props) => {
             <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
                                 currentCustomerId={props.currentCustomerId}/>
             <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
-                                currentCustomerId={props.currentCustomerId}
-                                />
+                               currentCustomerId={props.currentCustomerId}
+            />
         </React.Fragment>;
 
     const header =

@@ -7,12 +7,12 @@ import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalEditWarehouse(props) {
 
+    const ref = React.createRef();
     const [state, setState] = useState([]);
     // const [users, setUsers] = useState([]);
 
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
-        customerId: props.currentCustomerId,
         identifier: '',
         type: '',
         addressDto: {
@@ -31,14 +31,11 @@ function ModalEditWarehouse(props) {
     const filterBy = () => true;
 
     const handleSearch = (query) => {
-        fetch(`/customers/${props.currentCustomerId}/states/${query}`)
+        fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                const optionsFromBack = res.map((i) => ({
-                    id: i.id,
-                    state: i.state,
-                }));
-                setOptions(optionsFromBack);
+                // console.log(res.content);
+                setOptions(res);
             });
     };
 
@@ -48,12 +45,15 @@ function ModalEditWarehouse(props) {
             validationErrors: []
         });
         e.length > 0 ?
-            setState(preState => ({
+            setWarehouseDto(preState => ({
                 ...preState,
-                id: e[0].id,
-                state: e[0].state,
+                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].stateZone}}
             })) :
-            setState('');
+            setWarehouseDto(preState => ({
+                ...preState,
+                addressDto: {...preState.addressDto, state: {...preState, state: {...preState,
+                            id: '', stateZone: ''}}}
+            }));
     };
 
     useEffect(() => {
@@ -65,29 +65,6 @@ function ModalEditWarehouse(props) {
                 });
         }
     }, [props.props.editShow]);
-
-    // function getStates(url) {
-    //     fetch(url)
-    //         .then(response => response.json())
-    //         .then(commits => {
-    //             setState(commits.content);
-    //         });
-    // }
-
-    // function getUsers(url) {
-    //     fetch(url)
-    //         .then(response => response.json())
-    //         .then(commits => {
-    //             setUsers(commits.content);
-    //         });
-    // }
-
-    const handleType = (e) => {
-        setWarehouseDto(preState => ({
-            ...preState,
-            type: e.target.value
-        }));
-    };
 
     const handleCity = (e) => {
         setWarehouseDto(preState => ({
@@ -124,13 +101,6 @@ function ModalEditWarehouse(props) {
         }));
     };
 
-    // const handleUser = (e) => {
-    //     setUsersDto(preState => ({
-    //         ...preState,
-    //         user: e.target.value
-    //     }));
-    // };
-
     const editWarehouseHandler = (e) => {
         e.preventDefault();
 
@@ -143,18 +113,6 @@ function ModalEditWarehouse(props) {
         })
             .then(() => props.onChange(null, warehouseDto));
     };
-
-    // const stateRow = state.map(state => (
-    //     <tr key={state.id}>
-    //         <td>{state.state}</td>
-    //     </tr>));
-
-    // const us = users.map(user => (
-    //     <tr key={user.id}>
-    //         <td>{user.name}</td>
-    //         <td>{user.lastName}</td>
-    //     </tr>
-    // ));
 
     return (
         <>
@@ -182,9 +140,9 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
                             <input type="text"
-                                          onChange={handleType}
                                           value={warehouseDto.type}
                                           disabled
+                                   // onChange={handleType}
                             />
                             <div className="btn-group">
                                 <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
@@ -240,12 +198,12 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
 
                         <AsyncTypeahead
-                            // ref={ref}
+                            ref={ref}
                             name="state"
                             filterBy={filterBy}
                             id="async-state"
                             labelKey="state"
-                            minLength={1}
+                            minLength={3}
                             options={options}
                             placeholder="Search, if you want to change state..."
                             onSearch={handleSearch}
@@ -256,14 +214,6 @@ function ModalEditWarehouse(props) {
                             </div>
                         </AsyncTypeahead>
 
-                        {/*<Form.Group controlId="users" style={{padding: '5px 10px'}}>*/}
-                        {/*    <Form.Control type="text"*/}
-                        {/*                  placeholder="Users"*/}
-                        {/*                  onChange={handleUser}*/}
-                        {/*                  value={usersDto.id}*/}
-                        {/*                  {us}*/}
-                        {/*    />*/}
-                        {/*</Form.Group>*/}
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
                                     onClick={editWarehouseHandler}>
@@ -276,5 +226,4 @@ function ModalEditWarehouse(props) {
         </>
     );
 }
-
 export default ModalEditWarehouse;
