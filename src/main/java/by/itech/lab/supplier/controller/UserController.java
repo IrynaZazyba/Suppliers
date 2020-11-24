@@ -77,7 +77,7 @@ public class UserController {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
-
+    @AdminAccess
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public int changePassword(@PathVariable Long id, @RequestBody String password) {
