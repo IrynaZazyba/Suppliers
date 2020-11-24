@@ -11,6 +11,8 @@ public class UserMapper implements BaseMapper<User, UserDto> {
 
     private final AddressMapper addressMapper;
 
+    private CustomerMapper customerMapper;
+
     @Override
     public UserDto map(User user) {
         return UserDto.builder()
@@ -23,6 +25,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .active(user.isActive())
                 .password(user.getPassword())
                 .role(user.getRole())
+                .customerDto(user.getCustomer() != null ? customerMapper.map(user.getCustomer()) : null)
                 .deletedAt(user.getDeletedAt())
                 .addressDto(user.getAddress() != null ? addressMapper.map(user.getAddress()) : null)
                 .build();
@@ -51,6 +54,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .active(userDTO.isActive())
                 .deletedAt(userDTO.getDeletedAt())
                 .role(userDTO.getRole())
+                .customer(userDTO.getCustomerDto() != null ? customerMapper.map(userDTO.getCustomerDto()) : null)
                 .address(userDTO.getAddressDto() != null ? addressMapper.map(userDTO.getAddressDto()) : null)
                 .build();
     }

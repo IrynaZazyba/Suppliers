@@ -33,10 +33,22 @@ public class UserServiceImpl implements UserService {
 
     private final MailService mailService;
 
+    @Override
+    public Page<UserDto> findAllByActive( Pageable pageable,  Boolean status) {
+        return userRepository.findByStatus(pageable, status).map(userMapper::map);
+    }
 
-    public UserDto findById(Long id) {
-        return userRepository.findOneWithRolesById(id).map(userMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist"));
+
+    @Override
+    public Optional<UserDto> findById(Long id) {
+        return Optional.of(userRepository.findOneWithRolesById(id).map(userMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id=" + id + " doesn't exist")));
+    }
+
+    @Override
+    public Optional<UserDto> findByUsername(String username) {
+        return Optional.of(userRepository.findByEmail(username).map(userMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username=" + username + " doesn't exist")));
     }
 
     @Override
@@ -45,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> getAllActive(Pageable pageable) {
-        return userRepository.findAllByActiveEquals(pageable, true).map(userMapper::map);
+    public Page<UserDto> getAllActive(Pageable pageable, Boolean status) {
+        return userRepository.findAllByActiveEquals(pageable, status).map(userMapper::map);
     }
 
     @Transactional
@@ -69,8 +81,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public int changeActiveStatus(Long id, boolean status) {
+    public int changeActiveStatus(Long id, Boolean status) {
         return userRepository.setStatus(status, id);
+    }
+
+    @Override
+    @Transactional
+    public int changePassword(Long id, String password) {
+        return userRepository.changePassword(password, id);
     }
 
     @Override

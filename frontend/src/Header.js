@@ -14,7 +14,11 @@ function Header() {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
     }
 
+    const isPermittedAndRoleAdmin =  user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
+    const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const usersClass = window.location.pathname === "/users" ? "active" : "";
+
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -29,8 +33,10 @@ function Header() {
                     <Nav.Link className={getClass(/.profile/)}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
-                    {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
+                    {isPermittedAndRoleAdmin   &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
+                    {isPermittedAndRoleAdmin  &&
+                    <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={getClass(/.category/)}
                               href={`/customers/${user.currentCustomerId}/category`}>

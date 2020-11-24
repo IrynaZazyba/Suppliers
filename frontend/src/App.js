@@ -19,6 +19,8 @@ function App() {
     const {user, setUser} = useContext(AuthContext);
     const currentCustomerId = user && user.currentCustomerId ? user.currentCustomerId : 0;
 
+    localStorage.setItem("currentCustomerId", currentCustomerId);
+
     const renderProfile = () => {
         return <ProtectedComponent conditions={user} render={(() => {
             return <Profile/>
@@ -45,6 +47,13 @@ function App() {
         })}/>
     };
 
+    const renderUser = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+            return <Users/>
+        })}/>
+    };
+
+
     return (
         <UserContext>
             <Header/>
@@ -55,6 +64,8 @@ function App() {
                 <Route path={`/customers/${currentCustomerId}/profile`} render={renderProfile}/>/>
                 <Route path={`/customers`} render={renderCustomer}/>
                 <Route path={`/login`} component={Login}/>
+                <Route path={'/users'} render={renderUser}/>
+
             </Switch>
             <Footer/>
         </UserContext>
