@@ -30,6 +30,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEMS;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_RETAILER_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 
 @RestController
@@ -49,6 +50,13 @@ public class WarehouseController {
         return warehouseService.findById(id);
     }
 
+    @GetMapping(URL_RETAILER_ID_PARAMETER)
+    public Page<WarehouseDto> findByRetailerId(@PageableDefault final Pageable pageable,
+                                               @PathVariable final Long retailerId) {
+        return warehouseService.findByRetailerId(retailerId, pageable);
+    }
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WarehouseDto save(@Valid @RequestBody final WarehouseDto warehouseDto) {
@@ -65,6 +73,12 @@ public class WarehouseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable final Long id) {
         warehouseService.delete(id);
+    }
+
+    @DeleteMapping(URL_RETAILER_ID_PARAMETER)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByRetailerId(@PathVariable final Long retailerId) {
+        warehouseService.deleteByRetailerId(retailerId);
     }
 
 
