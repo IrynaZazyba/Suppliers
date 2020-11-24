@@ -12,4 +12,13 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query("update Car set deletedAt = current_timestamp where id = :id")
     void deleteById(@Param("id") Long id);
 
+    @Modifying
+    @Query("update Car set currentCapacity = currentCapacity - :capacity  where id = :id")
+    int decreaseCurrentCapacity (@Param("capacity") double capacity, @Param("id") Long id);
+
+    @Modifying
+    @Query("update Car set currentCapacity = currentCapacity + :capacity  where id = :id")
+    int increaseCurrentCapacity (@Param("capacity") double capacity, @Param("id") Long id);
+
+
 }
