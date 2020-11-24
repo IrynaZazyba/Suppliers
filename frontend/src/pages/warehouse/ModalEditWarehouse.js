@@ -8,9 +8,6 @@ import {AsyncTypeahead} from "react-bootstrap-typeahead";
 function ModalEditWarehouse(props) {
 
     const ref = React.createRef();
-    const [state, setState] = useState([]);
-    // const [users, setUsers] = useState([]);
-
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
         identifier: '',

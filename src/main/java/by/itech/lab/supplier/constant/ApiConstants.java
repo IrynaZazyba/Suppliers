@@ -33,5 +33,4 @@ public final class ApiConstants {
     public final static String URL_UPC = "/upc";
     public final static String URL_TYPE = "/type";
     public final static String URL_STATES = "/states";
-    public final static String URL_STATES_PARAMETER = "/{state}";
 }

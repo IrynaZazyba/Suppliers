@@ -83,7 +83,6 @@ export default (props) => {
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
-            <td/>
             <td>{warehouse.type}</td>
             <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
                 {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
