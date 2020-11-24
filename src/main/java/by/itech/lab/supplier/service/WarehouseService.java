@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Set;
 
+import java.util.List;
+
 public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Page<WarehouseDto> findAll(Pageable pageable);
@@ -17,4 +19,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     void acceptItems(Set<ApplicationItemDto> itemsToAccept, ApplicationDto appFromDb);
 
     Double getAvailableCapacity(Long warehouseId);
+
+    void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 }
