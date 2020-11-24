@@ -2,6 +2,8 @@ package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +19,15 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
     @Query("update Warehouse set deletedAt = current_timestamp where id = :id")
     void delete(@Param("id") Long id);
 
+    @Modifying
+    @Query("update Warehouse set deletedAt = current_timestamp where retailerId = :id")
+    void deleteByRetailerId(@Param("id") Long id);
+
     @Query("select totalCapacity from Warehouse where id=:warehouseId")
     Double getTotalCapacity(@Param("warehouseId") Long warehouseId);
+
+    @Query("select w from Warehouse w where w.retailerId=:retailer_id")
+    Page<Warehouse> findAllByRetailerId(@Param("retailer_id") Long retailerId, final Pageable page);
 
     List<Warehouse> findAllByType(WarehouseType warehouseType);
 

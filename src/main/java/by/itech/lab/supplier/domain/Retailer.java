@@ -35,10 +35,8 @@ public class Retailer implements BaseEntity {
     private String fullName;
     @Column(nullable = false, unique = true)
     private String identifier;
-    @Column(nullable = false)
-    private String retailersCol;
     private LocalDate deletedAt;
-    private boolean active;
+    private Boolean active;
     private Long customerId;
 
 }

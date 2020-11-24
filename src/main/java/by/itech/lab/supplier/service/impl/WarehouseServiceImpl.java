@@ -17,6 +17,7 @@ import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateExcep
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WarehouseItemRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
+import by.itech.lab.supplier.repository.filter.WarehouseItemFilter;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
@@ -32,13 +33,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +57,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final Lock lock = new ReentrantLock();
     private final UserService userService;
     private final WarehouseItemMapper warehouseItemMapper;
+    private final WarehouseItemFilter warehouseItemFilter;
 
     @Lazy
     @Autowired
@@ -81,6 +86,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable) {
+        return warehouseRepository.findAllByRetailerId(retailerId, pageable).map(warehouseMapper::map);
+    }
+
+    @Override
     @Transactional
     public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
@@ -102,10 +112,17 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
+
     @Transactional
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByRetailerId(final Long id) {
+        warehouseRepository.deleteByRetailerId(id);
     }
 
     @Override
@@ -216,6 +233,43 @@ public class WarehouseServiceImpl implements WarehouseService {
                                     final Long destinationLocationId) {
         final Double capacityApp = applicationService.getCapacityItemInApplication(acceptedToWarehouse);
         return getAvailableCapacity(destinationLocationId) < capacityApp;
+    }
+
+    @Override
+    @Transactional
+    public void shipItemsAccordingApplications(List<ApplicationDto> applicationsDto) {
+        final Map<Long, Map<Long, WarehouseItem>> whItemByWhAndItem = findOnlyRelatedItems(applicationsDto);
+        final List<WarehouseItem> warehouseItems = applicationsDto.stream().map(app -> app.getItems().stream()
+                .map(appItem -> reduceItemAmount(appItem, whItemByWhAndItem
+                        .get(app.getDestinationLocationDto().getId())
+                        .get(appItem.getItemDto().getId())))
+                .collect(Collectors.toList())
+        ).flatMap(Collection::stream).collect(Collectors.toList());
+        itemInWarehouseRepository.saveAll(warehouseItems);
+    }
+
+    private Map<Long, Map<Long, WarehouseItem>> findOnlyRelatedItems(final List<ApplicationDto> apps) {
+        return itemInWarehouseRepository.findAll(warehouseItemFilter.buildSearchSpecification(apps)).stream()
+                // mapping by warehouse id
+                .collect(Collectors.groupingBy(item -> item.getWarehouse().getId(),
+                        // mapping by item id
+                        Collectors.toMap(item -> item.getItem().getId(), Function.identity())));
+    }
+
+    private WarehouseItem reduceItemAmount(final ApplicationItemDto item,
+                                           final WarehouseItem itemInWarehouse) {
+        if (Objects.isNull(itemInWarehouse)) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Warehouse doesn't have item with id=" + item.getItemDto().getId());
+        }
+        final Double amountAtWarehouse = itemInWarehouse.getAmount();
+        final Double amountAfterReducing = amountAtWarehouse - item.getAmount();
+        if (amountAfterReducing < 0) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Required amount of items bigger than existing at warehouse");
+        }
+        itemInWarehouse.setAmount(amountAfterReducing);
+        return itemInWarehouse;
     }
 
 }
