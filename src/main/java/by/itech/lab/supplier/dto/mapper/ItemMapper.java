@@ -5,6 +5,8 @@ import by.itech.lab.supplier.dto.ItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @AllArgsConstructor
 public class ItemMapper implements BaseMapper<Item, ItemDto> {
@@ -18,7 +20,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
                 .upc(dto.getUpc())
                 .label(dto.getLabel())
                 .units(dto.getUnits())
-                .category(categoryMapper.map(dto.getCategoryDto()))
+                .category(Objects.nonNull(dto.getCategoryDto()) ? categoryMapper.map(dto.getCategoryDto()) : null)
                 .deletedAt(dto.getDeletedAt())
                 .customerId(dto.getCustomerId())
                 .build();
@@ -31,7 +33,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
                 .upc(entity.getUpc())
                 .label(entity.getLabel())
                 .units(entity.getUnits())
-                .categoryDto(categoryMapper.map(entity.getCategory()))
+                .categoryDto(Objects.nonNull(entity.getCategory()) ? categoryMapper.map(entity.getCategory()) : null)
                 .deletedAt(entity.getDeletedAt())
                 .customerId(entity.getCustomerId())
                 .build();
@@ -41,7 +43,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
         to.setUpc(from.getUpc());
         to.setLabel(from.getLabel());
         to.setUnits(from.getUnits());
-        to.setCategory(categoryMapper.map(from.getCategoryDto()));
+        to.setCategory(Objects.nonNull(from.getCategoryDto()) ? categoryMapper.map(from.getCategoryDto()) : null);
         to.setDeletedAt(from.getDeletedAt());
         to.setCustomerId(from.getCustomerId());
     }
