@@ -9,7 +9,7 @@ public final class ApiConstants {
     public final static String URL_CUSTOMER_ID = "/{customerId}";
     public final static String URL_ITEM = "/item";
     public final static String URL_CATEGORY = "/category";
-    public final static String URL_RETAILER = "/retailer";
+    public final static String URL_RETAILER = "/retailers";
     public final static String URL_USER = "/users";
     public final static String URL_WAREHOUSE = "/warehouses";
     public final static String URL_WAYBILL = "/waybill";

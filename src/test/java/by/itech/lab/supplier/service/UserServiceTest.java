@@ -1,5 +1,6 @@
-package by.itech.lab.supplier;
+package by.itech.lab.supplier.service;
 
+import by.itech.lab.supplier.SupplierApplication;
 import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;

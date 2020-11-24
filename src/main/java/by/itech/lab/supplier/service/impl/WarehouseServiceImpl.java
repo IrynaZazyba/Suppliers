@@ -67,6 +67,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public  Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable) {
+        return warehouseRepository.findAllByRetailerId(retailerId, pageable).map(warehouseMapper::map);
+    }
+
+    @Override
     @Transactional
     public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
@@ -88,10 +93,17 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
+
     @Transactional
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByRetailerId(final Long id) {
+        warehouseRepository.deleteByRetailerId(id);
     }
 
     @Override
