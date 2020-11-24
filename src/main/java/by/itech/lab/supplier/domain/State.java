@@ -10,10 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -28,8 +25,6 @@ public class State implements BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String state;
-    @OneToMany(mappedBy = "state")
-    private Set<Tax> taxes = new HashSet<>();
 
 }
 
