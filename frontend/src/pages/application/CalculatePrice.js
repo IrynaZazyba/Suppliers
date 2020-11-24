@@ -1,17 +1,10 @@
+import {getDistance} from "geolib";
+
 export default function calculateItemPrice(item, taxes, distance, zoneId) {
 
     let taxId = taxes.find(t => t.stateDto.id == zoneId);
-
-    console.log(item);
-    console.log(taxId.percentage);
-    console.log(distance);
-    console.log(item.category.taxRate);
-    console.log(zoneId);
-console.log("#########")
-
     let res = item.cost * (1 + taxId.percentage / 100) + (distance * item.category.taxRate);
     return res.toFixed(2);
-
 };
 
 
@@ -21,6 +14,15 @@ export function recalculateItems(items, taxes, distance, zoneId) {
         i.price = calculateItemPrice(i, taxes, distance, zoneId);
     });
     return items;
+}
 
+export function calculateDistance(warehouses, sourceId, destinationId) {
+    let dest = warehouses.destination.find(i => i.id == destinationId);
+    let sour = warehouses.source.find(i => i.id == sourceId);
+    let distance = getDistance(
+        {latitude: dest.addressDto.latitude, longitude: dest.addressDto.longitude},
+        {latitude: sour.addressDto.latitude, longitude: sour.addressDto.longitude}
+    );
+    return distance / 1000;
 }
 

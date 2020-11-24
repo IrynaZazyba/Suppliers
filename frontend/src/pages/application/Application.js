@@ -12,7 +12,7 @@ import ErrorMessage from "../../messages/errorMessage";
 import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
-import ModalAddShipmentApplication from "./ModalAddShipmentApplication";
+import AddShipmentApplication from "./AddShipmentApplication";
 
 export default () => {
 
@@ -34,6 +34,7 @@ export default () => {
     };
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
+    const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
 
     useEffect(() => {
         getApplications(`/customers/${customerId}/application`);
@@ -81,7 +82,7 @@ export default () => {
     };
 
     const closeModalAddShipment = (e, appDto) => {
-        setOpenShipment(e);
+        setModalAddShipmentOpen(e);
         if (appDto) {
             getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }
@@ -117,7 +118,7 @@ export default () => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
-            <ModalAddShipmentApplication props={openShipmentModal} onChange={closeModalAddShipment}/>
+            <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
         </React.Fragment>;
 
     const header =
@@ -129,7 +130,7 @@ export default () => {
                     </Button>
                 </Col>
                 <Col md={'auto'}>
-                    <Button className="mainButton" size="sm" onClick={() => setOpenShipment(true)}>
+                    <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
                         Add shipment
                     </Button>
                 </Col>

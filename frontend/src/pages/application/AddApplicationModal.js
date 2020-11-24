@@ -156,7 +156,6 @@ function AddApplicationModal(props) {
             ...prevState,
             validationErrors: validationResult
         }));
-
         if (validationResult.length === 0) {
             setItems([
                 ...items, currentItem
@@ -264,9 +263,7 @@ function AddApplicationModal(props) {
                 ))}
                 </tbody>
             </Table>}
-
         </React.Fragment>;
-
 
     const inputsAddItems =
         <>

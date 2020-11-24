@@ -12,14 +12,12 @@ import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
 import {validateShipmentItem} from "../../validation/ItemValidationRules";
 import validateApplication from "../../validation/ApplicationValidationRules";
-import calculateItemPrice, {recalculateItems} from "./CalculatePrice";
-import {getDistance} from 'geolib';
+import calculateItemPrice, {calculateDistance, recalculateItems} from "./CalculatePrice";
 
 
-function ModalAddApplication(props) {
+function AddShipmentApplication(props) {
 
     const ref = React.createRef();
-
     const [appDto, setApp] = useState({
         number: '',
         sourceId: '',
@@ -31,6 +29,7 @@ function ModalAddApplication(props) {
         validationErrors: [],
         serverErrors: ''
     });
+    const customerId = user.currentCustomerId;
     const [options, setOptions] = useState([]);
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState([]);
@@ -42,12 +41,10 @@ function ModalAddApplication(props) {
         source: [],
         destination: []
     });
-
     const [taxes, setTaxes] = useState();
-    const [distance, setDistance] = useState();
 
     const handleSearch = (query) => {
-        fetch(`/customers/${user.currentCustomerId}/warehouses/${warehouses.source[0].id}/items?itemUpc=${query}`)
+        fetch(`/customers/${customerId}/warehouses/${warehouses.source[0].id}/items?itemUpc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
@@ -64,7 +61,6 @@ function ModalAddApplication(props) {
     };
     const filterBy = () => true;
     const onChangeUpc = (e) => {
-        console.log(e[0]);
         checkValidationErrors('upc');
         e.length > 0 ?
             setCurrentItem(preState => ({
@@ -97,6 +93,8 @@ function ModalAddApplication(props) {
             ...preState,
             sourceId: value
         }));
+        ref.current.clear();
+        setCurrentItem('');
         if (appDto.destinationId && value && items.length !== 0) {
             recalculatePrices(value, appDto.destinationId);
         }
@@ -109,44 +107,28 @@ function ModalAddApplication(props) {
             ...preState,
             destinationId: value
         }));
-
+        ref.current.clear();
+        setCurrentItem('');
         if (appDto.sourceId && value && items.length !== 0) {
             recalculatePrices(appDto.sourceId, value);
         }
     };
 
     function recalculatePrices(sourceId, destinationId) {
-        let distance = calculateDistance(sourceId, destinationId);
+        let distance = calculateDistance(warehouses,sourceId, destinationId);
         let itemPrice = recalculateItems(items, taxes, distance, destinationId);
         setItems(itemPrice);
     }
 
-    function calculateDistance(sourceId, destinationId) {
-        let dest = warehouses.destination.find(i => i.id == destinationId);
-        let sour = warehouses.source.find(i => i.id == sourceId);
-        let distance = getDistance(
-            {latitude: dest.addressDto.latitude, longitude: dest.addressDto.longitude},
-            {latitude: sour.addressDto.latitude, longitude: sour.addressDto.longitude}
-        );
-        return distance / 1000;
-    }
 
-    const handleAppNumber = (e) => {
+    const appNumberOnChange = (e) => {
         const value = e.target.value;
-        checkValidationErrors('number');
+        checkValidationErrors("number");
         setApp(preState => ({
             ...preState,
             number: value
         }))
     };
-
-    function checkValidationErrors(fieldName) {
-        let res = errors.validationErrors.filter(e => e != fieldName);
-        setErrors(prevState => ({
-            ...prevState,
-            validationErrors: res
-        }));
-    }
 
     const deleteItem = (e) => {
         let afterDelete = [];
@@ -157,6 +139,14 @@ function ModalAddApplication(props) {
         });
         setItems(afterDelete);
     };
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
 
     useEffect(() => {
         setCurrentItem('');
@@ -176,8 +166,7 @@ function ModalAddApplication(props) {
                 setTaxes(commits);
             });
 
-
-        fetch(`/customers/${user.currentCustomerId}/warehouses/type?type=WAREHOUSE`)
+        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
             .then(response => response.json())
             .then(res => {
                 setWarehouses(preState => ({
@@ -186,7 +175,7 @@ function ModalAddApplication(props) {
                     })
                 );
             });
-        fetch(`/customers/${user.currentCustomerId}/warehouses/type?type=RETAILER`)
+        fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`)
             .then(response => response.json())
             .then(res => {
                 setWarehouses(preState => ({
@@ -195,7 +184,7 @@ function ModalAddApplication(props) {
                     })
                 );
             });
-    }, [props]);
+    }, []);
 
     const addItemHandler = (e) => {
         e.preventDefault();
@@ -204,8 +193,6 @@ function ModalAddApplication(props) {
             ...prevState,
             validationErrors: validationResult
         }));
-
-        //todo check warehouses chosen
         if (validationResult.length === 0) {
             setItems([
                 ...items, currentItem
@@ -221,9 +208,10 @@ function ModalAddApplication(props) {
 
     function prepareAppDto() {
         let itemInApp = [];
+        console.log(items);
         items.forEach(i => {
             let itemApp = {
-                cost: i.cost,
+                cost: i.price,
                 amount: i.amount,
                 itemDto: {
                     id: i.id,
@@ -257,7 +245,7 @@ function ModalAddApplication(props) {
 
         if (validErrors.length === 0) {
             let application = prepareAppDto();
-            fetch(`/customers/${user.currentCustomerId}/application`, {
+            fetch(`/customers/${customerId}/application`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -313,9 +301,7 @@ function ModalAddApplication(props) {
                 ))}
                 </tbody>
             </Table>}
-
         </React.Fragment>;
-
 
     const inputsAddItems =
         <>
@@ -351,7 +337,7 @@ function ModalAddApplication(props) {
                                   onChange={handleInput('amount')}
                                   onBlur={() => {
                                       if (appDto.destinationId && appDto.sourceId) {
-                                          let distance = calculateDistance(appDto.sourceId, appDto.destinationId);
+                                          let distance = calculateDistance(warehouses,appDto.sourceId, appDto.destinationId);
                                           let itemPrice = calculateItemPrice(currentItem, taxes, distance, appDto.destinationId);
                                           setCurrentItem(prevState => ({
                                               ...prevState,
@@ -369,10 +355,9 @@ function ModalAddApplication(props) {
                     </Form.Control.Feedback>
                 </Col>
                 <Col>
-                    <Form.Control name="price" placeholder="price" type="number" min='1'
+                    <Form.Control name="price" placeholder="price" type="number"
                                   disabled
                                   value={currentItem && currentItem.price}
-                                  onChange={handleInput('price')}
                     />
 
                 </Col>
@@ -393,7 +378,7 @@ function ModalAddApplication(props) {
                 <Form.Group as={Row} controlId="appNumber">
                     <Form.Label column sm="3">Number</Form.Label>
                     <Col sm="7">
-                        <Form.Control type="text" onChange={handleAppNumber}
+                        <Form.Control type="text" onChange={appNumberOnChange}
                                       className={
                                           errors.validationErrors.includes("number")
                                               ? "form-control is-invalid"
@@ -491,7 +476,7 @@ function ModalAddApplication(props) {
                 backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
-                        Create supply application
+                        Create shipment application
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -505,8 +490,7 @@ function ModalAddApplication(props) {
                             <Card.Header>
                                 {inputsAddItems}
                             </Card.Header>
-                            <Card.Body
-                            >
+                            <Card.Body>
                                 <Card.Text>
                                     {itemsTable}
                                 </Card.Text>
@@ -525,4 +509,4 @@ function ModalAddApplication(props) {
 
 }
 
-export default ModalAddApplication;
+export default AddShipmentApplication;
