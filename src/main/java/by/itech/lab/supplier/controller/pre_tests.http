@@ -126,7 +126,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/warehouses
+GET http://localhost:8080/customers/3/warehouses/retailers/5
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -183,6 +183,57 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
+#--------------------------------------------------Retailers---------------------------------------------#
+###
+GET http://localhost:8080/customers/3/retailers
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+GET http://localhost:8080/customers/3/retailers/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+
+DELETE http://localhost:8080/customers/3/retailers/2
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+###
+
+POST http://localhost:8080/customers/3/retailers
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+
+  "fullName": "Tetya Motya",
+  "identifier": "1615091480024",
+  "deletedAt": null,
+  "active": null,
+  "customerId": 4
+}
+###
 #--------------------------------------------------Users---------------------------------------------------------------
 
 GET http://localhost:8080/customers/3/users
@@ -195,6 +246,8 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+
+
 
 ###
 

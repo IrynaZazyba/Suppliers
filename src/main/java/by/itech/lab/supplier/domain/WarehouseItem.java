@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +33,7 @@ public class WarehouseItem implements BaseEntity {
     private Double amount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id")
+    @ToString.Exclude
     private Warehouse warehouse;
     @ManyToOne
     @JoinColumn(name = "item_id")
