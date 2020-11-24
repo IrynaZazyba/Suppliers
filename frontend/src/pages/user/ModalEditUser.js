@@ -71,6 +71,7 @@ function ModalEditUser(props) {
                    });
 
     };
+    const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
 
     return (
         <>
@@ -94,9 +95,7 @@ function ModalEditUser(props) {
                                           onChange={handleName}
                                           value={userDto.name}
                                           className={
-                                              validError.includes("name")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid  name.
@@ -108,9 +107,7 @@ function ModalEditUser(props) {
                                           onChange={handleSurname}
                                           value={userDto.surname}
                                           className={
-                                              validError.includes("surname")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("surname")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid  surname.
@@ -120,9 +117,7 @@ function ModalEditUser(props) {
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
                                           className={
-                                              validError.includes("birthday")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("birthday")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid date.

@@ -97,7 +97,7 @@ export default () => {
             });
 
     };
-
+    const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
     const editPasswordHandler = (e) => {
         e.preventDefault();
 
@@ -146,9 +146,7 @@ export default () => {
                                           onChange={handleName}
                                           value={userDto.name}
                                           className={
-                                              validError.includes("name")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                             isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid name.
@@ -161,9 +159,7 @@ export default () => {
                                           onChange={handleSurname}
                                           value={userDto.surname}
                                           className={
-                                              validError.includes("surname")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("surname")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid surname.
@@ -177,9 +173,7 @@ export default () => {
                                           readOnly={true}
                                           value={userDto.username}
                                           className={
-                                              validError.includes("surname")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("username")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid username.
@@ -191,9 +185,7 @@ export default () => {
                             <Form.Control type="date" placeholder="birthday" value={userDto.birthday}
                                           onChange={handleBirthday}
                                           className={
-                                              validError.includes("birthday")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("birthday")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid date.
@@ -204,9 +196,7 @@ export default () => {
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email" placeholder="email" value={userDto.email} readOnly={true}
                                           className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("email")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid email.
@@ -215,14 +205,14 @@ export default () => {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Role</Form.Label>
                             <Form.Control type="text" placeholder="role" value={userDto.role} readOnly={true}
-                                         />
+                            />
                         </Form.Group>
 
                         <Form.Group controlId="formBasicCity" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
                             <Form.Control type="text" placeholder="city" value={userDto.addressDto.city}
                                           readOnly={true}
-                                        />
+                            />
 
                         </Form.Group>
 

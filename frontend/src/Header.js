@@ -9,7 +9,7 @@ function Header() {
     const {user, setUser} = useContext(AuthContext);
 
     const checkPermission = user && user.currentCustomerId;
-    const adminRole = "ROLE_SYSTEM_ADMIN";
+    const isPermittedAndRoleAdmin =  user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
@@ -24,9 +24,9 @@ function Header() {
                     <Nav.Link className={profileClass}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
-                    {checkPermission && user.role === adminRole &&
+                    {isPermittedAndRoleAdmin   &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission && user.role === adminRole &&
+                    {isPermittedAndRoleAdmin  &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     <UserProfile/>
                 </Nav>

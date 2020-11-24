@@ -140,6 +140,8 @@ function ModalAddUser(props) {
                 }
             });
     };
+    const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
+
 
     return (
         <>
@@ -160,9 +162,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="name" onChange={handleName}
                                           className={
-                                              validError.includes("name")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid name.
@@ -172,9 +172,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="surname" onChange={handleSurname}
                                           className={
-                                              validError.includes("surnname")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("surname")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid surname.
@@ -184,9 +182,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="username" onChange={handleUsername}
                                           className={
-                                              validError.includes("surname")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("username")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid username.
@@ -196,9 +192,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="password" onChange={handlePassword}
                                           className={
-                                              validError.includes("password")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("password")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid password.
@@ -208,9 +202,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicDate" style={{padding: '5px 10px'}}>
                             <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
                                           className={
-                                              validError.includes("birthday")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("birthday")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid date.
@@ -243,9 +235,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="city" onChange={handleCity}
                                           className={
-                                              validError.includes("city")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("city")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid city.
@@ -256,9 +246,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="addressLine1" onChange={handleaddressLine1}
                                           className={
-                                              validError.includes("addressLine1")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("addressLine1")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 1.
@@ -269,9 +257,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="addressLine2" onChange={handleaddressLine2}
                                           className={
-                                              validError.includes("addressLine2")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("addressLine2")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 2.
@@ -282,9 +268,7 @@ function ModalAddUser(props) {
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
                             <Form.Control type="email" placeholder="email" onChange={handleEmail}
                                           className={
-                                              validError.includes("email")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("email")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid email.
