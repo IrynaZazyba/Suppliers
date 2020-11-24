@@ -58,7 +58,7 @@ function ModalEditCategory(props) {
                 },
                 body: JSON.stringify(categoryDto)
             })
-                .then(function (response) {
+                .then(response => {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",

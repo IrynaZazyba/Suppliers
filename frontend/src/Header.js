@@ -10,10 +10,15 @@ function Header() {
 
     const checkPermission = user && user.currentCustomerId;
 
-    const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
+    function getClass(regexOfClass) {
+        return window.location.pathname.match(regexOfClass) ? "active" : "";
+    }
+
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
-    const categoryClass = window.location.pathname.match(/.category/) ? "active" : "";
-    const itemClass = window.location.pathname.match(/.item/) ? "active" : "";
+
+    const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
+        user.role === "ROLE_DISPATCHER" ||
+        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -21,19 +26,19 @@ function Header() {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto navigation">
                     {checkPermission &&
-                    <Nav.Link className={profileClass}
+                    <Nav.Link className={getClass(/.profile/)}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_DISPATCHER" ||
-                        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN") &&
-                    <Nav.Link className={categoryClass} href={`/customers/${user.currentCustomerId}/category`}>
+                    {categoryAndItemPermission &&
+                    <Nav.Link className={getClass(/.category/)}
+                              href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
-                    {checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_DISPATCHER" ||
-                        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN") &&
-                    <Nav.Link className={itemClass} href={`/customers/${user.currentCustomerId}/item`}>Items
+                    {categoryAndItemPermission &&
+                    <Nav.Link className={getClass(/.item/)}
+                              href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
                     <UserProfile/>
                 </Nav>

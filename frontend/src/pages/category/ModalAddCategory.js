@@ -47,7 +47,7 @@ function ModalAddCategory(props) {
                 },
                 body: JSON.stringify(categoryDto)
             })
-                .then(function (response) {
+                .then(response => {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something went wrong, please try later",
@@ -100,7 +100,8 @@ function ModalAddCategory(props) {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicTaxRate" style={{padding: '5px 10px'}}>
-                            <Form.Control type="number" step="0.001" placeholder="Tax rate(per km)" onChange={handleTaxRate}
+                            <Form.Control type="number" step="0.001" placeholder="Tax rate(per km)"
+                                          onChange={handleTaxRate}
                                           className={
                                               errors.validationErrors.includes("taxRate")
                                                   ? "form-control is-invalid"

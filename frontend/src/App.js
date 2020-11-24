@@ -50,11 +50,11 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route path={'/customers/' + currentCustomerId + '/category'} render={renderCategory}/>/>
-                <Route path={'/customers/' + currentCustomerId + '/item'} render={renderItems}/>/>
-                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
-                <Route path={'/customers'} render={renderCustomer}/>
-                <Route path={'/login'} component={Login}/>
+                <Route path={`/customers/${currentCustomerId}/category`} render={renderCategory}/>/>
+                <Route path={`/customers/${currentCustomerId}/item`} render={renderItems}/>/>
+                <Route path={`/customers/${currentCustomerId}/profile`} render={renderProfile}/>/>
+                <Route path={`/customers`} render={renderCustomer}/>
+                <Route path={`/login`} component={Login}/>
             </Switch>
             <Footer/>
         </UserContext>

@@ -53,19 +53,22 @@ function ModalAddItem(props) {
             setErrors: '',
             validationErrors: []
         });
-        e.length > 0 ?
-            setCategory(preState => ({
+        if (e.length > 0) {
+            setItem(preState => ({
                 ...preState,
-                id: e[0].id,
-                category: e[0].category,
-                taxRate: e[0].taxRate,
-                customerId: currentCustomerId
-            })) :
-            setCategory('');
-        setItem(preState => ({
-            ...preState,
-            categoryDto: category
-        }))
+                categoryDto: {
+                    id: e[0].id,
+                    category: e[0].category,
+                    taxRate: e[0].taxRate,
+                    customerId: currentCustomerId
+                }
+            }))
+        } else {
+            setItem(preState => ({
+                ...preState,
+                categoryDto: ''
+            }));
+        }
     };
 
     const handleLabel = (e) => {
@@ -102,7 +105,7 @@ function ModalAddItem(props) {
                 },
                 body: JSON.stringify(itemDto)
             })
-                .then(function (response) {
+                .then(response => {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
@@ -154,7 +157,9 @@ function ModalAddItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicUpc" style={{padding: '5px 10px'}}>
-                            <Form.Control type="number" step="0.01" placeholder="Cost per unit" onChange={handleUpc}
+                            <Form.Control type="text"
+                                          placeholder="Code of item"
+                                          onChange={handleUpc}
                                           className={
                                               errors.validationErrors.includes("upc")
                                                   ? "form-control is-invalid"
@@ -165,7 +170,10 @@ function ModalAddItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicUnits" style={{padding: '5px 10px'}}>
-                            <Form.Control type="number" step="any" placeholder="Units" onChange={handleUnits}
+                            <Form.Control type="number"
+                                          step="any"
+                                          placeholder="Units"
+                                          onChange={handleUnits}
                                           className={
                                               errors.validationErrors.includes("units")
                                                   ? "form-control is-invalid"
@@ -176,6 +184,7 @@ function ModalAddItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <AsyncTypeahead
+                            style={{padding: '5px 10px'}}
                             ref={ref}
                             name="category"
                             filterBy={filterBy}

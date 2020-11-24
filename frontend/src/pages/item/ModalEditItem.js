@@ -53,19 +53,22 @@ function ModalEditItem(props) {
             setErrors: '',
             validationErrors: []
         });
-        e.length > 0 ?
-            setCategory(preState => ({
+        if (e.length > 0) {
+            setItem(preState => ({
                 ...preState,
-                id: e[0].id,
-                category: e[0].category,
-                taxRate: e[0].taxRate,
-                customerId: currentCustomerId
-            })) :
-            setCategory('');
-        setItem(preState => ({
-            ...preState,
-            categoryDto: category
-        }))
+                categoryDto: {
+                    id: e[0].id,
+                    category: e[0].category,
+                    taxRate: e[0].taxRate,
+                    customerId: currentCustomerId
+                }
+            }))
+        } else {
+            setItem(preState => ({
+                ...preState,
+                categoryDto: ''
+            }));
+        }
     };
 
     const handleLabel = (e) => {
@@ -113,7 +116,7 @@ function ModalEditItem(props) {
                 },
                 body: JSON.stringify(itemDto)
             })
-                .then(function (response) {
+                .then(response => {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
@@ -162,9 +165,8 @@ function ModalEditItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUpc" style={{padding: '5px 10px'}}>
-                            <Form.Control type="number"
-                                          step="0.01"
-                                          placeholder="Cost per unit"
+                            <Form.Control type="text"
+                                          placeholder="Code of item"
                                           onChange={handleUpc}
                                           value={itemDto.upc}
                                           className={
@@ -206,6 +208,7 @@ function ModalEditItem(props) {
                             />
                         </Form.Group>
                         <AsyncTypeahead
+                            style={{padding: '5px 10px'}}
                             ref={ref}
                             name="category"
                             filterBy={filterBy}

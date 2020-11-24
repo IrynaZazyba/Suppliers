@@ -58,7 +58,7 @@ Cookie: {{test}}
 
 {
   "name": "SomeCompany2",
-  "taxRate": "1j323@gmail.com"
+  "adminEmail": "1j323@gmail.com"
 }
 
 ###
