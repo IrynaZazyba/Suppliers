@@ -54,6 +54,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public int increaseCapacity(final double capacity, Long id) {
+    return carRepository.increaseCurrentCapacity(capacity, id);
+    }
+
+    @Override
+    public int decreaseCapacity(final double capacity, Long id) {
+        return carRepository.decreaseCurrentCapacity(capacity, id);
+    }
+
+    @Override
     @Transactional
     public void delete(Long id) {
         carRepository.deleteById(id);

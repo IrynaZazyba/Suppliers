@@ -7,4 +7,8 @@ import org.springframework.data.domain.Pageable;
 public interface CarService extends BaseService<CarDto> {
 
     Page<CarDto> findAll(Pageable pageable);
+
+    int increaseCapacity(final double capacity, Long id);
+
+    int decreaseCapacity(final double capacity, Long id);
 }
