@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +23,6 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "items_in_application")
-@Where(clause = "deleted_at is null")
 public class ApplicationItem implements BaseEntity {
 
     @Id
@@ -43,6 +41,6 @@ public class ApplicationItem implements BaseEntity {
     private BigDecimal cost;
     @Column(nullable = false)
     private Double amount;
-    private LocalDate deletedAt;
+    private LocalDate acceptedAt;
 
 }
