@@ -11,11 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public interface UserService {
+public interface UserService extends BaseService<UserDto>{
 
     UserDto createAdmin(CustomerDto customerDto);
 
-    Optional<UserDto> findById(Long id);
 
     Page<UserDto> findAll(Pageable pageable);
 
