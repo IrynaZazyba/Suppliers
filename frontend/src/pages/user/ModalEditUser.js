@@ -41,7 +41,7 @@ function ModalEditUser(props) {
 
     useEffect(() => {
         if (props.props.editShow) {
-            fetch("customers/" +  currentCustomerId + "/users/" + props.props.user.id)
+            fetch(`customers/${currentCustomerId}/users/${props.props.user.id}`)
                 .then(response => response.json())
                 .then(res => {
                     setUser(res);
@@ -53,7 +53,7 @@ function ModalEditUser(props) {
     const editUserHandler = (e) => {
         e.preventDefault();
 
-               fetch("customers/" +  currentCustomerId + "/users/" + userDto.id, {
+               fetch(`customers/${currentCustomerId}/users/${userDto.id}`, {
                    method: 'PUT',
                    headers: {
                        'Content-Type': 'application/json'
@@ -89,7 +89,7 @@ function ModalEditUser(props) {
                 <Modal.Body>
                     {errorMessage && <ErrorMessage message={errorMessage}/>}
                     <Form>
-                        <Form.Group controlId="editUserr" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"
                                           placeholder="name"
                                           onChange={handleName}

@@ -64,8 +64,7 @@ export default () => {
 
 
     useEffect(() => {
-
-        fetch('http://localhost:8080/customers/{currentCustomerId}/users/username/${user.username}')
+        fetch(`http://localhost:8080/customers/${currentCustomerId}/users/username/${user.username}`)
             .then(response => response.json())
             .then(res => {
                 setUserDto(res);
@@ -79,7 +78,7 @@ export default () => {
     const editUserHandler = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}', {
+        fetch(`http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +100,7 @@ export default () => {
     const editPasswordHandler = (e) => {
         e.preventDefault();
 
-        fetch('http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}/password', {
+        fetch(`http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}/password`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

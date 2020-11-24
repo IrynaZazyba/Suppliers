@@ -123,7 +123,7 @@ function ModalAddUser(props) {
         e.preventDefault();
 
 
-        fetch('customers/' + currentCustomerId + '/users', {
+        fetch(`customers/${currentCustomerId}/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
