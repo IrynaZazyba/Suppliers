@@ -73,8 +73,8 @@ export default () => {
 
     const changePage = (e) => {
         e.preventDefault();
-        let page = e.target.innerHTML - 1;
-        getCustomers(`/customers?page=${page}&status=${filter}`);
+        let currentPage = e.target.innerHTML - 1;
+        getCustomers(`/customers?page=${currentPage}&status=${filter}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {

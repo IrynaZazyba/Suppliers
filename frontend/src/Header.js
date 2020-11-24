@@ -11,9 +11,10 @@ function Header() {
 
     const checkPermission = user && user.currentCustomerId;
 
-    const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
+    const profileClass = defineActiveClassWithMatch(/.profile/);
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
+    const appClass = defineActiveClassWithMatch(/.application/);
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -24,6 +25,9 @@ function Header() {
                     <Nav.Link className={profileClass}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
+                    <Nav.Link className={appClass}
+                              href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     {checkPermission &&
@@ -34,7 +38,11 @@ function Header() {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-    )
+    );
+
+    function defineActiveClassWithMatch(path) {
+        return window.location.pathname.match(path) ? "active" : "";
+    }
 }
 
 

@@ -1,10 +1,13 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.domain.WarehouseItem;
+import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
+import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -22,12 +25,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +72,22 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public List<WarehouseDto> findAllByType(final WarehouseType warehouseType) {
+        if (warehouseType == WarehouseType.WAREHOUSE) {
+            UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDto currentUser = userService.findById(principal.getId()).orElseThrow();
+            return Collections.singletonList(currentUser.getWarehouseDto());
+        }
+        return warehouseRepository.findAllByType(warehouseType)
+                .stream().map(warehouseMapper::map).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable) {
+        return warehouseRepository.findAllByRetailerId(retailerId, pageable).map(warehouseMapper::map);
+    }
+
+    @Override
     @Transactional
     public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
@@ -88,10 +109,17 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
+
     @Transactional
     @Override
     public void delete(final Long id) {
         warehouseRepository.delete(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByRetailerId(final Long id) {
+        warehouseRepository.deleteByRetailerId(id);
     }
 
     @Override

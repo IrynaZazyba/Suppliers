@@ -1,11 +1,11 @@
-package by.itech.lab.supplier;
+package by.itech.lab.supplier.service;
 
+import by.itech.lab.supplier.SupplierApplication;
 import by.itech.lab.supplier.domain.Address;
 import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
-import by.itech.lab.supplier.dto.mapper.CustomerMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.repository.UserRepository;
 import by.itech.lab.supplier.service.impl.UserServiceImpl;
@@ -16,10 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Optional;
 

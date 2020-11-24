@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
 import {AuthContext} from "./context/authContext";
 import Warehouses from "./pages/warehouse/Warehouses";
+import Application from "./pages/application/Application";
 
 function App() {
 
@@ -36,13 +37,21 @@ function App() {
         })}/>
     };
 
+    const renderApplication = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_LOGISTICS_SPECIALIST" ||
+        user.role === "ROLE_DISPATCHER"} render={(() => {
+            return <Application/>
+        })}/>
+    };
+
     return (
         <UserContext>
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>/>
-                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
+                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>
+                <Route path={'/customers/' + currentCustomerId + '/application'} render={renderApplication}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
