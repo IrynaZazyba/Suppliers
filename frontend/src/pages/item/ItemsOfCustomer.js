@@ -12,6 +12,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import CardContainer from "../../components/CardContainer";
+import {FaTrash} from "react-icons/fa";
 
 export default () => {
 
@@ -29,7 +30,9 @@ export default () => {
         editShow: false,
         customer: []
     });
-    const [errorMessage, setErrors] = useState('');
+    const [errors, setErrors] = useState({
+        errorMessage: ''
+    });
 
     const handleCountPerPage = (e) => {
         e.preventDefault();
@@ -43,6 +46,10 @@ export default () => {
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
+        setPage(preState => ({
+            ...preState,
+            currentPage: e.target.innerHTML - 1
+        }));
         getItems(`/customers/${currentCustomerId}/item?page=${currentPage}&size=${page.countPerPage}`);
     };
 
@@ -51,6 +58,7 @@ export default () => {
     }, []);
 
     function getItems(url) {
+        setErrors('');
         fetch(url)
             .then(response => response.json())
             .then(commits => {
@@ -81,8 +89,31 @@ export default () => {
         }
     };
 
+    function deleteItem(idOfItem) {
+        fetch(`/customers/${currentCustomerId}/item/${idOfItem}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.status !== 204) {
+                setErrors({
+                    errorMessage: "Item can not be deleted, because it is already used in application"
+                });
+            } else {
+                let raw = document.getElementById(`item${idOfItem}`);
+                raw.style.opacity = '0.3';
+                raw.style.background = '#656662';
+                setErrors(preState => ({
+                    ...preState,
+                    errorMessage: ''
+                }));
+            }
+        });
+    }
+
     const tableRows = items.map(item => (
-        <tr key={item.id}>
+        <tr id={`item${item.id}`} key={item.id}>
             <td>{item.label}</td>
             <td>{item.units}</td>
             <td>{item.categoryDto.category}</td>
@@ -96,12 +127,18 @@ export default () => {
                             });
                         }}/>
             </td>
+            <td><FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
+                         onClick={() => {
+                             deleteItem(item.id);
+                         }}
+            />
+            </td>
         </tr>
     ));
 
     const modals =
         <React.Fragment>
-            {errorMessage && <ErrorMessage message={errorMessage}/>}
+            {errors.errorMessage && <ErrorMessage message={errors.errorMessage}/>}
             <ModalAddItem props={lgShow} onChange={closeModalAdd}/>
             <ModalEditItem props={editItem} onChange={closeModalEdit}/>
         </React.Fragment>;

@@ -6,6 +6,7 @@ import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ItemRepository;
 import by.itech.lab.supplier.service.impl.ItemServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -49,29 +50,29 @@ public class ItemServiceTest {
     @BeforeEach
     void initializeFields() {
         category = Category.builder()
-          .id(17L)
-          .category("Fruit")
-          .build();
+                .id(17L)
+                .category("Fruit")
+                .build();
         categoryDto = CategoryDto.builder()
-          .id(17L)
-          .category("Fruit")
-          .build();
+                .id(17L)
+                .category("Fruit")
+                .build();
         item = Item.builder()
-          .id(10L)
-          .label("Apple")
-          .units(5.0)
-          .upc(new BigDecimal(0.5))
-          .deletedAt(LocalDate.now())
-          .category(category)
-          .build();
+                .id(10L)
+                .label("Apple")
+                .units(5.0)
+                .upc(new BigDecimal(0.5))
+                .deletedAt(LocalDate.now())
+                .category(category)
+                .build();
         itemDto = ItemDto.builder()
-          .id(10L)
-          .label("Apple")
-          .units(5.0)
-          .upc(new BigDecimal(0.5))
-          .deletedAt(LocalDate.now())
-          .categoryDto(categoryDto)
-          .build();
+                .id(10L)
+                .label("Apple")
+                .units(5.0)
+                .upc(new BigDecimal(0.5))
+                .deletedAt(LocalDate.now())
+                .categoryDto(categoryDto)
+                .build();
         pageRequest = PageRequest.of(0, 10);
     }
 
@@ -114,9 +115,12 @@ public class ItemServiceTest {
         @MockBean
         private ItemMapper itemMapper;
 
+        @MockBean
+        private ApplicationItemRepository applicationItemRepository;
+
         @Bean
         public ItemService itemService() {
-            return new ItemServiceImpl(itemRepository, itemMapper);
+            return new ItemServiceImpl(itemRepository, itemMapper, applicationItemRepository);
         }
 
     }

@@ -50,7 +50,7 @@ function ModalAddItem(props) {
 
     const onChangeCategory = (e) => {
         setErrors({
-            setErrors: '',
+            serverErrors: '',
             validationErrors: []
         });
         if (e.length > 0) {

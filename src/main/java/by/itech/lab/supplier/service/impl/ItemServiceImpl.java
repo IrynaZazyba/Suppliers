@@ -5,6 +5,7 @@ import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ItemRepository;
 import by.itech.lab.supplier.service.CategoryService;
 import by.itech.lab.supplier.service.ItemService;
@@ -24,6 +25,8 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
     private final ItemMapper itemMapper;
+
+    private final ApplicationItemRepository applicationItemRepository;
 
     @Override
     public Page<ItemDto> findByLabel(final String label, final Pageable pageable) {
@@ -54,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<ItemDto> findAll(Pageable pageable) {
+    public Page<ItemDto> findAll(final Pageable pageable) {
         return itemRepository.findAll(pageable)
           .map(itemMapper::map);
     }
@@ -66,8 +69,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        itemRepository.deleteById(id, LocalDate.now());
+    public void delete(final Long id) {
+        if (applicationItemRepository.getNumberOfItemUsages(id) == 0) {
+            itemRepository.deleteById(id, LocalDate.now());
+        } else {
+            throw new ResourceNotFoundException("Item can not be deleted, because it is already used in " +
+                    "application");
+        }
     }
 
 }
