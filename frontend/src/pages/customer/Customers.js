@@ -81,7 +81,6 @@ export default () => {
         getCustomers('/customers');
     }, []);
 
-
     function getCustomers(url) {
         fetch(url)
             .then(response => response.json())
