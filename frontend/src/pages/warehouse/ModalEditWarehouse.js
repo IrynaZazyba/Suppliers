@@ -15,7 +15,9 @@ function ModalEditWarehouse(props) {
         customerId: props.currentCustomerId,
         identifier: '',
         type: '',
-        addressDto: {},
+        addressDto: {
+            state: {}
+        },
         totalCapacity: ''
     });
 
@@ -29,7 +31,7 @@ function ModalEditWarehouse(props) {
     const filterBy = () => true;
 
     const handleSearch = (query) => {
-        fetch(`/customers/${props.currentCustomerId}/states${query}`)
+        fetch(`/customers/${props.currentCustomerId}/states/${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
@@ -108,12 +110,12 @@ function ModalEditWarehouse(props) {
         }));
     };
 
-    // const handleState = (e) => {
-    //     setWarehouseDto(preState => ({
-    //         ...preState,
-    //         addressDto: {...preState.addressDto, state: e.target.value}
-    //     }));
-    // };
+    const handleState = (e) => {
+        setWarehouseDto(preState => ({
+            ...preState,
+            addressDto: {...preState.addressDto, state: e.target.value}
+        }));
+    };
 
     const handleTotalCapacity = (e) => {
         setWarehouseDto(preState => ({
@@ -179,12 +181,22 @@ function ModalEditWarehouse(props) {
                             />
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
-                            type
-                            <Form.Control type="text"
+                            <input type="text"
                                           onChange={handleType}
                                           value={warehouseDto.type}
-                                          placeholder="type"
+                                          disabled
                             />
+                            <div className="btn-group">
+                                <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    change type
+                                </button>
+                                <div className="dropdown-menu">
+                                    <a className="dropdown-item" href="#">FACTORY</a>
+                                    <a className="dropdown-item" href="#">WAREHOUSE</a>
+                                    <a className="dropdown-item" href="#">RETAILER</a>
+                                </div>
+                            </div>
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
@@ -221,8 +233,9 @@ function ModalEditWarehouse(props) {
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
                             current state
                             <Form.Control type="text"
+                                          onChange={handleState}
+                                          value={warehouseDto.addressDto.state.state}
                                           disabled
-                                          value={warehouseDto.addressDto.state}
                             />
                         </Form.Group>
 
@@ -242,17 +255,6 @@ function ModalEditWarehouse(props) {
                                 {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
                             </div>
                         </AsyncTypeahead>
-
-                        {/*<div className="btn-group">*/}
-                        {/*    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"*/}
-                        {/*            aria-haspopup="true" aria-expanded="false" style={{padding: '5px 15px'}}*/}
-                        {/*            onChange={handleState}>*/}
-                        {/*        state*/}
-                        {/*    </button>*/}
-                        {/*    <div className="dropdown-menu">*/}
-                        {/*        {stateRow}*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
 
                         {/*<Form.Group controlId="users" style={{padding: '5px 10px'}}>*/}
                         {/*    <Form.Control type="text"*/}

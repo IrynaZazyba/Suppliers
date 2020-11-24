@@ -30,4 +30,5 @@ public final class ApiConstants {
     public final static String URL_CAPACITY = "/capacity";
     public final static String URL_ITEMS = "/items";
     public final static String URL_STATES = "/states";
+    public final static String URL_STATES_PARAMETER = "/{state}";
 }

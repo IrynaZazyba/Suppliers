@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.dto.StateDto;
 import by.itech.lab.supplier.dto.mapper.StateMapper;
 import by.itech.lab.supplier.repository.StateRepository;
@@ -17,7 +18,13 @@ public class StateServiceImpl implements StateService {
     private final StateMapper stateMapper;
 
     @Override
-    public Page<StateDto> findAll(Pageable pageable) {
+    public Page<StateDto> findAll(final Pageable pageable) {
         return stateRepository.findAll(pageable).map(stateMapper::map);
+    }
+
+    @Override
+    public Page<StateDto> findByState(final String state, final Pageable pageable) {
+        return stateRepository.findByLabel(state, pageable)
+                .map(stateMapper::map);
     }
 }

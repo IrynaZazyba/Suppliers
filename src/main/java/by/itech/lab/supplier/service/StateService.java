@@ -6,4 +6,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface StateService{
     Page<StateDto> findAll(Pageable pageable);
+
+    Page<StateDto> findByState(String state, Pageable pageable);
 }
