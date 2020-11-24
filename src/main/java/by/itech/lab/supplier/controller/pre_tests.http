@@ -779,4 +779,16 @@ Cookie: {{test}}
     });
 %}
 
+###-------------------------------------------------------Taxes---------------------------------------------------
+GET http://localhost:8080/taxes
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
 ###
