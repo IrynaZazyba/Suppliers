@@ -74,15 +74,15 @@ export default () => {
         getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
     };
 
-    const closeAddSupplyModel = (e, appDto) => {
-        setModalAddSupplyOpen(e);
+    const closeAddSupplyModel = (isOpen, appDto) => {
+        setModalAddSupplyOpen(isOpen);
         if (appDto) {
             getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }
     };
 
-    const closeModalAddShipment = (e, appDto) => {
-        setModalAddShipmentOpen(e);
+    const closeModalAddShipment = (isOpen, appDto) => {
+        setModalAddShipmentOpen(isOpen);
         if (appDto) {
             getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }

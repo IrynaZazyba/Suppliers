@@ -39,11 +39,10 @@ export function validateShipmentItem(currentItem, items, app) {
         errorsFields.push("destinationId");
     }
 
-    items.forEach(i => {
-        if (i.id === currentItem.id) {
-            errorsFields.push("exist")
-        }
-    });
+    let item = items.filter(i => i.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
 
     return errorsFields;
 };
