@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
+import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.service.ItemService;
 import lombok.AllArgsConstructor;
@@ -43,9 +44,9 @@ public class ItemController {
         return itemService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAllByCategory(@PathVariable String category, Pageable pageable) {
-        return itemService.findAllByCategory(category, pageable);
+    @GetMapping(ApiConstants.URL_CATEGORY)
+    public Page<ItemDto> getAllByCategory(@Valid @RequestBody CategoryDto categoryDto, Pageable pageable) {
+        return itemService.findAllByCategory(categoryDto, pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import java.util.List;
+
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CATEGORY;
 
 @RestController
@@ -47,7 +49,7 @@ public class CategoryController {
     }
 
     @GetMapping(URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
-    public CategoryDto getByName(@PathVariable String category) {
+    public List<CategoryDto> getByName(@PathVariable String category) {
         return categoryService.findByCategory(category);
     }
 
