@@ -6,6 +6,10 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from 'react-bootstrap/Form'
 import ModalLg from "../../components/ModalLg";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import Button from "react-bootstrap/Button";
+import {validateEditItem} from "../../validation/ItemValidationRules";
+import {validateEditApplication} from "../../validation/ApplicationValidationRules";
 
 function EditSupplyAppModal(props) {
 
@@ -16,65 +20,264 @@ function EditSupplyAppModal(props) {
         validationErrors: [],
         serverErrors: ''
     });
-
+    const [options, setOptions] = useState([]);
+    const filterBy = () => true;
+    const ref = React.createRef();
+    const [totalValues, setTotalValues] = useState({
+        totalAmount: '',
+        totalUnits: ''
+    });
 
     useEffect(() => {
         if (props.props.isOpen === true) {
-            console.log(props);
-            console.log(props.props.app.id);
-
             fetch(`/customers/${customerId}/application/${props.props.app.id}`)
                 .then(response => response.json())
                 .then(res => {
-                    console.log("******");
-                    console.log(res);
+                    calculateTotalValues(res.items);
                     setApp(res);
                 });
+
+
         }
     }, [props.props.isOpen]);
 
 
     const deleteItem = (e) => {
-        console.log(e.currentTarget.id);
         let afterDelete = [];
         app.items.forEach(i => {
-            if (i.id != e.currentTarget.id) {
+            if (i.itemDto.id != e.currentTarget.id) {
                 afterDelete.push(i);
             }
         });
+        calculateTotalValues(afterDelete);
         setApp(prevState => ({
             ...prevState,
             items: afterDelete
         }));
     };
 
-    // const handleSearch = (query) => {
-    //     fetch(`/customers/${customerId}/item/upc?upc=${query}`)
-    //         .then(resp => resp.json())
-    //         .then(res => {
-    //             const optionsFromBack = res.map((i) => ({
-    //                 id: i.id,
-    //                 upc: i.upc,
-    //                 label: i.label,
-    //                 units: i.units
-    //             }));
-    //             setOptions(optionsFromBack);
-    //         });
-    // };
+    const handleInputsAmountAndCost = (fieldName) =>
+        (e) => {
+            const value = e.target.value;
+            setCurrentItem(preState => ({
+                ...preState,
+                [fieldName]: value
+            }))
+        };
+
+    const handleSearch = (query) => {
+        fetch(`/customers/${customerId}/item/upc?upc=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                const optionsFromBack = res.map((i) => ({
+                    id: i.id,
+                    upc: i.upc,
+                    label: i.label,
+                    units: i.units
+                }));
+                setOptions(optionsFromBack);
+            });
+    };
 
     const appNumberOnChange = (e) => {
         const value = e.target.value;
-        // checkValidationErrors("number");
+        checkValidationErrors("number");
         setApp(preState => ({
             ...preState,
             number: value
         }))
     };
 
+    const onChangeUpc = (e) => {
+        checkValidationErrors("upc");
+        checkValidationErrors("exists");
+        setErrors({
+            setErrors: '',
+            validationErrors: []
+        });
+        e.length > 0 ?
+            setCurrentItem(preState => ({
+                ...preState,
+                id: e[0].id,
+                upc: e[0].upc,
+                label: e[0].label,
+                units: e[0].units
+            })) :
+            setCurrentItem('');
+    };
+
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
+
+    function calculateTotalValues(items) {
+        setTotalValues(preState => ({
+                ...preState,
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units), 0)
+            })
+        );
+    }
+
+    const addItemHandler = (e) => {
+        e.preventDefault();
+        let validationResult = validateEditItem(currentItem, app.items);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: validationResult
+        }));
+        if (validationResult.length === 0) {
+
+            setCurrentItem('');
+            let dtoItem = {
+                cost: currentItem.cost,
+                amount: currentItem.amount,
+                itemDto: {
+                    id: currentItem.id,
+                    upc: currentItem.upc,
+                    label: currentItem.label,
+                    units: currentItem.units
+                }
+            };
+            let afterAdd = [...app.items, dtoItem];
+            setApp(prevState => ({
+                ...prevState,
+                items: afterAdd
+            }));
+            calculateTotalValues(afterAdd);
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: []
+            }));
+            ref.current.clear();
+        }
+    };
+
+    const addAppHandler = (e) => {
+        e.preventDefault();
+        let validErrors = validateEditApplication(app);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: validErrors
+        }));
+        if (validErrors.length === 0) {
+            fetch(`/customers/${customerId}/application/${app.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(app)
+            })
+                .then(function (response) {
+                    if (response.status !== 200) {
+                        setErrors({
+                            serverErrors: "Something go wrong, try later",
+                            validationErrors: ''
+                        });
+                    } else {
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: []
+                        }));
+                        setApp([]);
+                        props.onChange(false, app);
+                    }
+                });
+        }
+    };
+
+    const appData =
+        <>
+            {app &&
+            <Row>
+                <Col sm={8}>
+                    <Row style={{margin: '10px 5px'}}>
+                        <Col><span className="editAppList">Created by: </span>
+                            {app.createdByUsersDto.username + ', ' + app.createdByUsersDto.surname}
+                        </Col>
+                        <Col style={{marginLeft: '-20px'}}>
+                            <span className="editAppList">Registration date: </span>
+                            {app.registrationDate}
+                        </Col>
+                    </Row>
+                    <Row style={{margin: '10px 5px'}}>
+                        <Col><span className="editAppList">Last updated by: </span>
+                            {app.lastUpdatedByUsersDto.username + ', ' + app.lastUpdatedByUsersDto.surname}
+                        </Col>
+                        <Col style={{marginLeft: '-20px'}}>
+                            <span className="editAppList">Last updated date: </span>
+                            {app.lastUpdated}
+                        </Col>
+                    </Row>
+                    <Row style={{margin: '20px 5px 10px'}}>
+                        <Col>
+                            <Form.Group as={Row} controlId="appNumber">
+                                <Form.Label column sm="3">Number:</Form.Label>
+                                <Col sm="7">
+                                    <Form.Control size="sm" type="text" value={app.number} onChange={appNumberOnChange}
+                                                  className={
+                                                      errors.validationErrors.includes("number")
+                                                          ? "form-control is-invalid"
+                                                          : "form-control"
+                                                  }/>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please provide a valid number.
+                                    </Form.Control.Feedback>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} controlId="sourceLocation">
+                                <Form.Label column sm="3">Source location:</Form.Label>
+                                <Col sm="7">
+                                    <Form.Control size="sm" disabled type="text"
+                                                  value={app.sourceLocationDto.identifier + ', '
+                                                  + app.sourceLocationDto.addressDto.addressLine1 + ', '
+                                                  + app.sourceLocationDto.addressDto.state.state}/>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} controlId="destinationLocation">
+                                <Form.Label column sm="3">Destination location:</Form.Label>
+                                <Col sm="7">
+                                    <Form.Control size="sm" disabled type="text"
+                                                  value={app.destinationLocationDto.identifier + ', '
+                                                  + app.destinationLocationDto.addressDto.addressLine1 + ', '
+                                                  + app.destinationLocationDto.addressDto.state.state}/>
+                                </Col>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Col>
+                <Col sm={2} style={{marginLeft: '-25px'}}>
+                    <Card className="total-card">
+                        <Card.Body>
+                            <h6>Total amount of items</h6>
+                            <Card.Text>
+                                <h3>{totalValues.totalAmount}</h3>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col sm={2}>
+                    <Card className="total-card">
+                        <Card.Body>
+                            <h6>Total number of units</h6>
+                            <Card.Text>
+                                <h3>{totalValues.totalUnits}</h3>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+            }
+        </>;
 
     const itemsTable =
         <React.Fragment>
-            {app && app.items.length > 0 &&
+            {app && app.items && app.items.length > 0 &&
             <Table striped bordered hover size="sm">
                 <thead>
                 <tr>
@@ -83,7 +286,6 @@ function EditSupplyAppModal(props) {
                     <th>Amount</th>
                     <th>Cost</th>
                     <th></th>
-
                 </tr>
                 </thead>
                 <tbody>
@@ -94,7 +296,7 @@ function EditSupplyAppModal(props) {
                         <td>{i.amount}</td>
                         <td>{i.cost}</td>
                         <td style={{textAlign: 'center'}}>
-                            <FaTrash id={i.id} style={{color: '#1A7FA8'}}
+                            <FaTrash id={i.itemDto.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
                             />
                         </td>
@@ -104,87 +306,74 @@ function EditSupplyAppModal(props) {
             </Table>}
         </React.Fragment>;
 
-    const appData =
+    const inputsAddItems =
         <>
-
-            {app &&
             <Row>
-                <Col sm={8}>
-                    <Row style={{margin: '10px 5px'}}>
-                        <Col>
-                            <span
-                                className="editAppList">Created by: </span>{app.createdByUsersDto.username + ', ' + app.createdByUsersDto.surname}
-                        </Col>
-                        <Col>
-                            <span className="editAppList">Registration date: </span>{app.registrationDate}
-                        </Col>
-                    </Row>
-                    <Row style={{margin: '10px 5px'}}>
-                        <Col>
-                            <span
-                                className="editAppList">Last updated by: </span>{app.lastUpdatedByUsersDto.username + ', ' + app.lastUpdatedByUsersDto.surname}
-                        </Col>
-                        <Col>
-                            <span className="editAppList">Last updated date: </span>{app.lastUpdated}
-                        </Col>
-                    </Row>
-
-                    <Form.Group as={Row} controlId="appNumber">
-                        <Form.Label column sm="3">Number</Form.Label>
-                        <Col sm="7">
-                            <Form.Control type="text" value={app.number} onChange={appNumberOnChange}
-                                          className={
-                                              errors.validationErrors.includes("number")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid number.
-                            </Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="sourceLocation">
-                        <Form.Label column sm="3">Source location</Form.Label>
-                        <Col sm="7">
-                            <Form.Control disabled type="text"
-                                          value={app.sourceLocationDto.identifier + ', '
-                                          + app.sourceLocationDto.addressDto.addressLine1 + ', '
-                                          + app.sourceLocationDto.addressDto.state.state}/>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId="destinationLocation">
-                        <Form.Label column sm="3">Destination location</Form.Label>
-                        <Col sm="7">
-                            <Form.Control disabled type="text"
-                                          value={app.destinationLocationDto.identifier + ', '
-                                          + app.destinationLocationDto.addressDto.addressLine1 + ', '
-                                          + app.destinationLocationDto.addressDto.state.state}/>
-                        </Col>
-                    </Form.Group>
+                <Col sm="3">
+                    <AsyncTypeahead
+                        size="sm"
+                        ref={ref}
+                        name="upc"
+                        filterBy={filterBy}
+                        id="async-example"
+                        labelKey="upc"
+                        minLength={3}
+                        options={options}
+                        placeholder="Search item..."
+                        onSearch={handleSearch}
+                        onChange={onChangeUpc}
+                    >
+                        <div className="validation-error">
+                            {errors.validationErrors.includes("upc") ? "Please provide a value" : ""}
+                        </div>
+                        <div className="validation-error">
+                            {errors.validationErrors.includes("exist") ? "Such item already exists" : ""}
+                        </div>
+                    </AsyncTypeahead>
                 </Col>
-                <Col sm={2} style={{marginLeft: '-25px'}}>
-                    <Card className="total-card">
-                        <Card.Body>
-                            <h6>Total amount of items</h6>
-                            <Card.Text>
-                                <h3>10</h3>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
+                <Col sm="3">
+                    <Form.Control name="label" size="sm" disabled placeholder="label" type="text"
+                                  value={currentItem && currentItem.label}/>
                 </Col>
-                <Col sm={2}>
-                    <Card className="total-card">
-                        <Card.Body>
-                            <h6>Total number of units</h6>
-                            <Card.Text>
-                                <h3> 20</h3>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
+                <Col>
+                    <Form.Control name="amount" size="sm" placeholder="amount" type="number" min='1'
+                                  value={currentItem && currentItem.amount}
+                                  onChange={handleInputsAmountAndCost('amount')}
+                                  className={
+                                      errors.validationErrors.includes("amount")
+                                          ? "form-control is-invalid"
+                                          : "form-control"
+                                  }/>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                    </Form.Control.Feedback>
+                </Col>
+                <Col>
+                    <Form.Control size="sm" name="cost" placeholder="cost" type="number" min='1'
+                                  value={currentItem && currentItem.cost}
+                                  onChange={handleInputsAmountAndCost('cost')}
+                                  className={
+                                      errors.validationErrors.includes("cost")
+                                          ? "form-control is-invalid"
+                                          : "form-control"
+                                  }/>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a value.
+                    </Form.Control.Feedback>
+                </Col>
+                <Col sm="1">
+                    <Button size="sm" id={currentItem && currentItem.id} type="submit"
+                            variant="outline-primary"
+                            className="primaryButton"
+                            onClick={addItemHandler}
+                    >
+                        Add
+                    </Button>
                 </Col>
             </Row>
-            }
         </>;
+
+    const addButton = <Button type="submit" className="mainButton pull-right" onClick={addAppHandler}>Save</Button>;
 
     return (
         <>
@@ -194,6 +383,12 @@ function EditSupplyAppModal(props) {
                 itemsTable={itemsTable}
                 appDataFields={appData}
                 status={app && app.applicationStatus.replace('_', ' ').toLowerCase()}
+                inputsAddItems={inputsAddItems}
+                setErrors={setErrors}
+                setApp={setApp}
+                errors={errors}
+                button={addButton}
+                setCurrentItem={setCurrentItem}
             />
         </>
     );

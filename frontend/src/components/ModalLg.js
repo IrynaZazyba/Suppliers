@@ -1,29 +1,33 @@
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../messages/errorMessage";
 import Form from "react-bootstrap/Form";
-import React, {useState} from "react";
+import React from "react";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
-import Col from "react-bootstrap/Col";
 
 function ModalLg(props) {
 
-    // const {isOpen,appDataFields, inputsAddItems, itemsTable, button} = props;
-    // console.log("///////////");
-    //
-    // console.log(props);
-    const {isOpen, title, itemsTable, appDataFields, status} = props;
-
-    const [errors, setErrors] = useState({
-        validationErrors: [],
-        serverErrors: ''
-    });
+    const {
+        isOpen,
+        title,
+        itemsTable,
+        appDataFields,
+        status,
+        inputsAddItems,
+        setErrors,
+        errors,
+        setApp,
+        button,
+        setCurrentItem
+    } = props;
 
     const onHideModal = () => {
         setErrors({
             serverErrors: '',
             validationErrors: []
         });
+        setApp('');
+        setCurrentItem('');
         isOpen.onChange(false)
     };
 
@@ -40,12 +44,13 @@ function ModalLg(props) {
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
                         {title}
-                        <span>
-                        <Badge className="badge-status" style={{color: '#009edd'}}>
+                    </Modal.Title>
+                    <div className="badgeEditModal">
+                        <h3><Badge className="badge-status statusInModal">
                             {status}
                         </Badge>
-                        </span>
-                    </Modal.Title>
+                        </h3>
+                    </div>
                 </Modal.Header>
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
@@ -56,7 +61,7 @@ function ModalLg(props) {
                         </div>
                         <Card border="primary" style={{width: '100%'}}>
                             <Card.Header>
-                                {/*{inputsAddItems}*/}
+                                {inputsAddItems}
                             </Card.Header>
                             <Card.Body>
                                 <Card.Text>
@@ -65,7 +70,7 @@ function ModalLg(props) {
                             </Card.Body>
                         </Card>
                         <div className="float-right" style={{padding: '10px'}}>
-                            {/*{button}*/}
+                            {button}
                         </div>
                     </Form>
                 </Modal.Body>

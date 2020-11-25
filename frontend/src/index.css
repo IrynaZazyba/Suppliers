@@ -162,3 +162,14 @@ a.page-link {
     font-weight: bold;
 }
 
+.statusInModal {
+    float: right;
+    color: #009edd;
+    margin-top: 5px;
+}
+
+.badgeEditModal {
+    display: inline-block;
+    width: 73%;
+    float: left;
+}

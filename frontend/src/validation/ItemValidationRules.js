@@ -46,7 +46,31 @@ export function validateShipmentItem(currentItem, items, app) {
     });
 
     return errorsFields;
-};
+}
+
+export function validateEditItem(currentItem, itemsInApp) {
+
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount) {
+        console.log("amount error")
+        errorsFields.push("amount");
+    }
+
+    if (!currentItem.cost) {
+        errorsFields.push("cost");
+    }
+
+    itemsInApp.forEach(i => {
+        if (i.itemDto.id === currentItem.id) {
+            errorsFields.push("exist")
+        }
+    });
+    return errorsFields;
+}
 
 
 
