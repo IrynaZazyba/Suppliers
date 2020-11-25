@@ -22,4 +22,9 @@ public class TaxServiceImpl implements TaxService {
         return taxRepository.findAll().stream().map(taxMapper::map).collect(Collectors.toList());
     }
 
+    @Override
+    public TaxDto getTaxByState(Long stateId) {
+        return taxMapper.map(taxRepository.findByStateId(stateId));
+    }
+
 }

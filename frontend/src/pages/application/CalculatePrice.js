@@ -21,7 +21,7 @@ export function calculateDistance(warehouses, sourceId, destinationId) {
     let sour = warehouses.source.find(i => i.id == sourceId);
     let distance = getDistance(
         {latitude: dest.addressDto.latitude, longitude: dest.addressDto.longitude},
-        {latitude: sour.addressDto.latitude, longitude: sour.addressDto.longitude}
+        {latitude: sour.addressDto.latitude, longitude: sour.addressDto.longitude},
     );
     return distance / 1000;
 }

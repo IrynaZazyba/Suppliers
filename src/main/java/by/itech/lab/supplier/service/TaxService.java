@@ -7,4 +7,6 @@ import java.util.List;
 public interface TaxService {
 
     List<TaxDto> getAll();
+
+    TaxDto getTaxByState(Long stateId);
 }

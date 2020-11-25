@@ -15,7 +15,6 @@ import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.UserService;
-import liquibase.pro.packaged.A;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -41,9 +40,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationItemMapper itemsInApplicationMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+
     @Lazy
     @Autowired
-    private CalculationService calculationService;
+    private PriceCalculationServiceImpl calculationService;
 
     @Override
     @Transactional
@@ -72,7 +72,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     private Application buildApplicationToCreate(final ApplicationDto dto, final User user) {
         if (dto.getType() == ApplicationType.TRAFFIC) {
-            dto.setItems(calculationService.calculatePrice(dto));
+            dto.setItems(calculationService.calculateAppItemsPrice(dto));
         }
         final Application app = applicationMapper.map(dto);
         app.setApplicationStatus(ApplicationStatus.OPEN);
@@ -80,7 +80,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         app.setCreatedByUsers(user);
         return app;
     }
-
 
     @Override
     public Page<ApplicationDto> findAllByStatus(final Pageable pageable, ApplicationStatus status) {

@@ -254,7 +254,7 @@ function AddShipmentApplication(props) {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     } else {
                         setErrors(preState => ({

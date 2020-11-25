@@ -143,8 +143,6 @@ public class ApplicationServiceTest {
         @MockBean
         private UserMapper userMapper;
 
-
-        //todo fixed tests
         @Bean
         public ApplicationService applicationService() {
             return new ApplicationServiceImpl(applicationRepository,
