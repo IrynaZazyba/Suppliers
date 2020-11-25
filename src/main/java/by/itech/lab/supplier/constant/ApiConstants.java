@@ -26,6 +26,7 @@ public final class ApiConstants {
     public final static String URL_STATUS_PARAMETER = "/{status}";
     public final static String URL_PASSWORD_PARAMETER = "/password";
     public final static String URL_NUMBER_PARAMETER = "/{number}";
+    public final static String URL_RETAILER_ID_PARAMETER = "retailers/{retailerId}";
     public final static String URL_NUMBER = "/number";
     public final static String URL_LABEL = "/label";
     public final static String URL_STATUS = "/status";
