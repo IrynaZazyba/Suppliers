@@ -13,6 +13,7 @@ import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
 import AddShipmentApplication from "./AddShipmentApplication";
+import EditSupplyAppModal from "./EditSupplyAppModal";
 
 export default () => {
 
@@ -35,6 +36,11 @@ export default () => {
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
     const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
+    const [openEditModal, setOpenEditModal] = useState({
+        isOpen: false,
+        app: [],
+        customerId: customerId
+    });
 
     useEffect(() => {
         getApplications(`/customers/${customerId}/application`);
@@ -88,6 +94,13 @@ export default () => {
         }
     };
 
+    const closeModalEdit = (e) => {
+        setOpenEditModal(e);
+        // if (appDto) {
+        //     getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
+        // }
+    };
+
     const tableRows = applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
@@ -108,6 +121,14 @@ export default () => {
             <td><Button variant="link">Accept</Button>
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+                        onClick={() => {
+                            console.log("click");
+                            setOpenEditModal({
+                                isOpen: true,
+                                app: app,
+                                customerId: customerId
+                            });
+                        }}
                         size={'1.3em'}
             />
             </td>
@@ -119,6 +140,7 @@ export default () => {
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
             <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
+            <EditSupplyAppModal props={openEditModal} onChange={closeModalEdit}/>
         </React.Fragment>;
 
     const header =

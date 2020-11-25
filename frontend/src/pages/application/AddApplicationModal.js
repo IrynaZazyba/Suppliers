@@ -53,6 +53,7 @@ function AddApplicationModal(props) {
                 setOptions(optionsFromBack);
             });
     };
+
     const filterBy = () => true;
     const onChangeUpc = (e) => {
 

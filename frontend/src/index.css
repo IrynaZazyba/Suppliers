@@ -153,8 +153,12 @@ a.page-link {
     text-align: center;
 }
 
-.badge-status{
+.badge-status {
     background-color: #E8E8EE;
     text-align: center;
+}
+
+.editAppList {
+    font-weight: bold;
 }
 
