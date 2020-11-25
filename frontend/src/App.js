@@ -6,13 +6,14 @@ import Footer from './Footer';
 import {Route, Switch} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedComponent from "./components/ProtectedComponent";
-
+import Users from "./pages/user/Users";
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
 import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
+import Cars from "./pages/car/Cars";
 
 function App() {
 
@@ -53,6 +54,12 @@ function App() {
         })}/>
     };
 
+    const renderCar = () => {
+       return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+            return <Cars/>
+        })}/>
+    };
+
 
     return (
         <UserContext>
@@ -65,7 +72,7 @@ function App() {
                 <Route path={`/customers`} render={renderCustomer}/>
                 <Route path={`/login`} component={Login}/>
                 <Route path={'/users'} render={renderUser}/>
-
+                <Route path={'/cars'} render={renderCar}/>
             </Switch>
             <Footer/>
         </UserContext>

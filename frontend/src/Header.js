@@ -18,6 +18,7 @@ function Header() {
     const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
+    const carsClass = window.location.pathname === "/cars" ? "active" : "";
 
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
@@ -46,6 +47,7 @@ function Header() {
                     <Nav.Link className={getClass(/.item/)}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
+                    <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>

@@ -11,7 +11,6 @@ public class StateMapper implements BaseMapper<State, StateDto> {
     @Override
     public State map(final StateDto dto) {
         return State.builder()
-                .id(dto.getId())
                 .state(dto.getState())
                 .build();
     }
