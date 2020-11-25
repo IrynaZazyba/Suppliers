@@ -13,6 +13,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
 
     private final AddressMapper addressMapper;
     private final WarehouseMapper warehouseMapper;
+    private final CustomerMapper customerMapper;
 
 
     @Override
@@ -30,6 +31,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .deletedAt(user.getDeletedAt())
                 .addressDto(user.getAddress() != null ? addressMapper.map(user.getAddress()) : null)
                 .warehouseDto(Objects.isNull(user.getWarehouse()) ? null : warehouseMapper.map(user.getWarehouse()))
+                .customerDto(customerMapper.map(user.getCustomer()))
                 .build();
     }
 
@@ -60,6 +62,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .warehouse(Objects.isNull(userDTO.getWarehouseDto())
                         ? null :
                         warehouseMapper.map(userDTO.getWarehouseDto()))
+                .customer(customerMapper.map(userDTO.getCustomerDto()))
                 .build();
     }
 
