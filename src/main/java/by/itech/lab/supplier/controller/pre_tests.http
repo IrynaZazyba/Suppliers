@@ -135,6 +135,13 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/customers/3/warehouses/type?type=FACTORY
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
 GET http://localhost:8080/customers/3/warehouses/6
 Content-Type: application/json
 Connection: keep-alive
@@ -493,10 +500,18 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/item/category/someType
+GET http://localhost:8080/customers/3/item/category
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+{
+  "id": 5,
+  "category": "MG",
+  "taxRate": 42,
+  "deletedAt": null,
+  "customerId": 3
+}
 
 > {%
     client.test("Request executed successfully", function() {
@@ -545,6 +560,20 @@ Cookie: {{test}}
 
 ###
 
+
+GET http://localhost:8080/customers/3/item/upc?upc=135
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
 DELETE http://localhost:8080/customers/3/item/1
 Content-Type: application/json
 Connection: keep-alive
@@ -559,7 +588,6 @@ Cookie: {{test}}
 ###
 
 #-------------------------------------------------------Application---------------------------------------------------
-# Note: put commentaries before @Secured in ApplicationController
 
 POST http://localhost:8080/customers/3/application
 Content-Type: application/json
@@ -573,7 +601,7 @@ Cookie: {{test}}
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
   "sourceLocationDto": {
-    "id":1
+    "id": 1
   },
   "destinationLocationDto": {
     "id": 3
@@ -646,7 +674,7 @@ Cookie: {{test}}
       "cost": 55.0,
       "amount": 99,
       "itemDto": {
-        "id": 1,
+        "id": 2,
         "upc": 8.5,
         "label": "label",
         "units": 80.5,

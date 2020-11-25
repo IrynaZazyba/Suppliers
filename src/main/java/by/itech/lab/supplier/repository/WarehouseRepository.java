@@ -1,7 +1,7 @@
 package by.itech.lab.supplier.repository;
 
-import by.itech.lab.supplier.domain.Item;
 import by.itech.lab.supplier.domain.Warehouse;
+import by.itech.lab.supplier.domain.WarehouseType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
@@ -28,5 +28,7 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     @Query("select w from Warehouse w where w.retailerId=:retailer_id")
     Page<Warehouse> findAllByRetailerId(@Param("retailer_id") Long retailerId, final Pageable page);
+
+    List<Warehouse> findAllByType(WarehouseType warehouseType);
 
 }

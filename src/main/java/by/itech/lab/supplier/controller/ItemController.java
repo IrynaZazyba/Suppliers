@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
+import by.itech.lab.supplier.dto.CategoryDto;
 import by.itech.lab.supplier.dto.ItemDto;
 import by.itech.lab.supplier.service.ItemService;
 import lombok.AllArgsConstructor;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEM;
 
@@ -41,9 +44,9 @@ public class ItemController {
         return itemService.findAll(pageable);
     }
 
-    @GetMapping(ApiConstants.URL_CATEGORY + ApiConstants.URL_CATEGORY_PARAMETER)
-    public Page<ItemDto> getAllByCategory(@PathVariable String category, Pageable pageable) {
-        return itemService.findAllByCategory(category, pageable);
+    @GetMapping(ApiConstants.URL_CATEGORY)
+    public Page<ItemDto> getAllByCategory(@Valid @RequestBody CategoryDto categoryDto, Pageable pageable) {
+        return itemService.findAllByCategory(categoryDto, pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
@@ -60,6 +63,11 @@ public class ItemController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         itemService.delete(id);
+    }
+
+    @GetMapping(ApiConstants.URL_UPC)
+    public List<ItemDto> getItemByUpc(@RequestParam String upc) {
+        return itemService.findByUpc(upc.trim());
     }
 
 }
