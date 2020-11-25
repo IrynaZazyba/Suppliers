@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import validateItem from "../../validation/ItemValidationRules";
+import validateItemPage from "../../validation/ItemPageValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
@@ -92,7 +92,7 @@ function ModalAddItem(props) {
 
     const addItemHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateItem(itemDto);
+        let validationResult = validateItemPage(itemDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult

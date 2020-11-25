@@ -8,4 +8,12 @@ databaseChangeLog:
             newColumnName: full_name
             oldColumnName: fullname
             tableName: retailer
-
+  - changeSet:
+      id: SUP-RETAILER-13
+      author: alesia_hlushakova
+      changes:
+        - dropColumn:
+            tableName: retailer
+            columns:
+               - column:
+                   name: retailerscol

@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,21 +57,21 @@ public class ItemServiceTest {
                 .category("Fruit")
                 .build();
         item = Item.builder()
-                .id(10L)
-                .label("Apple")
-                .units(5.0)
-                .upc(new BigDecimal(0.5))
-                .deletedAt(LocalDate.now())
-                .category(category)
-                .build();
+          .id(10L)
+          .label("Apple")
+          .units(5.0)
+          .upc("1234567")
+          .deletedAt(LocalDate.now())
+          .category(category)
+          .build();
         itemDto = ItemDto.builder()
-                .id(10L)
-                .label("Apple")
-                .units(5.0)
-                .upc(new BigDecimal(0.5))
-                .deletedAt(LocalDate.now())
-                .categoryDto(categoryDto)
-                .build();
+          .id(10L)
+          .label("Apple")
+          .units(5.0)
+          .upc("12345678")
+          .deletedAt(LocalDate.now())
+          .categoryDto(categoryDto)
+          .build();
         pageRequest = PageRequest.of(0, 10);
     }
 

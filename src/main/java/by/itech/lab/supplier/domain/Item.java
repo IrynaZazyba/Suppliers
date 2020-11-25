@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.domain;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -34,7 +34,7 @@ public class Item implements BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private BigDecimal upc;
+    private String upc;
     @Column(nullable = false)
     private String label;
     @Column(nullable = false)
