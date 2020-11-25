@@ -11,12 +11,13 @@ function ModalEditCar(props) {
     const ref = React.createRef();
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
-    const [itemDto, setItem] = useState({
-        label: '',
-        upc: '',
-        units: '',
+    const [carDto, setCar] = useState({
+        id: '',
+        number: '',
+        totalCapacity: '',
+        currentCapacity: '',
         customerId: currentCustomerId,
-        categoryDto: ''
+        addressDto: addressDto,
     });
 
     const [errors, setErrors] = useState({
@@ -24,97 +25,107 @@ function ModalEditCar(props) {
         serverErrors: ''
     });
 
-    const [category, setCategory] = useState({
-        id: '',
-        category: '',
-        taxRate: '',
-        customerId: ''
-    });
+
     const [options, setOptions] = useState([]);
 
     const filterBy = () => true;
 
-    const handleSearch = (query) => {
-        fetch(`/customers/${currentCustomerId}/category/category/${query}`)
-            .then(resp => resp.json())
-            .then(res => {
-                const optionsFromBack = res.map((i) => ({
-                    id: i.id,
-                    category: i.category,
-                    taxRate: i.taxRate,
-                    customerId: currentCustomerId
-                }));
-                setOptions(optionsFromBack);
+    const [zone, setZone] = useState([]);
+
+    const [zones, setZones] = useState([]);
+
+    const [addressDto, setAddressDto] = useState({
+        city: '',
+        state: null,
+        addressLine1: '',
+        addressLine2: ''
+    });
+
+    const handleNumber = (e) => {
+        setCar(preState => ({
+            ...preState,
+            number: e.target.value
+        }));
+    };
+    const handleTotalCapacity = (e) => {
+        setCar(preState => ({
+            ...preState,
+            totalCapacity: e.target.value,
+            currentCapacity: e.target.value
+        }));
+    };
+    const onChangeState = (e) => {
+        const selectedState = zones.find(state => state.state === e.target.value);
+
+        setZone(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+        setAddressDto(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+    };
+    useEffect(() => {
+
+
+        fetch('/states')
+            .then(response => response.json())
+            .then(commits => {
+                setZones(commits.content);
             });
+    }, []);
+    const handleCity = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            city: e.target.value
+        }));
     };
+    const handleaddressLine1 = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            addressLine1: e.target.value
+        }));
+    };
+    const handleaddressLine2 = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            addressLine2: e.target.value
+        }));
+        setCar(preState => ({
+            ...preState,
+            addressDto: addressDto
+        }));
+    };
+    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
 
-    const onChangeCategory = (e) => {
-        setErrors({
-            setErrors: '',
-            validationErrors: []
-        });
-        if (e.length > 0) {
-            setItem(preState => ({
-                ...preState,
-                categoryDto: {
-                    id: e[0].id,
-                    category: e[0].category,
-                    taxRate: e[0].taxRate,
-                    customerId: currentCustomerId
-                }
-            }))
-        } else {
-            setItem(preState => ({
-                ...preState,
-                categoryDto: ''
-            }));
-        }
-    };
 
-    const handleLabel = (e) => {
-        setItem(preState => ({
-            ...preState,
-            label: e.target.value
-        }));
-    };
-    const handleUpc = (e) => {
-        setItem(preState => ({
-            ...preState,
-            upc: e.target.value
-        }));
-    };
-    const handleUnits = (e) => {
-        setItem(preState => ({
-            ...preState,
-            units: e.target.value
-        }));
-    };
 
     useEffect(() => {
         if (props.props.editShow === true) {
-            fetch(`/customers/${currentCustomerId}/item/${props.props.item.id}`)
+            fetch(`/customers/${currentCustomerId}/car/${props.props.item.id}`)
                 .then(response => response.json())
                 .then(res => {
-                    setItem(res);
+                    setCar(res);
                 });
         }
     }, [props.props.editShow]);
 
 
-    const editItemHandler = (e) => {
+    const editCarHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateItem(itemDto);
+        let validationResult = validateItem(carDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult
         }));
         if (validationResult.length === 0) {
-            fetch(`/customers/${currentCustomerId}/item`, {
+            fetch(`/customers/${currentCustomerId}/car`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(itemDto)
+                body: JSON.stringify(carDto)
             })
                 .then(response => {
                     if (response.status !== 200) {
@@ -127,7 +138,7 @@ function ModalEditCar(props) {
                             ...preState,
                             validationErrors: []
                         }));
-                        props.onChange(false, itemDto);
+                        props.onChange(false, carDto);
                     }
                 });
         }
@@ -150,84 +161,73 @@ function ModalEditCar(props) {
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
-                        <Form.Group controlId="editLabel" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text"
-                                          placeholder="Label"
-                                          onChange={handleLabel}
-                                          value={itemDto.label}
+                        <Form.Group controlId="formBasicLabel" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="Number" onChange={handleNumber}
                                           className={
-                                              errors.validationErrors.includes("label")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("number")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid label.
+                                Please provide a valid number.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="editUpc" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicCapacity" style={{padding: '5px 10px'}}>
                             <Form.Control type="text"
-                                          placeholder="Code of item"
-                                          onChange={handleUpc}
-                                          value={itemDto.upc}
+                                          placeholder="Total capacity"
+                                          onChange={handleTotalCapacity}
                                           className={
-                                              errors.validationErrors.includes("upc")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("totalCapacity")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid upc.
+                                Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="editUnits" style={{padding: '5px 10px'}}>
-                            <Form.Control type="number"
-                                          step="any"
-                                          placeholder="Units"
-                                          onChange={handleUnits}
-                                          value={itemDto.units}
+                        <Form.Control style={{padding: '5px 10px'}} as="select"
+                                      defaultValue="Choose..."
+                                      onChange={onChangeState}>
+                            {Object.entries(zones).map(([k, v]) => (
+
+                                <option>{v.state}</option>
+
+                            ))}
+                        </Form.Control>
+
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="city" onChange={handleCity}
                                           className={
-                                              errors.validationErrors.includes("units")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
+                                              isValid("city")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide valid units.
+                                Please provide a valid city.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="categoryName" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text"
-                                          value={itemDto.categoryDto.category}
-                                          placeholder="Category name"
-                                          disabled
-                            />
+
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="addressLine1" onChange={handleaddressLine1}
+                                          className={
+                                              isValid("addressLine1")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid address line 1.
+                            </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="taxRate" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text"
-                                          value={itemDto.categoryDto.taxRate}
-                                          placeholder="Tax rate"
-                                          disabled
-                            />
+
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="addressLine2" onChange={handleaddressLine2}
+                                          className={
+                                              isValid("addressLine2")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid address line 2.
+                            </Form.Control.Feedback>
                         </Form.Group>
-                        <AsyncTypeahead
-                            style={{padding: '5px 10px'}}
-                            ref={ref}
-                            name="category"
-                            filterBy={filterBy}
-                            id="async-category"
-                            labelKey="category"
-                            minLength={1}
-                            options={options}
-                            placeholder="Search, if you want to change category..."
-                            onSearch={handleSearch}
-                            onChange={onChangeCategory}
-                        >
-                            <div className="validation-error">
-                                {errors.validationErrors.includes("category") ? "Please provide a value" : ""}
-                            </div>
-                        </AsyncTypeahead>
+
 
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
-                                    onClick={editItemHandler}>
+                                    onClick={editCarHandler}>
                                 Save
                             </Button>
                         </div>
