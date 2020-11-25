@@ -43,7 +43,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
         to.setUpc(from.getUpc());
         to.setLabel(from.getLabel());
         to.setUnits(from.getUnits());
-        to.setCategory(categoryMapper.map(from.getCategoryDto()));
+        to.setCategory(Objects.nonNull(from.getCategoryDto()) ? categoryMapper.map(from.getCategoryDto()) : null);
         to.setDeletedAt(from.getDeletedAt());
         to.setCustomerId(from.getCustomerId());
     }

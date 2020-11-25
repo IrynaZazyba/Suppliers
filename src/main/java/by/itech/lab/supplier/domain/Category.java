@@ -34,7 +34,7 @@ public class Category implements BaseEntity {
     private Long id;
     @Column(nullable = false, unique = true)
     private String category;
-    @Column(nullable = false)
+    @Column(precision = 5, scale = 3, nullable = false)
     private BigDecimal taxRate;
     private LocalDate deletedAt;
     private Long customerId;

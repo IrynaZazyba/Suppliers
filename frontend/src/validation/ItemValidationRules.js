@@ -20,5 +20,3 @@ export default function validateItem(currentItem, items) {
 
     return errorsFields;
 };
-
-

@@ -23,46 +23,50 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
 
     @Override
     public Application map(final ApplicationDto dto) {
-        final Application application = Application.builder()
+        return Application.builder()
                 .id(dto.getId())
                 .applicationStatus(dto.getApplicationStatus())
                 .number(dto.getNumber())
                 .registrationDate(dto.getRegistrationDate())
                 .lastUpdated(dto.getLastUpdated())
-                .sourceLocationAddress(warehouseMapper.map(dto.getSourceLocationDto()))
-                .destinationLocationAddress(warehouseMapper.map(dto.getDestinationLocationDto()))
+                .sourceLocationAddress(Objects.nonNull(dto.getSourceLocationDto()) ? warehouseMapper
+                        .map(dto.getSourceLocationDto()) : null)
+                .destinationLocationAddress(Objects.nonNull(dto.getDestinationLocationDto()) ? warehouseMapper
+                        .map(dto.getDestinationLocationDto()) : null)
+                .createdByUsers(Objects.nonNull(dto.getCreatedByUsersDto()) ? userMapper
+                        .map(dto.getCreatedByUsersDto()) : null)
+                .lastUpdatedByUsers(Objects.nonNull(dto.getLastUpdatedByUsersDto()) ? userMapper
+                        .map(dto.getLastUpdatedByUsersDto()) : null)
                 .deletedAt(dto.getDeletedAt())
                 .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
                 .customerId(dto.getCustomerId())
                 .type(dto.getType())
+                .wayBill(Objects.nonNull(dto.getWayBillDto()) ? wayBillMapper.map(dto.getWayBillDto()) : null)
                 .build();
-        if (Objects.nonNull(dto.getWayBillDto())) {
-            application.setWayBill(wayBillMapper.map(dto.getWayBillDto()));
-        }
-        return application;
     }
 
     @Override
-    public ApplicationDto map(final Application application) {
-        final ApplicationDto applicationDto = ApplicationDto.builder()
-                .id(application.getId())
-                .applicationStatus(application.getApplicationStatus())
-                .number(application.getNumber())
-                .registrationDate(application.getRegistrationDate())
-                .lastUpdated(application.getLastUpdated())
-                .sourceLocationDto(warehouseMapper.map(application.getSourceLocationAddress()))
-                .destinationLocationDto(warehouseMapper.map(application.getDestinationLocationAddress()))
-                .createdByUsersDto(userMapper.map(application.getCreatedByUsers()))
-                .lastUpdatedByUsersDto(userMapper.map(application.getLastUpdatedByUsers()))
-                .deletedAt(application.getDeletedAt())
-                .items(application.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
-                .customerId(application.getCustomerId())
-                .type(application.getType())
+    public ApplicationDto map(final Application entity) {
+        return ApplicationDto.builder()
+                .id(entity.getId())
+                .applicationStatus(entity.getApplicationStatus())
+                .number(entity.getNumber())
+                .registrationDate(entity.getRegistrationDate())
+                .lastUpdated(entity.getLastUpdated())
+                .sourceLocationDto(Objects.nonNull(entity.getSourceLocationAddress()) ? warehouseMapper
+                        .map(entity.getSourceLocationAddress()) : null)
+                .destinationLocationDto(Objects.nonNull(entity.getDestinationLocationAddress()) ? warehouseMapper
+                        .map(entity.getDestinationLocationAddress()) : null)
+                .createdByUsersDto(Objects.nonNull(entity.getCreatedByUsers()) ? userMapper
+                        .map(entity.getCreatedByUsers()) : null)
+                .lastUpdatedByUsersDto(Objects.nonNull(entity.getLastUpdatedByUsers()) ? userMapper
+                        .map(entity.getLastUpdatedByUsers()) : null)
+                .deletedAt(entity.getDeletedAt())
+                .items(entity.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .customerId(entity.getCustomerId())
+                .type(entity.getType())
+                .wayBillDto(Objects.nonNull(entity.getWayBill()) ? wayBillMapper.map(entity.getWayBill()) : null)
                 .build();
-        if (Objects.nonNull(application.getWayBill())) {
-            applicationDto.setWayBillDto(wayBillMapper.map(application.getWayBill()));
-        }
-        return applicationDto;
     }
 
     public void map(final ApplicationDto from, final Application to) {
@@ -70,17 +74,19 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         to.setNumber(from.getNumber());
         to.setRegistrationDate(from.getRegistrationDate());
         to.setLastUpdated(from.getLastUpdated());
-        to.setSourceLocationAddress(warehouseMapper.map(from.getSourceLocationDto()));
-        to.setDestinationLocationAddress(warehouseMapper.map(from.getDestinationLocationDto()));
-        to.setCreatedByUsers(userMapper.map(from.getCreatedByUsersDto()));
-        to.setLastUpdatedByUsers(userMapper.map(from.getLastUpdatedByUsersDto()));
+        to.setSourceLocationAddress(Objects.nonNull(from.getSourceLocationDto()) ? warehouseMapper
+                .map(from.getSourceLocationDto()) : null);
+        to.setDestinationLocationAddress(Objects.nonNull(from.getDestinationLocationDto()) ? warehouseMapper
+                .map(from.getDestinationLocationDto()) : null);
+        to.setCreatedByUsers(Objects.nonNull(from.getCreatedByUsersDto()) ? userMapper
+                .map(from.getCreatedByUsersDto()) : null);
+        to.setLastUpdatedByUsers(Objects.nonNull(from.getLastUpdatedByUsersDto()) ? userMapper
+                .map(from.getLastUpdatedByUsersDto()) : null);
+        to.setWayBill(Objects.nonNull(from.getWayBillDto()) ? wayBillMapper.map(from.getWayBillDto()) : null);
         to.setDeletedAt(from.getDeletedAt());
         to.setCustomerId(from.getCustomerId());
         to.setType(from.getType());
         updateItems(to.getItems(), from.getItems());
-        if (Objects.nonNull(from.getWayBillDto())) {
-            to.setWayBill(wayBillMapper.map(from.getWayBillDto()));
-        }
     }
 
     public Application mapItems(final Application application) {

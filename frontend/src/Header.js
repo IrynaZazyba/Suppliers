@@ -11,10 +11,21 @@ function Header() {
 
     const checkPermission = user && user.currentCustomerId;
 
-    const profileClass = defineActiveClassWithMatch(/.profile/);
+    function getClass(regexOfClass) {
+        return window.location.pathname.match(regexOfClass) ? "active" : "";
+    }
+
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
     const appClass = defineActiveClassWithMatch(/.application/);
+    const profileClass = getClass(/.profile/);
+    const categoryClass = getClass(/.category/);
+    const itemClass = getClass(/.item/);
+    const appClass = getClass(/.application/);
+
+    const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
+        user.role === "ROLE_DISPATCHER" ||
+        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -34,15 +45,21 @@ function Header() {
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
+                    {categoryAndItemPermission &&
+                    <Nav.Link className={categoryClass}
+                              href={`/customers/${user.currentCustomerId}/category`}>
+                        Categories
+                    </Nav.Link>}
+                    {categoryAndItemPermission &&
+                    <Nav.Link className={itemClass}
+                              href={`/customers/${user.currentCustomerId}/item`}>Items
+                    </Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
     );
 
-    function defineActiveClassWithMatch(path) {
-        return window.location.pathname.match(path) ? "active" : "";
-    }
 }
 
 

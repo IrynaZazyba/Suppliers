@@ -8,13 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("select c from Category c where c.category = :category")
-    Optional<Category> findByCategory(@Param("category") final String categoryName);
+    List<Category> findByCategoryStartingWith(final String categoryName);
 
     @Modifying
     @Query("update Category set deletedAt = :deletedTime where id = :id")
