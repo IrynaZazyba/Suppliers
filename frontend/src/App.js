@@ -45,14 +45,22 @@ function App() {
         })}/>
     };
 
+    function pathWithCustomer(urlAfterCustomer) {
+        return `/customers/${currentCustomerId}${urlAfterCustomer}`
+    }
+
+    const categoryPath = pathWithCustomer(`/category`);
+    const itemPath = pathWithCustomer(`/item`);
+    const profilePath = pathWithCustomer(`/profile`);
+
     return (
         <UserContext>
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route path={`/customers/${currentCustomerId}/category`} render={renderCategory}/>/>
-                <Route path={`/customers/${currentCustomerId}/item`} render={renderItems}/>/>
-                <Route path={`/customers/${currentCustomerId}/profile`} render={renderProfile}/>/>
+                <Route path={categoryPath} render={renderCategory}/>/>
+                <Route path={itemPath} render={renderItems}/>/>
+                <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={`/customers`} render={renderCustomer}/>
                 <Route path={`/login`} component={Login}/>
             </Switch>

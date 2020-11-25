@@ -15,6 +15,9 @@ function Header() {
     }
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const profileClass = getClass(/.profile/);
+    const categoryClass = getClass(/.category/);
+    const itemClass = getClass(/.item/);
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -26,18 +29,18 @@ function Header() {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto navigation">
                     {checkPermission &&
-                    <Nav.Link className={getClass(/.profile/)}
+                    <Nav.Link className={profileClass}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     {categoryAndItemPermission &&
-                    <Nav.Link className={getClass(/.category/)}
+                    <Nav.Link className={categoryClass}
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
                     {categoryAndItemPermission &&
-                    <Nav.Link className={getClass(/.item/)}
+                    <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
                     <UserProfile/>
