@@ -3,23 +3,20 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import Dropdown from "react-bootstrap/Dropdown";
 
 function ModalAddWarehouse(props) {
 
-    const [stateDto, setStateDto] = useState({
-        state: null
-    });
-    const [addressDto, setAddressDto] = useState({
-        city: '',
-        addressLine1: '',
-        addressLine2: '',
-        stateDto: stateDto
-    });
-
+    const ref = React.createRef();
+    const [dropdownMenuName, setDropdownMenuName] = useState("select type");
     const [warehouseDto, setWarehouseDto] = useState({
+        id: '',
         identifier: '',
         type: '',
-        addressDto: addressDto,
+        addressDto: {
+            state: {}
+        },
         totalCapacity: ''
     });
 
@@ -27,6 +24,35 @@ function ModalAddWarehouse(props) {
         validationErrors: [],
         serverErrors: ''
     });
+
+    const [options, setOptions] = useState([]);
+
+    const filterBy = () => true;
+
+    const handleSearch = (query) => {
+        fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                // console.log(res.content);
+                setOptions(res);
+            });
+    };
+
+    const onChangeState = (e) => {
+        setErrors({
+            setErrors: '',
+            validationErrors: []
+        });
+        e.length > 0 ?
+            setWarehouseDto(preState => ({
+                ...preState,
+                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].stateZone}}
+            })) :
+            setWarehouseDto(preState => ({
+                ...preState,
+                addressDto: {...preState.addressDto, state: {id: '', state: ''}}
+            }));
+    };
 
     const handleIdentifier = (e) => {
         setWarehouseDto(preState => ({
@@ -38,37 +64,31 @@ function ModalAddWarehouse(props) {
     const handleType = (e) => {
         setWarehouseDto(preState => ({
             ...preState,
-            type: e.target.value
+            type: e
         }));
+        setDropdownMenuName(e);
     };
 
     const handleCity = (e) => {
-        setAddressDto(preState => ({
+        setWarehouseDto(preState => ({
             ...preState,
-            city: e.target.value
+            addressDto: {...preState.addressDto, city: e.target.value}
         }));
     };
 
     const handleLineOne = (e) => {
-        setAddressDto(preState => ({
+        setWarehouseDto(preState => ({
             ...preState,
-            addressLine1: e.target.value
+            addressDto: {...preState.addressDto, addressLine1: e.target.value}
         }));
     };
 
     const handleLineTwo = (e) => {
-        setAddressDto(preState => ({
+        setWarehouseDto(preState => ({
             ...preState,
-            addressLine2: e.target.value
+            addressDto: {...preState.addressDto, addressLine2: e.target.value}
         }));
     };
-
-    // const handleState = (e) => {
-    //     setAddressDto(preState => ({
-    //         ...preState,
-    //         stateDto: state: e.target.value
-    //     }));
-    // };
 
     const handleTotalCapacity = (e) => {
         setWarehouseDto(preState => ({
@@ -78,10 +98,6 @@ function ModalAddWarehouse(props) {
     };
 
     const addWarehouseHandler = (e) => {
-        setWarehouseDto(preState => ({
-            ...preState,
-            addressDto: addressDto
-        }));
         e.preventDefault();
         fetch('/customers/' + props.currentCustomerId + '/warehouses', {
             method: 'POST',
@@ -89,8 +105,8 @@ function ModalAddWarehouse(props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(warehouseDto)
-        });
-        props.onChange();
+        })
+            .then(() => props.onChange(null, warehouseDto));
     };
 
     return (
@@ -116,11 +132,19 @@ function ModalAddWarehouse(props) {
                                           onChange={handleIdentifier}
                             />
                         </Form.Group>
-                            type
+
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text"
-                                          onChange={handleType}
-                            />
+                            <Dropdown>
+                                <Dropdown.Toggle variant="" id="dropdown-basic">
+                                    {dropdownMenuName}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => handleType("Factory")}>FACTORY</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("Warehouse")}>WAREHOUSE</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("Retailer")}>RETAILER</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
@@ -147,19 +171,24 @@ function ModalAddWarehouse(props) {
                                           onChange={handleTotalCapacity}
                             />
                         </Form.Group>
-
-                        {/*<div className="btn-group">*/}
-                        {/*    <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"*/}
-                        {/*            aria-haspopup="true" aria-expanded="false">*/}
-                        {/*        /!*{warehouseDto.addressDto.stateDto.state}*!/*/}
-                        {/*onChange={handleState}*/}
-                        {/*    </button>*/}
-                        {/*    <div className="dropdown-menu">*/}
-                        {/*        <a className="dropdown-item">Action1</a>*/}
-                        {/*        <a className="dropdown-item">Action2</a>*/}
-                        {/*        <a className="dropdown-item">Action3</a>*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
+                        <Form.Group>
+                            <AsyncTypeahead
+                                ref={ref}
+                                name="state"
+                                filterBy={filterBy}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={options}
+                                placeholder="Select state..."
+                                onSearch={handleSearch}
+                                onChange={onChangeState}
+                            >
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
+                                </div>
+                            </AsyncTypeahead>
+                        </Form.Group>
 
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"

@@ -48,8 +48,7 @@ function ModalEditWarehouse(props) {
             })) :
             setWarehouseDto(preState => ({
                 ...preState,
-                addressDto: {...preState.addressDto, state: {...preState, state: {...preState,
-                            id: '', stateZone: ''}}}
+                addressDto: {...preState.addressDto, state: {id: '', state: ''}}
             }));
     };
 
@@ -137,16 +136,21 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
                             <input type="text"
-                                          value={warehouseDto.type}
-                                          disabled
-                                   // onChange={handleType}
+                                   value={warehouseDto.type}
+                                   disabled
+                                // onChange={handleType}
+                                //className="btn btn-default dropdown-toggle"
                             />
                             <div className="btn-group">
-                                <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
+                                <button id="dLabel"
+                                        className="btn btn-default dropdown-toggle"
+                                        type="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false">
                                     change type
                                 </button>
-                                <div className="dropdown-menu">
+                                <div className="dropdown-menu" aria-labelledby="dLabel">
                                     <a className="dropdown-item" href="#">FACTORY</a>
                                     <a className="dropdown-item" href="#">WAREHOUSE</a>
                                     <a className="dropdown-item" href="#">RETAILER</a>
@@ -223,4 +227,5 @@ function ModalEditWarehouse(props) {
         </>
     );
 }
+
 export default ModalEditWarehouse;
