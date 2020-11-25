@@ -74,7 +74,9 @@ PUT http://localhost:8080/customers/4
 Content-Type: application/json
 Cookie: {{test}}
 
-{"name":"New name"}
+{
+  "name": "New name"
+}
 
 ###
 #---------------------------------------------Warehouse----------------------------------------------------------------
@@ -87,7 +89,7 @@ Cookie: {{test}}
 {
   "customerId": "3",
   "identifier": "199",
-  "type" : "FACTORY",
+  "type" : "CCC",
   "totalCapacity" : "44",
   "addressDto" : {
     "city" : "Kanzas",
@@ -110,7 +112,7 @@ Cookie: {{test}}
 
 {
   "id" : "21",
-  "type" : "FACTORY",
+  "type" : "anotherType",
   "totalCapacity" : "1",
   "addressDto" : {
     "id" : "104",
@@ -258,6 +260,39 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/states
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+
+GET http://localhost:8080/customers/3/users/username/zazybo1.17@gmail.com
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+PUT http://localhost:8080/customers/3/users/1/password
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "password": "password"
+}
+###
 GET http://localhost:8080/customers/3/users/1
 Content-Type: application/json
 Connection: keep-alive

@@ -10,6 +10,7 @@ import ProtectedComponent from "./components/ProtectedComponent";
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
+import Users from "./pages/user/Users"
 import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
@@ -19,6 +20,8 @@ function App() {
 
     const {user, setUser} = useContext(AuthContext);
     const currentCustomerId = user && user.currentCustomerId ? user.currentCustomerId : 0;
+
+    localStorage.setItem("currentCustomerId", currentCustomerId);
 
     const renderProfile = () => {
         return <ProtectedComponent conditions={user} render={(() => {
@@ -31,6 +34,13 @@ function App() {
             return <Customers/>
         })}/>
     };
+
+    const renderUser = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+            return <Users/>
+        })}/>
+    };
+
 
     const renderItems = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
@@ -72,6 +82,7 @@ function App() {
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
                 <Route path={'/customers'} render={renderCustomer}/>
+                <Route path={'/users'} render={renderUser}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>
