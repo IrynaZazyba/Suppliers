@@ -14,7 +14,7 @@ function ModalAddCar(props) {
         totalCapacity: '',
         currentCapacity: '',
         customerId: currentCustomerId,
-        addressDto: addressDto,
+        addressDto: null,
     });
 
     const [errors, setErrors] = useState({

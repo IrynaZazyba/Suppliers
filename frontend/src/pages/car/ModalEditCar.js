@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import validateItem from "../../validation/ItemValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
-import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalEditCar(props) {
 
@@ -17,7 +16,7 @@ function ModalEditCar(props) {
         totalCapacity: '',
         currentCapacity: '',
         customerId: currentCustomerId,
-        addressDto: addressDto,
+        addressDto: null,
     });
 
     const [errors, setErrors] = useState({
@@ -100,7 +99,6 @@ function ModalEditCar(props) {
     const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
 
 
-
     useEffect(() => {
         if (props.props.editShow === true) {
             fetch(`/customers/${currentCustomerId}/car/${props.props.item.id}`)
@@ -161,8 +159,10 @@ function ModalEditCar(props) {
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
+
                         <Form.Group controlId="formBasicLabel" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="Number" onChange={handleNumber}
+                            <Form.Label>Number</Form.Label>
+                            <Form.Control type="text" placeholder="Number" value={carDto.number} onChange={handleNumber}
                                           className={
                                               isValid("number")
                                           }/>
@@ -171,7 +171,9 @@ function ModalEditCar(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicCapacity" style={{padding: '5px 10px'}}>
+                            <Form.Label>Total capacity</Form.Label>
                             <Form.Control type="text"
+                                          value={carDto.totalCapacity}
                                           placeholder="Total capacity"
                                           onChange={handleTotalCapacity}
                                           className={
@@ -181,8 +183,9 @@ function ModalEditCar(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
+                        <Form.Label>State</Form.Label>
                         <Form.Control style={{padding: '5px 10px'}} as="select"
-                                      defaultValue="Choose..."
+                                      value={carDto.addressDto.state.state}
                                       onChange={onChangeState}>
                             {Object.entries(zones).map(([k, v]) => (
 
@@ -193,7 +196,8 @@ function ModalEditCar(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="city" onChange={handleCity}
+                            <Form.Label>City</Form.Label>
+                            <Form.Control type="text" placeholder="city" value={carDto.addressDto.city} onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -204,7 +208,8 @@ function ModalEditCar(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine1" onChange={handleaddressLine1}
+                            <Form.Label>Address line 1</Form.Label>
+                            <Form.Control type="text" placeholder="addressLine1" value={carDto.addressDto.addressLine1} onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -215,7 +220,8 @@ function ModalEditCar(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine2" onChange={handleaddressLine2}
+                            <Form.Label>Address line 2</Form.Label>
+                            <Form.Control type="text" placeholder="addressLine2" value={carDto.addressDto.addressLine2} onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")
                                           }/>

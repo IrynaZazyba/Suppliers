@@ -90,6 +90,7 @@ function ModalEditUser(props) {
                     {errorMessage && <ErrorMessage message={errorMessage}/>}
                     <Form>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Label>Name</Form.Label>
                             <Form.Control type="text"
                                           placeholder="name"
                                           onChange={handleName}
@@ -102,6 +103,7 @@ function ModalEditUser(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Label>Surname</Form.Label>
                             <Form.Control type="text"
                                           placeholder="surname"
                                           onChange={handleSurname}
@@ -115,7 +117,8 @@ function ModalEditUser(props) {
                         </Form.Group>
 
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
-                            <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
+                            <Form.Label>Birthday</Form.Label>
+                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday} onChange={handleBirthday}
                                           className={
                                               isValid("birthday")
                                           }/>
