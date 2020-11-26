@@ -4,7 +4,7 @@ databaseChangeLog:
       author: iryna_zazybo
       changes:
         -  sqlFile:
-             dbms:  '!h2,  oracle,  mysql, mariadb'
+             dbms:  '!h2,  oracle,  mysql'
              encoding:  UTF-8
              endDelimiter: ;
              path: ../sql/2020-10-21-insert-user-info.sql
