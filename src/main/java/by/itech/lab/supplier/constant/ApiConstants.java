@@ -17,7 +17,6 @@ public final class ApiConstants {
     public final static String URL_LOGIN = "/login";
     public final static String URL_LOGOUT = "/logout";
     public final static String URL_ROOT = "/";
-    public final static String URL_COMPANIES = "/companies";
     public final static String URL_CATEGORY_PARAMETER = "/{category}";
     public final static String URL_LABEL_PARAMETER = "/{label}";
     public final static String URL_USERNAME_PARAMETER = "/username/{username}";

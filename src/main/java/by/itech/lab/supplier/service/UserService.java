@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface UserService extends BaseService<UserDto>{
@@ -16,7 +15,7 @@ public interface UserService extends BaseService<UserDto>{
     UserDto createAdmin(CustomerDto customerDto);
 
 
-    Optional<UserDto> findByUsername(String username);
+    UserDto findByUsername(String username);
 
     Page<UserDto> findAll(Pageable pageable);
 

@@ -49,7 +49,6 @@ public class UserController {
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public UserDto getUser(@PathVariable Long id) {
-        log.debug("request to get User : {}", id);
         return userService.findById(id);
     }
 
@@ -72,7 +71,7 @@ public class UserController {
 
 
     @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
-    public Optional<UserDto> getUseByUsername(@PathVariable String username) {
+    public UserDto getUseByUsername(@PathVariable String username) {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
