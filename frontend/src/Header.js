@@ -10,6 +10,7 @@ function Header() {
     const {user, setUser} = useContext(AuthContext);
 
     const checkPermission = user && user.currentCustomerId;
+    const isPermittedAndRoleAdmin =  user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
 
     function getClass(regexOfClass) {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
@@ -17,6 +18,8 @@ function Header() {
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
+    const usersClass = window.location.pathname === "/users" ? "active" : "";
+
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);
@@ -35,8 +38,8 @@ function Header() {
                     <Nav.Link className={profileClass}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
-                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
-                    <Nav.Link className={appClass}
+                    {isPermittedAndRoleAdmin   &&
+                                <Nav.Link className={appClass}
                               href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
@@ -44,6 +47,8 @@ function Header() {
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
+                    {isPermittedAndRoleAdmin  &&
+                    <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={categoryClass}
                               href={`/customers/${user.currentCustomerId}/category`}>
