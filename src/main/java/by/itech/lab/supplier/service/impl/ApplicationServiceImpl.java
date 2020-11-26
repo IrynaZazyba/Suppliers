@@ -3,6 +3,7 @@ package by.itech.lab.supplier.service.impl;
 import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.ApplicationType;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
@@ -13,8 +14,11 @@ import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.service.ApplicationService;
+import by.itech.lab.supplier.service.PriceCalculationService;
 import by.itech.lab.supplier.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
@@ -37,6 +41,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationItemMapper itemsInApplicationMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+
+    @Lazy
+    @Autowired
+    private PriceCalculationService calculationService;
 
     @Override
     @Transactional
@@ -64,6 +72,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     private Application buildApplicationToCreate(final ApplicationDto dto, final User user) {
+        if (dto.getType() == ApplicationType.TRAFFIC) {
+            dto.setItems(calculationService.calculateAppItemsPrice(dto));
+        }
         final Application app = applicationMapper.map(dto);
         app.setApplicationStatus(ApplicationStatus.OPEN);
         app.setRegistrationDate(LocalDate.now());

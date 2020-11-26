@@ -40,5 +40,7 @@ public class Address implements BaseEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private State state;
+    private Double latitude;
+    private Double longitude;
 
 }

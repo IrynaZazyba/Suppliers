@@ -133,7 +133,9 @@ Cookie: {{test}}
     "state": {
       "id": "5",
       "state": "Alaska"
-    }
+    },
+    "latitude": 40.854785,
+    "longitude": -75.85785
   },
   "usersId": [3]
 }
@@ -157,7 +159,9 @@ Cookie: {{test}}
     "state": {
       "id": "6",
       "state": "Arizona"
-    }
+    },
+    "latitude": 40.854785,
+    "longitude": -75.85785
   }
 }
 
@@ -220,6 +224,12 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/customers/3/warehouses/8/items?itemUpc=829
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
 
 DELETE http://localhost:8080/customers/3/warehouses/1
 Content-Type: application/json
@@ -323,7 +333,7 @@ Cookie: {{test}}
 %}
 
 ###
-PUT http://localhost:8080/customers/3/users/1/password
+PUT http://localhost:8080/customers/3/users/2/password
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -410,7 +420,9 @@ Cookie: {{test}}
     "state": {
       "id": 4,
       "state": "Alabama"
-    }
+    },
+    "latitude": 40.854785,
+    "longitude": -75.85785
   }
 }
 
@@ -637,6 +649,7 @@ Cookie: {{test}}
 ###
 
 #-------------------------------------------------------Application---------------------------------------------------
+# Note: put commentaries before @Secured in ApplicationController
 
 POST http://localhost:8080/customers/3/application
 Content-Type: application/json
@@ -837,6 +850,18 @@ Cookie: {{test}}
 > {%
     client.test("Request executed successfully", function() {
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+
+###-------------------------------------------------------Taxes---------------------------------------------------
+GET http://localhost:8080/taxes
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
 

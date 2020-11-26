@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: IIA-C-1
+      author: iryna_zazybo
+      changes:
+        - modifyDataType:
+            columnName: cost
+            newDataType: decimal(10,2)
+            tableName: items_in_application
+  - changeSet:
+      id: IIW-C-2
+      author: iryna_zazybo
+      changes:
+        - modifyDataType:
+            columnName: cost
+            newDataType: decimal(10,2)
+            tableName: items_in_warehouse
