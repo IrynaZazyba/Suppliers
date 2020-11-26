@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from 'react-bootstrap/Form'
-import ModalLg from "../../components/ModalLg";
+import ModalApp from "../../components/ModalApp";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Button from "react-bootstrap/Button";
 import {validateEditItem} from "../../validation/ItemValidationRules";
@@ -27,6 +27,34 @@ function EditSupplyAppModal(props) {
         totalAmount: '',
         totalUnits: ''
     });
+    const [warehouses, setWarehouses] = useState({
+        source: [],
+        destination: []
+    });
+
+    useEffect(() => {
+        if (props.props.isOpen === true) {
+            fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(preState => ({
+                            ...preState,
+                            source: res
+                        })
+                    );
+                });
+            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(preState => ({
+                            ...preState,
+                            destination: res
+                        })
+                    );
+                });
+        }
+    }, [props]);
+
 
     useEffect(() => {
         if (props.props.isOpen === true) {
@@ -37,10 +65,25 @@ function EditSupplyAppModal(props) {
                     setApp(res);
                 });
 
-
         }
+
     }, [props.props.isOpen]);
 
+    const handleSourceLocations = (e) => {
+        const value = e.currentTarget.value;
+        setApp(preState => ({
+            ...preState,
+            sourceLocationDto: {id: value}
+        }))
+    };
+
+    const handleDestinationLocations = (e) => {
+        const value = e.currentTarget.value;
+        setApp(preState => ({
+            ...preState,
+            destinationLocationDto: {id: value}
+        }))
+    };
 
     const deleteItem = (e) => {
         let afterDelete = [];
@@ -197,20 +240,20 @@ function EditSupplyAppModal(props) {
             <Row>
                 <Col sm={8}>
                     <Row style={{margin: '10px 5px'}}>
-                        <Col><span className="editAppList">Created by: </span>
+                        <Col><span className="edit-appList">Created by: </span>
                             {app.createdByUsersDto.username + ', ' + app.createdByUsersDto.surname}
                         </Col>
                         <Col style={{marginLeft: '-20px'}}>
-                            <span className="editAppList">Registration date: </span>
+                            <span className="edit-appList">Registration date: </span>
                             {app.registrationDate}
                         </Col>
                     </Row>
                     <Row style={{margin: '10px 5px'}}>
-                        <Col><span className="editAppList">Last updated by: </span>
+                        <Col><span className="edit-appList">Last updated by: </span>
                             {app.lastUpdatedByUsersDto.username + ', ' + app.lastUpdatedByUsersDto.surname}
                         </Col>
                         <Col style={{marginLeft: '-20px'}}>
-                            <span className="editAppList">Last updated date: </span>
+                            <span className="edit-appList">Last updated date: </span>
                             {app.lastUpdated}
                         </Col>
                     </Row>
@@ -230,22 +273,40 @@ function EditSupplyAppModal(props) {
                                     </Form.Control.Feedback>
                                 </Col>
                             </Form.Group>
+
+
                             <Form.Group as={Row} controlId="sourceLocation">
                                 <Form.Label column sm="3">Source location:</Form.Label>
                                 <Col sm="7">
-                                    <Form.Control size="sm" disabled type="text"
-                                                  value={app.sourceLocationDto.identifier + ', '
-                                                  + app.sourceLocationDto.addressDto.addressLine1 + ', '
-                                                  + app.sourceLocationDto.addressDto.state.state}/>
+                                    <Form.Control name="sourceId" size="sm" onChange={handleSourceLocations}
+                                                  as="select">
+                                        {warehouses && warehouses.source.map(f =>
+                                            <option value={f.id} key={f.id}
+                                                    selected={f.id === app.sourceLocationDto.id}>
+                                                {f.identifier}{', '}
+                                                {f.addressDto.city}{', '}
+                                                {f.addressDto.addressLine1}
+                                            </option>
+                                        )}
+                                    </Form.Control>
                                 </Col>
                             </Form.Group>
+
+
                             <Form.Group as={Row} controlId="destinationLocation">
                                 <Form.Label column sm="3">Destination location:</Form.Label>
                                 <Col sm="7">
-                                    <Form.Control size="sm" disabled type="text"
-                                                  value={app.destinationLocationDto.identifier + ', '
-                                                  + app.destinationLocationDto.addressDto.addressLine1 + ', '
-                                                  + app.destinationLocationDto.addressDto.state.state}/>
+                                    <Form.Control name="destinationLocationId" size="sm"
+                                                  onChange={handleDestinationLocations} as="select">
+                                        {warehouses && warehouses.destination.map(f =>
+                                            <option value={f.id} key={f.id}
+                                                    selected={f.id === app.destinationLocationDto.id}>
+                                                {f.identifier}{', '}
+                                                {f.addressDto.city}{', '}
+                                                {f.addressDto.addressLine1}
+                                            </option>
+                                        )}
+                                    </Form.Control>
                                 </Col>
                             </Form.Group>
                         </Col>
@@ -377,7 +438,7 @@ function EditSupplyAppModal(props) {
 
     return (
         <>
-            <ModalLg
+            <ModalApp
                 isOpen={props}
                 title={"Edit supply application"}
                 itemsTable={itemsTable}

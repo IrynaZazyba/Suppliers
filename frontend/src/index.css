@@ -158,18 +158,24 @@ a.page-link {
     text-align: center;
 }
 
-.editAppList {
+.edit-appList {
     font-weight: bold;
 }
 
-.statusInModal {
+.status-in-modal {
     float: right;
     color: #009edd;
     margin-top: 5px;
 }
 
-.badgeEditModal {
+.badge-edit-modal {
     display: inline-block;
     width: 73%;
     float: left;
 }
+
+.checkbox-all-app {
+    text-align: end;
+    margin-top: 3px;
+}
+

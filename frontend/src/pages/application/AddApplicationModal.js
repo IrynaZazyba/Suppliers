@@ -130,25 +130,27 @@ function AddApplicationModal(props) {
 
 
     useEffect(() => {
-        fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
-                        ...preState,
-                        source: res
-                    })
-                );
-            });
-        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
-                        ...preState,
-                        destination: res
-                    })
-                );
-            });
-    }, []);
+        if (props.props) {
+            fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(preState => ({
+                            ...preState,
+                            source: res
+                        })
+                    );
+                });
+            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(preState => ({
+                            ...preState,
+                            destination: res
+                        })
+                    );
+                });
+        }
+    }, [props]);
 
     const addItemHandler = (e) => {
         e.preventDefault();

@@ -9,6 +9,7 @@ import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATION;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
@@ -45,7 +47,7 @@ public class ApplicationController {
 
     @PutMapping(URL_ID_PARAMETER)
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
-    public ApplicationDto update(@PathVariable Long id, @Valid @RequestBody ApplicationDto applicationDto) {
+    public ApplicationDto update(@PathVariable final Long id, @Valid @RequestBody final ApplicationDto applicationDto) {
         applicationDto.setId(id);
         return applicationService.save(applicationDto);
     }
@@ -60,15 +62,19 @@ public class ApplicationController {
 
     @GetMapping
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
-    public Page<ApplicationDto> getAllByStatus(@PageableDefault final Pageable pageable,
-                                               @RequestParam(required = false) final ApplicationStatus status) {
+    public Page<ApplicationDto> getAllByStatus(
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
+            @RequestParam(required = false) final ApplicationStatus status,
+            @RequestParam(required = false) final Boolean isAll) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Boolean roleFlag = null;
+        Long userId = null;
         if (authentication.getPrincipal() instanceof UserImpl) {
             UserImpl user = (UserImpl) authentication.getPrincipal();
             roleFlag = user.getAuthorities().contains(Role.ROLE_DISPATCHER);
+            userId = Objects.nonNull(isAll) && !isAll ? user.getId() : null;
         }
-        return applicationService.findAllByRoleAndStatus(pageable, roleFlag, status);
+        return applicationService.findAllByRoleAndStatus(pageable, roleFlag, status, userId);
     }
 
     @GetMapping(ApiConstants.URL_ADMIN)

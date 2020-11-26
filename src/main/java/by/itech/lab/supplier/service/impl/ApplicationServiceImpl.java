@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,8 +101,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAllByRoleAndStatus(Pageable pageable, Boolean roleFlag, ApplicationStatus status) {
-        return applicationRepository.findAllByRoleAndStatus(pageable, roleFlag, status).map(applicationMapper::map);
+    public Page<ApplicationDto> findAllByRoleAndStatus(final Pageable pageable,
+                                                       final Boolean roleFlag,
+                                                       final ApplicationStatus status,
+                                                       final Long userId) {
+        final Long warehouseId = roleFlag &&
+                Objects.nonNull(userId) ? userService.findById(userId).orElseThrow().getWarehouseDto().getId() : null;
+        return applicationRepository.findAllByRoleAndStatusAndWarehouse(pageable, roleFlag, status, warehouseId)
+                .map(applicationMapper::map);
     }
 
     @Override

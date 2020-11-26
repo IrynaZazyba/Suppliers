@@ -5,7 +5,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 
-function ModalLg(props) {
+function ModalApp(props) {
 
     const {
         isOpen,
@@ -45,8 +45,8 @@ function ModalLg(props) {
                     <Modal.Title id="modal-custom">
                         {title}
                     </Modal.Title>
-                    <div className="badgeEditModal">
-                        <h3><Badge className="badge-status statusInModal">
+                    <div className="badge-edit-modal">
+                        <h3><Badge className="badge-status status-in-modal">
                             {status}
                         </Badge>
                         </h3>
@@ -80,4 +80,4 @@ function ModalLg(props) {
 
 }
 
-export default ModalLg;
+export default ModalApp;

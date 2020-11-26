@@ -94,8 +94,9 @@ public class WarehouseController {
     }
 
     @GetMapping(ApiConstants.URL_TYPE)
-    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type) {
-        return warehouseService.findAllByType(type);
+    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type,
+                                         @RequestParam(required = false) final Boolean byDispatcher) {
+        return warehouseService.findAllByType(type, byDispatcher);
     }
 
     @GetMapping(URL_ID_PARAMETER + URL_ITEMS)

@@ -41,9 +41,14 @@ export default () => {
         app: [],
         customerId: customerId
     });
+    const [isAll, setBelongToWarehouse] = useState(false);
+    const [isCheckboxAll, setCheckbox] = useState({
+        checkboxChecked: false
+    });
+
 
     useEffect(() => {
-        getApplications(`/customers/${customerId}/application`);
+        getApplications(`/customers/${customerId}/application?isAll=${isAll}`);
     }, []);
 
     function getApplications(url) {
@@ -59,10 +64,17 @@ export default () => {
             });
     }
 
+    const handleBelongToDispatcherFilter = (e) => {
+        let value = e.target.checked;
+        setCheckbox(value);
+        setBelongToWarehouse(value);
+        getApplications(`/customers/${customerId}/application?status=${filter}&size=${page.countPerPage}&isAll=${value}`);
+    };
+
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getApplications(`/customers/${customerId}/application?status=${e.target.value}&size=${page.countPerPage}`);
+        getApplications(`/customers/${customerId}/application?status=${e.target.value}&size=${page.countPerPage}&isAll=${isAll}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -71,34 +83,31 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getApplications(`/customers/${customerId}/application?size=${e.target.value}`);
+        getApplications(`/customers/${customerId}/application?size=${e.target.value}&isAll=${isAll}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
+        getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}&isAll=${isAll}`);
     };
 
     const closeAddSupplyModel = (e, appDto) => {
         setModalAddSupplyOpen(e);
         if (appDto) {
-            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
         }
     };
 
     const closeModalAddShipment = (e, appDto) => {
         setModalAddShipmentOpen(e);
         if (appDto) {
-            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
         }
     };
 
     const closeModalEdit = (e) => {
         setOpenEditModal(e);
-        // if (appDto) {
-        //     getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
-        // }
     };
 
     const tableRows = applications.map(app => (
@@ -122,7 +131,6 @@ export default () => {
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         onClick={() => {
-                            console.log("click");
                             setOpenEditModal({
                                 isOpen: true,
                                 app: app,
@@ -156,7 +164,16 @@ export default () => {
                         Add shipment
                     </Button>
                 </Col>
-                <Col md={6}></Col>
+                <Col md={4}></Col>
+                <Col md={2} className="checkbox-all-app">
+                    <Form.Group controlId="formBasicCheckbox">
+                        <Form.Check
+                            type="checkbox"
+                            label="See all"
+                            onChange={handleBelongToDispatcherFilter}
+                            checked={isCheckboxAll.checkboxChecked}/>
+                    </Form.Group>
+                </Col>
                 <Col md={2}>
                     <Form.Control size="sm" as="select"
                                   value={filter}
