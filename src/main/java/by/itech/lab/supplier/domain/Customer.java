@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Where;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -41,6 +41,7 @@ public class Customer implements BaseEntity {
     @EqualsAndHashCode.Exclude
     private Set<Warehouse> warehouses = new HashSet<>();
     @OneToMany(mappedBy = "customer")
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<User> users = new HashSet<>();
 }

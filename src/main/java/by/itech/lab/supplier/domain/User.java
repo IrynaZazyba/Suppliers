@@ -3,11 +3,14 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -51,12 +54,15 @@ public class User implements BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne
+    @ToString.Exclude
+    @OneToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "address_id")
+    @EqualsAndHashCode.Exclude
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @EqualsAndHashCode.Exclude
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
