@@ -50,7 +50,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Transactional
     public ApplicationDto save(final ApplicationDto dto) {
         UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userMapper.map(userService.findById(principal.getId()).orElseThrow());
+        User user = userMapper.map(userService.findById(principal.getId()));
 
         Application application = Optional.ofNullable(dto.getId())
                 .map(appToSave -> buildApplicationForUpdate(dto))

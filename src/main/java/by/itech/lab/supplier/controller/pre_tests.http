@@ -79,6 +79,41 @@ Cookie: {{test}}
 }
 
 ###
+#--------------------------------------------Car------------------------------------------------------------------
+GET http://localhost:8080/customers/3/car/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+POST http://localhost:8080/customers/3/car
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "number": "30A194",
+  "totalCapacity": 151.0,
+  "currentCapacity": 85.0,
+  "addressDto": {
+    "id": 20,
+    "city": "Pinto",
+    "addressLine1": "6374 Posuere, St.",
+    "addressLine2": "163-8189 Mi Ave",
+    "state": {
+      "id": 11,
+      "state": "Delaware"
+    }
+  }
+}
+
+###
 #---------------------------------------------Warehouse----------------------------------------------------------------
 
 POST http://localhost:8080/customers/3/warehouses
@@ -102,9 +137,7 @@ Cookie: {{test}}
     "latitude": 40.854785,
     "longitude": -75.85785
   },
-  "usersId": [
-    3
-  ]
+  "usersId": [3]
 }
 
 ###
@@ -257,6 +290,21 @@ Cookie: {{test}}
   "customerId": 4
 }
 
+
+###
+#--------------------------------------------------State---------------------------------------------------------------
+
+GET http://localhost:8080/states
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
 ###
 #--------------------------------------------------Users---------------------------------------------------------------
 
@@ -271,10 +319,30 @@ Cookie: {{test}}
     });
 %}
 
-
-
 ###
 
+GET http://localhost:8080/customers/3/users/username/zazybo1.17@gmail.com
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+PUT http://localhost:8080/customers/3/users/1/password
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "password": "password"
+}
+
+###
 GET http://localhost:8080/customers/3/users/1
 Content-Type: application/json
 Connection: keep-alive
@@ -301,16 +369,16 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/users/companies
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
-    });
-%}
+#GET http://localhost:8080/customers/3/users/companies
+#Content-Type: application/json
+#Connection: keep-alive
+#Cookie: {{test}}
+#
+#> {%
+#    client.test("Request executed successfully", function() {
+#        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+#    });
+#%}
 
 ###
 
@@ -325,12 +393,7 @@ Cookie: {{test}}
     });
 %}
 
-###
 
-PUT http://localhost:8080/customers/3/users/1/1
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
 
 ###
 
@@ -349,8 +412,8 @@ Cookie: {{test}}
   "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
   "email": "zazybo1211.17@gmail.com",
   "role": "ROLE_SYSTEM_ADMIN",
+  "customerId": 3,
   "addressDto": {
-    "id": 3,
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
@@ -496,10 +559,18 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/item/category/someType
+GET http://localhost:8080/customers/3/item/category
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+{
+  "id": 5,
+  "category": "MG",
+  "taxRate": 42,
+  "deletedAt": null,
+  "customerId": 3
+}
 
 > {%
     client.test("Request executed successfully", function() {
@@ -547,6 +618,7 @@ Cookie: {{test}}
 %}
 
 ###
+
 
 GET http://localhost:8080/customers/3/item/upc?upc=135
 Content-Type: application/json
@@ -662,7 +734,7 @@ Cookie: {{test}}
       "cost": 55.0,
       "amount": 99,
       "itemDto": {
-        "id": 1,
+        "id": 2,
         "upc": 8.5,
         "label": "label",
         "units": 80.5,

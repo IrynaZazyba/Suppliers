@@ -8,24 +8,28 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public interface UserService {
+public interface UserService extends BaseService<UserDto>{
 
     UserDto createAdmin(CustomerDto customerDto);
 
-    Optional<UserDto> findById(Long id);
+
+    UserDto findByUsername(String username);
 
     Page<UserDto> findAll(Pageable pageable);
+
+    Page<UserDto> findAllByActive(Pageable pageable, Boolean status);
 
     UserDto save(UserDto userDTO);
 
     void delete(Long id);
 
-    int changeActiveStatus(Long id, boolean status);
+    int changeActiveStatus(Long id, Boolean status);
 
-    Page<UserDto> getAllActive(Pageable pageable);
+    int changePassword(Long id, String password);
+
+    Page<UserDto> getAllActive(Pageable pageable, Boolean status);
 
     Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable);
 

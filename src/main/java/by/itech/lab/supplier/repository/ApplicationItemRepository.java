@@ -22,4 +22,7 @@ public interface ApplicationItemRepository extends JpaRepository<ApplicationItem
     @Query("update ApplicationItem i set i.acceptedAt= current_timestamp where i.id in (:appsId)")
     int setAcceptedAtForItemsInApplication(@Param("appsId") List<Long> appsId);
 
+    @Query("select count(i) from ApplicationItem i where i.item.id=:itemId")
+    int getNumberOfItemUsages(@Param("itemId") Long itemId);
+
 }
