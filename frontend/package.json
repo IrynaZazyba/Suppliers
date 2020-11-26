@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.2.0",
     "antd": "^4.8.2",
     "bootstrap": "^4.5.3",
+    "jest-validate": "^26.6.2",
     "multiselect-react-dropdown": "^1.6.1",
     "postcss": "^8.1.6",
     "prop-types": "^15.7.2",

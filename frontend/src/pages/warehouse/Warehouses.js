@@ -4,7 +4,6 @@ import Page from "../../components/Page";
 import CardContainer from "../../components/CardContainer";
 import ErrorMessage from "../../messages/errorMessage";
 import ModalEditWarehouse from "./ModalEditWarehouse";
-import {errorMessage} from "jest-validate";
 import {FaEdit, FaTrash} from "react-icons/fa";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -24,16 +23,13 @@ export default (props) => {
         id: []
     });
     const [warehouses, setWarehouses] = useState([]);
-    const [filter, setFilter] = useState([]);
     const [lgShow, setLgShow] = useState(false);
     const [delShow, setDelShow] = useState(false);
     const [editWarehouse, setEditWarehouse] = useState({
         editShow: false,
         warehouse: []
     });
-    const [errors, setErrors] = useState({
-        errorMessage: ''
-    });
+    const [errorMessage, setErrors] = useState('');
 
     const handleCountPerPage = (e) => {
         e.preventDefault();
