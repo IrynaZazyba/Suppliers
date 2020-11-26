@@ -53,12 +53,6 @@ public class CarServiceImpl implements CarService {
                 .map(carMapper::map);
     }
 
-    //todo: call method in waybill and driver service
-    @Override
-    public int changeCurrentCapacity(final double capacity, Long id) {
-    return carRepository.changeCurrentCapacity(capacity, id);
-    }
-
 
     @Override
     @Transactional
