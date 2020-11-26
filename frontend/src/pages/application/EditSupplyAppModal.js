@@ -184,7 +184,7 @@ function EditSupplyAppModal(props) {
                             ...preState,
                             validationErrors: []
                         }));
-                        setApp([]);
+                        setApp('');
                         props.onChange(false, app);
                     }
                 });

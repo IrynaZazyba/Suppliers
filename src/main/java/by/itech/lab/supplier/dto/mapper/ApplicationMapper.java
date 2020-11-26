@@ -7,8 +7,10 @@ import by.itech.lab.supplier.dto.ApplicationItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -96,10 +98,11 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         return application;
     }
 
+
     private void updateItems(Set<ApplicationItem> forUpdate, Set<ApplicationItemDto> update) {
         for (ApplicationItemDto item : update) {
             ApplicationItem result = forUpdate.stream()
-                    .filter(Objects::nonNull)
+                    .filter(obj -> Objects.nonNull(obj.getId()))
                     .filter(p -> p.getId().equals(item.getId()))
                     .findAny()
                     .orElse(null);
@@ -112,6 +115,12 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 forUpdate.add(itemsInApplicationMapper.map(item));
             }
         }
+
+        //delete items
+        Map<Long, ApplicationItemDto> front = update.stream()
+                .filter(obj -> Objects.nonNull(obj.getId()))
+                .collect(Collectors.toMap(ApplicationItemDto::getId, Function.identity()));
+        forUpdate.removeIf(i -> Objects.nonNull(i.getId()) && Objects.isNull(front.get(i.getId())));
     }
 
 }

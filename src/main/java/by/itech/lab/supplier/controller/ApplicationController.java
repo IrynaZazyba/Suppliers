@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATION;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 
 @RestController
 @AllArgsConstructor
@@ -39,6 +40,13 @@ public class ApplicationController {
     @PostMapping
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
+        return applicationService.save(applicationDto);
+    }
+
+    @PutMapping(URL_ID_PARAMETER)
+    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
+    public ApplicationDto update(@PathVariable Long id, @Valid @RequestBody ApplicationDto applicationDto) {
+        applicationDto.setId(id);
         return applicationService.save(applicationDto);
     }
 

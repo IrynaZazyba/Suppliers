@@ -64,7 +64,7 @@ export default () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:8080/customers/${currentCustomerId}/users/username/${user.username}`)
+        fetch(`/customers/${currentCustomerId}/users/username/${user.username}`)
             .then(response => response.json())
             .then(res => {
                 setUserDto(res);
