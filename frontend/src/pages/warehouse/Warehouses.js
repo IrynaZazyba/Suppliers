@@ -5,7 +5,7 @@ import CardContainer from "../../components/CardContainer";
 import ErrorMessage from "../../messages/errorMessage";
 import ModalEditWarehouse from "./ModalEditWarehouse";
 import {errorMessage} from "jest-validate";
-import {FaEdit} from "react-icons/fa";
+import {FaEdit, FaTrash} from "react-icons/fa";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -20,12 +20,19 @@ export default (props) => {
         countPages: 1
     });
 
+    const [checkBoxes, setCheckBox] = useState({
+        id: []
+    });
     const [warehouses, setWarehouses] = useState([]);
     const [filter, setFilter] = useState([]);
     const [lgShow, setLgShow] = useState(false);
+    const [delShow, setDelShow] = useState(false);
     const [editWarehouse, setEditWarehouse] = useState({
         editShow: false,
         warehouse: []
+    });
+    const [errors, setErrors] = useState({
+        errorMessage: ''
     });
 
     const handleCountPerPage = (e) => {
@@ -62,7 +69,6 @@ export default (props) => {
     }
 
     const closeModalEdit = (e, warehouseDto) => {
-        console.log(warehouseDto)
         setEditWarehouse(
             preState => ({
                 ...preState,
@@ -80,6 +86,35 @@ export default (props) => {
         }
     };
 
+    function deleteWarehouse(boxes) {
+        console.log(boxes);
+        boxes.map(box => (
+        fetch(`/customers/${props.currentCustomerId}/warehouses/${box}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(() => getWarehouses())
+        ));
+    }
+
+    // .then(response => {
+    // if (response.status !== 204) {
+    //     setErrors({
+    //         errorMessage: "Warehouse can not be deleted, because it is already used in application"
+    //     });
+    // } else {
+    //     let raw = document.getElementById(`warehouse${warehouseId}`);
+    //     raw.style.opacity = '0.3';
+    //     raw.style.background = '#656662';
+    //     setErrors(preState => ({
+    //         ...preState,
+    //         errorMessage: ''
+    //     }));
+    // }
+    // });
+
+
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
@@ -95,6 +130,9 @@ export default (props) => {
                                 warehouse: warehouse
                             });
                         }}/>
+            </td>
+            <td>
+                <input type="checkbox" checked={checkBoxes.id} onChange={() => setCheckBox(warehouse.id)} />
             </td>
         </tr>
     ));
@@ -115,6 +153,11 @@ export default (props) => {
                 <Col>
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                         Add
+                    </Button>
+                </Col>
+                <Col md={10}>
+                    <Button className="mainButton" size="sm" onClick={() => deleteWarehouse(checkBoxes)}>
+                        Delete
                     </Button>
                 </Col>
                 <Col md={14}>

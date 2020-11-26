@@ -17,7 +17,6 @@ function Header() {
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
-    const appClass = defineActiveClassWithMatch(/.application/);
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);

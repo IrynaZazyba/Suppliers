@@ -86,7 +86,7 @@ Cookie: {{test}}
 
 {
   "customerId": "3",
-  "identifier": "199",
+  "identifier": "196",
   "type" : "FACTORY",
   "totalCapacity" : "44",
   "addressDto" : {
@@ -97,9 +97,10 @@ Cookie: {{test}}
       "id" : "5",
       "state": "Alaska"
     }
-  },
-  "usersId" : [3]
+  }
 }
+###      "state": "Alaska"
+###   "usersId" : [3]
 
 ###
 

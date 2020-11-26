@@ -12,6 +12,7 @@ function ModalAddWarehouse(props) {
     const [dropdownMenuName, setDropdownMenuName] = useState("select type");
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
+        customerId: props.currentCustomerId,
         identifier: '',
         type: '',
         addressDto: {
@@ -33,7 +34,6 @@ function ModalAddWarehouse(props) {
         fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                // console.log(res.content);
                 setOptions(res);
             });
     };
@@ -106,7 +106,7 @@ function ModalAddWarehouse(props) {
             },
             body: JSON.stringify(warehouseDto)
         })
-            .then(() => props.onChange(null, warehouseDto));
+            .then(() => props.onChange(props, warehouseDto));
     };
 
     return (
@@ -135,16 +135,15 @@ function ModalAddWarehouse(props) {
 
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
                             <Dropdown>
-                                <Dropdown.Toggle variant="" id="dropdown-basic">
+                                <Dropdown.Toggle variant="btn btn-outline-primary" id="dropdown-basic">
                                     {dropdownMenuName}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => handleType("Factory")}>FACTORY</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleType("Warehouse")}>WAREHOUSE</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleType("Retailer")}>RETAILER</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("FACTORY")}>FACTORY</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("RETAILER")}>RETAILER</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
-
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city

@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import Dropdown from "react-bootstrap/Dropdown";
 
 function ModalEditWarehouse(props) {
 
@@ -61,6 +62,13 @@ function ModalEditWarehouse(props) {
                 });
         }
     }, [props.props.editShow]);
+
+    const handleType = (e) => {
+        setWarehouseDto(preState => ({
+            ...preState,
+            type: e
+        }));
+    };
 
     const handleCity = (e) => {
         setWarehouseDto(preState => ({
@@ -135,27 +143,17 @@ function ModalEditWarehouse(props) {
                             />
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
-                            <input type="text"
-                                   value={warehouseDto.type}
-                                   disabled
-                                // onChange={handleType}
-                                //className="btn btn-default dropdown-toggle"
-                            />
-                            <div className="btn-group">
-                                <button id="dLabel"
-                                        className="btn btn-default dropdown-toggle"
-                                        type="button"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false">
-                                    change type
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="dLabel">
-                                    <a className="dropdown-item" href="#">FACTORY</a>
-                                    <a className="dropdown-item" href="#">WAREHOUSE</a>
-                                    <a className="dropdown-item" href="#">RETAILER</a>
-                                </div>
-                            </div>
+                            <Dropdown>
+                                <div>select type</div>
+                                <Dropdown.Toggle variant="btn btn-outline-primary" id="dropdown-basic">
+                                    {warehouseDto.type}
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={() => handleType("FACTORY")}>FACTORY</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("RETAILER")}>RETAILER</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
