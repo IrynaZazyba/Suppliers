@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,10 +25,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryMapper categoryMapper;
 
-    public CategoryDto findByCategory(final String categoryName) {
-        return categoryRepository.findByCategory(categoryName)
-          .map(categoryMapper::map)
-          .orElseThrow(() -> new ResourceNotFoundException("Category with name=" + categoryName + " doesn't exist"));
+    public List<CategoryDto> findByCategory(final String categoryName) {
+        return categoryRepository.findByCategoryStartingWith(categoryName).stream()
+          .map(categoryMapper::map).collect(Collectors.toList());
     }
 
     @Override

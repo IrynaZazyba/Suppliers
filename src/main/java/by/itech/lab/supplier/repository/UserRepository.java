@@ -19,6 +19,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+    Optional<User> findByEmail(String email);
+
+    @Query("select c from User c where :active is null or c.active=:active")
+    Page<User> findByStatus(Pageable pageable, @Param("active") Boolean active);
+
     @Modifying
     @Query("update User set deletedAt = current_timestamp where id = :id")
     void delete(@Param("id") Long id);
@@ -26,6 +31,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("update User set active = :active where id = :id")
     int setStatus(@Param("active") boolean active, @Param("id") Long id);
+
+    @Modifying
+    @Query("update User set password = :password where id = :id")
+    int changePassword(@Param("password") String password, @Param("id") Long id);
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 

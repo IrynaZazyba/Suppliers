@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service;
 
+import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
@@ -13,6 +14,8 @@ import java.util.List;
 public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Page<WarehouseDto> findAll(Pageable pageable);
+
+    List<WarehouseDto> findAllByType(WarehouseType warehouseType);
 
     void acceptApplication(ApplicationDto appDto, Long warehouseId);
 

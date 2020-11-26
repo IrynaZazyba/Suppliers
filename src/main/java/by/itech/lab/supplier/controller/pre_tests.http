@@ -74,7 +74,9 @@ PUT http://localhost:8080/customers/4
 Content-Type: application/json
 Cookie: {{test}}
 
-{"name":"New name"}
+{
+  "name": "New name"
+}
 
 ###
 #--------------------------------------------Car------------------------------------------------------------------
@@ -122,7 +124,7 @@ Cookie: {{test}}
 {
   "customerId": "3",
   "identifier": "199",
-  "type" : "FACTORY",
+  "type" : "CCC",
   "totalCapacity" : "44",
   "addressDto" : {
     "city" : "Kanzas",
@@ -145,7 +147,7 @@ Cookie: {{test}}
 
 {
   "id" : "21",
-  "type" : "FACTORY",
+  "type" : "anotherType",
   "totalCapacity" : "1",
   "addressDto" : {
     "id" : "104",
@@ -162,6 +164,13 @@ Cookie: {{test}}
 ###
 
 GET http://localhost:8080/customers/3/warehouses/retailers/5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/customers/3/warehouses/type?type=FACTORY
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -286,6 +295,39 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/states
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+
+GET http://localhost:8080/customers/3/users/username/zazybo1.17@gmail.com
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+PUT http://localhost:8080/customers/3/users/1/password
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "password": "password"
+}
+###
 GET http://localhost:8080/customers/3/users/1
 Content-Type: application/json
 Connection: keep-alive
@@ -493,10 +535,18 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/item/category/someType
+GET http://localhost:8080/customers/3/item/category
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+{
+  "id": 5,
+  "category": "MG",
+  "taxRate": 42,
+  "deletedAt": null,
+  "customerId": 3
+}
 
 > {%
     client.test("Request executed successfully", function() {
@@ -545,6 +595,20 @@ Cookie: {{test}}
 
 ###
 
+
+GET http://localhost:8080/customers/3/item/upc?upc=135
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
 DELETE http://localhost:8080/customers/3/item/1
 Content-Type: application/json
 Connection: keep-alive
@@ -559,7 +623,6 @@ Cookie: {{test}}
 ###
 
 #-------------------------------------------------------Application---------------------------------------------------
-# Note: put commentaries before @Secured in ApplicationController
 
 POST http://localhost:8080/customers/3/application
 Content-Type: application/json
@@ -573,7 +636,7 @@ Cookie: {{test}}
   "registrationDate": "2020-11-03",
   "lastUpdated": "2020-11-04",
   "sourceLocationDto": {
-    "id":1
+    "id": 1
   },
   "destinationLocationDto": {
     "id": 3
@@ -646,7 +709,7 @@ Cookie: {{test}}
       "cost": 55.0,
       "amount": 99,
       "itemDto": {
-        "id": 1,
+        "id": 2,
         "upc": 8.5,
         "label": "label",
         "units": 80.5,

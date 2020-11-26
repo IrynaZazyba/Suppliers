@@ -88,23 +88,6 @@ public class CategoryServiceTest {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> categoryService.findById(17L));
     }
 
-    @Test
-    void getCategoryByCategoryNameTest_Positive() {
-        Mockito.when(categoryRepository.findByCategory("Test")).thenReturn(Optional.of(category));
-        Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
-
-        Assertions.assertEquals(categoryDto, categoryService.findByCategory("Test"));
-    }
-
-    @Test
-    void getCategoryByCategoryNameTest_Negative() {
-        Mockito.when(categoryRepository.findByCategory("Test")).thenReturn(Optional.empty());
-        Mockito.when(categoryMapper.map(category)).thenReturn(categoryDto);
-
-        Assertions.assertThrows(ResourceNotFoundException.class,
-          () -> categoryService.findByCategory("Test"));
-    }
-
     @TestConfiguration
     static class Config {
 

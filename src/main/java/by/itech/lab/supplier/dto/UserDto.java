@@ -39,4 +39,6 @@ public class UserDto implements BaseDto {
     private Role role;
     private AddressDto addressDto;
     private CustomerDto customerDto;
+    private Long customerId;
+    private WarehouseDto warehouseDto;
 }

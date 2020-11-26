@@ -20,14 +20,19 @@ public final class ApiConstants {
     public final static String URL_COMPANIES = "/companies";
     public final static String URL_CATEGORY_PARAMETER = "/{category}";
     public final static String URL_LABEL_PARAMETER = "/{label}";
-    public final static String URL_FILTERED = "/companies";
+    public final static String URL_USERNAME_PARAMETER = "/username/{username}";
     public final static String URL_ID_PARAMETER = "/{id}";
-    public final static String URL_RETAILER_ID_PARAMETER = "retailers/{retailerId}";
+    public final static String URL_STATES = "/states";
     public final static String URL_STATUS_PARAMETER = "/{status}";
+    public final static String URL_PASSWORD_PARAMETER = "/password";
     public final static String URL_NUMBER_PARAMETER = "/{number}";
+    public final static String URL_RETAILER_ID_PARAMETER = "retailers/{retailerId}";
     public final static String URL_NUMBER = "/number";
     public final static String URL_LABEL = "/label";
     public final static String URL_STATUS = "/status";
     public final static String URL_CAPACITY = "/capacity";
     public final static String URL_ITEMS = "/items";
+    public final static String URL_UPC = "/upc";
+    public final static String URL_TYPE = "/type";
+
 }
