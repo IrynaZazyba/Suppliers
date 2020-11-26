@@ -352,18 +352,7 @@ Cookie: {{test}}
     });
 %}
 
-###
 
-GET http://localhost:8080/customers/3/users/companies
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
-
-> {%
-    client.test("Request executed successfully", function() {
-        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
-    });
-%}
 
 ###
 
@@ -378,12 +367,7 @@ Cookie: {{test}}
     });
 %}
 
-###
 
-PUT http://localhost:8080/customers/3/users/1/1
-Content-Type: application/json
-Connection: keep-alive
-Cookie: {{test}}
 
 ###
 
@@ -402,8 +386,8 @@ Cookie: {{test}}
   "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
   "email": "zazybo1211.17@gmail.com",
   "role": "ROLE_SYSTEM_ADMIN",
+  "customerId": 3,
   "addressDto": {
-    "id": 3,
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
