@@ -333,7 +333,7 @@ Cookie: {{test}}
 %}
 
 ###
-PUT http://localhost:8080/customers/3/users/1/password
+PUT http://localhost:8080/customers/3/users/2/password
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
