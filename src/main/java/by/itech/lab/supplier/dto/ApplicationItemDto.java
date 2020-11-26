@@ -15,4 +15,6 @@ public class ApplicationItemDto implements BaseDto {
     private BigDecimal cost;
     private Double amount;
     private LocalDate acceptedAt;
+    private Boolean deleted;
+
 }

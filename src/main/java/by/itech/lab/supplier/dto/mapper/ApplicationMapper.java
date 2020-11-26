@@ -117,10 +117,11 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         }
 
         //delete items
-        Map<Long, ApplicationItemDto> front = update.stream()
+        Map<Long, ApplicationItemDto> deletedItems = update.stream()
                 .filter(obj -> Objects.nonNull(obj.getId()))
+                .filter(applicationItemDto -> Objects.nonNull(applicationItemDto.getDeleted()))
                 .collect(Collectors.toMap(ApplicationItemDto::getId, Function.identity()));
-        forUpdate.removeIf(i -> Objects.nonNull(i.getId()) && Objects.isNull(front.get(i.getId())));
+        forUpdate.removeIf(i -> Objects.nonNull(i.getId()) && Objects.nonNull(deletedItems.get(i.getId())));
     }
 
 }

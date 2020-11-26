@@ -31,6 +31,9 @@ function EditSupplyAppModal(props) {
         source: [],
         destination: []
     });
+    const [deleted, setDeleted] = useState({
+        deletedItems: []
+    });
 
     useEffect(() => {
         if (props.props.isOpen === true) {
@@ -90,6 +93,12 @@ function EditSupplyAppModal(props) {
         app.items.forEach(i => {
             if (i.itemDto.id != e.currentTarget.id) {
                 afterDelete.push(i);
+            } else {
+                i.deleted = true;
+                setDeleted(prevState => ({
+                    ...prevState,
+                    deletedItems: [...deleted.deletedItems, i]
+                }));
             }
         });
         calculateTotalValues(afterDelete);
@@ -209,12 +218,14 @@ function EditSupplyAppModal(props) {
             validationErrors: validErrors
         }));
         if (validErrors.length === 0) {
+            let dtoApp = Object.assign({}, app);
+            dtoApp.items = [...app.items, ...deleted.deletedItems];
             fetch(`/customers/${customerId}/application/${app.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(app)
+                body: JSON.stringify(dtoApp)
             })
                 .then(function (response) {
                     if (response.status !== 200) {
@@ -231,6 +242,11 @@ function EditSupplyAppModal(props) {
                         props.onChange(false, app);
                     }
                 });
+            setCurrentItem('');
+            setDeleted(prevState => ({
+                ...prevState,
+                deletedItems: []
+            }));
         }
     };
 
