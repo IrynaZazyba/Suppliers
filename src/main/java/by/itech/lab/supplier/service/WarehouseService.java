@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface WarehouseService extends BaseService<WarehouseDto> {
 
+    void delete(final List<Long> id);
+
     Page<WarehouseDto> findAll(Pageable pageable);
 
     List<WarehouseDto> findAllByType(WarehouseType warehouseType);

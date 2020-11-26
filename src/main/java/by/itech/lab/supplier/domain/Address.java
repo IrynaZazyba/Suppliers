@@ -37,8 +37,8 @@ public class Address implements BaseEntity {
     private String addressLine2;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "state_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
+//    @EqualsAndHashCode.Exclude
     private State state;
 
 }

@@ -18,10 +18,7 @@ export default (props) => {
         countPerPage: 10,
         countPages: 1
     });
-
-    const [checkBoxes, setCheckBox] = useState({
-        id: []
-    });
+    const [checkBoxes, setCheckBox] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
     const [lgShow, setLgShow] = useState(false);
     const [delShow, setDelShow] = useState(false);
@@ -31,159 +28,168 @@ export default (props) => {
     });
     const [errorMessage, setErrors] = useState('');
 
-    const handleCountPerPage = (e) => {
-        e.preventDefault();
-        setPage(preState => ({
-            ...preState,
-            countPerPage: e.target.value
-        }));
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${e.target.value}`);
+    const handleCheckedChange = (warehouseId) => {
+        const index = checkBoxes.indexOf(warehouseId);
+        if (index > -1) {
+            checkBoxes.splice(index, 1);
+        } else {
+            checkBoxes.push(warehouseId);
+        }
     };
 
-    const changePage = (e) => {
-        e.preventDefault();
-        let currentPage = e.target.innerHTML - 1;
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
-    };
-
-    useEffect(() => {
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
-    }, []);
-
-    function getWarehouses(url) {
-        fetch(url)
-            .then(response => response.json())
-            .then(commits => {
-                setWarehouses(commits.content);
-                console.log(commits.content)
-                setPage({
-                        countPerPage: commits.size,
-                        countPages: commits.totalPages
-                    }
-                );
-            });
-    }
-
-    const closeModalEdit = (e, warehouseDto) => {
-        setEditWarehouse(
-            preState => ({
+        const handleCountPerPage = (e) => {
+            e.preventDefault();
+            setPage(preState => ({
                 ...preState,
-                editShow: false
+                countPerPage: e.target.value
             }));
-        if (warehouseDto) {
-            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
-        }
-    };
+            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${e.target.value}`);
+        };
 
-    const closeModalAdd = (e, warehouseDto) => {
-        setLgShow(e);
-        if (warehouseDto) {
-            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
-        }
-    };
+        const changePage = (e) => {
+            e.preventDefault();
+            let currentPage = e.target.innerHTML - 1;
+            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
+        };
 
-    function deleteWarehouse(boxes) {
-        console.log(boxes);
-        boxes.map(box => (
-        fetch(`/customers/${props.currentCustomerId}/warehouses/${box}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
+        useEffect(() => {
+            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+        }, []);
+
+        function getWarehouses(url) {
+            fetch(url)
+                .then(response => response.json())
+                .then(commits => {
+                    setWarehouses(commits.content);
+                    console.log(commits.content)
+                    setPage({
+                            countPerPage: commits.size,
+                            countPages: commits.totalPages
+                        }
+                    );
+                });
+        }
+
+        const closeModalEdit = (e, warehouseDto) => {
+            setEditWarehouse(
+                preState => ({
+                    ...preState,
+                    editShow: false
+                }));
+            if (warehouseDto) {
+                getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
             }
-        }).then(() => getWarehouses())
+        };
+
+        const closeModalAdd = (e, warehouseDto) => {
+            setLgShow(e);
+            if (warehouseDto) {
+                getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+            }
+        };
+
+        function deleteWarehouse(boxes) {
+            console.log(boxes);
+            fetch(`/customers/${props.currentCustomerId}/warehouses/delete-list`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(checkBoxes)
+            })
+                .then(() => setCheckBox([]))
+        }
+
+        // .then(response => {
+        // if (response.status !== 204) {
+        //     setErrors({
+        //         errorMessage: "Warehouse can not be deleted, because it is already used in application"
+        //     });
+        // } else {
+        //     let raw = document.getElementById(`warehouse${warehouseId}`);
+        //     raw.style.opacity = '0.3';
+        //     raw.style.background = '#656662';
+        //     setErrors(preState => ({
+        //         ...preState,
+        //         errorMessage: ''
+        //     }));
+        // }
+        // });
+
+
+        const tableRows = warehouses.map(warehouse => (
+            <tr key={warehouse.id}>
+                <td>{warehouse.identifier}</td>
+                <td>{warehouse.type}</td>
+                <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
+                    {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
+                <td>{warehouse.totalCapacity}</td>
+                <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
+                            size={'1.3em'}
+                            onClick={() => {
+                                setEditWarehouse({
+                                    editShow: true,
+                                    warehouse: warehouse
+                                });
+                            }}/>
+                </td>
+                <td>
+                    <input type="checkbox" onChange={() => handleCheckedChange(warehouse.id)}/>
+                </td>
+            </tr>
         ));
+
+        const modals =
+            <React.Fragment>
+                {errorMessage && <ErrorMessage message={errorMessage}/>}
+                <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
+                                    currentCustomerId={props.currentCustomerId}/>
+                <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
+                                   currentCustomerId={props.currentCustomerId}
+                />
+            </React.Fragment>;
+
+        const header =
+            <React.Fragment>
+                <Row>
+                    <Col>
+                        <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
+                            Add
+                        </Button>
+                    </Col>
+                    <Col md={10}>
+                        <Button className="mainButton" size="sm" onClick={() => deleteWarehouse(checkBoxes)}>
+                            Delete
+                        </Button>
+                    </Col>
+                    <Col md={14}>
+                        <TogglePage props={page} onChange={handleCountPerPage}/>
+                    </Col>
+                </Row>
+            </React.Fragment>;
+
+        const body =
+            <React.Fragment>
+                <Table hover size="sm">
+                    <thead>
+                    <tr>
+                        <th>Identifier</th>
+                        <th>Type</th>
+                        <th>Full Address</th>
+                        <th>Total Capacity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {tableRows}
+                    </tbody>
+                </Table>
+                <Page page={page} onChange={changePage}/>
+            </React.Fragment>;
+
+        return (
+            <CardContainer
+                modals={modals}
+                header={header}
+                body={body}/>
+        );
     }
-
-    // .then(response => {
-    // if (response.status !== 204) {
-    //     setErrors({
-    //         errorMessage: "Warehouse can not be deleted, because it is already used in application"
-    //     });
-    // } else {
-    //     let raw = document.getElementById(`warehouse${warehouseId}`);
-    //     raw.style.opacity = '0.3';
-    //     raw.style.background = '#656662';
-    //     setErrors(preState => ({
-    //         ...preState,
-    //         errorMessage: ''
-    //     }));
-    // }
-    // });
-
-
-    const tableRows = warehouses.map(warehouse => (
-        <tr key={warehouse.id}>
-            <td>{warehouse.identifier}</td>
-            <td>{warehouse.type}</td>
-            <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
-                {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
-            <td>{warehouse.totalCapacity}</td>
-            <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
-                        size={'1.3em'}
-                        onClick={() => {
-                            setEditWarehouse({
-                                editShow: true,
-                                warehouse: warehouse
-                            });
-                        }}/>
-            </td>
-            <td>
-                <input type="checkbox" checked={checkBoxes.id} onChange={() => setCheckBox(warehouse.id)} />
-            </td>
-        </tr>
-    ));
-
-    const modals =
-        <React.Fragment>
-            {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
-                                currentCustomerId={props.currentCustomerId}/>
-            <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
-                               currentCustomerId={props.currentCustomerId}
-            />
-        </React.Fragment>;
-
-    const header =
-        <React.Fragment>
-            <Row>
-                <Col>
-                    <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
-                        Add
-                    </Button>
-                </Col>
-                <Col md={10}>
-                    <Button className="mainButton" size="sm" onClick={() => deleteWarehouse(checkBoxes)}>
-                        Delete
-                    </Button>
-                </Col>
-                <Col md={14}>
-                    <TogglePage props={page} onChange={handleCountPerPage}/>
-                </Col>
-            </Row>
-        </React.Fragment>;
-
-    const body =
-        <React.Fragment>
-            <Table hover size="sm">
-                <thead>
-                <tr>
-                    <th>Identifier</th>
-                    <th>Type</th>
-                    <th>Full Address</th>
-                    <th>Total Capacity</th>
-                </tr>
-                </thead>
-                <tbody>
-                {tableRows}
-                </tbody>
-            </Table>
-            <Page page={page} onChange={changePage}/>
-        </React.Fragment>;
-
-    return (
-        <CardContainer
-            modals={modals}
-            header={header}
-            body={body}/>
-    );
-}

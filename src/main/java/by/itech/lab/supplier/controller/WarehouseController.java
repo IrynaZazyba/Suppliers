@@ -28,6 +28,7 @@ import java.util.List;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_DELETE_LIST;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEMS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_RETAILER_ID_PARAMETER;
@@ -69,13 +70,19 @@ public class WarehouseController {
         return warehouseService.save(warehouseDto);
     }
 
-    @DeleteMapping(URL_ID_PARAMETER)
+//    @DeleteMapping(URL_ID_PARAMETER)
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void delete(@PathVariable final Long id) {
+//        warehouseService.delete(id);
+//    }
+
+    @PostMapping(URL_DELETE_LIST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable final Long id) {
-        warehouseService.delete(id);
+    public void delete(@RequestBody final List<Long> deleteList) {
+        warehouseService.delete(deleteList);
     }
 
-    @DeleteMapping(URL_RETAILER_ID_PARAMETER)
+    @PostMapping(URL_RETAILER_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByRetailerId(@PathVariable final Long retailerId) {
         warehouseService.deleteByRetailerId(retailerId);

@@ -72,6 +72,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public void delete(Long id) {}
+
+    @Override
     public List<WarehouseDto> findAllByType(final WarehouseType warehouseType) {
         if (warehouseType == WarehouseType.WAREHOUSE) {
             UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -109,10 +112,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
-
     @Transactional
     @Override
-    public void delete(final Long id) {
+    public void delete(final List<Long> id) {
         warehouseRepository.delete(id);
     }
 
