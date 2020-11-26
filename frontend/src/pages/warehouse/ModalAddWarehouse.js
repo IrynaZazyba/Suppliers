@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Dropdown from "react-bootstrap/Dropdown";
+import validateWarehouse from "../../validation/WarehouseValidationRules";
 
 function ModalAddWarehouse(props) {
 
@@ -99,14 +100,37 @@ function ModalAddWarehouse(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
-        fetch('/customers/' + props.currentCustomerId + '/warehouses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(warehouseDto)
-        })
-            .then(() => props.onChange(props, warehouseDto));
+        // let validationResult = validateWarehouse(warehouseDto);
+        // setErrors(preState => ({
+        //     ...preState,
+        //     validationErrors: validationResult,
+        //     serverErrors: ''
+        // }));
+        // if (validationResult.length === 0) {
+            fetch('/customers/' + props.currentCustomerId + '/warehouses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(warehouseDto)
+            })
+                .then(() => props.onChange(false, warehouseDto));
+        //         .then(function (response) {
+        //             if (response.status !== 200) {
+        //                 setErrors({
+        //                     serverErrors: "Something go wrong, try later",
+        //                     validationErrors: ''
+        //                 });
+        //             } else {
+        //                 setErrors(preState => ({
+        //                     ...preState,
+        //                     validationErrors: []
+        //                 }));
+        //                 props.onChange(false, warehouseDto);
+        //             }
+        //
+        //         });
+        // }
     };
 
     return (
@@ -126,10 +150,18 @@ function ModalAddWarehouse(props) {
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
-                        <Form.Group controlId="Identifier" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
                             Identifier
                             <Form.Control type="text"
                                           onChange={handleIdentifier}
+                            //               className={
+                            //                   errors.validationErrors.includes("identifier")
+                            //                       ? "form-control is-invalid"
+                            //                       : "form-control"
+                            //               }/>
+                            // <Form.Control.Feedback type="invalid">
+                            //     Please provide a valid identifier.
+                            // </Form.Control.Feedback>
                             />
                         </Form.Group>
 
@@ -149,25 +181,56 @@ function ModalAddWarehouse(props) {
                             city
                             <Form.Control type="text"
                                           onChange={handleCity}
+                            //               className={
+                            //                   errors.validationErrors.includes("city")
+                            //                       ? "form-control is-invalid"
+                            //                       : "form-control"
+                            //               }/>
+                            // <Form.Control.Feedback type="invalid">
+                            //     Please provide a valid city.
+                            // </Form.Control.Feedback>
                             />
                         </Form.Group>
                         <Form.Group controlId="addressLine1" style={{padding: '5px 10px'}}>
                             address line 1
                             <Form.Control type="text"
                                           onChange={handleLineOne}
+                            //               className={
+                            //                   errors.validationErrors.includes("addressLine1")
+                            //                       ? "form-control is-invalid"
+                            //                       : "form-control"
+                            //               }/>
+                            // <Form.Control.Feedback type="invalid">
+                            //     Please provide a valid address line 1.
+                            // </Form.Control.Feedback>
                             />
-
                         </Form.Group>
                         <Form.Group controlId="addressLine2" style={{padding: '5px 10px'}}>
                             address line 2
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
+                            //               className={
+                            //                   errors.validationErrors.includes("addressLine2")
+                            //                       ? "form-control is-invalid"
+                            //                       : "form-control"
+                            //               }/>
+                            // <Form.Control.Feedback type="invalid">
+                            //     Please provide a valid address line 2.
+                            // </Form.Control.Feedback>
                             />
                         </Form.Group>
                         <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
                             total capacity
                             <Form.Control type="text"
                                           onChange={handleTotalCapacity}
+                            //               className={
+                            //                   errors.validationErrors.includes("totalCapacity")
+                            //                       ? "form-control is-invalid"
+                            //                       : "form-control"
+                            //               }/>
+                            // <Form.Control.Feedback type="invalid">
+                            //     Please provide a valid total capacity.
+                            // </Form.Control.Feedback>
                             />
                         </Form.Group>
                         <Form.Group>

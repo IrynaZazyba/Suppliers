@@ -12,6 +12,7 @@ function ModalEditWarehouse(props) {
     const ref = React.createRef();
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
+        customerId: props.currentCustomerId,
         identifier: '',
         type: '',
         addressDto: {
@@ -20,7 +21,7 @@ function ModalEditWarehouse(props) {
         totalCapacity: ''
     });
 
-    const [errorMessage, setErrors] = useState({
+    const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
@@ -146,6 +147,7 @@ function ModalEditWarehouse(props) {
                 onHide={() => props.onChange(false)}
                 aria-labelledby="modal-custom"
                 className="shadow"
+                centered
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
@@ -153,18 +155,13 @@ function ModalEditWarehouse(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {errorMessage.serverErrors && <ErrorMessage message={errorMessage.serverErrors}/>}
+                    {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
-                        <Form.Group controlId="Identifier" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
                             Identifier
                             <Form.Control type="text"
                                           disabled
                                           value={warehouseDto.identifier}
-                                          className={
-                                              errorMessage.validationErrors.includes("Identifier")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }
                             />
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
@@ -186,7 +183,7 @@ function ModalEditWarehouse(props) {
                                           onChange={handleCity}
                                           value={warehouseDto.addressDto.city}
                                           className={
-                                              errorMessage.validationErrors.includes("city")
+                                              errors.validationErrors.includes("city")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -200,7 +197,7 @@ function ModalEditWarehouse(props) {
                                           onChange={handleLineOne}
                                           value={warehouseDto.addressDto.addressLine1}
                                           className={
-                                              errorMessage.validationErrors.includes("addressLine1")
+                                              errors.validationErrors.includes("addressLine1")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -214,7 +211,7 @@ function ModalEditWarehouse(props) {
                                           onChange={handleLineTwo}
                                           value={warehouseDto.addressDto.addressLine2}
                                           className={
-                                              errorMessage.validationErrors.includes("addressLine2")
+                                              errors.validationErrors.includes("addressLine2")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -228,7 +225,7 @@ function ModalEditWarehouse(props) {
                                           onChange={handleTotalCapacity}
                                           value={warehouseDto.totalCapacity}
                                           className={
-                                              errorMessage.validationErrors.includes("totalCapacity")
+                                              errors.validationErrors.includes("totalCapacity")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -258,7 +255,7 @@ function ModalEditWarehouse(props) {
                             onChange={onChangeState}
                         >
                             <div className="validation-error">
-                                {errorMessage.validationErrors.includes("state") ? "Please provide a value" : ""}
+                                {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
                             </div>
                         </AsyncTypeahead>
 
