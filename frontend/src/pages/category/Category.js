@@ -83,7 +83,7 @@ export default () => {
 
     const tableRows = categories.map(category => (
         <tr key={category.id}>
-            <td>{category.category}</td>
+            <td onClick={() => document.location.href=`/customers/${currentCustomerId}/warehouse/3`}>{category.category}</td>
             <td>{category.taxRate}</td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './App.css';
 import UserContext from './UserContext';
 import Header from './Header';
@@ -14,6 +14,7 @@ import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 import Application from "./pages/application/Application";
+import WarehouseItems from "./pages/warehouse/WarehouseItems";
 
 function App() {
 
@@ -53,6 +54,14 @@ function App() {
         })}/>
     };
 
+
+    const renderWarehouseItems = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
+            return <WarehouseItems/>
+        })}/>
+    };
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -61,6 +70,7 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
+    const warehouseItemsPath = pathWithCustomer(`/warehouse/:warehouseId`);
 
     return (
         <UserContext>
@@ -71,6 +81,7 @@ function App() {
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
+                <Route path={warehouseItemsPath} render={renderWarehouseItems}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
