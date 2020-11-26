@@ -34,7 +34,6 @@ function ModalEditWarehouse(props) {
         fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                // console.log(res.content);
                 setOptions(res);
             });
     };

@@ -11,7 +11,11 @@ import java.util.Set;
 
 import java.util.List;
 
-public interface WarehouseService extends BaseService<WarehouseDto> {
+public interface WarehouseService{
+
+    WarehouseDto save(final WarehouseDto warehouseDto);
+
+    WarehouseDto findById(final Long warehouseId);
 
     void delete(final List<Long> id);
 

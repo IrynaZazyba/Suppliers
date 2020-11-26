@@ -51,7 +51,6 @@ public class Warehouse implements BaseEntity {
     private LocalDate deletedAt;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
-//    @EqualsAndHashCode.Exclude
     private Address address;
     private Long customerId;
     private Long retailerId;

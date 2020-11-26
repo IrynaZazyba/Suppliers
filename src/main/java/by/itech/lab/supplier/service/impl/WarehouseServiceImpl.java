@@ -72,9 +72,6 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public void delete(Long id) {}
-
-    @Override
     public List<WarehouseDto> findAllByType(final WarehouseType warehouseType) {
         if (warehouseType == WarehouseType.WAREHOUSE) {
             UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
