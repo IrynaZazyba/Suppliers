@@ -135,9 +135,7 @@ Cookie: {{test}}
       "state": "Alaska"
     }
   },
-  "usersId": [
-    3
-  ]
+  "usersId": [3]
 }
 
 ###
@@ -385,6 +383,8 @@ Cookie: {{test}}
     });
 %}
 
+
+
 ###
 
 POST http://localhost:8080/customers/3/users
@@ -402,6 +402,7 @@ Cookie: {{test}}
   "password": "$2a$10$EpyybZabF5N7YfgTS5J8Y.tHK4eF4bRa9Xpf1D0FLD0CZ9AFaNWTG",
   "email": "zazybo1211.17@gmail.com",
   "role": "ROLE_SYSTEM_ADMIN",
+  "customerId": 3,
   "addressDto": {
     "city": "NY",
     "addressLine1": "Lexington Avenue",
@@ -410,8 +411,7 @@ Cookie: {{test}}
       "id": 4,
       "state": "Alabama"
     }
-  },
-  "customerId": 3
+  }
 }
 
 ###
