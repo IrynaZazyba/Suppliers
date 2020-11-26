@@ -107,7 +107,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                                                        final ApplicationStatus status,
                                                        final Long userId) {
         final Long warehouseId = roleFlag &&
-                Objects.nonNull(userId) ? userService.findById(userId).orElseThrow().getWarehouseDto().getId() : null;
+                Objects.nonNull(userId) ? userService.findById(userId).getWarehouseDto().getId() : null;
         return applicationRepository.findAllByRoleAndStatusAndWarehouse(pageable, roleFlag, status, warehouseId)
                 .map(applicationMapper::map);
     }

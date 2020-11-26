@@ -131,11 +131,13 @@ export default () => {
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         onClick={() => {
-                            setOpenEditModal({
-                                isOpen: true,
-                                app: app,
-                                customerId: customerId
-                            });
+                            {app.type !== 'TRAFFIC' &&
+                                setOpenEditModal({
+                                    isOpen: true,
+                                    app: app,
+                                    customerId: customerId
+                                });
+                            }
                         }}
                         size={'1.3em'}
             />
