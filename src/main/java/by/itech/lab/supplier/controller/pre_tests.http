@@ -420,7 +420,9 @@ Cookie: {{test}}
     "state": {
       "id": 4,
       "state": "Alabama"
-    }
+    },
+    "latitude": 40.854785,
+    "longitude": -75.85785
   }
 }
 
