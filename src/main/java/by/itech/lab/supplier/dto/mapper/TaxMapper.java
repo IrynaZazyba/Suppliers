@@ -5,6 +5,8 @@ import by.itech.lab.supplier.dto.TaxDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 
 @Component
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class TaxMapper implements BaseMapper<Tax, TaxDto> {
                 .amount(dto.getAmount())
                 .name(dto.getName())
                 .percentage(dto.getPercentage())
-                .state(stateMapper.map(dto.getStateDto()))
+                .state(!Objects.isNull(dto.getStateDto()) ? stateMapper.map(dto.getStateDto()) : null)
                 .build();
     }
 
@@ -30,7 +32,7 @@ public class TaxMapper implements BaseMapper<Tax, TaxDto> {
                 .amount(tax.getAmount())
                 .name(tax.getName())
                 .percentage(tax.getPercentage())
-                .stateDto(stateMapper.map(tax.getState()))
+                .stateDto(!Objects.isNull(tax.getState()) ? stateMapper.map(tax.getState()) : null)
                 .build();
     }
 

@@ -9,11 +9,10 @@ export default function calculateItemPrice(item, taxes, distance, zoneId) {
 
 
 export function recalculateItems(items, taxes, distance, zoneId) {
-
-    items.forEach(i => {
-        i.price = calculateItemPrice(i, taxes, distance, zoneId);
+    return items.map(item => {
+        item.price = calculateItemPrice(item, taxes, distance, zoneId);
+        return item;
     });
-    return items;
 }
 
 export function calculateDistance(warehouses, sourceId, destinationId) {

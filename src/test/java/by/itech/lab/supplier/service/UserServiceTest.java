@@ -78,7 +78,7 @@ public class UserServiceTest {
     public void testGetUserWithAuthoritiesById() {
         when(userRepository.findOneWithRolesById(1L)).thenReturn(Optional.of(user));
         when(userMapper.map(user)).thenReturn(userDto);
-        assertEquals(Optional.of(userDto), userService.findById(1L));
+        assertEquals(userDto, userService.findById(1L));
     }
 
     @Test

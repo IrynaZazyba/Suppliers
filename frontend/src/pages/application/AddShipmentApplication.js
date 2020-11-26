@@ -62,6 +62,7 @@ function AddShipmentApplication(props) {
     const filterBy = () => true;
     const onChangeUpc = (e) => {
         checkValidationErrors('upc');
+        checkValidationErrors('exist');
         e.length > 0 ?
             setCurrentItem(preState => ({
                 ...preState,

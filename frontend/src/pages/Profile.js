@@ -78,7 +78,7 @@ export default () => {
     const editUserHandler = (e) => {
         e.preventDefault();
 
-        fetch(`http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}`, {
+        fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -100,7 +100,7 @@ export default () => {
     const editPasswordHandler = (e) => {
         e.preventDefault();
 
-        fetch(`http://localhost:8080/customers/${currentCustomerId}/users/${userDto.id}/password`, {
+        fetch(`/customers/${currentCustomerId}/users/${userDto.id}/password`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

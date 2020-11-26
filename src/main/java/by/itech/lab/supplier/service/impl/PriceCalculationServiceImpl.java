@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PriceCalculationServiceImpl implements PriceCalculationService {
 
-    private final static Integer EARTH_RADIUS = 6371000; //meters
+    private final static Integer EARTH_RADIUS_IN_METERS = 6371000;
 
     private final WarehouseService warehouseService;
     private final TaxService taxService;
@@ -38,18 +38,18 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(dLng / 2) * Math.sin(dLng / 2);
         final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
+        return EARTH_RADIUS_IN_METERS * c;
     }
 
     @Override
     public Set<ApplicationItemDto> calculateAppItemsPrice(final ApplicationDto appDto) {
-        final List<Long> collect = appDto.getItems().stream().map(e -> e.getItemDto().getId()).collect(Collectors.toList());
+        final List<Long> itemsIds = appDto.getItems().stream().map(e -> e.getItemDto().getId()).collect(Collectors.toList());
         final Long sourceLocationId = appDto.getSourceLocationDto().getId();
         final Long destinationLocationId = appDto.getDestinationLocationDto().getId();
 
         //mapped WarehouseItem by itemId
         final Map<Long, WarehouseItemDto> whItems = warehouseService
-                .getWarehouseItemContainingItems(sourceLocationId, collect).stream()
+                .getWarehouseItemContainingItems(sourceLocationId, itemsIds).stream()
                 .collect(Collectors.toMap(e -> e.getItem().getId(), Function.identity()));
 
         final AddressDto destinationAddress = warehouseService.findById(sourceLocationId).getAddressDto();

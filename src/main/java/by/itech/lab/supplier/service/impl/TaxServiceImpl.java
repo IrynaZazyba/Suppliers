@@ -2,6 +2,7 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.dto.TaxDto;
 import by.itech.lab.supplier.dto.mapper.TaxMapper;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.TaxRepository;
 import by.itech.lab.supplier.service.TaxService;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,8 @@ public class TaxServiceImpl implements TaxService {
 
     @Override
     public TaxDto getTaxByState(Long stateId) {
-        return taxMapper.map(taxRepository.findByStateId(stateId));
+        return taxRepository.findByStateId(stateId).map(taxMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Taxes to state id=" + stateId + " doesn't exist"));
     }
 
 }
