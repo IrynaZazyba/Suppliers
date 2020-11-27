@@ -6,10 +6,13 @@ import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Dropdown from "react-bootstrap/Dropdown";
 import validateWarehouse from "../../validation/WarehouseValidationRules";
+import {FaTrash} from "react-icons/fa";
 
 function ModalAddWarehouse(props) {
 
     const ref = React.createRef();
+    const [dispatcherIdList, setDispatcherIdList] = useState([]);
+    const [dispatcherList, setDispatcherList] = useState([]);
     const [dropdownMenuName, setDropdownMenuName] = useState("select type");
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
@@ -19,7 +22,8 @@ function ModalAddWarehouse(props) {
         addressDto: {
             state: {}
         },
-        totalCapacity: ''
+        totalCapacity: '',
+        usersId: dispatcherIdList
     });
 
     const [errors, setErrors] = useState({
@@ -27,15 +31,28 @@ function ModalAddWarehouse(props) {
         serverErrors: ''
     });
 
-    const [options, setOptions] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const [dispatcherOptions, setDispatcherOptions] = useState([]);
 
     const filterBy = () => true;
 
-    const handleSearch = (query) => {
+    const handleStateSearch = (query) => {
         fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                setOptions(res);
+                setStateOptions(res);
+            });
+    };
+
+    const handleDispatcherSearch = (query) => {
+        fetch(`/customers/${props.currentCustomerId}/users/dispatchers?username=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                const optionsFromBack = res.map((i) => ({
+                    id: i.id,
+                    username: i.username
+                }));
+                setDispatcherOptions(optionsFromBack);
             });
     };
 
@@ -53,6 +70,14 @@ function ModalAddWarehouse(props) {
                 ...preState,
                 addressDto: {...preState.addressDto, state: {id: '', state: ''}}
             }));
+    };
+
+    const onChangeDispatcher = (e) => {
+
+        if (e.length!==0) {
+            dispatcherList.push(e);
+            console.log(dispatcherList)
+        }
     };
 
     const handleIdentifier = (e) => {
@@ -126,12 +151,30 @@ function ModalAddWarehouse(props) {
                                 validationErrors: [],
                                 serverErrors: ''
                             }));
+                            dispatcherList.map(object => (object.map(dispatcher =>
+                                dispatcherIdList.push(dispatcher.id)
+                            )))
                             props.onChange(false, warehouseDto)
+                            setDispatcherList([]);
+                            setDispatcherIdList([]);
                         }
                     }
                 )
         }
     };
+
+    const dispatchers = dispatcherList.map(dispatcherObject => (dispatcherObject.map(dispatcher =>
+        <div key={dispatcher.id}>
+            {dispatcher.username}
+            <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
+                     onClick={() => {
+                         const index = dispatcherList.indexOf(dispatcherObject);
+                         console.log(index)
+                         dispatcherList.splice(index, 1)
+                     }}
+            />
+        </div>
+    )));
 
     return (
         <>
@@ -236,9 +279,9 @@ function ModalAddWarehouse(props) {
                                 id="async-state"
                                 labelKey="state"
                                 minLength={3}
-                                options={options}
+                                options={stateOptions}
                                 placeholder="Select state..."
-                                onSearch={handleSearch}
+                                onSearch={handleStateSearch}
                                 onChange={onChangeState}
                             >
                                 <div className="validation-error">
@@ -246,7 +289,27 @@ function ModalAddWarehouse(props) {
                                 </div>
                             </AsyncTypeahead>
                         </Form.Group>
-
+                        <Form.Group>
+                            {dispatchers}
+                        </Form.Group>
+                        <Form.Group>
+                            <AsyncTypeahead
+                                ref={ref}
+                                name="username"
+                                filterBy={filterBy}
+                                id="async-username"
+                                labelKey="username"
+                                minLength={3}
+                                options={dispatcherOptions}
+                                placeholder="Select dispatcher username..."
+                                onSearch={handleDispatcherSearch}
+                                onChange={onChangeDispatcher}
+                            >
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("username") ? "Please provide a username" : ""}
+                                </div>
+                            </AsyncTypeahead>
+                        </Form.Group>
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
                                     onClick={addWarehouseHandler}>

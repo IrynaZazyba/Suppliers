@@ -80,7 +80,6 @@ public class WarehouseController {
         warehouseService.deleteByRetailerId(retailerId);
     }
 
-
     @PostMapping(URL_ID_PARAMETER + URL_ITEMS)
     public void acceptItem(@PathVariable Long id, @RequestBody ApplicationDto applicationDto) {
         warehouseService.acceptApplication(applicationDto, id);

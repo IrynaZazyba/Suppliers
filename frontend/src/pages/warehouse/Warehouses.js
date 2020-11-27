@@ -60,7 +60,6 @@ export default (props) => {
             .then(response => response.json())
             .then(commits => {
                 setWarehouses(commits.content);
-                console.log(commits.content)
                 setPage({
                         countPerPage: commits.size,
                         countPages: commits.totalPages

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -110,8 +111,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable) {
-        return userRepository.getAllDispatchers(customerId, pageable, Role.ROLE_DISPATCHER).map(userMapper::map);
+    public List<UserDto> findListByDispatcherUsername(final String username) {
+        return userRepository.findByUsernameStartingWith(username).stream()
+                .map(userMapper::map).collect(Collectors.toList());
     }
 
     @Override

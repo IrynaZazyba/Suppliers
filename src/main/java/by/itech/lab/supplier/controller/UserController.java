@@ -3,7 +3,6 @@ package by.itech.lab.supplier.controller;
 import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.dto.StateDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.CustomerService;
 import by.itech.lab.supplier.service.UserService;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,11 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_DISPATCHERS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 
 @RestController
@@ -42,9 +43,9 @@ public class UserController {
 
     private final CustomerService customerService;
 
-    @GetMapping("/dispatchers")
-    public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
-        return userService.getAllDispatchers(customerId, pageable);
+    @GetMapping(URL_DISPATCHERS)
+    public List<UserDto> getListByUsername(@RequestParam String username) {
+        return userService.findListByDispatcherUsername(username);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
@@ -59,7 +60,6 @@ public class UserController {
             @RequestParam(required = false) final Boolean status) {
         return userService.findAllByActive(pageable, status);
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

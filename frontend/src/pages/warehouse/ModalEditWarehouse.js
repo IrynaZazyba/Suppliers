@@ -10,6 +10,9 @@ import validateWarehouse from "../../validation/WarehouseValidationRules";
 function ModalEditWarehouse(props) {
 
     const ref = React.createRef();
+    const [dispatcherList, setDispatcherList] = useState([]);
+    const [dispatcherOptions, setDispatcherOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
         customerId: props.currentCustomerId,
@@ -18,15 +21,14 @@ function ModalEditWarehouse(props) {
         addressDto: {
             state: {}
         },
-        totalCapacity: ''
+        totalCapacity: '',
+        usersId: dispatcherList
     });
 
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
-
-    const [options, setOptions] = useState([]);
 
     const filterBy = () => true;
 
@@ -35,6 +37,18 @@ function ModalEditWarehouse(props) {
             .then(resp => resp.json())
             .then(res => {
                 setOptions(res);
+            });
+    };
+
+    const handleDispatcherSearch = (query) => {
+        fetch(`/customers/${props.currentCustomerId}/users/dispatchers?username=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                const optionsFromBack = res.map((i) => ({
+                    id: i.id,
+                    username: i.username
+                }));
+                setDispatcherOptions(optionsFromBack);
             });
     };
 
@@ -53,6 +67,9 @@ function ModalEditWarehouse(props) {
                 addressDto: {...preState.addressDto, state: {id: '', state: ''}}
             }));
     };
+
+    const onChangeDispatcher = (e) => {
+        setDispatcherList(e)};
 
     useEffect(() => {
         if (props.props.editShow === true) {
@@ -255,6 +272,23 @@ function ModalEditWarehouse(props) {
                         >
                             <div className="validation-error">
                                 {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
+                            </div>
+                        </AsyncTypeahead>
+
+                        <AsyncTypeahead
+                            ref={ref}
+                            name="username"
+                            filterBy={filterBy}
+                            id="async-username"
+                            labelKey="username"
+                            minLength={3}
+                            options={dispatcherOptions}
+                            placeholder="Search, if want to add a new dispatcher..."
+                            onSearch={handleDispatcherSearch}
+                            onChange={onChangeDispatcher}
+                        >
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("username") ? "Please provide a value" : ""}
                             </div>
                         </AsyncTypeahead>
 

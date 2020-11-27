@@ -1,7 +1,9 @@
+import validateCategory from "./CategoryValidationRules";
+
 export default function validateWarehouse(dto) {
-    return [...validateIdentifier(dto), ...validateCity(dto),
-        ...validateAddressLine1(dto), ...validateAddressLine2(dto),
-        ...validateTotalCapacity(dto)];
+        return [...validateIdentifier(dto), ...validateCity(dto),
+            ...validateAddressLine1(dto), ...validateAddressLine2(dto),
+            ...validateTotalCapacity(dto)];
 }
 
 export function validateIdentifier(dto) {
