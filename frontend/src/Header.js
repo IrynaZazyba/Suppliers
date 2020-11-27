@@ -9,17 +9,20 @@ function Header() {
     const {user, setUser} = useContext(AuthContext);
 
     const checkPermission = user && user.currentCustomerId;
+    const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
 
     function getClass(regexOfClass) {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
     }
 
-    const isPermittedAndRoleAdmin =  user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
-    const profileClass = window.location.pathname.match(/.profile/) ? "active" : "";
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
     const carsClass = window.location.pathname === "/cars" ? "active" : "";
 
+    const profileClass = getClass(/.profile/);
+    const categoryClass = getClass(/.category/);
+    const itemClass = getClass(/.item/);
+    const appClass = getClass(/.application/);
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -31,20 +34,23 @@ function Header() {
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="mr-auto navigation">
                     {checkPermission &&
-                    <Nav.Link className={getClass(/.profile/)}
+                    <Nav.Link className={profileClass}
                               href={`/customers/${user.currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin   &&
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
+                    <Nav.Link className={appClass}
+                              href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
+                    {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {isPermittedAndRoleAdmin  &&
+                    {isPermittedAndRoleAdmin &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryAndItemPermission &&
-                    <Nav.Link className={getClass(/.category/)}
+                    <Nav.Link className={categoryClass}
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
                     {categoryAndItemPermission &&
-                    <Nav.Link className={getClass(/.item/)}
+                    <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
                     <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}

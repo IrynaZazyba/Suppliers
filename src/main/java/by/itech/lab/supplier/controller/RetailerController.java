@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.Optional;
-
 import static by.itech.lab.supplier.constant.ApiConstants.*;
 
 @RestController

@@ -20,7 +20,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
                 .upc(dto.getUpc())
                 .label(dto.getLabel())
                 .units(dto.getUnits())
-                .category(Objects.nonNull(dto.getCategoryDto()) ? categoryMapper.map(dto.getCategoryDto()) : null)
+                .category(Objects.isNull(dto.getCategoryDto()) ? null : categoryMapper.map(dto.getCategoryDto()))
                 .deletedAt(dto.getDeletedAt())
                 .customerId(dto.getCustomerId())
                 .build();
@@ -33,7 +33,7 @@ public class ItemMapper implements BaseMapper<Item, ItemDto> {
                 .upc(entity.getUpc())
                 .label(entity.getLabel())
                 .units(entity.getUnits())
-                .categoryDto(Objects.nonNull(entity.getCategory()) ? categoryMapper.map(entity.getCategory()) : null)
+                .categoryDto(Objects.isNull(entity.getCategory()) ? null : categoryMapper.map(entity.getCategory()))
                 .deletedAt(entity.getDeletedAt())
                 .customerId(entity.getCustomerId())
                 .build();

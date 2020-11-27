@@ -80,7 +80,7 @@ public class RetailerServiceTest {
         Mockito.when(retailerRepository.findById(100L)).thenReturn(Optional.of(retailer));
         Mockito.when(retailerMapper.map(retailer)).thenReturn(retailerDto);
 
-        Assertions.assertEquals(Optional.of(retailerDto), retailerService.findById(100L));
+        Assertions.assertEquals(retailerDto, retailerService.findById(100L));
     }
 
     @Test

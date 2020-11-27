@@ -9,6 +9,7 @@ import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,21 +51,23 @@ public class ApplicationController {
     }
 
     @GetMapping
-    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
-    public Page<ApplicationDto> getAll(final Pageable pageable) {
+    @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST"})
+    public Page<ApplicationDto> getAllByStatus(@PageableDefault final Pageable pageable,
+                                               @RequestParam(required = false) final ApplicationStatus status) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Boolean roleFlag = null;
         if (authentication.getPrincipal() instanceof UserImpl) {
             UserImpl user = (UserImpl) authentication.getPrincipal();
             roleFlag = user.getAuthorities().contains(Role.ROLE_DISPATCHER);
         }
-        return applicationService.findAll(pageable, roleFlag);
+        return applicationService.findAllByRoleAndStatus(pageable, roleFlag, status);
     }
 
     @GetMapping(ApiConstants.URL_ADMIN)
     @Secured("ROLE_SYSTEM_ADMIN")
-    public Page<ApplicationDto> getAllAdmin(final Pageable pageable) {
-        return applicationService.findAll(pageable);
+    public Page<ApplicationDto> getAllAdminByStatus(@PageableDefault final Pageable pageable,
+                                                    @RequestParam(required = false) final ApplicationStatus status) {
+        return applicationService.findAllByStatus(pageable, status);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

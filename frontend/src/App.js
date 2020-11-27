@@ -14,6 +14,7 @@ import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 import Cars from "./pages/car/Cars";
+import Application from "./pages/application/Application";
 
 function App() {
 
@@ -34,6 +35,13 @@ function App() {
         })}/>
     };
 
+    const renderUser = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+            return <Users/>
+        })}/>
+    };
+
+
     const renderItems = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
         || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
@@ -48,9 +56,10 @@ function App() {
         })}/>
     };
 
-    const renderUser = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
-            return <Users/>
+    const renderApplication = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_LOGISTICS_SPECIALIST" ||
+        user.role === "ROLE_DISPATCHER"} render={(() => {
+            return <Application/>
         })}/>
     };
 
@@ -60,19 +69,28 @@ function App() {
         })}/>
     };
 
+    function pathWithCustomer(urlAfterCustomer) {
+        return `/customers/${currentCustomerId}${urlAfterCustomer}`
+    }
+
+    const categoryPath = pathWithCustomer(`/category`);
+    const itemPath = pathWithCustomer(`/item`);
+    const profilePath = pathWithCustomer(`/profile`);
+    const applicationPath = pathWithCustomer(`/application`);
 
     return (
         <UserContext>
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route path={`/customers/${currentCustomerId}/category`} render={renderCategory}/>/>
-                <Route path={`/customers/${currentCustomerId}/item`} render={renderItems}/>/>
-                <Route path={`/customers/${currentCustomerId}/profile`} render={renderProfile}/>/>
-                <Route path={`/customers`} render={renderCustomer}/>
-                <Route path={`/login`} component={Login}/>
+                <Route path={categoryPath} render={renderCategory}/>/>
+                <Route path={itemPath} render={renderItems}/>/>
+                <Route path={profilePath} render={renderProfile}/>/>
+                <Route path={applicationPath} render={renderApplication}/>
+                <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
                 <Route path={'/cars'} render={renderCar}/>
+                <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>
         </UserContext>

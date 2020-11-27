@@ -5,11 +5,15 @@ import by.itech.lab.supplier.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @Component
 public class UserMapper implements BaseMapper<User, UserDto> {
 
     private final AddressMapper addressMapper;
+    private final WarehouseMapper warehouseMapper;
+
 
     private CustomerMapper customerMapper;
 
@@ -28,6 +32,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .customerDto(user.getCustomer() != null ? customerMapper.map(user.getCustomer()) : null)
                 .deletedAt(user.getDeletedAt())
                 .addressDto(user.getAddress() != null ? addressMapper.map(user.getAddress()) : null)
+                .warehouseDto(Objects.isNull(user.getWarehouse()) ? null : warehouseMapper.map(user.getWarehouse()))
                 .build();
     }
 
@@ -56,6 +61,9 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .role(userDTO.getRole())
                 .customer(userDTO.getCustomerDto() != null ? customerMapper.map(userDTO.getCustomerDto()) : null)
                 .address(userDTO.getAddressDto() != null ? addressMapper.map(userDTO.getAddressDto()) : null)
+                .warehouse(Objects.isNull(userDTO.getWarehouseDto())
+                        ? null :
+                        warehouseMapper.map(userDTO.getWarehouseDto()))
                 .build();
     }
 

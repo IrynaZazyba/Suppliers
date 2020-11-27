@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: ADDR-AD-1
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: address
+            columns:
+              - column:
+                  name: latitude
+                  type: DOUBLE
+                  defaultValue: 0
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: ADDR-AD-2
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: address
+            columns:
+              - column:
+                  name: longitude
+                  type: DOUBLE
+                  defaultValue: 0
+                  constraints:
+                    nullable: true
+

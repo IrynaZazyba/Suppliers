@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +49,6 @@ public class UserController {
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public UserDto getUser(@PathVariable Long id) {
-        log.debug("request to get User : {}", id);
         return userService.findById(id);
     }
 
@@ -73,7 +71,7 @@ public class UserController {
 
 
     @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
-    public Optional<UserDto> getUseByUsername(@PathVariable String username) {
+    public UserDto getUseByUsername(@PathVariable String username) {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
@@ -84,6 +82,7 @@ public class UserController {
         return userService.changePassword(id, password);
     }
 
+    //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {

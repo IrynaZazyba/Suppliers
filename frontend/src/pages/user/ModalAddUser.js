@@ -208,7 +208,7 @@ function ModalAddUser(props) {
                                 Please provide a valid date.
                             </Form.Control.Feedback>
                         </Form.Group>
-
+                        <Form.Group controlId="formBasicRole" style={{padding: '5px 10px'}}>
                         <Form.Control style={{padding: '5px 10px '}} as="select"
                                       defaultValue="Choose..."
                                       onChange={handleRole}>
@@ -220,7 +220,8 @@ function ModalAddUser(props) {
                             <option value={"ROLE_DRIVER"}>ROLE_DRIVER</option>
                             <option value={"ROLE_DIRECTOR"}>ROLE_DIRECTOR</option>
                         </Form.Control>
-
+                    </Form.Group>
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
                         <Form.Control style={{padding: '5px 10px'}} as="select"
                                       defaultValue="Choose..."
                                       onChange={onChangeState}>
@@ -230,7 +231,7 @@ function ModalAddUser(props) {
 
                             ))}
                         </Form.Control>
-
+                        </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="city" onChange={handleCity}

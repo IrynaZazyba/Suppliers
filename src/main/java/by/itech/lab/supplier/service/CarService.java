@@ -8,6 +8,4 @@ public interface CarService extends BaseService<CarDto> {
 
     Page<CarDto> findAll(Pageable pageable);
 
-    int changeCurrentCapacity(final double capacity, Long id);
-
 }

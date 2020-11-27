@@ -21,5 +21,7 @@ public class AddressDto implements BaseDto {
     @NotBlank
     private String addressLine2;
     private StateDto state;
+    private Double latitude;
+    private Double longitude;
 
 }
