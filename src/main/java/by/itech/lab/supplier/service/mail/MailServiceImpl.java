@@ -22,7 +22,8 @@ public class MailServiceImpl implements MailService {
         Map<String, Object> emailMap = new HashMap<>();
         emailMap.put("firstName", userDto.getName());
         emailMap.put("lastName", userDto.getSurname());
-        emailMap.put("activationLink", "localhost:8080/users/" + userDto.getId() + "/1");
+        emailMap.put("activationLink", "localhost:8080/" + userDto.getCustomerId()
+                + "users/" + userDto.getId() + "/activate");
         emailMap.put("title", "Registration email");
         Context ctx = new Context(LocaleContextHolder.getLocale());
         ctx.setVariables(emailMap);

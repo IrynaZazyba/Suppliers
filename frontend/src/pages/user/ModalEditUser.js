@@ -15,7 +15,16 @@ function ModalEditUser(props) {
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
+    const [zone, setZone] = useState([]);
 
+    const [zones, setZones] = useState([]);
+
+    const [addressDto, setAddressDto] = useState({
+        city: '',
+        state: null,
+        addressLine1: '',
+        addressLine2: ''
+    });
     const handleName = (e) => {
         setUser(preState => ({
             ...preState,
@@ -35,7 +44,50 @@ function ModalEditUser(props) {
             birthday: e.target.value
         }));
     };
+    const onChangeState = (e) => {
+        const selectedState = zones.find(state => state.state === e.target.value);
 
+        setZone(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+        setAddressDto(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+    };
+    useEffect(() => {
+
+
+        fetch('/states')
+            .then(response => response.json())
+            .then(commits => {
+                setZones(commits.content);
+            });
+    }, []);
+    const handleCity = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            city: e.target.value
+        }));
+    };
+    const handleaddressLine1 = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            addressLine1: e.target.value
+        }));
+    };
+    const handleaddressLine2 = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            addressLine2: e.target.value
+        }));
+        setUser(preState => ({
+            ...preState,
+            addressDto: addressDto
+        }));
+
+    };
     const currentCustomerId = localStorage.
     getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId"): 0;
 
@@ -45,6 +97,8 @@ function ModalEditUser(props) {
                 .then(response => response.json())
                 .then(res => {
                     setUser(res);
+                    setZone(res.addressDto.state);
+                    setAddressDto(res.addressDto);
                 });
         }
     }, [props.props.editShow]);
@@ -124,6 +178,53 @@ function ModalEditUser(props) {
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid date.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Label>State</Form.Label>
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
+
+                                          onChange={onChangeState}>
+                                {Object.entries(zones).map(([k, v]) => (
+
+                                    <option>{v.state}</option>
+
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Label>City</Form.Label>
+                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
+                                          className={
+                                              isValid("city")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid city.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+
+                        <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 1</Form.Label>
+                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
+                                          className={
+                                              isValid("addressLine1")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid address line 1.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+
+                        <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 2</Form.Label>
+                            <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2} onChange={handleaddressLine2}
+                                          className={
+                                              isValid("addressLine2")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid address line 2.
                             </Form.Control.Feedback>
                         </Form.Group>
 

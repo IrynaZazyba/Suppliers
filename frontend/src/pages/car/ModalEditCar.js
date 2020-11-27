@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import validateItem from "../../validation/ItemValidationRules";
+
 import ErrorMessage from "../../messages/errorMessage";
 
 function ModalEditCar(props) {
@@ -64,6 +64,10 @@ function ModalEditCar(props) {
             ...preState,
             state: selectedState
         }));
+        setCar(preState => ({
+            ...preState,
+            addressDto: addressDto
+        }));
     };
     useEffect(() => {
 
@@ -79,11 +83,19 @@ function ModalEditCar(props) {
             ...preState,
             city: e.target.value
         }));
+        setCar(preState => ({
+            ...preState,
+            addressDto: addressDto
+        }));
     };
     const handleaddressLine1 = (e) => {
         setAddressDto(preState => ({
             ...preState,
             addressLine1: e.target.value
+        }));
+        setCar(preState => ({
+            ...preState,
+            addressDto: addressDto
         }));
     };
     const handleaddressLine2 = (e) => {
@@ -95,16 +107,20 @@ function ModalEditCar(props) {
             ...preState,
             addressDto: addressDto
         }));
+
     };
     const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
 
 
     useEffect(() => {
         if (props.props.editShow === true) {
-            fetch(`/customers/${currentCustomerId}/car/${props.props.item.id}`)
+            fetch(`/customers/${currentCustomerId}/car/${props.props.car.id}`)
                 .then(response => response.json())
                 .then(res => {
+
                     setCar(res);
+                    setAddressDto(res.addressDto);
+                    setZone(res.addressDto.state);
                 });
         }
     }, [props.props.editShow]);
@@ -112,12 +128,12 @@ function ModalEditCar(props) {
 
     const editCarHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateItem(carDto);
+
         setErrors(preState => ({
             ...preState,
-            validationErrors: validationResult
+            validationErrors: ''
         }));
-        if (validationResult.length === 0) {
+
             fetch(`/customers/${currentCustomerId}/car`, {
                 method: 'POST',
                 headers: {
@@ -139,7 +155,6 @@ function ModalEditCar(props) {
                         props.onChange(false, carDto);
                     }
                 });
-        }
     };
 
     return (
@@ -184,20 +199,21 @@ function ModalEditCar(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Label>State</Form.Label>
-                        <Form.Control style={{padding: '5px 10px'}} as="select"
-                                      value={carDto.addressDto.state.state}
-                                      onChange={onChangeState}>
-                            {Object.entries(zones).map(([k, v]) => (
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
 
-                                <option>{v.state}</option>
+                                          onChange={onChangeState}>
+                                {Object.entries(zones).map(([k, v]) => (
 
-                            ))}
-                        </Form.Control>
+                                    <option>{v.state}</option>
 
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city" value={carDto.addressDto.city} onChange={handleCity}
+                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -209,7 +225,8 @@ function ModalEditCar(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine1" value={carDto.addressDto.addressLine1} onChange={handleaddressLine1}
+                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1}
+                                          onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -221,7 +238,8 @@ function ModalEditCar(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine2" value={carDto.addressDto.addressLine2} onChange={handleaddressLine2}
+                            <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2}
+                                          onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")
                                           }/>

@@ -37,7 +37,7 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getItems(`/customers/${currentCustomerId}/car?size=${e.target.value}`);
+        getCars(`/customers/${currentCustomerId}/car?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
@@ -47,14 +47,14 @@ export default () => {
             ...preState,
             currentPage: e.target.innerHTML - 1
         }));
-        getItems(`/customers/${currentCustomerId}/car?page=${currentPage}&size=${page.countPerPage}`);
+        getCars(`/customers/${currentCustomerId}/car?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getItems(`/customers/${currentCustomerId}/car?size=${page.countPerPage}`);
+        getCars(`/customers/${currentCustomerId}/car?size=${page.countPerPage}`);
     }, []);
 
-    function getItems(url) {
+    function getCars(url) {
         setErrors('');
         fetch(url)
             .then(response => response.json())
@@ -69,10 +69,10 @@ export default () => {
             });
     }
 
-    const closeModalAdd = (e, itemDto) => {
+    const closeModalAdd = (e, carDto) => {
         setLgShow(e);
-        if (itemDto) {
-            getItems(`/customers/${currentCustomerId}/car?size=${page.countPerPage}`);
+        if (carDto) {
+            getCars(`/customers/${currentCustomerId}/car?size=${page.countPerPage}`);
         }
     };
 
@@ -83,7 +83,7 @@ export default () => {
                 editShow: false
             }));
         if (itemDto) {
-            getItems(`/customers/${currentCustomerId}/car?size=${page.countPerPage}`);
+            getCars(`/customers/${currentCustomerId}/car?size=${page.countPerPage}`);
         }
     };
 
@@ -121,7 +121,7 @@ export default () => {
                         onClick={() => {
                             setEditCar({
                                 editShow: true,
-                                item: car
+                                car: car
                             });
                         }}/>
             </td>

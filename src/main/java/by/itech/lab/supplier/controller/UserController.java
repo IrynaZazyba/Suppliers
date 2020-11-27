@@ -75,14 +75,14 @@ public class UserController {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
-    @AdminAccess
+
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public int changePassword(@PathVariable Long id, @RequestBody String password) {
         return userService.changePassword(id, password);
     }
 
-    //todo add secured when change url
+
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
@@ -95,6 +95,12 @@ public class UserController {
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
         userService.changeActiveStatus(id, status);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_ACTIVATE)
+    public void changeActive(@PathVariable Long id) {
+        userService.changeActive(id);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)

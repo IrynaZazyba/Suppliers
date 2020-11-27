@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     private final MailService mailService;
 
@@ -87,8 +89,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public int changeActive(Long id) {
+        return userRepository.setStatus(true, id);
+    }
+
+
+    @Override
+    @Transactional
     public int changePassword(Long id, String password) {
-        return userRepository.changePassword(password, id);
+        return userRepository.changePassword(passwordEncoder.encode(password), id);
     }
 
     @Override

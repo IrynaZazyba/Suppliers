@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -32,6 +33,8 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
     private UserMapper userMapper;
     @Mock
     private MailServiceImpl mailService;
@@ -43,7 +46,8 @@ public class UserServiceTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        userService = new UserServiceImpl(userRepository, userMapper, mailService);
+        userService = new UserServiceImpl(userRepository, userMapper,
+                passwordEncoder, mailService);
         Address address = new Address();
         address.setAddressLine1("address1");
         address.setAddressLine2("address2");
@@ -62,7 +66,7 @@ public class UserServiceTest {
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
         user = new User();
         user.setUsername(USERNAME);
-        user.setPassword("password");
+        user.setPassword(passwordEncoder.encode("password"));
         user.setActive(true);
         user.setEmail(EMAIL);
         user.setName("john");
