@@ -210,8 +210,6 @@ function EditShipmentModal(props) {
             validationErrors: validationResult
         }));
         if (validationResult.length === 0) {
-
-            setCurrentItem('');
             let dtoItem = {
                 cost: currentItem.price,
                 amount: currentItem.amount,
@@ -233,6 +231,7 @@ function EditShipmentModal(props) {
                 validationErrors: []
             }));
             ref.current.clear();
+            setCurrentItem('');
         }
     };
 
@@ -443,6 +442,7 @@ function EditShipmentModal(props) {
                 </Col>
                 <Col>
                     <Form.Control name="amount" size="sm" placeholder="amount" type="number" min='1'
+                                  value={currentItem && currentItem.amount}
                                   onChange={handleInputsAmount}
                                   onBlur={() => {
                                       let sourceId = app.sourceLocationDto.id;
