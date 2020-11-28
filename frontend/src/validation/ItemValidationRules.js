@@ -71,5 +71,27 @@ export function validateEditItem(currentItem, itemsInApp) {
     return errorsFields;
 }
 
+export function validateShipmentEditItem(currentItem, itemsInApp) {
+
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount) {
+        console.log("amount error")
+        errorsFields.push("amount");
+    }
+
+    let item = itemsInApp.filter(i => i.itemDto.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
+    return errorsFields;
+}
+
+
+
 
 
