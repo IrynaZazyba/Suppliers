@@ -50,6 +50,3 @@ export function recalculateItemWhenChangeWarehouse(app, sourceId, destinationId,
 
     return app;
 }
-
-
-
