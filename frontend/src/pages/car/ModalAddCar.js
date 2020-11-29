@@ -3,6 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
+import validateCar from "../../validation/CarValidationRules";
 
 function ModalAddCar(props) {
 
@@ -97,33 +98,36 @@ function ModalAddCar(props) {
 
     const addCarHandler = (e) => {
         e.preventDefault();
+        let validationResult = validateCar(carDto);
         setErrors(preState => ({
             ...preState,
-            validationErrors: ''
+            validationErrors: validationResult
         }));
-        console.log(carDto);
-        fetch(`/customers/${currentCustomerId}/car`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(carDto)
-        })
-            .then(response => {
-                if (response.status !== 200) {
-                    setErrors({
-                        serverErrors: "Something went wrong, try later",
-                        validationErrors: ''
-                    });
-                } else {
-                    setErrors(preState => ({
-                        ...preState,
-                        validationErrors: []
-                    }));
-                    props.onChange(false, carDto);
-                }
-            });
+        if (validationResult.length === 0) {
+            fetch(`/customers/${currentCustomerId}/car`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(carDto)
+            })
+                .then(response => {
+                    if (response.status !== 200) {
+                        setErrors({
+                            serverErrors: "Something went wrong, try later",
+                            validationErrors: ''
+                        });
+                    } else {
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: []
+                        }));
+                        props.onChange(false, carDto);
+                    }
+                });
+        }
     };
+
 
     return (
         <>
@@ -168,16 +172,18 @@ function ModalAddCar(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Control style={{padding: '5px 10px'}} as="select"
-                                      defaultValue="Choose..."
-                                      onChange={onChangeState}>
-                            {Object.entries(zones).map(([k, v]) => (
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
 
-                                <option>{v.state}</option>
+                            <Form.Control style={{padding: '5px 10px'}} as="select"
+                                          defaultValue="Choose..."
+                                          onChange={onChangeState}>
+                                {Object.entries(zones).map(([k, v]) => (
 
-                            ))}
-                        </Form.Control>
+                                    <option>{v.state}</option>
 
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="city" onChange={handleCity}

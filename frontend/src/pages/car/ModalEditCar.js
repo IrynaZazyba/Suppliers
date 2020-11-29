@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
 import ErrorMessage from "../../messages/errorMessage";
+import validateCar from "../../validation/CarValidationRules";
 
 function ModalEditCar(props) {
 
@@ -128,12 +129,12 @@ function ModalEditCar(props) {
 
     const editCarHandler = (e) => {
         e.preventDefault();
-
+        let validationResult = validateCar(carDto);
         setErrors(preState => ({
             ...preState,
-            validationErrors: ''
+            validationErrors: validationResult
         }));
-
+        if (validationResult.length === 0) {
             fetch(`/customers/${currentCustomerId}/car`, {
                 method: 'POST',
                 headers: {
@@ -155,6 +156,7 @@ function ModalEditCar(props) {
                         props.onChange(false, carDto);
                     }
                 });
+        }
     };
 
     return (
@@ -168,7 +170,7 @@ function ModalEditCar(props) {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
-                        Edit Item
+                        Edit Car
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -198,8 +200,9 @@ function ModalEditCar(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Label>State</Form.Label>
+
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Label>State</Form.Label>
                             <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
 
                                           onChange={onChangeState}>

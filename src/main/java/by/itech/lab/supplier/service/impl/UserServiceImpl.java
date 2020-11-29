@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int changePassword(Long id, String password) {
+        String passwd = passwordEncoder.encode(password);
         return userRepository.changePassword(passwordEncoder.encode(password), id);
     }
 

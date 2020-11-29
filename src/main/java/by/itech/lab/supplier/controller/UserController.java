@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
@@ -71,15 +72,15 @@ public class UserController {
 
 
     @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
-    public UserDto getUseByUsername(@PathVariable String username) {
+    public UserDto getUserByUsername(@PathVariable String username) {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
-    public int changePassword(@PathVariable Long id, @RequestBody String password) {
-        return userService.changePassword(id, password);
+    public int changePassword(@PathVariable Long id, @RequestBody Map<String, String> password) {
+        return userService.changePassword(id, password.get("password"));
     }
 
 
