@@ -13,6 +13,7 @@ import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
 import AddShipmentApplication from "./AddShipmentApplication";
+import AcceptApplicationModal from "./AcceptApplicationModal";
 
 export default () => {
 
@@ -35,6 +36,7 @@ export default () => {
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
     const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
+    const [modalAcceptOpen, setModalAcceptOpen] = useState();
 
     useEffect(() => {
         getApplications(`/customers/${customerId}/application`);
@@ -88,6 +90,11 @@ export default () => {
         }
     };
 
+    const closeModalAccept = (isOpen) => {
+        setModalAcceptOpen(isOpen);
+    };
+
+
     const tableRows = applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
@@ -105,7 +112,8 @@ export default () => {
                 <Badge className="badge-status">
                     {app.applicationStatus.replace('_', ' ').toLowerCase()}
                 </Badge></td>
-            <td><Button variant="link">Accept</Button>
+            <td><Button variant="link"
+                        onClick={() => setModalAcceptOpen(true)}>Accept</Button>
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
@@ -119,6 +127,8 @@ export default () => {
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
             <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
+            <AcceptApplicationModal props={modalAcceptOpen} onChange={closeModalAccept}/>
+
         </React.Fragment>;
 
     const header =
