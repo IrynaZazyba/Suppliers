@@ -159,32 +159,33 @@ function AddShipmentApplication(props) {
     }, [items]);
 
     useEffect(() => {
+        if (props.props) {
+            fetch(`/taxes`)
+                .then(response => response.json())
+                .then(commits => {
+                    setTaxes(commits);
+                });
 
-        fetch(`/taxes`)
-            .then(response => response.json())
-            .then(commits => {
-                setTaxes(commits);
-            });
-
-        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
-                        ...preState,
-                        source: res
-                    })
-                );
-            });
-        fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
-                        ...preState,
-                        destination: res
-                    })
-                );
-            });
-    }, []);
+            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(preState => ({
+                            ...preState,
+                            source: res
+                        })
+                    );
+                });
+            fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(preState => ({
+                            ...preState,
+                            destination: res
+                        })
+                    );
+                });
+        }
+    }, [props]);
 
     const addItemHandler = (e) => {
         e.preventDefault();

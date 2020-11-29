@@ -11,7 +11,10 @@ import java.util.Set;
 
 public interface ApplicationService extends BaseService<ApplicationDto> {
 
-    Page<ApplicationDto> findAllByRoleAndStatus(Pageable pageable, Boolean roleFlag, ApplicationStatus status);
+    Page<ApplicationDto> findAllByRoleAndStatus(Pageable pageable,
+                                                Boolean roleFlag,
+                                                ApplicationStatus status,
+                                                Long userId);
 
     Page<ApplicationDto> findAllByStatus(Pageable pageable, ApplicationStatus status);
 

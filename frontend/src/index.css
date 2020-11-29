@@ -153,7 +153,37 @@ a.page-link {
     text-align: center;
 }
 
-.badge-status{
+.badge-status {
     background-color: #E8E8EE;
     text-align: center;
 }
+
+.edit-appList {
+    font-weight: bold;
+}
+
+.status-in-modal {
+    float: right;
+    color: #009edd;
+    margin-top: 5px;
+}
+
+.badge-edit-modal {
+    display: inline-block;
+    width: 73%;
+    float: left;
+}
+
+.checkbox-all-app {
+    text-align: end;
+    margin-top: 3px;
+}
+
+.unavailable-item {
+    background-color: #f2b5ba;
+}
+
+.unavailable-item:hover{
+    background-color: #f2b5ba;
+}
+

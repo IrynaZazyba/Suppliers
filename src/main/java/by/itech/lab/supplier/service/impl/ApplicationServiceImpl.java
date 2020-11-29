@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,11 +52,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationDto save(final ApplicationDto dto) {
         UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userMapper.map(userService.findById(principal.getId()));
-
         Application application = Optional.ofNullable(dto.getId())
                 .map(appToSave -> buildApplicationForUpdate(dto))
                 .orElseGet(() -> buildApplicationToCreate(dto, user));
 
+        if (application.getType() == ApplicationType.TRAFFIC) {
+            application = calculationService.calculateAppItemsPrice(application);
+        }
         application.setLastUpdated(LocalDate.now());
         application.setLastUpdatedByUsers(user);
         application = applicationMapper.mapItems(application);
@@ -72,9 +75,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     private Application buildApplicationToCreate(final ApplicationDto dto, final User user) {
-        if (dto.getType() == ApplicationType.TRAFFIC) {
-            dto.setItems(calculationService.calculateAppItemsPrice(dto));
-        }
         final Application app = applicationMapper.map(dto);
         app.setApplicationStatus(ApplicationStatus.OPEN);
         app.setRegistrationDate(LocalDate.now());
@@ -101,8 +101,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<ApplicationDto> findAllByRoleAndStatus(Pageable pageable, Boolean roleFlag, ApplicationStatus status) {
-        return applicationRepository.findAllByRoleAndStatus(pageable, roleFlag, status).map(applicationMapper::map);
+    public Page<ApplicationDto> findAllByRoleAndStatus(final Pageable pageable,
+                                                       final Boolean roleFlag,
+                                                       final ApplicationStatus status,
+                                                       final Long userId) {
+        final Long warehouseId = roleFlag &&
+                Objects.nonNull(userId) ? userService.findById(userId).getWarehouseDto().getId() : null;
+        return applicationRepository.findAllByRoleAndStatusAndWarehouse(pageable, roleFlag, status, warehouseId)
+                .map(applicationMapper::map);
     }
 
     @Override

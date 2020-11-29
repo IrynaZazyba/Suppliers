@@ -20,4 +20,19 @@ export default function validateApplication(app, items) {
     return errorsFields;
 };
 
+export function validateEditApplication(app) {
+    let errorsFields = [];
+
+    if (!app.number) {
+        errorsFields.push("number");
+    }
+
+    if (app.items.length === 0) {
+        errorsFields.push("items");
+    }
+
+    return errorsFields;
+};
+
+
 
