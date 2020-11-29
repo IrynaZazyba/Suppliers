@@ -38,7 +38,11 @@ export default () => {
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
     const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
-    const [modalAcceptOpen, setModalAcceptOpen] = useState();
+    const [modalAcceptOpen, setModalAcceptOpen] = useState({
+        isOpen: false,
+        appId: '',
+        customerId: customerId
+    });
     const [openEditModal, setOpenEditModal] = useState({
         isOpen: false,
         app: [],
@@ -118,16 +122,17 @@ export default () => {
         setOpenEditModal(e);
     };
 
-    const closeModalEditShipment=(e)=>{
+    const closeModalEditShipment = (e) => {
         setOpenEditShipmentModal(e);
     };
 
     const closeModalAccept = (isOpen) => {
         setModalAcceptOpen(isOpen);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
     };
 
 
-    const tableRows = applications.map(app => (
+    const tableRows = applications && applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
             <td style={{fontSize: '0.9rem'}}>{app.sourceLocationDto.identifier}{','}<br/>
@@ -144,24 +149,35 @@ export default () => {
                 <Badge className="badge-status">
                     {app.applicationStatus.replace('_', ' ').toLowerCase()}
                 </Badge></td>
-            <td><Button variant="link"
-                        onClick={() => setModalAcceptOpen(true)}>Accept</Button>
+            <td>
+                {app.type === 'SUPPLY' &&
+                <Button variant="link"
+                        disabled={app.applicationStatus === 'FINISHED_PROCESSING'}
+                        onClick={() => {
+                            setModalAcceptOpen({
+                                isOpen: true,
+                                appId: app.id,
+                                customerId: customerId
+                            });
+                        }}>Accept</Button>}
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         onClick={() => {
-                            {app.type === 'SUPPLY' &&
+                            {
+                                app.type === 'SUPPLY' &&
                                 setOpenEditModal({
                                     isOpen: true,
                                     app: app,
                                     customerId: customerId
                                 });
                             }
-                            {app.type === 'TRAFFIC' &&
-                            setOpenEditShipmentModal({
-                                isOpen: true,
-                                app: app,
-                                customerId: customerId
-                            });
+                            {
+                                app.type === 'TRAFFIC' &&
+                                setOpenEditShipmentModal({
+                                    isOpen: true,
+                                    app: app,
+                                    customerId: customerId
+                                });
                             }
                         }}
                         size={'1.3em'}
