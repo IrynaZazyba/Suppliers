@@ -140,6 +140,11 @@ function AcceptApplicationModal(props) {
             <Row>
                 <Col sm={8}>
                     <Row style={{margin: '10px 5px'}}>
+                        <Col>
+                            <span className="edit-appList">Number: </span> {app.number}
+                        </Col>
+                    </Row>
+                    <Row style={{margin: '10px 5px'}}>
                         <Col><span className="edit-appList">Created by: </span>
                             {app.createdByUsersDto.username + ', ' + app.createdByUsersDto.surname}
                         </Col>

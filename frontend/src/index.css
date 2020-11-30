@@ -210,3 +210,8 @@ th.accept-all-item:hover {
 .already-accepted {
     background-color: #E8E8EE;
 }
+
+.forward-attention {
+    padding-left: 5px;
+    color: yellowgreen !important;
+}

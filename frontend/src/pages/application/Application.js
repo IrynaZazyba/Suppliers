@@ -114,21 +114,24 @@ export default () => {
     const closeModalAddShipment = (isOpen, appDto) => {
         setModalAddShipmentOpen(isOpen);
         if (appDto) {
-            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
         }
     };
 
     const closeModalEdit = (e) => {
         setOpenEditModal(e);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
+
     };
 
     const closeModalEditShipment = (e) => {
         setOpenEditShipmentModal(e);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
     };
 
     const closeModalAccept = (isOpen) => {
         setModalAcceptOpen(isOpen);
-        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
     };
 
 
@@ -162,25 +165,26 @@ export default () => {
                         }}>Accept</Button>}
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+                        size={'1.3em'}
                         onClick={() => {
                             {
-                                app.type === 'SUPPLY' &&
-                                setOpenEditModal({
+                                app.type === 'SUPPLY' && (app.applicationStatus === 'OPEN' || app.applicationStatus === 'STARTED_PROCESSING')
+                                && setOpenEditModal({
                                     isOpen: true,
                                     app: app,
                                     customerId: customerId
                                 });
                             }
                             {
-                                app.type === 'TRAFFIC' &&
-                                setOpenEditShipmentModal({
+                                app.type === 'TRAFFIC' && (app.applicationStatus === 'OPEN' || app.applicationStatus === 'STARTED_PROCESSING')
+                                && setOpenEditShipmentModal({
                                     isOpen: true,
                                     app: app,
                                     customerId: customerId
                                 });
                             }
                         }}
-                        size={'1.3em'}
+
             />
             </td>
         </tr>
