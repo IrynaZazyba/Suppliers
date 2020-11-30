@@ -64,7 +64,7 @@ public class Application implements BaseEntity {
     @JoinColumn(name = "waybill_id")
     private WayBill wayBill;
     private LocalDate deletedAt;
-    @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     private Set<ApplicationItem> items = new HashSet<>();
     private Long customerId;

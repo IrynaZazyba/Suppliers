@@ -53,6 +53,7 @@ function AddApplicationModal(props) {
                 setOptions(optionsFromBack);
             });
     };
+
     const filterBy = () => true;
     const onChangeUpc = (e) => {
 
@@ -129,25 +130,23 @@ function AddApplicationModal(props) {
 
 
     useEffect(() => {
-        fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
+        if (props.props) {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`),
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(warehouses => {
+                    setWarehouses(preState => ({
                         ...preState,
-                        source: res
-                    })
-                );
-            });
-        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
+                        source: warehouses[0]
+                    }));
+                    setWarehouses(preState => ({
                         ...preState,
-                        destination: res
-                    })
-                );
-            });
-    }, []);
+                        destination: warehouses[1]
+                    }));
+                });
+        }
+    }, [props]);
 
     const addItemHandler = (e) => {
         e.preventDefault();
@@ -218,7 +217,7 @@ function AddApplicationModal(props) {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     } else {
                         setErrors(preState => ({
