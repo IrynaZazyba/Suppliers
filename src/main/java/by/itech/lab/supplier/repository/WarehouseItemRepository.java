@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.WarehouseItem;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,8 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
     @Query("select i.warehouse.totalCapacity-COALESCE(sum(i.amount*i.item.units),0) " +
             "from WarehouseItem as i where i.warehouse.id=:warehouseId")
     Double getAvailableCapacity(@Param("warehouseId") Long warehouseId);
+
+    @Query("select i from WarehouseItem i where i.warehouse.id=:warehouseId")
+    Page<WarehouseItem> findItemsByWarehouseId(@Param("warehouseId") Long warehouseId);
 
 }

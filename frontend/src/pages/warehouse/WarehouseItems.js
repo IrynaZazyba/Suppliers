@@ -3,54 +3,28 @@ import Page from "../../components/Page";
 import {FaEdit} from "react-icons/fa";
 import React from "react";
 import ErrorMessage from "../../messages/errorMessage";
-import ModalAddItem from "../item/ModalAddItem";
-import ModalEditItem from "../item/ModalEditItem";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import CardContainer from "../../components/CardContainer";
-import {FaTrash} from "react-icons/fa";
+import {useParams} from "react-router-dom";
 
-export default (props) => {
 
-    const warehouseId = props.match?.params.warehouseId;
+export default () => {
+
+    const { warehouseId } = useParams();
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
-    const [page, setPage] = useState({
-        active: 1,
-        currentPage: 1,
-        countPerPage: 10,
-        countPages: 1
-    });
     const [items, setItems] = useState([]);
     const [warehouse, setWarehouse] = useState({});
     const [errors, setErrors] = useState({
         errorMessage: ''
     });
 
-    const handleCountPerPage = (e) => {
-        e.preventDefault();
-        setPage(preState => ({
-            ...preState,
-            countPerPage: e.target.value
-        }));
-        getWarehouse(`/customers/${currentCustomerId}/warehouse/${warehouseId}?size=${e.target.value}`);
-    };
-
-    const changePage = (e) => {
-        e.preventDefault();
-        let currentPage = e.target.innerHTML - 1;
-        setPage(preState => ({
-            ...preState,
-            currentPage: e.target.innerHTML - 1
-        }));
-        getWarehouse(`/customers/${currentCustomerId}/warehouse/${warehouseId}?page=${currentPage}&size=${page.countPerPage}`);
-    };
-
     useEffect(() => {
-        getWarehouse(`/customers/${currentCustomerId}/warehouse/${warehouseId}?size=${page.countPerPage}`);
+        getWarehouse(`/customers/${currentCustomerId}/warehouses/${warehouseId}`);
     }, []);
 
     function getWarehouse(url) {
@@ -58,22 +32,17 @@ export default (props) => {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                setWarehouse(commits.content);
-                setPage({
-                    active: (commits.pageable.pageNumber + 1),
-                    countPerPage: commits.size,
-                    countPages: commits.totalPages
-                });
+                setWarehouse(commits);
             });
     }
 
-    const tableRows = warehouse.items.map(whItem => (
-        <tr id={`whItem${whItem.id}`} key={whItem.id}>
-            <td>{whItem.itemDto.label}</td>
-            <td>{whItem.itemDto.units}</td>
-            <td>{whItem.amount}</td>
+    const tableRows =
+        <tr id={`whItem${warehouse.id}`} key={warehouse.id}>
+            <td>{warehouse.identifier}</td>
+            <td>{warehouse.type}</td>
+            <td>{warehouse.totalCapacity}</td>
         </tr>
-    ));
+    ;
 
     const modals =
         <React.Fragment>
@@ -83,10 +52,7 @@ export default (props) => {
     const header =
         <React.Fragment>
             <Row>
-                <Col md={11}></Col>
-                <Col md={1}>
-                    <TogglePage props={page} onChange={handleCountPerPage}/>
-                </Col>
+                <Col md={12}></Col>
             </Row>
         </React.Fragment>;
 
@@ -104,7 +70,6 @@ export default (props) => {
                 {tableRows}
                 </tbody>
             </Table>
-            <Page page={page} onChange={changePage}/>
         </React.Fragment>;
 
     return (

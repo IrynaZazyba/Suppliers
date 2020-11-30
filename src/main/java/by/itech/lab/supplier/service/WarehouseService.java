@@ -4,6 +4,7 @@ import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.WarehouseItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,4 +29,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable);
 
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
+
+    Page<WarehouseItemDto> getItemsOfWarehouse(Long warehouseId, Pageable pageable);
 }
