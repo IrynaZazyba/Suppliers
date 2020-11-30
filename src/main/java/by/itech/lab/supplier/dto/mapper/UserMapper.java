@@ -15,9 +15,6 @@ public class UserMapper implements BaseMapper<User, UserDto> {
     private final WarehouseMapper warehouseMapper;
     private final CustomerMapper customerMapper;
 
-
-    private CustomerMapper customerMapper;
-
     @Override
     public UserDto map(User user) {
         return UserDto.builder()
