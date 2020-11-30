@@ -12,6 +12,7 @@ import ErrorMessage from "../../messages/errorMessage";
 import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
+import AddShipmentApplication from "./AddShipmentApplication";
 
 export default () => {
 
@@ -33,6 +34,7 @@ export default () => {
     };
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
+    const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
 
     useEffect(() => {
         getApplications(`/customers/${customerId}/application`);
@@ -72,8 +74,15 @@ export default () => {
         getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
     };
 
-    const closeAddSupplyModel = (e, appDto) => {
-        setModalAddSupplyOpen(e);
+    const closeAddSupplyModel = (isOpen, appDto) => {
+        setModalAddSupplyOpen(isOpen);
+        if (appDto) {
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
+        }
+    };
+
+    const closeModalAddShipment = (isOpen, appDto) => {
+        setModalAddShipmentOpen(isOpen);
         if (appDto) {
             getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
         }
@@ -109,7 +118,7 @@ export default () => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
-
+            <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
         </React.Fragment>;
 
     const header =
@@ -121,7 +130,7 @@ export default () => {
                     </Button>
                 </Col>
                 <Col md={'auto'}>
-                    <Button className="mainButton" size="sm">
+                    <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
                         Add shipment
                     </Button>
                 </Col>

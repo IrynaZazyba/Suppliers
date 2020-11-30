@@ -24,11 +24,13 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Double getAvailableCapacity(Long warehouseId);
 
+    List<WarehouseItemDto> getWarehouseItemsByUpc(Long id, String itemUpc);
+
     void deleteByRetailerId(final Long id);
 
     Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable);
 
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 
-    Page<WarehouseItemDto> getItemsOfWarehouse(Long warehouseId, Pageable pageable);
+    List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
 }

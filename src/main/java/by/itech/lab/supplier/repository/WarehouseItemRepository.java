@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Long>,
@@ -21,5 +22,9 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
 
     @Query("select i from WarehouseItem i where i.warehouse.id=:warehouseId")
     Page<WarehouseItem> findItemsByWarehouseId(@Param("warehouseId") Long warehouseId);
+
+    List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemUpcStartsWith(Long id, String upc);
+
+    List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemIdIn(Long id, List<Long> itemIds);
 
 }

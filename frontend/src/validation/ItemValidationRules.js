@@ -20,3 +20,32 @@ export default function validateItem(currentItem, items) {
 
     return errorsFields;
 };
+
+export function validateShipmentItem(currentItem, items, app) {
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount) {
+        errorsFields.push("amount");
+    }
+
+    if (!app.sourceId) {
+        errorsFields.push("sourceId");
+    }
+
+    if (!app.destinationId) {
+        errorsFields.push("destinationId");
+    }
+
+    let item = items.filter(i => i.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
+    return errorsFields;
+};
+
+
+
