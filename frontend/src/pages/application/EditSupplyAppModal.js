@@ -37,23 +37,19 @@ function EditSupplyAppModal(props) {
 
     useEffect(() => {
         if (props.props.isOpen === true) {
-            fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
-                .then(response => response.json())
-                .then(res => {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`),
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(warehouses => {
                     setWarehouses(preState => ({
-                            ...preState,
-                            source: res
-                        })
-                    );
-                });
-            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-                .then(response => response.json())
-                .then(res => {
+                        ...preState,
+                        source: warehouses[0]
+                    }));
                     setWarehouses(preState => ({
-                            ...preState,
-                            destination: res
-                        })
-                    );
+                        ...preState,
+                        destination: warehouses[1]
+                    }));
                 });
         }
     }, [props]);
@@ -171,7 +167,7 @@ function EditSupplyAppModal(props) {
         setTotalValues(preState => ({
                 ...preState,
                 totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units)+parseInt(i.amount), 0)
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) + parseInt(i.amount), 0)
             })
         );
     }

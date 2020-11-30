@@ -131,23 +131,19 @@ function AddApplicationModal(props) {
 
     useEffect(() => {
         if (props.props) {
-            fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
-                .then(response => response.json())
-                .then(res => {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`),
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(warehouses => {
                     setWarehouses(preState => ({
-                            ...preState,
-                            source: res
-                        })
-                    );
-                });
-            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
-                .then(response => response.json())
-                .then(res => {
+                        ...preState,
+                        source: warehouses[0]
+                    }));
                     setWarehouses(preState => ({
-                            ...preState,
-                            destination: res
-                        })
-                    );
+                        ...preState,
+                        destination: warehouses[1]
+                    }));
                 });
         }
     }, [props]);
@@ -221,7 +217,7 @@ function AddApplicationModal(props) {
                     if (response.status !== 200) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     } else {
                         setErrors(preState => ({
