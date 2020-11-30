@@ -171,7 +171,7 @@ function EditSupplyAppModal(props) {
         setTotalValues(preState => ({
                 ...preState,
                 totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units), 0)
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units)+parseInt(i.amount), 0)
             })
         );
     }
