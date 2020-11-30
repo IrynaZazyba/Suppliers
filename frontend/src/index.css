@@ -180,10 +180,10 @@ a.page-link {
 }
 
 .unavailable-item {
-    background-color: #f2b5ba;
+    background-color: #fcc7ca;
 }
 
-.unavailable-item:hover{
-    background-color: #f2b5ba;
+.unavailable-item:hover {
+    background-color: #fcc7ca;
 }
 
