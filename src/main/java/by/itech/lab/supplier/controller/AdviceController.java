@@ -17,6 +17,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -62,6 +64,14 @@ public class AdviceController extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toMap(
                         e -> ((FieldError) e).getField(),
                         e -> Objects.nonNull(e.getDefaultMessage()) ? e.getDefaultMessage() : "error"));
+        return ResponseEntity.status(BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(
+                v -> v.getPropertyPath().toString(),
+                ConstraintViolation::getMessage));
         return ResponseEntity.status(BAD_REQUEST).body(errors);
     }
 

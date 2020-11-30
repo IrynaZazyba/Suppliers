@@ -2,7 +2,10 @@ package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.ApplicationType;
-import by.itech.lab.supplier.dto.validation.AppNumberConstraint;
+import by.itech.lab.supplier.dto.validation.application.constraints.AppNumberConstraint;
+import by.itech.lab.supplier.dto.validation.application.constraints.AppNumberUpdateConstraint;
+import by.itech.lab.supplier.dto.validation.OnCreate;
+import by.itech.lab.supplier.dto.validation.OnUpdate;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +20,8 @@ import java.util.Set;
 public class ApplicationDto implements BaseDto {
 
     private Long id;
-    @AppNumberConstraint(message = "Already exists number")
+    @AppNumberConstraint(groups = OnCreate.class, message = "Already exists number")
+    @AppNumberUpdateConstraint(groups = OnUpdate.class, message = "Already exists number")
     private String number;
     private LocalDate registrationDate;
     private LocalDate lastUpdated;

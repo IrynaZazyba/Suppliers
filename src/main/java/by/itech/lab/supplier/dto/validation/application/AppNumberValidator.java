@@ -1,5 +1,6 @@
-package by.itech.lab.supplier.dto.validation;
+package by.itech.lab.supplier.dto.validation.application;
 
+import by.itech.lab.supplier.dto.validation.application.constraints.AppNumberConstraint;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.RequiredArgsConstructor;
