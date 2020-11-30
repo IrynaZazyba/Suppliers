@@ -122,8 +122,8 @@ function AddApplicationModal(props) {
         setCurrentItem('');
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units)*parseFloat(i.amount), 0)
             })
         );
     }, [items]);
@@ -219,11 +219,11 @@ function AddApplicationModal(props) {
             }).then(response => {
                 if (response.status === 400) {
                     response.json().then(json => {
-                        let keys = Object.keys(json);
-                        setErrors(preState => ({
-                            ...preState,
-                            validationErrors: keys
-                        }));
+                       let res=Object.values(json).join('. ');
+                        setErrors({
+                            serverErrors: res,
+                            validationErrors: ''
+                        });
                     });
                 }
                 if (response.status !== 200 && response.status !== 400) {
@@ -256,7 +256,7 @@ function AddApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
+                    <th>Cost, $ per unit</th>
                     <th></th>
 
                 </tr>

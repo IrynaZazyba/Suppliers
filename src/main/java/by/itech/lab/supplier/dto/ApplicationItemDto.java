@@ -14,7 +14,7 @@ public class ApplicationItemDto implements BaseDto {
     private Long id;
     private ItemDto itemDto;
     private ApplicationDto applicationDto;
-    @DecimalMin("1.0")
+    @DecimalMin("0.001")
     private BigDecimal cost;
     @DecimalMin("1.0")
     private Double amount;

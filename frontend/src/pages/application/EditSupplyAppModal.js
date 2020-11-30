@@ -171,8 +171,8 @@ function EditSupplyAppModal(props) {
     function calculateTotalValues(items) {
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseInt(i.amount), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseFloat(i.amount), 0)
             })
         );
     }
@@ -369,20 +369,20 @@ function EditSupplyAppModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
+                    <th>Cost, $ per unit</th>
                     <th>{status && 'Accepted at'}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {app.items.map(i => (
                     <tr id={i.id} key={i.id}
-                        className={i.acceptedAt !== null && "accepted-item"}>
+                        className={i.acceptedAt && i.acceptedAt !== null && "accepted-item"}>
                         <td>{i.itemDto.upc}</td>
                         <td>{i.itemDto.label}</td>
                         <td>{i.amount}</td>
                         <td>{i.cost}</td>
                         <td style={{textAlign: 'center', width: '10%'}}>
-                            {i.acceptedAt === null && !status &&
+                            {(!i.acceptedAt || i.acceptedAt === null) && !status &&
                             <FaTrash id={i.itemDto.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
                             />}

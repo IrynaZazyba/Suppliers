@@ -4,11 +4,11 @@ export default function validateItem(currentItem, items) {
         errorsFields.push("upc");
     }
 
-    if (!currentItem.amount) {
+    if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
     }
 
-    if (!currentItem.cost) {
+    if (!currentItem.cost || currentItem.cost < 0) {
         errorsFields.push("cost");
     }
 
@@ -27,7 +27,7 @@ export function validateShipmentItem(currentItem, items, app) {
         errorsFields.push("upc");
     }
 
-    if (!currentItem.amount) {
+    if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
     }
 
@@ -54,8 +54,7 @@ export function validateEditItem(currentItem, itemsInApp) {
         errorsFields.push("upc");
     }
 
-    if (!currentItem.amount) {
-        console.log("amount error")
+    if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
     }
 
@@ -78,8 +77,7 @@ export function validateShipmentEditItem(currentItem, itemsInApp) {
         errorsFields.push("upc");
     }
 
-    if (!currentItem.amount) {
-        console.log("amount error")
+    if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
     }
 

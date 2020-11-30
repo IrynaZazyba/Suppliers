@@ -31,7 +31,6 @@ public class ApplicationDto implements BaseDto {
     private WarehouseDto destinationLocationDto;
     private UserDto createdByUsersDto;
     private UserDto lastUpdatedByUsersDto;
-    @NotNull
     private ApplicationStatus applicationStatus;
     private WayBillDto wayBillDto;
     private LocalDate deletedAt;

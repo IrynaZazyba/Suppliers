@@ -2,14 +2,15 @@ import React, {useContext, useEffect, useState} from 'react';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
-import Modal from "react-bootstrap/Modal";
 import {AuthContext} from "../../context/authContext";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import {FaCheck, FaMapMarkerAlt, FaTimes} from "react-icons/fa";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import Modal from "react-bootstrap/Modal";
 import Badge from "react-bootstrap/Badge";
+import Alert from "react-bootstrap/Alert";
 
 function AcceptApplicationModal(props) {
 
@@ -25,6 +26,7 @@ function AcceptApplicationModal(props) {
     const [acceptedItems, setAcceptedItems] = useState([]);
     const [mapAppItems, setMapAppItems] = useState([]);
     const [serverError, setError] = useState('');
+    const [fullWhWarning, setWarning] = useState(false);
 
     useEffect(() => {
         if (props.props.isOpen === true) {
@@ -38,7 +40,7 @@ function AcceptApplicationModal(props) {
                     fetch(`/customers/${customerId}/warehouses/${res.destinationLocationDto.id}/capacity`)
                         .then(response => response.json())
                         .then(capacity => {
-                            let percentage = (capacity * 100 / res.destinationLocationDto.totalCapacity).toFixed(2);
+                            let percentage = calculatePercentage(capacity, res.destinationLocationDto.totalCapacity);
                             setWhPercentage(percentage);
                             setAvailableCapacity(capacity);
                         });
@@ -48,17 +50,20 @@ function AcceptApplicationModal(props) {
 
     useEffect(() => {
         if (props.props.isOpen) {
-            let percentage = (availableCapacity * 100 / app.destinationLocationDto.totalCapacity).toFixed(2);
+            let percentage = calculatePercentage(availableCapacity, app.destinationLocationDto.totalCapacity);
             setWhPercentage(percentage);
         }
     }, [availableCapacity]);
 
+    function calculatePercentage(availableCapacity, totalCapacity) {
+        return (availableCapacity * 100 / totalCapacity).toFixed(2);
+    }
 
     function calculateTotalValues(items) {
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseInt(i.amount), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseFloat(i.amount), 0)
             })
         );
     }
@@ -66,41 +71,43 @@ function AcceptApplicationModal(props) {
     const acceptItem = (e) => {
         const value = parseInt(e.currentTarget.id);
         let item = mapAppItems.get(value);
-        let availableCapacityAfterChange = availableCapacity + (item.amount * item.itemDto.units);
-        if (checkWhTotalCapacity(availableCapacityAfterChange)) {
+        let availableCapacityAfterChange = availableCapacity - (item.amount * item.itemDto.units);
+        if (availableCapacityAfterChange >= 0) {
             setAcceptedItems([...acceptedItems, value]);
             setAvailableCapacity(availableCapacityAfterChange);
+            setWarning(false);
         } else {
-
+            setWarning(true);
         }
     };
 
     const cancelAccept = (e) => {
+        setWarning(false);
         const value = parseInt(e.currentTarget.id);
         let removed = acceptedItems.filter(i => i !== value);
         setAcceptedItems(removed);
         let item = mapAppItems.get(value);
-        let availableCapacityAfterChange = availableCapacity - (item.amount * item.itemDto.units);
+        let availableCapacityAfterChange = availableCapacity + (item.amount * item.itemDto.units);
         setAvailableCapacity(availableCapacityAfterChange);
     };
 
-    function checkWhTotalCapacity(availableCapacity) {
-        return app.destinationLocationDto.totalCapacity > availableCapacity;
-    }
-
     const acceptAll = () => {
         let totalCapacityAcceptedItems = calculateTotalItemsCapacity();
-        let resCapacity = availableCapacity + totalCapacityAcceptedItems;
-        if (checkWhTotalCapacity(resCapacity)) {
+        let resCapacity = availableCapacity - totalCapacityAcceptedItems;
+        if (resCapacity >= 0) {
             setAvailableCapacity(resCapacity);
             let acceptedIds = Array.from(mapAppItems.keys());
             setAcceptedItems(acceptedIds);
+            setWarning(false);
+        } else {
+            setWarning(true);
         }
     };
 
     const cancelAll = () => {
+        setWarning(false);
         let totalCapacityCanceledItems = calculateTotalItemsCapacity();
-        let resCapacity = availableCapacity - totalCapacityCanceledItems;
+        let resCapacity = availableCapacity + totalCapacityCanceledItems;
         setAvailableCapacity(resCapacity);
         setAcceptedItems([]);
     };
@@ -129,6 +136,7 @@ function AcceptApplicationModal(props) {
                 } else {
                     setAcceptedItems([]);
                     setError('');
+                    setWarning('');
                     props.onChange(false, appDto);
                 }
             });
@@ -212,10 +220,20 @@ function AcceptApplicationModal(props) {
                         <span
                             style={{marginLeft: '10px'}}>{availableCapacity}</span>
                         <ProgressBar
-                            variant={whCapacityPercentage > 70 ? "danger" : "success"}
+                            variant={(whCapacityPercentage > 40 && "success") ||
+                            (whCapacityPercentage < 40 && whCapacityPercentage > 20 && "warning")
+                            || (whCapacityPercentage < 20 && "danger")}
                             className="wh-capacity-bar" now={whCapacityPercentage} label={`${whCapacityPercentage}%`}/>
+                        {/*<Form.Text id="attentionCapacity" className="capacity-warning">*/}
+                        {/*    The current warehouse can't accept all items,*/}
+                        {/*    you can forward non accepted items to another warehouse in the application editing mode.*/}
+                        {/*</Form.Text>*/}
                     </Row>
                 </Col>
+                {fullWhWarning && <Alert style={{marginLeft: '20px'}} variant="danger">
+                    The current warehouse can't accept all items,
+                    you can forward non accepted items to another warehouse in the application editing mode
+                </Alert>}
             </Row>
             }
         </>;
@@ -229,7 +247,7 @@ function AcceptApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
+                    <th>Price, $ per unit</th>
                     <th className="accept-all-item">
                         {acceptedItems.length === mapAppItems.size &&
                         <Button variant="link"
@@ -271,6 +289,8 @@ function AcceptApplicationModal(props) {
                 show={props.props.isOpen}
                 onHide={() => {
                     setAcceptedItems([]);
+                    setWhPercentage('');
+                    setWarning(false);
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"

@@ -82,8 +82,8 @@ function EditShipmentModal(props) {
     function calculateTotalValues(items) {
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units)*parseFloat(i.amount), 0)
             })
         );
     }
@@ -388,7 +388,7 @@ function EditShipmentModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
+                    <th>Cost, $ per unit</th>
                     <th></th>
                 </tr>
                 </thead>
