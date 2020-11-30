@@ -216,14 +216,24 @@ function AddApplicationModal(props) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(application)
-            })
-                .then(function (response) {
-                    if (response.status !== 200) {
-                        setErrors({
-                            serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
-                        });
-                    } else {
+            }).then(response => {
+                if (response.status === 400) {
+                    response.json().then(json => {
+                        let keys = Object.keys(json);
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: keys
+                        }));
+                    });
+                }
+                if (response.status !== 200 && response.status !== 400) {
+                    setErrors({
+                        serverErrors: "Something go wrong, try later",
+                        validationErrors: ''
+                    });
+                }
+                if (response.status === 200) {
+                    response.json().then(json => {
                         setErrors(preState => ({
                             ...preState,
                             validationErrors: []
@@ -231,8 +241,9 @@ function AddApplicationModal(props) {
                         setApp([]);
                         setItems([]);
                         props.onChange(false, appDto);
-                    }
-                });
+                    })
+                }
+            });
         }
     };
 
@@ -346,7 +357,7 @@ function AddApplicationModal(props) {
                                               : "form-control"
                                       }/>
                         <Form.Control.Feedback type="invalid">
-                            Please provide a number.
+                            Please provide a valid number.
                         </Form.Control.Feedback>
                     </Col>
                 </Form.Group>

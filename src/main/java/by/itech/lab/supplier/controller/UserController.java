@@ -3,7 +3,6 @@ package by.itech.lab.supplier.controller;
 import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.dto.StateDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.CustomerService;
 import by.itech.lab.supplier.service.UserService;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
-import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
@@ -64,8 +62,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @AdminAccess
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-       CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
-       userDto.setCustomerDto(customerDto);
+        CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
+        userDto.setCustomerDto(customerDto);
         return userService.save(userDto);
     }
 
@@ -75,6 +73,7 @@ public class UserController {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
+
     @AdminAccess
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
