@@ -30,7 +30,9 @@ import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_DELETE_LIST;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_DISPATCHERS;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 
 @RestController
@@ -48,7 +50,12 @@ public class UserController {
         return userService.findListByDispatcherUsername(username);
     }
 
-    @GetMapping(ApiConstants.URL_ID_PARAMETER)
+    @GetMapping(URL_DISPATCHERS + URL_ID_PARAMETER)
+    public List<UserDto> getAllDispatchersForCurrentWarehouse(@RequestParam Long id) {
+        return userService.findDispatchersByWarehouseId(id);
+    }
+
+    @GetMapping(URL_ID_PARAMETER)
     public Optional<UserDto> getUser(@PathVariable Long id) {
         log.debug("request to get User : {}", id);
         return userService.findById(id);
@@ -78,13 +85,13 @@ public class UserController {
     }
     @AdminAccess
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
+    @PutMapping(URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public int changePassword(@PathVariable Long id, @RequestBody String password) {
         return userService.changePassword(id, password);
     }
 
     //todo add secured when change url
-    @PutMapping(ApiConstants.URL_ID_PARAMETER)
+    @PutMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
@@ -93,15 +100,21 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @AdminAccess
-    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
+    @PutMapping(URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
         userService.changeActiveStatus(id, status);
     }
 
-    @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
+    @DeleteMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @PostMapping(URL_DELETE_LIST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody final List<Long> dispatcherDeleteList) {
+        userService.deleteWarehouseFromUsers(dispatcherDeleteList);
     }
 }

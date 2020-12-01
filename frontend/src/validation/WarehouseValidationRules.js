@@ -1,5 +1,3 @@
-import validateCategory from "./CategoryValidationRules";
-
 export default function validateWarehouse(dto) {
         return [...validateIdentifier(dto), ...validateCity(dto),
             ...validateAddressLine1(dto), ...validateAddressLine2(dto),
@@ -45,7 +43,7 @@ export function validateAddressLine2(dto) {
 export function validateTotalCapacity(dto) {
     let errorsFields = [];
 
-    if (dto.totalCapacity.length < 1 || dto.totalCapacity.length > 50 || !(/[0-9]/.test(dto.totalCapacity))) {
+    if (dto.totalCapacity.length < 1 || dto.totalCapacity.length > 50) {
         errorsFields.push("totalCapacity");
     }
     return errorsFields;

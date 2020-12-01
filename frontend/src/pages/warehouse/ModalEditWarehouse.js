@@ -6,23 +6,25 @@ import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Dropdown from "react-bootstrap/Dropdown";
 import validateWarehouse from "../../validation/WarehouseValidationRules";
+import {FaTrash} from "react-icons/fa";
 
 function ModalEditWarehouse(props) {
 
     const ref = React.createRef();
-    const [dispatcherList, setDispatcherList] = useState([]);
+    const [dispatcherDeleteList, setDispatcherDeleteList] = useState([]);
+    const [dispatchersList, setDispatchersList] = useState([]);
     const [dispatcherOptions, setDispatcherOptions] = useState([]);
-    const [options, setOptions] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
-        customerId: props.currentCustomerId,
+        customerId: '',
         identifier: '',
         type: '',
         addressDto: {
             state: {}
         },
         totalCapacity: '',
-        usersId: dispatcherList
+        dispatchersId: []
     });
 
     const [errors, setErrors] = useState({
@@ -30,14 +32,51 @@ function ModalEditWarehouse(props) {
         serverErrors: ''
     });
 
+    useEffect(() => {
+        if (props.props.editShow === true) {
+            fetch("/customers/" + props.currentCustomerId + "/warehouses/" + props.props.warehouse.id)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouseDto(res);
+                })
+            handleSearchAllDispatchersById(props.props.warehouse.id);
+        }
+    }, [props.props.editShow]);
+
     const filterBy = () => true;
 
-    const handleSearch = (query) => {
+    const handleStateSearch = (query) => {
         fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                setOptions(res);
+                setStateOptions(res);
             });
+    };
+
+    function deleteWarehouseFromDispatchers() {
+        if (dispatcherDeleteList.length > 0) {
+            fetch(`/customers/${props.currentCustomerId}/users/delete-list`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dispatcherDeleteList)
+            })
+                .then(function (response) {
+                        if (response.status !== 204) {
+                            setErrors({
+                                serverErrors: "Something go wrong, try later",
+                                validationErrors: ''
+                            });
+                        } else {
+                            setErrors(preState => ({
+                                ...preState,
+                                validationErrors: []
+                            }));
+                        }
+                    }
+                )
+        }
     };
 
     const handleDispatcherSearch = (query) => {
@@ -52,6 +91,18 @@ function ModalEditWarehouse(props) {
             });
     };
 
+    const handleSearchAllDispatchersById = (id) => {
+        fetch(`/customers/${props.currentCustomerId}/users/dispatchers/${id}?id=${id}`)
+            .then(resp => resp.json())
+            .then(res => {
+                const dispatchersFromBack = res.map((i) => ({
+                    id: i.id,
+                    username: i.username
+                }));
+                setDispatchersList(dispatchersFromBack);
+            });
+    };
+
     const onChangeState = (e) => {
         setErrors({
             setErrors: '',
@@ -60,7 +111,7 @@ function ModalEditWarehouse(props) {
         e.length > 0 ?
             setWarehouseDto(preState => ({
                 ...preState,
-                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].stateZone}}
+                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].state}}
             })) :
             setWarehouseDto(preState => ({
                 ...preState,
@@ -68,18 +119,14 @@ function ModalEditWarehouse(props) {
             }));
     };
 
-    const onChangeDispatcher = (e) => {
-        setDispatcherList(e)};
-
-    useEffect(() => {
-        if (props.props.editShow === true) {
-            fetch("/customers/" + props.currentCustomerId + "/warehouses/" + props.props.warehouse.id)
-                .then(response => response.json())
-                .then(res => {
-                    setWarehouseDto(res);
-                });
+    const addDispatcher = (e) => {
+        if (e.length !== 0) {
+            e.map(dispatcher =>
+                setDispatchersList(preState => ([
+                    ...preState, dispatcher
+                ])));
         }
-    }, [props.props.editShow]);
+    };
 
     const handleType = (e) => {
         setWarehouseDto(preState => ({
@@ -109,13 +156,6 @@ function ModalEditWarehouse(props) {
         }));
     };
 
-    const handleState = (e) => {
-        setWarehouseDto(preState => ({
-            ...preState,
-            addressDto: {...preState.addressDto, state: e.target.value}
-        }));
-    };
-
     const handleTotalCapacity = (e) => {
         setWarehouseDto(preState => ({
             ...preState,
@@ -125,22 +165,26 @@ function ModalEditWarehouse(props) {
 
     const editWarehouseHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateWarehouse(warehouseDto);
+        const dispatchersId = dispatchersList.map(dispatcher => dispatcher.id);
+        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
+        deleteWarehouseFromDispatchers();
+
+        let validationResult = validateWarehouse(updateWarehouseDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
-            serverErrors: ''
         }));
         if (validationResult.length === 0) {
+
             fetch('/customers/' + props.currentCustomerId + '/warehouses/' + warehouseDto.id, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(warehouseDto)
+                body: JSON.stringify(updateWarehouseDto)
             })
                 .then(function (response) {
-                    if (response.status !== 202) {
+                    if (response.status !== 202 || errors.serverErrors === '') {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
                             validationErrors: ''
@@ -148,13 +192,31 @@ function ModalEditWarehouse(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
+                            serverErrors: '',
                             validationErrors: []
                         }));
+                        setDispatchersList([]);
+                        setDispatcherDeleteList([])
+                        props.onChange(false, warehouseDto);
                     }
-                    props.onChange(false, warehouseDto);
                 });
         }
     };
+
+    const showDispatchers = dispatchersList.map(disp =>
+        <div key={disp.id}>
+            {disp.username}
+            <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
+                     onClick={() => {
+
+                         setDispatchersList(
+                             dispatchersList.filter((dispatcher) => dispatcher.id !== disp.id));
+
+                         setDispatcherDeleteList([...dispatcherDeleteList, disp.id]);
+                     }}
+            />
+        </div>
+    );
 
     return (
         <>
@@ -252,46 +314,50 @@ function ModalEditWarehouse(props) {
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
                             current state
                             <Form.Control type="text"
-                                          onChange={handleState}
                                           value={warehouseDto.addressDto.state.state}
                                           disabled
                             />
                         </Form.Group>
-
-                        <AsyncTypeahead
-                            ref={ref}
-                            name="state"
-                            filterBy={filterBy}
-                            id="async-state"
-                            labelKey="state"
-                            minLength={3}
-                            options={options}
-                            placeholder="Search, if you want to change state..."
-                            onSearch={handleSearch}
-                            onChange={onChangeState}
-                        >
-                            <div className="validation-error">
-                                {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
-                            </div>
-                        </AsyncTypeahead>
-
-                        <AsyncTypeahead
-                            ref={ref}
-                            name="username"
-                            filterBy={filterBy}
-                            id="async-username"
-                            labelKey="username"
-                            minLength={3}
-                            options={dispatcherOptions}
-                            placeholder="Search, if want to add a new dispatcher..."
-                            onSearch={handleDispatcherSearch}
-                            onChange={onChangeDispatcher}
-                        >
-                            <div className="validation-error">
-                                {errors.validationErrors.includes("username") ? "Please provide a value" : ""}
-                            </div>
-                        </AsyncTypeahead>
-
+                        <Form.Group>
+                            <AsyncTypeahead
+                                ref={ref}
+                                name="state"
+                                filterBy={filterBy}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Search, if you want to change state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}
+                            >
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
+                                </div>
+                            </AsyncTypeahead>
+                        </Form.Group>
+                        <Form.Group>
+                            <div>Selected dispatchers</div>
+                            {showDispatchers}
+                        </Form.Group>
+                        <Form.Group>
+                            <AsyncTypeahead
+                                ref={ref}
+                                name="username"
+                                filterBy={filterBy}
+                                id="async-username"
+                                labelKey="username"
+                                minLength={3}
+                                options={dispatcherOptions}
+                                placeholder="Search, if want to add a new dispatcher..."
+                                onSearch={handleDispatcherSearch}
+                                onChange={addDispatcher}
+                            >
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("username") ? "Please provide a value" : ""}
+                                </div>
+                            </AsyncTypeahead>
+                        </Form.Group>
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
                                     onClick={editWarehouseHandler}>

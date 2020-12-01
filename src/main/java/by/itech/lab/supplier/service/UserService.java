@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface UserService {
     List<UserDto> findListByDispatcherUsername(String username);
 
+    List<UserDto> findDispatchersByWarehouseId(Long id);
+
     UserDto createAdmin(CustomerDto customerDto);
 
     Optional<UserDto> findById(Long id);
@@ -35,4 +37,6 @@ public interface UserService {
     Page<UserDto> getAllActive(Pageable pageable, Boolean status);
 
     void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId);
+
+    void deleteWarehouseFromUsers(List<Long> dispatcherDeleteList);
 }

@@ -11,28 +11,26 @@ import {FaTrash} from "react-icons/fa";
 function ModalAddWarehouse(props) {
 
     const ref = React.createRef();
-    const [dispatcherIdList, setDispatcherIdList] = useState([]);
-    const [dispatcherList, setDispatcherList] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const [dispatcherOptions, setDispatcherOptions] = useState([]);
+    const [dispatchersList, setDispatchersList] = useState([]);
     const [dropdownMenuName, setDropdownMenuName] = useState("select type");
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
-        customerId: props.currentCustomerId,
+        customerId: '',
         identifier: '',
         type: '',
         addressDto: {
             state: {}
         },
         totalCapacity: '',
-        usersId: dispatcherIdList
+        dispatchersId: []
     });
 
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
-
-    const [stateOptions, setStateOptions] = useState([]);
-    const [dispatcherOptions, setDispatcherOptions] = useState([]);
 
     const filterBy = () => true;
 
@@ -64,7 +62,7 @@ function ModalAddWarehouse(props) {
         e.length > 0 ?
             setWarehouseDto(preState => ({
                 ...preState,
-                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].stateZone}}
+                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].state}}
             })) :
             setWarehouseDto(preState => ({
                 ...preState,
@@ -72,11 +70,12 @@ function ModalAddWarehouse(props) {
             }));
     };
 
-    const onChangeDispatcher = (e) => {
-
-        if (e.length!==0) {
-            dispatcherList.push(e);
-            console.log(dispatcherList)
+    const addDispatcher = (e) => {
+        if (e.length !== 0) {
+            e.map(dispatcher =>
+                setDispatchersList(preState => ([
+                    ...preState, dispatcher
+                ])));
         }
     };
 
@@ -125,7 +124,10 @@ function ModalAddWarehouse(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateWarehouse(warehouseDto);
+        const dispatchersId = dispatchersList.map(dispatcher => dispatcher.id);
+        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
+
+        let validationResult = validateWarehouse(updateWarehouseDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
@@ -137,7 +139,7 @@ function ModalAddWarehouse(props) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(warehouseDto)
+                body: JSON.stringify(updateWarehouseDto)
             })
                 .then(function (response) {
                         if (response.status !== 201) {
@@ -151,30 +153,26 @@ function ModalAddWarehouse(props) {
                                 validationErrors: [],
                                 serverErrors: ''
                             }));
-                            dispatcherList.map(object => (object.map(dispatcher =>
-                                dispatcherIdList.push(dispatcher.id)
-                            )))
+                            setDispatchersList([]);
                             props.onChange(false, warehouseDto)
-                            setDispatcherList([]);
-                            setDispatcherIdList([]);
                         }
                     }
                 )
         }
     };
 
-    const dispatchers = dispatcherList.map(dispatcherObject => (dispatcherObject.map(dispatcher =>
-        <div key={dispatcher.id}>
-            {dispatcher.username}
+    const showDispatchers = dispatchersList.map(disp =>
+        <div key={disp.id}>
+            {disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
-                         const index = dispatcherList.indexOf(dispatcherObject);
-                         console.log(index)
-                         dispatcherList.splice(index, 1)
+
+                         setDispatchersList(
+                             dispatchersList.filter((dispatcher) => dispatcher.id !== disp.id));
                      }}
             />
         </div>
-    )));
+    );
 
     return (
         <>
@@ -290,7 +288,7 @@ function ModalAddWarehouse(props) {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group>
-                            {dispatchers}
+                            {showDispatchers}
                         </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
@@ -303,7 +301,7 @@ function ModalAddWarehouse(props) {
                                 options={dispatcherOptions}
                                 placeholder="Select dispatcher username..."
                                 onSearch={handleDispatcherSearch}
-                                onChange={onChangeDispatcher}
+                                onChange={addDispatcher}
                             >
                                 <div className="validation-error">
                                     {errors.validationErrors.includes("username") ? "Please provide a username" : ""}

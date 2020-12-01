@@ -22,6 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static by.itech.lab.supplier.domain.Role.ROLE_DISPATCHER;
+
 @Service
 @Transactional
 @Slf4j
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private final MailService mailService;
 
     @Override
-    public Page<UserDto> findAllByActive( Pageable pageable,  Boolean status) {
+    public Page<UserDto> findAllByActive(Pageable pageable, Boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
 
@@ -112,12 +114,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findListByDispatcherUsername(final String username) {
-        return userRepository.findByUsernameStartingWith(username).stream()
+        return userRepository.findByUsernameStartingWithAndActiveIsTrueAndRoleEquals(username, ROLE_DISPATCHER).stream()
                 .map(userMapper::map).collect(Collectors.toList());
     }
 
     @Override
-    public void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId) {
-        userRepository.setWarehouseIntoUser(warehouse, usersId);
+    public List<UserDto> findDispatchersByWarehouseId(Long id) {
+        return userRepository.findDispatchersByWarehouseId(id).stream()
+                .map(userMapper::map).collect(Collectors.toList());
+    }
+
+    @Override
+    public void setWarehouseIntoUser(final Warehouse warehouse, final List<Long> dispatchersId) {
+        userRepository.setWarehouseIntoUser(warehouse, dispatchersId);
+    }
+
+    @Override
+    public void deleteWarehouseFromUsers(final List<Long> dispatcherDeleteList) {
+        userRepository.deleteWarehouseFromUsers(dispatcherDeleteList);
     }
 }

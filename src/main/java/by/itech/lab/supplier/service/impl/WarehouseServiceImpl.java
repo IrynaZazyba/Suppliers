@@ -99,14 +99,17 @@ public class WarehouseServiceImpl implements WarehouseService {
     private Warehouse create(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
         Warehouse saved = warehouseRepository.save(warehouse);
-        userService.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
+        userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
         return saved;
     }
 
     private Warehouse update(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
         warehouseMapper.map(warehouseDto, warehouse);
-        return warehouseRepository.save(warehouse);
+        Warehouse saved = warehouseRepository.save(warehouse);
+        System.out.println(warehouseDto.getDispatchersId());
+        userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
+        return saved;
     }
 
     @Transactional

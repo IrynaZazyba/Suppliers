@@ -48,6 +48,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User set warehouse = :warehouse where id in :usersId")
     void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId);
 
-//    @Query("select u from User u where u.role=:role and u.active=true")
-    List<User> findByUsernameStartingWith(final String username);
+    List<User> findByUsernameStartingWithAndActiveIsTrueAndRoleEquals(String username, Role role);
+
+    @Query("select u from User u where u.warehouse.id =:id")
+    List<User> findDispatchersByWarehouseId(final Long id);
+
+    @Modifying
+    @Query("update User set warehouse = null where id in :dispatcherDeleteList")
+    void deleteWarehouseFromUsers(List<Long> dispatcherDeleteList);
 }
