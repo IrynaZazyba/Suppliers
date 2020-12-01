@@ -8,10 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public interface UserService {
+public interface UserService extends BaseService<UserDto> {
     List<UserDto> findListByDispatcherUsername(String username);
 
     List<UserDto> findDispatchersByWarehouseId(Long id);

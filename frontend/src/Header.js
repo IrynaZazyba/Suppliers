@@ -3,7 +3,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import UserProfile from "./components/UserProfile";
 import {AuthContext} from "./context/authContext";
-import Warehouse from "./pages/warehouse/Warehouses";
 
 function Header() {
 
