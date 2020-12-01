@@ -77,9 +77,9 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
-    public void changePassword(@PathVariable Long customerId, @PathVariable Long id, @RequestBody Map<String, String> password) {
+    public void changePassword(@PathVariable Long customerId, @PathVariable Long id, @RequestBody String password) {
       if (customerId.equals(threadLocal.get()))
-        userService.changePassword(id, password.get("password"));
+        userService.changePassword(id, password);
     }
 
 
