@@ -18,9 +18,8 @@ public interface UserService {
 
     UserDto createAdmin(CustomerDto customerDto);
 
-    Optional<UserDto> findById(Long id);
 
-    Optional<UserDto> findByUsername(String username);
+    UserDto findByUsername(String username);
 
     Page<UserDto> findAll(Pageable pageable);
 

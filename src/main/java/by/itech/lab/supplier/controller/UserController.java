@@ -55,9 +55,8 @@ public class UserController {
         return userService.findDispatchersByWarehouseId(id);
     }
 
-    @GetMapping(URL_ID_PARAMETER)
-    public Optional<UserDto> getUser(@PathVariable Long id) {
-        log.debug("request to get User : {}", id);
+    @GetMapping(ApiConstants.URL_ID_PARAMETER)
+    public UserDto getUser(@PathVariable Long id) {
         return userService.findById(id);
     }
 
@@ -79,19 +78,19 @@ public class UserController {
 
 
     @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
-    public Optional<UserDto> getUseByUsername(@PathVariable String username) {
+    public UserDto getUseByUsername(@PathVariable String username) {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
     @AdminAccess
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping(URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public int changePassword(@PathVariable Long id, @RequestBody String password) {
         return userService.changePassword(id, password);
     }
 
     //todo add secured when change url
-    @PutMapping(URL_ID_PARAMETER)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.OK)
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
@@ -100,12 +99,12 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @AdminAccess
-    @PutMapping(URL_ID_PARAMETER + ApiConstants.URL_STATUS)
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
         userService.changeActiveStatus(id, status);
     }
 
-    @DeleteMapping(URL_ID_PARAMETER)
+    @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @AdminAccess
     public void deleteUser(@PathVariable Long id) {

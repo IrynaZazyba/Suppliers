@@ -9,7 +9,9 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.WarehouseItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
+import by.itech.lab.supplier.dto.mapper.WarehouseItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateException;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -54,6 +56,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseItemRepository itemInWarehouseRepository;
     private final Lock lock = new ReentrantLock();
     private final UserService userService;
+    private final WarehouseItemMapper warehouseItemMapper;
     private final WarehouseItemFilter warehouseItemFilter;
 
     @Lazy
@@ -72,10 +75,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<WarehouseDto> findAllByType(final WarehouseType warehouseType) {
-        if (warehouseType == WarehouseType.WAREHOUSE) {
+    public List<WarehouseDto> findAllByType(final WarehouseType warehouseType, final Boolean byUser) {
+        if (warehouseType == WarehouseType.WAREHOUSE && Objects.nonNull(byUser) && byUser) {
             UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            UserDto currentUser = userService.findById(principal.getId()).orElseThrow();
+            UserDto currentUser = userService.findById(principal.getId());
             return Collections.singletonList(currentUser.getWarehouseDto());
         }
         return warehouseRepository.findAllByType(warehouseType)
@@ -167,6 +170,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         return Objects.isNull(availableCapacity) ?
                 warehouseRepository.getTotalCapacity(warehouseId) :
                 availableCapacity;
+    }
+
+    @Override
+    public List<WarehouseItemDto> getWarehouseItemsByUpc(final Long id, final String itemUpc) {
+        return itemInWarehouseRepository
+                .getWarehouseItemByWarehouseIdAndItemUpcStartsWith(id, itemUpc)
+                .stream()
+                .map(warehouseItemMapper::map)
+                .collect(Collectors.toList());
     }
 
     private Set<ApplicationItemDto> getItemsToAccept(final Set<ApplicationItemDto> itemsToAccept,
@@ -262,4 +274,12 @@ public class WarehouseServiceImpl implements WarehouseService {
         return itemInWarehouse;
     }
 
+    @Override
+    public List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId) {
+        return itemInWarehouseRepository
+                .getWarehouseItemByWarehouseIdAndItemIdIn(warehouseId, itemId)
+                .stream()
+                .map(warehouseItemMapper::map)
+                .collect(Collectors.toList());
+    }
 }

@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Query("update User set active = :active where id = :id")
-    int setStatus(@Param("active") boolean active, @Param("id") Long id);
+    int setStatus(@Param("active") Boolean active, @Param("id") Long id);
 
     @Modifying
     @Query("update User set password = :password where id = :id")

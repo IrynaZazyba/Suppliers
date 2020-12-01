@@ -10,10 +10,12 @@ import {FaTrash} from "react-icons/fa";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
-import validateItem from "../../validation/ItemValidationRules";
+import {validateShipmentItem} from "../../validation/ItemValidationRules";
 import validateApplication from "../../validation/ApplicationValidationRules";
+import calculateItemPrice, {calculateDistance, recalculateItems} from "./CalculatePrice";
 
-function AddApplicationModal(props) {
+
+function AddShipmentApplication(props) {
 
     const ref = React.createRef();
     const [appDto, setApp] = useState({
@@ -23,11 +25,11 @@ function AddApplicationModal(props) {
         items: []
     });
     const {user, setUser} = useContext(AuthContext);
-    const customerId = user.currentCustomerId;
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
+    const customerId = user.currentCustomerId;
     const [options, setOptions] = useState([]);
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState([]);
@@ -39,57 +41,85 @@ function AddApplicationModal(props) {
         source: [],
         destination: []
     });
+    const [taxes, setTaxes] = useState();
 
     const handleSearch = (query) => {
-        fetch(`/customers/${customerId}/item/upc?upc=${query}`)
+        fetch(`/customers/${customerId}/warehouses/${warehouses.source[0].id}/items?itemUpc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
-                    id: i.id,
-                    upc: i.upc,
-                    label: i.label,
-                    units: i.units
+                    id: i.item.id,
+                    upc: i.item.upc,
+                    label: i.item.label,
+                    units: i.item.units,
+                    category: i.item.categoryDto,
+                    cost: i.cost
                 }));
+
                 setOptions(optionsFromBack);
             });
     };
-
     const filterBy = () => true;
     const onChangeUpc = (e) => {
-
-        setErrors({
-            setErrors: '',
-            validationErrors: []
-        });
+        checkValidationErrors('upc');
+        checkValidationErrors('exist');
         e.length > 0 ?
             setCurrentItem(preState => ({
                 ...preState,
                 id: e[0].id,
                 upc: e[0].upc,
                 label: e[0].label,
-                units: e[0].units
+                units: e[0].units,
+                category: e[0].category,
+                cost: e[0].cost
+
             })) :
             setCurrentItem('');
     };
 
-    const handleInputsAmountAndCost = (fieldName) =>
+    const handleInput = (fieldName) =>
         (e) => {
             const value = e.target.value;
+            checkValidationErrors(fieldName);
             setCurrentItem(preState => ({
                 ...preState,
                 [fieldName]: value
-            }))
+            }));
         };
 
-    const handleAppLocations = (fieldName) =>
-        (e) => {
-            const value = e.currentTarget.value;
-            checkValidationErrors(fieldName);
-            setApp(preState => ({
-                ...preState,
-                [fieldName]: value
-            }))
-        };
+    const handleAppSourceLocations = (e) => {
+        const value = e.currentTarget.value;
+        checkValidationErrors("sourceId");
+        setApp(preState => ({
+            ...preState,
+            sourceId: value
+        }));
+        ref.current.clear();
+        setCurrentItem('');
+        if (appDto.destinationId && value && items.length !== 0) {
+            recalculatePrices(value, appDto.destinationId);
+        }
+    };
+
+    const handleAppDestinationLocations = (e) => {
+        const value = e.currentTarget.value;
+        checkValidationErrors('destinationId');
+        setApp(preState => ({
+            ...preState,
+            destinationId: value
+        }));
+        ref.current.clear();
+        setCurrentItem('');
+        if (appDto.sourceId && value && items.length !== 0) {
+            recalculatePrices(appDto.sourceId, value);
+        }
+    };
+
+    function recalculatePrices(sourceId, destinationId) {
+        let distance = calculateDistance(warehouses, sourceId, destinationId);
+        let itemPrice = recalculateItems(items, taxes, distance, destinationId);
+        setItems(itemPrice);
+    }
 
     const appNumberOnChange = (e) => {
         const value = e.target.value;
@@ -128,29 +158,30 @@ function AddApplicationModal(props) {
         );
     }, [items]);
 
-
     useEffect(() => {
         if (props.props) {
             Promise.all([
-                fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`),
-                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`),
+                fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`),
+                fetch(`/taxes`)
             ]).then(res => Promise.all(res.map(r => r.json())))
-                .then(warehouses => {
+                .then(content => {
                     setWarehouses(preState => ({
                         ...preState,
-                        source: warehouses[0]
+                        source: content[0]
                     }));
                     setWarehouses(preState => ({
                         ...preState,
-                        destination: warehouses[1]
+                        destination: content[1]
                     }));
+                    setTaxes(content[2]);
                 });
         }
     }, [props]);
 
     const addItemHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateItem(currentItem, items);
+        let validationResult = validateShipmentItem(currentItem, items, appDto);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validationResult
@@ -172,7 +203,7 @@ function AddApplicationModal(props) {
         let itemInApp = [];
         items.forEach(i => {
             let itemApp = {
-                cost: i.cost,
+                cost: i.price,
                 amount: i.amount,
                 itemDto: {
                     id: i.id,
@@ -191,7 +222,7 @@ function AddApplicationModal(props) {
             },
             items: itemInApp,
             customerId: user.currentCustomerId,
-            type: 'SUPPLY'
+            type: 'TRAFFIC'
         };
     }
 
@@ -241,7 +272,7 @@ function AddApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
+                    <th>Price, $ per unit</th>
                     <th></th>
 
                 </tr>
@@ -252,7 +283,7 @@ function AddApplicationModal(props) {
                         <td>{i.upc}</td>
                         <td>{i.label}</td>
                         <td>{i.amount}</td>
-                        <td>{i.cost}</td>
+                        <td>{i.price}</td>
                         <td style={{textAlign: 'center'}}>
                             <FaTrash id={i.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
@@ -295,7 +326,17 @@ function AddApplicationModal(props) {
                 <Col>
                     <Form.Control name="amount" placeholder="amount" type="number" min='1'
                                   value={currentItem && currentItem.amount}
-                                  onChange={handleInputsAmountAndCost('amount')}
+                                  onChange={handleInput('amount')}
+                                  onBlur={() => {
+                                      if (appDto.destinationId && appDto.sourceId) {
+                                          let distance = calculateDistance(warehouses, appDto.sourceId, appDto.destinationId);
+                                          let itemPrice = calculateItemPrice(currentItem, taxes, distance, appDto.destinationId);
+                                          setCurrentItem(prevState => ({
+                                              ...prevState,
+                                              price: itemPrice
+                                          }));
+                                      }
+                                  }}
                                   className={
                                       errors.validationErrors.includes("amount")
                                           ? "form-control is-invalid"
@@ -306,17 +347,11 @@ function AddApplicationModal(props) {
                     </Form.Control.Feedback>
                 </Col>
                 <Col>
-                    <Form.Control name="cost" placeholder="cost" type="number" min='1'
-                                  value={currentItem && currentItem.cost}
-                                  onChange={handleInputsAmountAndCost('cost')}
-                                  className={
-                                      errors.validationErrors.includes("cost")
-                                          ? "form-control is-invalid"
-                                          : "form-control"
-                                  }/>
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a value.
-                    </Form.Control.Feedback>
+                    <Form.Control name="price" placeholder="price" type="number"
+                                  disabled
+                                  value={currentItem && currentItem.price}
+                    />
+
                 </Col>
                 <Col sm="1">
                     <Button id={currentItem && currentItem.id} type="submit"
@@ -349,7 +384,8 @@ function AddApplicationModal(props) {
                 <Form.Group as={Row} controlId="sourceLocation">
                     <Form.Label column sm="3">Source location</Form.Label>
                     <Col sm="7">
-                        <Form.Control onChange={handleAppLocations('sourceId')} as="select"
+                        <Form.Control onChange={handleAppSourceLocations} as="select"
+                                      disabled={items.length > 0 ? true : false}
                                       className={
                                           errors.validationErrors.includes("sourceId")
                                               ? "form-control is-invalid"
@@ -370,7 +406,7 @@ function AddApplicationModal(props) {
                 <Form.Group as={Row} controlId="destinationLocation">
                     <Form.Label column sm="3">Destination location</Form.Label>
                     <Col sm="7">
-                        <Form.Control onChange={handleAppLocations('destinationId')} as="select"
+                        <Form.Control onChange={handleAppDestinationLocations} as="select"
                                       className={
                                           errors.validationErrors.includes("destinationId")
                                               ? "form-control is-invalid"
@@ -433,7 +469,7 @@ function AddApplicationModal(props) {
                 backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
-                        Create supply application
+                        Create shipment application
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -466,4 +502,4 @@ function AddApplicationModal(props) {
 
 }
 
-export default AddApplicationModal;
+export default AddShipmentApplication;

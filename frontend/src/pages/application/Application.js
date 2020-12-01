@@ -12,6 +12,8 @@ import ErrorMessage from "../../messages/errorMessage";
 import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
+import AddShipmentApplication from "./AddShipmentApplication";
+import EditSupplyAppModal from "./EditSupplyAppModal";
 
 export default () => {
 
@@ -33,9 +35,20 @@ export default () => {
     };
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
+    const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
+    const [openEditModal, setOpenEditModal] = useState({
+        isOpen: false,
+        app: [],
+        customerId: customerId
+    });
+    const [isAll, setBelongToWarehouse] = useState(false);
+    const [isCheckboxAll, setCheckbox] = useState({
+        checkboxChecked: false
+    });
+
 
     useEffect(() => {
-        getApplications(`/customers/${customerId}/application`);
+        getApplications(`/customers/${customerId}/application?isAll=${isAll}`);
     }, []);
 
     function getApplications(url) {
@@ -51,10 +64,17 @@ export default () => {
             });
     }
 
+    const handleBelongToDispatcherFilter = (e) => {
+        let value = e.target.checked;
+        setCheckbox(value);
+        setBelongToWarehouse(value);
+        getApplications(`/customers/${customerId}/application?status=${filter}&size=${page.countPerPage}&isAll=${value}`);
+    };
+
     const onChangeFilter = (e) => {
         e.preventDefault();
         setFilter(e.target.value);
-        getApplications(`/customers/${customerId}/application?status=${e.target.value}&size=${page.countPerPage}`);
+        getApplications(`/customers/${customerId}/application?status=${e.target.value}&size=${page.countPerPage}&isAll=${isAll}`);
     };
 
     const handleCountPerPage = (e) => {
@@ -63,20 +83,31 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getApplications(`/customers/${customerId}/application?size=${e.target.value}`);
+        getApplications(`/customers/${customerId}/application?size=${e.target.value}&isAll=${isAll}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}`);
+        getApplications(`/customers/${customerId}/application?page=${currentPage}&size=${page.countPerPage}&status=${filter}&isAll=${isAll}`);
     };
 
-    const closeAddSupplyModel = (e, appDto) => {
-        setModalAddSupplyOpen(e);
+    const closeAddSupplyModel = (isOpen, appDto) => {
+        setModalAddSupplyOpen(isOpen);
         if (appDto) {
-            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
         }
+    };
+
+    const closeModalAddShipment = (isOpen, appDto) => {
+        setModalAddShipmentOpen(isOpen);
+        if (appDto) {
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
+        }
+    };
+
+    const closeModalEdit = (e) => {
+        setOpenEditModal(e);
     };
 
     const tableRows = applications.map(app => (
@@ -99,6 +130,15 @@ export default () => {
             <td><Button variant="link">Accept</Button>
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+                        onClick={() => {
+                            {app.type !== 'TRAFFIC' &&
+                                setOpenEditModal({
+                                    isOpen: true,
+                                    app: app,
+                                    customerId: customerId
+                                });
+                            }
+                        }}
                         size={'1.3em'}
             />
             </td>
@@ -109,7 +149,8 @@ export default () => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
-
+            <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
+            <EditSupplyAppModal props={openEditModal} onChange={closeModalEdit}/>
         </React.Fragment>;
 
     const header =
@@ -121,11 +162,20 @@ export default () => {
                     </Button>
                 </Col>
                 <Col md={'auto'}>
-                    <Button className="mainButton" size="sm">
+                    <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
                         Add shipment
                     </Button>
                 </Col>
-                <Col md={6}></Col>
+                <Col md={4}></Col>
+                <Col md={2} className="checkbox-all-app">
+                    <Form.Group controlId="formBasicCheckbox">
+                        <Form.Check
+                            type="checkbox"
+                            label="See all"
+                            onChange={handleBelongToDispatcherFilter}
+                            checked={isCheckboxAll.checkboxChecked}/>
+                    </Form.Group>
+                </Col>
                 <Col md={2}>
                     <Form.Control size="sm" as="select"
                                   value={filter}

@@ -36,5 +36,7 @@ public class Address implements BaseEntity {
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "state_id")
     private State state;
+    private Double latitude;
+    private Double longitude;
 
 }

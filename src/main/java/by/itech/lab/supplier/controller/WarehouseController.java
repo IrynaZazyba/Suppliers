@@ -4,6 +4,7 @@ import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.WarehouseItemDto;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,7 +92,14 @@ public class WarehouseController {
     }
 
     @GetMapping(ApiConstants.URL_TYPE)
-    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type) {
-        return warehouseService.findAllByType(type);
+    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type,
+                                         @RequestParam(required = false) final Boolean byDispatcher) {
+        return warehouseService.findAllByType(type, byDispatcher);
+    }
+
+    @GetMapping(URL_ID_PARAMETER + URL_ITEMS)
+    public List<WarehouseItemDto> getWarehouseItemsByUpc(@PathVariable final Long id,
+                                                         @RequestParam final String itemUpc) {
+        return warehouseService.getWarehouseItemsByUpc(id, itemUpc);
     }
 }

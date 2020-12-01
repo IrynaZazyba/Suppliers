@@ -4,12 +4,12 @@ import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
+import by.itech.lab.supplier.dto.WarehouseItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Set;
-
 import java.util.List;
+import java.util.Set;
 
 public interface WarehouseService{
 
@@ -21,7 +21,7 @@ public interface WarehouseService{
 
     Page<WarehouseDto> findAll(Pageable pageable);
 
-    List<WarehouseDto> findAllByType(WarehouseType warehouseType);
+    List<WarehouseDto> findAllByType(WarehouseType warehouseType, Boolean byUser);
 
     void acceptApplication(ApplicationDto appDto, Long warehouseId);
 
@@ -29,9 +29,13 @@ public interface WarehouseService{
 
     Double getAvailableCapacity(Long warehouseId);
 
+    List<WarehouseItemDto> getWarehouseItemsByUpc(Long id, String itemUpc);
+
     void deleteByRetailerId(final Long id);
 
     Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable);
 
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
+
+    List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
 }
