@@ -116,7 +116,7 @@ export default () => {
         setOpenEditModal(e);
     };
 
-    const closeModalEditShipment=(e)=>{
+    const closeModalEditShipment = (e) => {
         setOpenEditShipmentModal(e);
     };
 
@@ -141,19 +141,18 @@ export default () => {
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         onClick={() => {
-                            {app.type === 'SUPPLY' &&
+                            if (app.type === 'SUPPLY') {
                                 setOpenEditModal({
                                     isOpen: true,
                                     app: app,
                                     customerId: customerId
                                 });
-                            }
-                            {app.type === 'TRAFFIC' &&
-                            setOpenEditShipmentModal({
-                                isOpen: true,
-                                app: app,
-                                customerId: customerId
-                            });
+                            } else {
+                                setOpenEditShipmentModal({
+                                    isOpen: true,
+                                    app: app,
+                                    customerId: customerId
+                                });
                             }
                         }}
                         size={'1.3em'}

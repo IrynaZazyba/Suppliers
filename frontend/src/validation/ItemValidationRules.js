@@ -90,6 +90,11 @@ export function validateShipmentEditItem(currentItem, itemsInApp) {
     return errorsFields;
 }
 
+export function checkItemsAtWarehouse(appItemsIds, whItems) {
+    let itemIds = whItems.map(i => i.item.id);
+    return appItemsIds.filter(appItem => !itemIds.includes(appItem));
+}
+
 
 
 

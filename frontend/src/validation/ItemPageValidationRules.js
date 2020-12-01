@@ -42,8 +42,3 @@ export function validateItemCategory(dto) {
     return errorFields;
 }
 
-
-export function checkItemsAtWarehouse(appItems, whItems) {
-    let filter = whItems.map(i => i.item.id);
-    return appItems.filter(appItem => !filter.includes(appItem));
-}
