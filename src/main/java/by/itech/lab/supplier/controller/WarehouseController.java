@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEMS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_RETAILER_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE_ITEMS;
 
 @RestController
 @AllArgsConstructor
@@ -75,7 +77,7 @@ public class WarehouseController {
         warehouseService.delete(deleteList);
     }
 
-    @PostMapping(URL_RETAILER_ID_PARAMETER)
+    @DeleteMapping(URL_RETAILER_ID_PARAMETER)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteByRetailerId(@PathVariable final Long retailerId) {
         warehouseService.deleteByRetailerId(retailerId);
@@ -101,5 +103,11 @@ public class WarehouseController {
     public List<WarehouseItemDto> getWarehouseItemsByUpc(@PathVariable final Long id,
                                                          @RequestParam final String itemUpc) {
         return warehouseService.getWarehouseItemsByUpc(id, itemUpc);
+    }
+
+    @GetMapping(URL_ID_PARAMETER + URL_WAREHOUSE_ITEMS)
+    public List<WarehouseItemDto> getWarehouseItemByItemsId(@PathVariable final Long id,
+                                                            @RequestParam final List<Long> itemsId) {
+        return warehouseService.getWarehouseItemContainingItems(id, itemsId);
     }
 }
