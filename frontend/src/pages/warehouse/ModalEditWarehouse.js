@@ -43,7 +43,8 @@ function ModalEditWarehouse(props) {
         }
     }, [props.props.editShow]);
 
-    const filterBy = () => true;
+    const filterByState = () => true;
+    const filterByUsername = () => true;
 
     const handleStateSearch = (query) => {
         fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
@@ -65,14 +66,8 @@ function ModalEditWarehouse(props) {
                 .then(function (response) {
                         if (response.status !== 204) {
                             setErrors({
-                                serverErrors: "Something go wrong, try later",
-                                validationErrors: ''
+                                serverErrors: "Something go wrong, try later"
                             });
-                        } else {
-                            setErrors(preState => ({
-                                ...preState,
-                                validationErrors: []
-                            }));
                         }
                     }
                 )
@@ -85,6 +80,8 @@ function ModalEditWarehouse(props) {
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
                     id: i.id,
+                    name: i.name,
+                    surname: i.surname,
                     username: i.username
                 }));
                 setDispatcherOptions(optionsFromBack);
@@ -97,6 +94,8 @@ function ModalEditWarehouse(props) {
             .then(res => {
                 const dispatchersFromBack = res.map((i) => ({
                     id: i.id,
+                    name: i.name,
+                    surname: i.surname,
                     username: i.username
                 }));
                 setDispatchersList(dispatchersFromBack);
@@ -104,10 +103,6 @@ function ModalEditWarehouse(props) {
     };
 
     const onChangeState = (e) => {
-        setErrors({
-            setErrors: '',
-            validationErrors: []
-        });
         e.length > 0 ?
             setWarehouseDto(preState => ({
                 ...preState,
@@ -121,10 +116,14 @@ function ModalEditWarehouse(props) {
 
     const addDispatcher = (e) => {
         if (e.length !== 0) {
-            e.map(dispatcher =>
-                setDispatchersList(preState => ([
-                    ...preState, dispatcher
-                ])));
+            const dispatcherId = e[0].id;
+            const isContains = dispatchersList.filter((dispatcher) => dispatcher.id === dispatcherId);
+            if (isContains.length===0) {
+                e.map(dispatcher =>
+                    setDispatchersList(preState => ([
+                        ...preState, dispatcher
+                    ])));
+            }
         }
     };
 
@@ -169,13 +168,12 @@ function ModalEditWarehouse(props) {
         const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
         deleteWarehouseFromDispatchers();
 
-        let validationResult = validateWarehouse(updateWarehouseDto);
+        let validationResult = validateWarehouse(warehouseDto, dispatchersId);
         setErrors(preState => ({
             ...preState,
-            validationErrors: validationResult,
+            validationErrors: validationResult
         }));
         if (validationResult.length === 0) {
-
             fetch('/customers/' + props.currentCustomerId + '/warehouses/' + warehouseDto.id, {
                 method: 'PUT',
                 headers: {
@@ -184,11 +182,12 @@ function ModalEditWarehouse(props) {
                 body: JSON.stringify(updateWarehouseDto)
             })
                 .then(function (response) {
-                    if (response.status !== 202 || errors.serverErrors === '') {
-                        setErrors({
+                    if (response.status !== 202 || errors.serverErrors !== '') {
+                        console.log("ooops 2")
+                        setErrors(preState => ({
+                            ...preState,
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
-                        });
+                        }));
                     } else {
                         setErrors(preState => ({
                             ...preState,
@@ -205,7 +204,7 @@ function ModalEditWarehouse(props) {
 
     const showDispatchers = dispatchersList.map(disp =>
         <div key={disp.id}>
-            {disp.username}
+            {disp.name + " " + disp.surname + ", username: " + disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
 
@@ -218,19 +217,24 @@ function ModalEditWarehouse(props) {
         </div>
     );
 
-    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
-
     return (
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
-                aria-labelledby="modal-custom"
+                backdrop="static"
+                onHide={() => {
+                    setErrors({
+                        validationErrors: [],
+                        serverErrors: ''
+                    });
+                    props.onChange(false);
+                }}
+                aria-labelledby="modal-warehouse"
                 className="shadow"
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="modal-custom">
+                    <Modal.Title id="modal-warehouse">
                         Edit warehouse
                     </Modal.Title>
                 </Modal.Header>
@@ -262,7 +266,8 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleCity}
                                           value={warehouseDto.addressDto.city}
-                                          className={isValid("city")}/>
+                                          className={errors.validationErrors.includes("city")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid city.
                             </Form.Control.Feedback>
@@ -272,7 +277,8 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleLineOne}
                                           value={warehouseDto.addressDto.addressLine1}
-                                          className={isValid("addressLine1")}/>
+                                          className={errors.validationErrors.includes("addressLine1")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
@@ -282,7 +288,8 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
                                           value={warehouseDto.addressDto.addressLine2}
-                                          className={isValid("addressLine2")}/>
+                                          className={errors.validationErrors.includes("addressLine2")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
@@ -292,7 +299,8 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleTotalCapacity}
                                           value={warehouseDto.totalCapacity}
-                                          className={isValid("totalCapacity")}/>
+                                          className={errors.validationErrors.includes("totalCapacity")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
@@ -306,9 +314,10 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
                                 ref={ref}
                                 name="state"
-                                filterBy={filterBy}
+                                filterBy={filterByState}
                                 id="async-state"
                                 labelKey="state"
                                 minLength={3}
@@ -328,9 +337,10 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
                                 ref={ref}
                                 name="username"
-                                filterBy={filterBy}
+                                filterBy={filterByUsername}
                                 id="async-username"
                                 labelKey="username"
                                 minLength={3}

@@ -32,7 +32,8 @@ function ModalAddWarehouse(props) {
         serverErrors: ''
     });
 
-    const filterBy = () => true;
+    const filterByState = () => true;
+    const filterByUsername = () => true;
 
     const handleStateSearch = (query) => {
         fetch(`/customers/${props.currentCustomerId}/states?state=${query}`)
@@ -48,6 +49,8 @@ function ModalAddWarehouse(props) {
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
                     id: i.id,
+                    name: i.name,
+                    surname: i.surname,
                     username: i.username
                 }));
                 setDispatcherOptions(optionsFromBack);
@@ -55,10 +58,6 @@ function ModalAddWarehouse(props) {
     };
 
     const onChangeState = (e) => {
-        setErrors({
-            setErrors: '',
-            validationErrors: []
-        });
         e.length > 0 ?
             setWarehouseDto(preState => ({
                 ...preState,
@@ -72,10 +71,14 @@ function ModalAddWarehouse(props) {
 
     const addDispatcher = (e) => {
         if (e.length !== 0) {
-            e.map(dispatcher =>
-                setDispatchersList(preState => ([
-                    ...preState, dispatcher
-                ])));
+            const dispatcherId = e[0].id;
+            const isContains = dispatchersList.filter((dispatcher) => dispatcher.id === dispatcherId);
+            if (isContains.length === 0) {
+                e.map(dispatcher =>
+                    setDispatchersList(preState => ([
+                        ...preState, dispatcher
+                    ])));
+            }
         }
     };
 
@@ -126,8 +129,7 @@ function ModalAddWarehouse(props) {
         e.preventDefault();
         const dispatchersId = dispatchersList.map(dispatcher => dispatcher.id);
         const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
-
-        let validationResult = validateWarehouse(updateWarehouseDto);
+        let validationResult = validateWarehouse(warehouseDto, dispatchersId, dropdownMenuName);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
@@ -145,7 +147,6 @@ function ModalAddWarehouse(props) {
                         if (response.status !== 201) {
                             setErrors({
                                 serverErrors: "Something go wrong, try later",
-                                validationErrors: ''
                             });
                         } else {
                             setErrors(preState => ({
@@ -154,6 +155,7 @@ function ModalAddWarehouse(props) {
                                 serverErrors: ''
                             }));
                             setDispatchersList([]);
+                            setDropdownMenuName("select type");
                             props.onChange(false, warehouseDto)
                         }
                     }
@@ -163,7 +165,7 @@ function ModalAddWarehouse(props) {
 
     const showDispatchers = dispatchersList.map(disp =>
         <div key={disp.id}>
-            {disp.username}
+            {disp.name + " " + disp.surname + ", username: " + disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
 
@@ -174,13 +176,19 @@ function ModalAddWarehouse(props) {
         </div>
     );
 
-    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
-
     return (
         <>
             <Modal
                 show={props.props}
-                onHide={() => props.onChange(false)}
+                backdrop="static"
+                onHide={() => {
+                    setErrors({
+                        validationErrors: [],
+                        serverErrors: ''
+                    });
+                    props.onChange(false);
+                    setDropdownMenuName("select type");
+                }}
                 aria-labelledby="modal-warehouse"
                 className="shadow"
                 centered
@@ -197,11 +205,8 @@ function ModalAddWarehouse(props) {
                             Identifier
                             <Form.Control type="text"
                                           onChange={handleIdentifier}
-                                          className={
-                                              errors.validationErrors.includes("identifier")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={errors.validationErrors.includes("identifier")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid identifier.
                             </Form.Control.Feedback>
@@ -218,12 +223,16 @@ function ModalAddWarehouse(props) {
                                     <Dropdown.Item onClick={() => handleType("RETAILER")}>RETAILER</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("type") ? "Please provide a type" : ""}
+                            </div>
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
                             <Form.Control type="text"
                                           onChange={handleCity}
-                                          className={isValid("city")}/>
+                                          className={errors.validationErrors.includes("city")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid city.
                             </Form.Control.Feedback>
@@ -232,7 +241,8 @@ function ModalAddWarehouse(props) {
                             address line 1
                             <Form.Control type="text"
                                           onChange={handleLineOne}
-                                          className={isValid("addressLine1")}/>
+                                          className={errors.validationErrors.includes("addressLine1")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
@@ -241,7 +251,8 @@ function ModalAddWarehouse(props) {
                             address line 2
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
-                                          className={isValid("addressLine2")}/>
+                                          className={errors.validationErrors.includes("addressLine2")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
@@ -250,16 +261,18 @@ function ModalAddWarehouse(props) {
                             total capacity
                             <Form.Control type="number"
                                           onChange={handleTotalCapacity}
-                                          className={isValid("totalCapacity")}/>
+                                          className={errors.validationErrors.includes("totalCapacity")
+                                              ? "form-control is-invalid" : "form-control"}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
                                 ref={ref}
                                 name="state"
-                                filterBy={filterBy}
+                                filterBy={filterByState}
                                 id="async-state"
                                 labelKey="state"
                                 minLength={3}
@@ -278,9 +291,10 @@ function ModalAddWarehouse(props) {
                         </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
                                 ref={ref}
                                 name="username"
-                                filterBy={filterBy}
+                                filterBy={filterByUsername}
                                 id="async-username"
                                 labelKey="username"
                                 minLength={3}

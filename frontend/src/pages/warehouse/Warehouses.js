@@ -69,6 +69,7 @@ export default (props) => {
     }
 
     const closeModalEdit = (e, warehouseDto) => {
+
         setEditWarehouse(
             preState => ({
                 ...preState,
