@@ -10,11 +10,15 @@ import by.itech.lab.supplier.dto.WayBillDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WayBillMapper;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WaybillRepository;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WaybillService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,5 +87,22 @@ public class WaybillServiceImpl implements WaybillService {
         return applicationService.getApplicationsByIds(appsIds)
                 .stream().map(applicationMapper::map).collect(Collectors.toList());
     }
+
+    @Override
+    public WayBillDto findById(final Long id) {
+        return Optional.ofNullable(waybillRepository.getOne(id))
+                .map(wayBillMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("No waybill with id=" + id + "exists"));
+    }
+
+    @Override
+    public Page<WayBillDto> findAll(final Pageable pageable, final WaybillStatus status) {
+        UserImpl user = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        GrantedAuthority grantedAuthority = user.getAuthorities().stream().findFirst().orElseThrow();
+        Page<WayBill> allByRoleAndStatus = waybillRepository
+                .findAllByRoleAndStatus(pageable, status, user.getId(), grantedAuthority.getAuthority());
+        return allByRoleAndStatus.map(wayBillMapper::map);
+    }
+
 
 }

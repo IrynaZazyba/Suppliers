@@ -3,7 +3,7 @@ Content-Type: application/json
 Connection: keep-alive
 
 {
-  "username": "zazybo1.17@gmail.com",
+  "username": "disp@gmail.com",
   "password": "pass"
 }
 
@@ -918,5 +918,18 @@ Cookie: {{test}}
     }
   ]
 }
+
+###
+
+GET http://localhost:8080/customers/3/waybills
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+GET http://localhost:8080/customers/3/waybills/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
 ###
