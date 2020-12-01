@@ -339,7 +339,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "password": "password"
+  "password": "passw"
 }
 
 ###

@@ -3,7 +3,6 @@ package by.itech.lab.supplier.controller;
 import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.dto.CustomerDto;
-import by.itech.lab.supplier.dto.StateDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.CustomerService;
 import by.itech.lab.supplier.service.UserService;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Map;
-import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
@@ -42,6 +39,8 @@ public class UserController {
     private final UserService userService;
 
     private final CustomerService customerService;
+
+    private final ThreadLocal threadLocal;
 
     @GetMapping("/dispatchers")
     public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
@@ -63,7 +62,6 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @AdminAccess
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
        CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
        userDto.setCustomerDto(customerDto);
@@ -79,8 +77,9 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
-    public int changePassword(@PathVariable Long id, @RequestBody Map<String, String> password) {
-        return userService.changePassword(id, password.get("password"));
+    public void changePassword(@PathVariable Long customerId, @PathVariable Long id, @RequestBody Map<String, String> password) {
+      if (customerId.equals(threadLocal.get()))
+        userService.changePassword(id, password.get("password"));
     }
 
 
@@ -98,7 +97,7 @@ public class UserController {
         userService.changeActiveStatus(id, status);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_ACTIVATE)
     public void changeActive(@PathVariable Long id) {
         userService.changeActive(id);
