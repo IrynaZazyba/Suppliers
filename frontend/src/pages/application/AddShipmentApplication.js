@@ -160,29 +160,21 @@ function AddShipmentApplication(props) {
 
     useEffect(() => {
         if (props.props) {
-            fetch(`/taxes`)
-                .then(response => response.json())
-                .then(commits => {
-                    setTaxes(commits);
-                });
-
-            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
-                .then(response => response.json())
-                .then(res => {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`),
+                fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`),
+                fetch(`/taxes`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(content => {
                     setWarehouses(preState => ({
-                            ...preState,
-                            source: res
-                        })
-                    );
-                });
-            fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`)
-                .then(response => response.json())
-                .then(res => {
+                        ...preState,
+                        source: content[0]
+                    }));
                     setWarehouses(preState => ({
-                            ...preState,
-                            destination: res
-                        })
-                    );
+                        ...preState,
+                        destination: content[1]
+                    }));
+                    setTaxes(content[2]);
                 });
         }
     }, [props]);

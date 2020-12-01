@@ -12,11 +12,10 @@ export default function validateItem(currentItem, items) {
         errorsFields.push("cost");
     }
 
-    items.forEach(i => {
-        if (i.id === currentItem.id) {
-            errorsFields.push("exist")
-        }
-    });
+    let item = items.filter(i => i.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
 
     return errorsFields;
 };
@@ -62,11 +61,11 @@ export function validateEditItem(currentItem, itemsInApp) {
         errorsFields.push("cost");
     }
 
-    itemsInApp.forEach(i => {
-        if (i.itemDto.id === currentItem.id) {
-            errorsFields.push("exist")
-        }
-    });
+    let item = itemsInApp.filter(i => i.itemDto.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
     return errorsFields;
 }
 
