@@ -218,6 +218,8 @@ function ModalEditWarehouse(props) {
         </div>
     );
 
+    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
+
     return (
         <>
             <Modal
@@ -260,11 +262,7 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleCity}
                                           value={warehouseDto.addressDto.city}
-                                          className={
-                                              errors.validationErrors.includes("city")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("city")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid city.
                             </Form.Control.Feedback>
@@ -274,11 +272,7 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleLineOne}
                                           value={warehouseDto.addressDto.addressLine1}
-                                          className={
-                                              errors.validationErrors.includes("addressLine1")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("addressLine1")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
@@ -288,11 +282,7 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
                                           value={warehouseDto.addressDto.addressLine2}
-                                          className={
-                                              errors.validationErrors.includes("addressLine2")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("addressLine2")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
@@ -302,11 +292,7 @@ function ModalEditWarehouse(props) {
                             <Form.Control type="text"
                                           onChange={handleTotalCapacity}
                                           value={warehouseDto.totalCapacity}
-                                          className={
-                                              errors.validationErrors.includes("totalCapacity")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("totalCapacity")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
@@ -332,7 +318,7 @@ function ModalEditWarehouse(props) {
                                 onChange={onChangeState}
                             >
                                 <div className="validation-error">
-                                    {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
                                 </div>
                             </AsyncTypeahead>
                         </Form.Group>

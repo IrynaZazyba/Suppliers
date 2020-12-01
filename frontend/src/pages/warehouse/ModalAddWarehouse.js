@@ -174,6 +174,8 @@ function ModalAddWarehouse(props) {
         </div>
     );
 
+    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
+
     return (
         <>
             <Modal
@@ -221,11 +223,7 @@ function ModalAddWarehouse(props) {
                             city
                             <Form.Control type="text"
                                           onChange={handleCity}
-                                          className={
-                                              errors.validationErrors.includes("city")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("city")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid city.
                             </Form.Control.Feedback>
@@ -234,11 +232,7 @@ function ModalAddWarehouse(props) {
                             address line 1
                             <Form.Control type="text"
                                           onChange={handleLineOne}
-                                          className={
-                                              errors.validationErrors.includes("addressLine1")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("addressLine1")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
@@ -247,11 +241,7 @@ function ModalAddWarehouse(props) {
                             address line 2
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
-                                          className={
-                                              errors.validationErrors.includes("addressLine2")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("addressLine2")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
@@ -260,11 +250,7 @@ function ModalAddWarehouse(props) {
                             total capacity
                             <Form.Control type="number"
                                           onChange={handleTotalCapacity}
-                                          className={
-                                              errors.validationErrors.includes("totalCapacity")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
+                                          className={isValid("totalCapacity")}/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
@@ -283,7 +269,7 @@ function ModalAddWarehouse(props) {
                                 onChange={onChangeState}
                             >
                                 <div className="validation-error">
-                                    {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
                                 </div>
                             </AsyncTypeahead>
                         </Form.Group>
