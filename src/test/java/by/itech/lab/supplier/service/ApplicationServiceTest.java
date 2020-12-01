@@ -63,7 +63,7 @@ public class ApplicationServiceTest {
         applicationDto = ApplicationDto.builder()
                 .id(17L)
                 .number("Test")
-                .wayBillDto(null)
+                .wayBillId(null)
                 //.lastUpdatedByUsersDto(null)
                 .lastUpdated(LocalDate.now())
                 //.createdByUsersDto(null)

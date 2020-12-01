@@ -137,7 +137,9 @@ Cookie: {{test}}
     "latitude": 40.854785,
     "longitude": -75.85785
   },
-  "usersId": [3]
+  "usersId": [
+    3
+  ]
 }
 
 ###
@@ -864,5 +866,57 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+
+###-------------------------------------------------------Waybills---------------------------------------------------
+POST http://localhost:8080/customers/3/waybills
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "number": "124844148853",
+  "sourceLocationWarehouseDto": {
+    "id": 1
+  },
+  "driverDto": {
+    "id": 67
+  },
+  "carDto": {
+    "id": 1
+  },
+  "applications": [
+    {
+      "id": 21
+    },
+    {
+      "id": 1
+    }
+  ]
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+PUT http://localhost:8080/customers/3/waybills/104
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "applications": [
+    {
+      "id": 21,
+      "deleteFromWaybill": true
+    },
+    {
+      "id": 1
+    }
+  ]
+}
 
 ###
