@@ -41,29 +41,22 @@ function EditShipmentModal(props) {
 
     useEffect(() => {
         if (props.props.isOpen === true) {
-            fetch(`/taxes`)
-                .then(response => response.json())
-                .then(commits => {
-                    setTaxes(commits);
-                });
 
-            fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-                .then(response => response.json())
-                .then(res => {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`),
+                fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`),
+                fetch(`/taxes`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(content => {
                     setWarehouses(preState => ({
-                            ...preState,
-                            source: res
-                        })
-                    );
-                });
-            fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`)
-                .then(response => response.json())
-                .then(res => {
+                        ...preState,
+                        source: content[0]
+                    }));
                     setWarehouses(preState => ({
-                            ...preState,
-                            destination: res
-                        })
-                    );
+                        ...preState,
+                        destination: content[1]
+                    }));
+                    setTaxes(content[2]);
                 });
         }
     }, [props]);
@@ -83,7 +76,7 @@ function EditShipmentModal(props) {
         setTotalValues(preState => ({
                 ...preState,
                 totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units)*parseFloat(i.amount), 0)
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseFloat(i.amount), 0)
             })
         );
     }
@@ -192,8 +185,10 @@ function EditShipmentModal(props) {
         });
 
         //remove deleted item from unavailable items
-        let unavailableItemAfterDeletingItem = unavailableItems.filter(i => i != e.currentTarget.id);
-        setUnavailableItems(unavailableItemAfterDeletingItem);
+        if (unavailableItems) {
+            let unavailableItemAfterDeletingItem = unavailableItems.filter(i => i != e.currentTarget.id);
+            setUnavailableItems(unavailableItemAfterDeletingItem);
+        }
 
         calculateTotalValues(afterDelete);
         setApp(prevState => ({

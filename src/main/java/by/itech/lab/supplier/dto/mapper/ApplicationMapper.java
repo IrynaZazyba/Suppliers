@@ -112,7 +112,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
             }
 
             if (Objects.nonNull(result) && Objects.nonNull(item.getDeleted())) {
-                forUpdate.remove(result);
+                forUpdate.removeIf(i -> i.getId().equals(result.getId()));
             }
 
             if (Objects.isNull(result)) {
