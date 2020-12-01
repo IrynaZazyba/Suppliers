@@ -16,4 +16,6 @@ public interface ItemService extends BaseSimpleService<ItemDto> {
     ItemDto save(ItemDto dto);
 
     List<ItemDto> findByUpc(String upc);
+
+    int getCountOfCategoryUsages(Long categoryId);
 }

@@ -925,7 +925,6 @@ databaseChangeLog:
                   type: DOUBLE PERCISION
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: date
                   type: DATE

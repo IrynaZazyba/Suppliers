@@ -52,7 +52,7 @@ function App() {
 
     const renderCategory = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
-        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
+        || user.role === "ROLE_DIRECTOR"} render={(() => {
             return <Category/>
         })}/>
     };
@@ -67,7 +67,7 @@ function App() {
 
     const renderWarehouseItems = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
-        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
+        || user.role === "ROLE_DISPATCHER"} render={(() => {
             return <WarehouseItems/>
         })}/>
     };
@@ -80,7 +80,7 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
-    const warehouseItemsPath = pathWithCustomer(`/warehouse/:warehouseId`);
+    const warehouseItemsPath = pathWithCustomer(`/warehouses/items/:warehouseId`);
 
     return (
         <UserContext>

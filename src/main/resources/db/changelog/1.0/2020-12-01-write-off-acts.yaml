@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: SUP-52-write-off-1
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: write_off_act
+            columns:
+              - column:
+                  name: total_amount
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: SUP-52-write-off-2
+      author: alexander_popovich
+      changes:
+        - modifyDataType:
+            columnName: total_sum
+            newDataType: decimal(10,2)
+            tableName: write_off_act
+  - changeSet:
+      id: SUP-52-write-off-3
+      author: alexander_popovich
+      changes:
+        - addColumn:
+            tableName: write_off_act
+            columns:
+              - column:
+                  name: identifier
+                  type: varchar(45)
+                  constraints:
+                    nullable: false
+                    unique: true
+  - changeSet:
+      id: SUP-52-write-off-4
+      author: alexander_popovich
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-12-01-fill-data-write-off.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true

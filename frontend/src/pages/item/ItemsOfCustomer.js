@@ -166,7 +166,7 @@ export default () => {
                     <th>Label</th>
                     <th>Units</th>
                     <th>Category</th>
-                    <th>Cost per unit</th>
+                    <th>UPC</th>
                     <th></th>
                 </tr>
                 </thead>

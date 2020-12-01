@@ -23,9 +23,11 @@ function Header() {
     const itemClass = getClass(/.item/);
     const appClass = getClass(/.application/);
 
-    const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
+    const itemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
         user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
+    const categoryPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
+        user.role === "ROLE_DIRECTOR" || user.role === "ROLE_ADMIN");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -43,12 +45,12 @@ function Header() {
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     {isPermittedAndRoleAdmin &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
-                    {categoryAndItemPermission &&
+                    {categoryPermission &&
                     <Nav.Link className={categoryClass}
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
-                    {categoryAndItemPermission &&
+                    {itemPermission &&
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}

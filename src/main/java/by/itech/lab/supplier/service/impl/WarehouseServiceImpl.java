@@ -58,6 +58,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final UserService userService;
     private final WarehouseItemMapper warehouseItemMapper;
     private final WarehouseItemFilter warehouseItemFilter;
+    private final WarehouseItemRepository warehouseItemRepository;
 
     @Lazy
     @Autowired
@@ -246,6 +247,12 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .collect(Collectors.toList())
         ).flatMap(Collection::stream).collect(Collectors.toList());
         itemInWarehouseRepository.saveAll(warehouseItems);
+    }
+
+    @Override
+    public Page<WarehouseItemDto> getItemsByWarehouseId(final Long warehouseId, final Pageable pageable) {
+        return warehouseItemRepository.findItemsByWarehouseId(warehouseId, pageable)
+                .map(warehouseItemMapper::map);
     }
 
     private Map<Long, Map<Long, WarehouseItem>> findOnlyRelatedItems(final List<ApplicationDto> apps) {

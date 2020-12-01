@@ -46,6 +46,12 @@ public class WarehouseController {
         return warehouseService.findAll(pageable);
     }
 
+    @GetMapping(URL_ITEMS + URL_ID_PARAMETER)
+    public Page<WarehouseItemDto> findItemsOfWarehouse(@PageableDefault final Pageable pageable,
+                                                       @PathVariable final Long id) {
+        return warehouseService.getItemsByWarehouseId(id, pageable);
+    }
+
     @GetMapping(URL_ID_PARAMETER)
     public WarehouseDto findById(@PathVariable final Long id) {
         return warehouseService.findById(id);

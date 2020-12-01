@@ -47,5 +47,22 @@ export function validateShipmentItem(currentItem, items, app) {
     return errorsFields;
 };
 
+export function validateWriteOffItem(currentItem, items, app) {
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount) {
+        errorsFields.push("amount");
+    }
+
+    let item = items.filter(i => i.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
+    return errorsFields;
+};
 
 
