@@ -1,11 +1,8 @@
 package by.itech.lab.supplier.service;
 
-import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ApplicationItemDto;
-
-import java.util.Set;
+import by.itech.lab.supplier.domain.Application;
 
 public interface PriceCalculationService {
 
-    Set<ApplicationItemDto> calculateAppItemsPrice(ApplicationDto appDto);
+    Application calculateAppItemsPrice(Application app);
 }

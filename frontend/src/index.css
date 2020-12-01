@@ -179,3 +179,11 @@ a.page-link {
     margin-top: 3px;
 }
 
+.unavailable-item {
+    background-color: #fcc7ca;
+}
+
+.unavailable-item:hover {
+    background-color: #fcc7ca;
+}
+
