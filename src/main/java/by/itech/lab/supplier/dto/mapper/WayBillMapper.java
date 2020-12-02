@@ -58,11 +58,11 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
         to.setSourceLocationWarehouse(Objects.nonNull(from.getSourceLocationWarehouseDto())
                 ? warehouseMapper.map(from.getSourceLocationWarehouseDto()) : to.getSourceLocationWarehouse());
         to.setDriver(Objects.nonNull(from.getDriverDto()) ? userMapper.map(from.getDriverDto()) : to.getDriver());
+        mapApplications(to, from);
     }
 
-
-    public void mapApplications(final WayBill wayBill,
-                                final WayBillDto wayBillDto) {
+    private void mapApplications(final WayBill wayBill,
+                                 final WayBillDto wayBillDto) {
         final Map<Long, ApplicationDto> mappedByAppId = wayBillDto.getApplications()
                 .stream().collect(Collectors.toMap(ApplicationDto::getId, Function.identity()));
         wayBill.getApplications().forEach(e -> {
@@ -74,6 +74,5 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
             }
         });
     }
-
 
 }

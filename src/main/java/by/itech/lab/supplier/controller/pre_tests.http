@@ -902,7 +902,7 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/customers/3/waybills/39
+PUT http://localhost:8080/customers/3/waybills/25
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
