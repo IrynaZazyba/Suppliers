@@ -31,6 +31,7 @@ export default () => {
     });
     const [filter, setFilter] = useState([]);
     const filterOptions = {
+        'All': '',
         'Open': 'OPEN',
         'Started processing': 'STARTED_PROCESSING',
         'Finished processing': 'FINISHED_PROCESSING'
