@@ -731,7 +731,6 @@ Cookie: {{test}}
     "warehouse": null
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": null,
   "deletedAt": null,
   "items": [
     {
@@ -874,12 +873,12 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "number": "124844148853",
+  "number": "12853",
   "sourceLocationWarehouseDto": {
     "id": 1
   },
   "driverDto": {
-    "id": 63
+    "id": 61
   },
   "carDto": {
     "id": 1
@@ -902,7 +901,7 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/customers/3/waybills/25
+PUT http://localhost:8080/customers/3/waybills/21
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}

@@ -42,7 +42,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                         dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()) : null)
                 .customerId(dto.getCustomerId())
                 .type(dto.getType())
-                .wayBill(WayBill.builder().id(dto.getWayBillId()).build())
+                .wayBill(Objects.nonNull(dto.getWayBillId()) ? WayBill.builder().id(dto.getWayBillId()).build() : null)
                 .build();
     }
 
