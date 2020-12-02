@@ -46,6 +46,10 @@ public class RetailerController {
         return retailerService.findAllByActive(pageable, status);
     }
 
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
+    public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
+        retailerService.changeActive(id, status);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

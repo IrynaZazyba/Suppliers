@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.dto;
 
+import by.itech.lab.supplier.domain.Warehouse;
 import lombok.Builder;
 import lombok.Data;
 
@@ -15,4 +16,5 @@ public class RetailerDto implements BaseDto {
     private LocalDate deletedAt;
     private Boolean active;
     private Long customerId;
+  //  private WarehouseDto warehouseDto;
 }

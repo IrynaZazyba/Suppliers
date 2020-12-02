@@ -39,6 +39,13 @@ public class RetailerServiceImpl implements RetailerService {
         return retailerRepository.findByStatus(pageable, status).map(retailerMapper::map);
     }
 
+    @Override
+    @Transactional
+    public int changeActive(Long id, Boolean status) {
+        return retailerRepository.setStatus(status, id);
+    }
+
+
     @Transactional
     @Override
     public RetailerDto save(RetailerDto retailerDto) {

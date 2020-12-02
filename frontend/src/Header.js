@@ -21,6 +21,7 @@ function Header() {
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);
+    const retailerClass = getClass(/.retailers/);
     const appClass = getClass(/.application/);
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
@@ -51,6 +52,9 @@ function Header() {
                     {categoryAndItemPermission &&
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
+                    </Nav.Link>}
+                    <Nav.Link className={retailerClass}
+                              href={`/customers/${user.currentCustomerId}/retailers`}>Retailers
                     </Nav.Link>}
                     <UserProfile/>
                 </Nav>

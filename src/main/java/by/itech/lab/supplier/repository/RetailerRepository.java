@@ -19,6 +19,10 @@ public interface RetailerRepository extends JpaRepository<Retailer, Long> {
 
     Page<Retailer> findAllByActiveEquals(Pageable pageable, Boolean active);
 
+    @Modifying
+    @Query("update Retailer set active = :active where id = :id")
+    int setStatus(@Param("active") Boolean active, @Param("id") Long id);
+
     @Query("select r from Retailer r  where :active is null or r.active=:active")
     Page<Retailer> findByStatus(Pageable pageable, @Param("active") Boolean active);
 }
