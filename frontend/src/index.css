@@ -220,5 +220,14 @@ th.accept-all-item:hover {
     color: #dc3545 !important;
     padding-bottom: 35px;
     margin: 3px;
+}
 
+.edit-app-icon-active{
+    text-align: center;
+    color: #1A7FA8;
+}
+
+.edit-app-icon-disable{
+    text-align: center;
+    color: dimgrey;
 }

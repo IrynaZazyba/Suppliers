@@ -164,26 +164,30 @@ export default () => {
                             });
                         }}>Accept</Button>}
             </td>
-            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
-                        size={'1.3em'}
-                        onClick={() => {
-                            {
-                                app.type === 'SUPPLY' && (app.applicationStatus === 'OPEN' || app.applicationStatus === 'STARTED_PROCESSING')
-                                && setOpenEditModal({
-                                    isOpen: true,
-                                    app: app,
-                                    customerId: customerId
-                                });
-                            }
-                            {
-                                app.type === 'TRAFFIC' && (app.applicationStatus === 'OPEN' || app.applicationStatus === 'STARTED_PROCESSING')
-                                && setOpenEditShipmentModal({
-                                    isOpen: true,
-                                    app: app,
-                                    customerId: customerId
-                                });
-                            }
-                        }}
+            <td><FaEdit
+                className={app.applicationStatus === 'FINISHED_PROCESSING'
+                    ? "edit-app-icon-disable"
+                    : "edit-app-icon-active"}
+                size={'1.3em'}
+                onClick={() => {
+
+                    let statusRule = app.applicationStatus === 'OPEN'
+                        || app.applicationStatus === 'STARTED_PROCESSING';
+
+                    if (app.type === 'SUPPLY' && statusRule) {
+                        setOpenEditModal({
+                            isOpen: true,
+                            app: app,
+                            customerId: customerId
+                        });
+                    } else if (app.type === 'TRAFFIC' && statusRule) {
+                        setOpenEditShipmentModal({
+                            isOpen: true,
+                            app: app,
+                            customerId: customerId
+                        });
+                    }
+                }}
 
             />
             </td>

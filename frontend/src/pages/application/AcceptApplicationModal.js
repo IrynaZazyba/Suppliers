@@ -224,10 +224,6 @@ function AcceptApplicationModal(props) {
                             (whCapacityPercentage < 40 && whCapacityPercentage > 20 && "warning")
                             || (whCapacityPercentage < 20 && "danger")}
                             className="wh-capacity-bar" now={whCapacityPercentage} label={`${whCapacityPercentage}%`}/>
-                        {/*<Form.Text id="attentionCapacity" className="capacity-warning">*/}
-                        {/*    The current warehouse can't accept all items,*/}
-                        {/*    you can forward non accepted items to another warehouse in the application editing mode.*/}
-                        {/*</Form.Text>*/}
                     </Row>
                 </Col>
                 {fullWhWarning && <Alert style={{marginLeft: '20px'}} variant="danger">
@@ -247,7 +243,7 @@ function AcceptApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Price, $ per unit</th>
+                    <th>Cost, $ per unit</th>
                     <th className="accept-all-item">
                         {acceptedItems.length === mapAppItems.size &&
                         <Button variant="link"

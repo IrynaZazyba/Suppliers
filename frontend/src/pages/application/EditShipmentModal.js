@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 import {validateEditApplication} from "../../validation/ApplicationValidationRules";
 import calculateItemPrice, {calculateDistance, recalculateItemWhenChangeWarehouse} from "./CalculatePrice";
 import {validateShipmentEditItem} from "../../validation/ItemValidationRules";
-import {checkItemsAtWarehouse} from "../../validation/ItemPageValidationRules";
+import {checkItemsAtWarehouse} from "../../validation/ItemValidationRules";
 
 function EditShipmentModal(props) {
 
