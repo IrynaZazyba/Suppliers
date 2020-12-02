@@ -5,8 +5,8 @@ import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.validation.OnCreate;
-import by.itech.lab.supplier.dto.validation.OnUpdate;
+import by.itech.lab.supplier.dto.validation.CreateDtoValidationGroup;
+import by.itech.lab.supplier.dto.validation.UpdateDtoValidationGroup;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,14 +43,14 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    @Validated(OnCreate.class)
+    @Validated(CreateDtoValidationGroup.class)
     @PostMapping
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
         return applicationService.save(applicationDto);
     }
 
-    @Validated(OnUpdate.class)
+    @Validated(UpdateDtoValidationGroup.class)
     @PutMapping(URL_ID_PARAMETER)
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public ApplicationDto update(@PathVariable final Long id, @Valid @RequestBody final ApplicationDto applicationDto) {

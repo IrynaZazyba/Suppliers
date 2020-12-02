@@ -29,13 +29,13 @@ function AcceptApplicationModal(props) {
     const [fullWhWarning, setWarning] = useState(false);
 
     useEffect(() => {
-        if (props.props.isOpen === true) {
-            fetch(`/customers/${customerId}/application/${props.props.appId}`)
+        if (props.modal.isOpen) {
+            fetch(`/customers/${customerId}/application/${props.modal.appId}`)
                 .then(response => response.json())
                 .then(res => {
                     calculateTotalValues(res.items);
                     setApp(res);
-                    let mappedItems = res.items.filter(i => i.acceptedAt == null).map(i => [i.id, i]);
+                    let mappedItems = res.items.filter(item => item.acceptedAt == null).map(item => [item.id, item]);
                     setMapAppItems(new Map(mappedItems));
                     fetch(`/customers/${customerId}/warehouses/${res.destinationLocationDto.id}/capacity`)
                         .then(response => response.json())
@@ -46,10 +46,10 @@ function AcceptApplicationModal(props) {
                         });
                 });
         }
-    }, [props.props.isOpen]);
+    }, [props.modal.isOpen]);
 
     useEffect(() => {
-        if (props.props.isOpen) {
+        if (props.modal.isOpen) {
             let percentage = calculatePercentage(availableCapacity, app.destinationLocationDto.totalCapacity);
             setWhPercentage(percentage);
         }
@@ -234,9 +234,33 @@ function AcceptApplicationModal(props) {
             }
         </>;
 
+    const itemsTableBody = <React.Fragment>
+        {app && app.items.map(i => (
+            <tr id={i.id} key={i.id}
+                className={(acceptedItems.includes(i.id) && "accepted-item") || (i.acceptedAt && "already-accepted")}>
+                <td>{i.itemDto.upc}</td>
+                <td>{i.itemDto.label}</td>
+                <td>{i.amount}</td>
+                <td>{i.cost}</td>
+                <td style={{textAlign: 'center'}}>
+                    {i.acceptedAt && i.acceptedAt}
+                    {!i.acceptedAt && !acceptedItems.includes(i.id) &&
+                    <FaCheck id={i.id} style={{color: '#1A7FA8'}}
+                             onClick={acceptItem}
+                    />}
+                    {!i.acceptedAt && acceptedItems.includes(i.id) &&
+                    <FaTimes id={i.id} style={{color: '#1A7FA8'}}
+                             onClick={cancelAccept}
+                    />}
+                </td>
+            </tr>
+        ))
+        }
+    </React.Fragment>;
+
     const itemsTable =
         <React.Fragment>
-            {app && app.items && app.items.length > 0 &&
+            {app && app.items.length > 0 &&
             <Table bordered size="sm">
                 <thead>
                 <tr>
@@ -255,34 +279,16 @@ function AcceptApplicationModal(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {app.items.map(i => (
-                    <tr id={i.id} key={i.id}
-                        className={(acceptedItems.includes(i.id) && "accepted-item") || (i.acceptedAt && "already-accepted")}>
-                        <td>{i.itemDto.upc}</td>
-                        <td>{i.itemDto.label}</td>
-                        <td>{i.amount}</td>
-                        <td>{i.cost}</td>
-                        <td style={{textAlign: 'center'}}>
-                            {i.acceptedAt && i.acceptedAt}
-                            {!i.acceptedAt && !acceptedItems.includes(i.id) &&
-                            <FaCheck id={i.id} style={{color: '#1A7FA8'}}
-                                     onClick={acceptItem}
-                            />}
-                            {!i.acceptedAt && acceptedItems.includes(i.id) &&
-                            <FaTimes id={i.id} style={{color: '#1A7FA8'}}
-                                     onClick={cancelAccept}
-                            />}
-                        </td>
-                    </tr>
-                ))}
+                {itemsTableBody}
                 </tbody>
             </Table>}
         </React.Fragment>;
 
+
     return (
         <>
             <Modal
-                show={props.props.isOpen}
+                show={props.modal.isOpen}
                 onHide={() => {
                     setAcceptedItems([]);
                     setWhPercentage('');

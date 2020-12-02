@@ -189,7 +189,6 @@ export default () => {
                         });
                     }
                 }}
-
             />
             </td>
         </tr>
@@ -202,7 +201,7 @@ export default () => {
             <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
             <EditSupplyAppModal props={openEditModal} onChange={closeModalEdit}/>
             <EditShipmentModal props={openEditShipmentModal} onChange={closeModalEditShipment}/>
-            <AcceptApplicationModal props={modalAcceptOpen} onChange={closeModalAccept}/>
+            <AcceptApplicationModal modal={modalAcceptOpen} onChange={closeModalAccept}/>
 
         </React.Fragment>;
 
