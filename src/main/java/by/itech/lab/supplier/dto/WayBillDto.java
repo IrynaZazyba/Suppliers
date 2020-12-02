@@ -1,6 +1,10 @@
 package by.itech.lab.supplier.dto;
 
 import by.itech.lab.supplier.domain.WaybillStatus;
+import by.itech.lab.supplier.dto.validation.CreateDtoValidationGroup;
+import by.itech.lab.supplier.dto.validation.UpdateDtoValidationGroup;
+import by.itech.lab.supplier.dto.validation.waybill.constraints.WaybillCreateNumberConstraint;
+import by.itech.lab.supplier.dto.validation.waybill.constraints.WaybillUpdateNumberConstraint;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,19 +18,21 @@ import java.util.List;
 public class WayBillDto implements BaseDto {
 
     private Long id;
+    @WaybillCreateNumberConstraint(groups = CreateDtoValidationGroup.class, message = "Already exists number")
+    @WaybillUpdateNumberConstraint(groups = UpdateDtoValidationGroup.class, message = "Already exists number")
     private String number;
     private LocalDateTime registrationDate;
     private LocalDateTime lastUpdated;
     private WaybillStatus waybillStatus;
-    @NotNull(message = "Source location shouldn't be empty")
+    @NotNull(groups = CreateDtoValidationGroup.class, message = "Source location shouldn't be empty")
     private WarehouseDto sourceLocationWarehouseDto;
     private UserDto createdByUsersDto;
     private UserDto updatedByUsersDto;
-    @NotNull(message = "Car should be specified")
+    @NotNull(groups = CreateDtoValidationGroup.class, message = "Car must be specified")
     private CarDto carDto;
-    @NotNull(message = "Car should be specified")
+    @NotNull(groups = CreateDtoValidationGroup.class, message = "Driver must be specified")
     private UserDto driverDto;
-    @NotNull(message = "Applications shouldn't be empty")
+    @NotNull(groups = CreateDtoValidationGroup.class, message = "Applications shouldn't be empty")
     private List<ApplicationDto> applications = new ArrayList<>();
 
 }

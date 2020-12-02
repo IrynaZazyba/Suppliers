@@ -77,4 +77,9 @@ public class WaybillServiceImpl implements WaybillService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Optional<WayBillDto> getWaybillByNumber(String number) {
+        return waybillRepository.findByNumber(number).map(wayBillMapper::map);
+    }
+
 }
