@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.Warehouse;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +104,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int changePassword(Long id, String password) {
-        return userRepository.changePassword(passwordEncoder.encode(password), id);
+        UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal.getId().equals(id))
+        return userRepository.changePassword(passwordEncoder.encode(password), principal.getId());
+        return 0;
     }
 
     @Override
