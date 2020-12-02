@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -22,6 +22,6 @@ public class WayBillDto implements BaseDto {
     private UserDto updatedByUsersDto;
     private CarDto carDto;
     private UserDto driverDto;
-    private Set<ApplicationDto> applications=new HashSet<>();
+    private List<ApplicationDto> applications = new ArrayList<>();
 
 }
