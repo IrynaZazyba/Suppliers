@@ -14,7 +14,7 @@ public interface WaybillRepository extends JpaRepository<WayBill, Long> {
 
     @Query("select w from WayBill w where (:status is null or w.waybillStatus=:status) " +
             "and ((:role like 'ROLE_LOGISTICS_SPECIALIST' and w.createdByUsers.id=:userId) " +
-            "or (:role like 'ROLE_DRIVER' and w.waybillStatus='READY'))")
+            "or (:role like 'ROLE_DRIVER' and w.waybillStatus='READY' and w.driver.id=:userId))")
     Page<WayBill> findAllByRoleAndStatus(Pageable pageable,
                                          WaybillStatus status,
                                          Long userId,
