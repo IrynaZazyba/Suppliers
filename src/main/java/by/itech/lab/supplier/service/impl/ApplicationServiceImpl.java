@@ -182,4 +182,13 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .stream().map(warehouseMapper::map).collect(Collectors.toList());
     }
 
+    @Override
+    public Page<ApplicationDto> getShipmentApplicationsByWarehouseAndStatus(Pageable pageable,
+                                                                            Long warehouseId,
+                                                                            ApplicationStatus status) {
+        return applicationRepository
+                .findAllByTypeAndApplicationStatusAndSourceLocationAddressId(pageable,
+                        ApplicationType.TRAFFIC, status, warehouseId).map(applicationMapper::map);
+    }
+
 }

@@ -2,6 +2,7 @@ package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.ApplicationType;
 import by.itech.lab.supplier.domain.Warehouse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
 
 
-    @Query("select app from Application app where (:flag = true or (:flag = false and app.wayBill is null)) " +
+    @Query("select app from Application app where (:flag = true or app.type='TRAFFIC') " +
             "and (:status is null or app.applicationStatus=:status) " +
             "and (:warehouseId is null or (app.sourceLocationAddress.id=:warehouseId or app.destinationLocationAddress.id=:warehouseId))")
     Page<Application> findAllByRoleAndStatusAndWarehouse(Pageable pageable,
@@ -51,8 +52,13 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     List<Application> findAllByIdIn(List<Long> ids);
 
-    @Query("select a.sourceLocationAddress from Application a where a.applicationStatus='OPEN' " +
+    @Query("select distinct a.sourceLocationAddress from Application a where a.applicationStatus='OPEN' " +
             "and a.sourceLocationAddress.type='WAREHOUSE'")
     List<Warehouse> getWarehousesWithOpenApplications();
+
+    Page<Application> findAllByTypeAndApplicationStatusAndSourceLocationAddressId(Pageable pageable,
+                                                                                  ApplicationType type,
+                                                                                  ApplicationStatus status,
+                                                                                  Long warehouseId);
 
 }

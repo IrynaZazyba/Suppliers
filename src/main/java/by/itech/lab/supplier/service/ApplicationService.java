@@ -38,4 +38,8 @@ public interface ApplicationService extends BaseService<ApplicationDto> {
     List<ApplicationDto> saveAll(List<ApplicationDto> appsDtos);
 
     List<WarehouseDto> getWarehousesWithOpenApplications();
+
+    Page<ApplicationDto> getShipmentApplicationsByWarehouseAndStatus(Pageable pageable,
+                                                                     Long warehouseId,
+                                                                     ApplicationStatus status);
 }
