@@ -64,7 +64,7 @@ function WriteOffWarehouseModal(props) {
     };
 
     const handleSearchReason = (query) => {
-        fetch(`/customers/${customerId}/reason?reason=${query}`)
+        fetch(`/customers/${customerId}/write-off-act/reason?reason=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
@@ -138,7 +138,6 @@ function WriteOffWarehouseModal(props) {
         setTotalValues(preState => ({
                 ...preState,
                 totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalSum: items.reduce((totalSum, i) => totalSum + i.amount * i.cost)
             })
         );
     }, [items]);

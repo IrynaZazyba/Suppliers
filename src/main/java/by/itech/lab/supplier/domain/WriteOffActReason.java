@@ -32,9 +32,6 @@ public class WriteOffActReason implements BaseEntity {
     private Long id;
     @Column(nullable = false)
     private String reason;
-    @OneToMany(mappedBy = "writeOffActReason")
-    @EqualsAndHashCode.Exclude
-    private Set<WriteOffAct> writeOffActs = new HashSet<>();
     private LocalDate deletedAt;
 
 }
