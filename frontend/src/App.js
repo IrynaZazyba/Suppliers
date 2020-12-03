@@ -14,6 +14,7 @@ import Users from "./pages/user/Users"
 import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
+import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
 import Retailers from "./pages/retailer/Retailers";
 
@@ -33,6 +34,12 @@ function App() {
     const renderCustomer = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
             return <Customers/>
+        })}/>
+    };
+
+    const renderWarehouse = () => {
+        return <ProtectedComponent conditions={user} render={(() => {
+            return <Warehouses currentCustomerId={currentCustomerId}/>
         })}/>
     };
 
@@ -85,6 +92,9 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
+                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>
+                <Route path={'/customers/' + currentCustomerId + '/application'} render={renderApplication}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>

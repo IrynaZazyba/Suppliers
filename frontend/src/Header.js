@@ -3,6 +3,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import UserProfile from "./components/UserProfile";
 import {AuthContext} from "./context/authContext";
+import Warehouse from "./pages/warehouse/Warehouses";
 
 function Header() {
 
@@ -16,6 +17,7 @@ function Header() {
     }
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
 
     const profileClass = getClass(/.profile/);
@@ -42,6 +44,10 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
+                    {checkPermission &&
+                    <Nav.Link className={warehousesClass}
+                              href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
+                    </Nav.Link>}
                     {isPermittedAndRoleAdmin &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryAndItemPermission &&

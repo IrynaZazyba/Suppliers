@@ -16,8 +16,8 @@ import java.util.List;
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     @Modifying
-    @Query("update Warehouse set deletedAt = current_timestamp where id = :id")
-    void delete(@Param("id") Long id);
+    @Query("update Warehouse set deletedAt = current_timestamp where id in :id")
+    void delete(@Param("id") List<Long> id);
 
     @Modifying
     @Query("update Warehouse set deletedAt = current_timestamp where retailerId = :id")

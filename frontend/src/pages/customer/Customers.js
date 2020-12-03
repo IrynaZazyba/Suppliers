@@ -81,7 +81,6 @@ export default () => {
         getCustomers('/customers');
     }, []);
 
-
     function getCustomers(url) {
         fetch(url)
             .then(response => response.json())
@@ -128,7 +127,7 @@ export default () => {
                 value={custom.active}
             />
             </td>
-            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+            <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
                         size={'1.3em'}
                         onClick={() => {
                             setEditCustomer({

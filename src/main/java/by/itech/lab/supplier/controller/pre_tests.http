@@ -123,16 +123,18 @@ Cookie: {{test}}
 
 {
   "customerId": "3",
-  "identifier": "199",
-  "type": "FACTORY",
-  "totalCapacity": "44",
-  "addressDto": {
-    "city": "Kanzas",
-    "addressLine1": "Linkoln Str.",
-    "addressLine2": "44",
-    "state": {
-      "id": "5",
+  "identifier": "196",
+  "type" : "FACTORY",
+  "totalCapacity" : "44",
+  "addressDto" : {
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "44",
+    "state" : {
+      "id" : "5",
       "state": "Alaska"
+    }
+  }
     },
     "latitude": 40.854785,
     "longitude": -75.85785
@@ -148,16 +150,16 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "id": "21",
-  "type": "FACTORY",
-  "totalCapacity": "1",
-  "addressDto": {
-    "id": "104",
-    "city": "Kanzas",
-    "addressLine1": "Linkoln Str.",
-    "addressLine2": "66",
-    "state": {
-      "id": "6",
+  "id" : "21",
+  "type" : "FACTORY",
+  "totalCapacity" : "1",
+  "addressDto" : {
+    "id" : "104",
+    "city" : "Kanzas",
+    "addressLine1" : "Linkoln Str.",
+    "addressLine2" : "66",
+    "state" : {
+      "id" : "6",
       "state": "Arizona"
     },
     "latitude": 40.854785,
@@ -274,7 +276,6 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
-
 ###
 
 POST http://localhost:8080/customers/3/retailers
@@ -292,7 +293,7 @@ Cookie: {{test}}
 
 
 ###
-#--------------------------------------------------State---------------------------------------------------------------
+#--------------------------------------------------Users---------------------------------------------------------------
 
 GET http://localhost:8080/states
 Content-Type: application/json

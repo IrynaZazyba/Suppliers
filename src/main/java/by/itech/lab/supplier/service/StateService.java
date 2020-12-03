@@ -4,6 +4,11 @@ import by.itech.lab.supplier.dto.StateDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface StateService {
+import java.util.List;
+
+public interface StateService{
+
+    List<StateDto> findListByState(String state);
+
     Page<StateDto> findAll(Pageable pageable);
 }

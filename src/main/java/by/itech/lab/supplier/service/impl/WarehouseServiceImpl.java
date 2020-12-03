@@ -102,7 +102,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private Warehouse create(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
         Warehouse saved = warehouseRepository.save(warehouse);
-        userService.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
+//        userService.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
         return saved;
     }
 
@@ -112,10 +112,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         return warehouseRepository.save(warehouse);
     }
 
-
     @Transactional
     @Override
-    public void delete(final Long id) {
+    public void delete(final List<Long> id) {
         warehouseRepository.delete(id);
     }
 
