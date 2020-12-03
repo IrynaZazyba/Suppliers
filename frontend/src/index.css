@@ -187,3 +187,6 @@ a.page-link {
     background-color: #fcc7ca;
 }
 
+.waybill-modal {
+    min-width: 85% !important;
+}

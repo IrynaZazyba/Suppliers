@@ -2,6 +2,7 @@ package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationStatus;
+import by.itech.lab.supplier.domain.Warehouse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -49,5 +50,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> findAllByWayBillIdIn(List<Long> waybillsIds);
 
     List<Application> findAllByIdIn(List<Long> ids);
+
+    @Query("select a.sourceLocationAddress from Application a where a.applicationStatus='OPEN' " +
+            "and a.sourceLocationAddress.type='WAREHOUSE'")
+    List<Warehouse> getWarehousesWithOpenApplications();
 
 }

@@ -53,10 +53,10 @@ public class CarServiceImpl implements CarService {
                 .map(carMapper::map);
     }
 
-
     @Override
     @Transactional
     public void delete(Long id) {
         carRepository.deleteById(id);
     }
+
 }

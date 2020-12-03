@@ -7,9 +7,11 @@ import by.itech.lab.supplier.domain.ApplicationType;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
+import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationItemMapper;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
+import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ApplicationRepository;
@@ -42,6 +44,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationItemMapper itemsInApplicationMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final WarehouseMapper warehouseMapper;
 
     @Lazy
     @Autowired
@@ -171,6 +174,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     public List<ApplicationDto> saveAll(List<ApplicationDto> appsDtos) {
         List<Application> apps = appsDtos.stream().map(applicationMapper::map).collect(Collectors.toList());
         return applicationRepository.saveAll(apps).stream().map(applicationMapper::map).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WarehouseDto> getWarehousesWithOpenApplications() {
+        return applicationRepository.getWarehousesWithOpenApplications()
+                .stream().map(warehouseMapper::map).collect(Collectors.toList());
     }
 
 }
