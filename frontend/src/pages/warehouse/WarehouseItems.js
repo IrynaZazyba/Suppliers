@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import React from "react";
 import ErrorMessage from "../../messages/errorMessage";
 import Table from "react-bootstrap/Table";
@@ -8,13 +8,13 @@ import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import CardContainer from "../../components/CardContainer";
 import {useParams} from "react-router-dom";
-import {FaTrash} from "react-icons/fa";
 import ModalWriteOff from "../write-off/WriteOffModalWarehouse"
+import Page from "../../components/Page";
 
 
 export default () => {
 
-    const { warehouseId } = useParams();
+    const {warehouseId} = useParams();
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
     const [page, setPage] = useState({
@@ -24,9 +24,9 @@ export default () => {
         countPages: 1
     });
     const [items, setItems] = useState([]);
-    const [writeOffShow, setWriteOffShow] = useState({
+    const [writeOffModal, setWriteOffShow] = useState({
         writeOffShow: false,
-        warehouseId: warehouseId
+        warehouseId: ''
     });
     const [errors, setErrors] = useState({
         errorMessage: ''
@@ -77,17 +77,12 @@ export default () => {
             <td>{item.item.units}</td>
             <td>{item.item.categoryDto.category}</td>
             <td>{item.amount}</td>
-            <td><FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
-                         onClick={() => {
-                         }}
-            />
-            </td>
         </tr>
     ));
 
-    const closeModalAdd = (e, itemDto) => {
+    const closeModalAddAct = (e, warehouseDto) => {
         setWriteOffShow(e);
-        if (itemDto) {
+        if (warehouseDto) {
             getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?size=${e.target.value}`);
         }
     };
@@ -95,14 +90,19 @@ export default () => {
     const modals =
         <React.Fragment>
             {errors.errorMessage && <ErrorMessage message={errors.errorMessage}/>}
-            <ModalWriteOff props={writeOffShow} onChange={closeModalAdd}/>
+            <ModalWriteOff props={writeOffModal} onChange={closeModalAddAct}/>
         </React.Fragment>;
 
     const header =
         <React.Fragment>
             <Row>
                 <Col md={2}>
-                    <Button className="mainButton" size="sm" onClick={() => {}}>
+                    <Button className="mainButton" size="sm" onClick={() => {
+                        setWriteOffShow({
+                            writeOffShow: true,
+                            warehouseId: warehouseId
+                        })
+                    }}>
                         Write-off items
                     </Button>
                 </Col>
@@ -123,13 +123,13 @@ export default () => {
                     <th>Units per item</th>
                     <th>Category</th>
                     <th>Amount</th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {tableRows}
                 </tbody>
             </Table>
+            <Page page={page} onChange={changePage}/>
         </React.Fragment>;
 
     return (
