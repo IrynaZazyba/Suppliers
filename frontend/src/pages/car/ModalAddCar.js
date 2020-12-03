@@ -128,7 +128,6 @@ function ModalAddCar(props) {
         }
     };
 
-
     return (
         <>
             <Modal
