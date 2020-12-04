@@ -152,8 +152,8 @@ function AddShipmentApplication(props) {
         setCurrentItem('');
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units) * parseFloat(i.amount), 0)
             })
         );
     }, [items]);
@@ -243,23 +243,32 @@ function AddShipmentApplication(props) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(application)
-            })
-                .then(function (response) {
-                    if (response.status !== 200) {
+            }).then(response => {
+                if (response.status === 400) {
+                    response.json().then(json => {
+                        let res = Object.values(json).join('. ');
                         setErrors({
-                            serverErrors: "Something go wrong, try later",
-                            validationErrors: []
+                            serverErrors: res,
+                            validationErrors: ''
                         });
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
-                            validationErrors: []
-                        }));
-                        setApp([]);
-                        setItems([]);
-                        props.onChange(false, appDto);
-                    }
-                });
+                    });
+                }
+                if (response.status !== 200 && response.status !== 400) {
+                    setErrors({
+                        serverErrors: "Something go wrong, try later",
+                        validationErrors: ''
+                    });
+                }
+                if (response.status === 200) {
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: []
+                    }));
+                    setApp([]);
+                    setItems([]);
+                    props.onChange(false, appDto);
+                }
+            });
         }
     };
 
