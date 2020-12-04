@@ -93,6 +93,7 @@ function App() {
             <Switch>
                 <Route exact path='/' component={Login}/>
                 <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses/type'} render={renderWarehouse}/>
                 <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>
                 <Route path={'/customers/' + currentCustomerId + '/application'} render={renderApplication}/>
                 <Route path={categoryPath} render={renderCategory}/>/>

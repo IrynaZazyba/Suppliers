@@ -176,7 +176,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/warehouses/type?type=FACTORY
+GET http://localhost:8080/customers/3/warehouses/type?type=RETAILER
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
