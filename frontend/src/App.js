@@ -64,7 +64,7 @@ function App() {
     };
 
     const renderCar = () => {
-       return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+       return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" | user.role === "ROLE_ADMIN"} render={(() => {
             return <Cars/>
         })}/>
     };
