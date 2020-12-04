@@ -9,7 +9,7 @@ function Header() {
     const {user, setUser} = useContext(AuthContext);
 
     const checkPermission = user && user.currentCustomerId;
-    const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
+    const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN";
 
     function getClass(regexOfClass) {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
