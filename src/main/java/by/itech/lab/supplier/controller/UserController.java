@@ -76,7 +76,6 @@ public class UserController {
         return userService.findByUsername(username);
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("#id==authentication.principal.id")
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public void changePassword(@PathVariable Long customerId, @PathVariable Long id, @RequestBody String password) {
@@ -91,7 +90,7 @@ public class UserController {
         return userService.save(userDTO);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+
     @AdminAccess
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
