@@ -10,6 +10,8 @@ import {GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps"
 import Table from "react-bootstrap/Table";
 import {FaMinus, FaPlus} from "react-icons/fa";
 import Page from "../../components/Page";
+import Button from "react-bootstrap/Button";
+import validateWaybill, {checkCarCapacity} from "../../validation/WaybillValidationRules";
 
 function AddWaybillModal(props) {
 
@@ -58,7 +60,6 @@ function AddWaybillModal(props) {
     }, [props.modal]);
 
     useEffect(() => {
-        console.log(addedApps.length);
         if (addedApps.length > 0) {
             let waybillApps = apps.filter(a => addedApps.includes(a.id));
             let totalAmount = waybillApps.reduce((total, app) => total + app.items.reduce((t, i) => t + i.amount, 0), 0);
@@ -67,13 +68,21 @@ function AddWaybillModal(props) {
                 ...prevState,
                 totalAmount: totalAmount,
                 totalUnits: totalUnits
-            }))
+            }));
+
+            checkValidationErrors('capacity');
+            let validRes = checkCarCapacity(totalValues.carCapacity, totalUnits);
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...errors.validationErrors, ...validRes]
+            }));
         }
     }, [addedApps]);
 
 
     const numberHandler = (e) => {
         e.preventDefault();
+        checkValidationErrors('number');
         setWaybill(prevState => ({
             ...prevState,
             number: e.target.value
@@ -95,6 +104,7 @@ function AddWaybillModal(props) {
 
     const sourceLocationHandler = (e) => {
         e.preventDefault();
+        checkValidationErrors('source');
         let sourceId = e.target.value;
         getApps(`/customers/${customerId}/application/warehouses?warehouseId=${sourceId}&applicationStatus=OPEN&size=5`);
         setWaybill(prevState => ({
@@ -111,6 +121,7 @@ function AddWaybillModal(props) {
 
     const driverHandler = (e) => {
         e.preventDefault();
+        checkValidationErrors('driver');
         setWaybill(prevState => ({
             ...prevState,
             driver: e.target.value
@@ -119,6 +130,7 @@ function AddWaybillModal(props) {
 
     const carHandler = (e) => {
         e.preventDefault();
+        checkValidationErrors('car');
         let carId = e.target.value;
         setWaybill(prevState => ({
             ...prevState,
@@ -128,7 +140,12 @@ function AddWaybillModal(props) {
         setTotalValues(prevState => ({
             ...prevState,
             carCapacity: car.currentCapacity
-        }))
+        }));
+        let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: [...errors.validationErrors, ...validRes]
+        }));
     };
 
     const waybillInfo =
@@ -139,8 +156,16 @@ function AddWaybillModal(props) {
                         <Form.Label>Number</Form.Label>
                     </Col>
                     <Col sm={8}>
-                        <Form.Control size="sm" type="text" placeholder="number"
-                                      onChange={numberHandler}/>
+                        <Form.Control size="sm" type="text"
+                                      onChange={numberHandler}
+                                      className={
+                                          errors.validationErrors.includes("number")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }/>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a valid value.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -155,6 +180,11 @@ function AddWaybillModal(props) {
                                       htmlSize={3}
                                       as="select" size="sm" drop="down"
                                       onChange={sourceLocationHandler}
+                                      className={
+                                          errors.validationErrors.includes("source")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }
                         >
                             <option hidden>Choose...</option>
                             {sourceWarehouse.map(warehouse => (
@@ -163,6 +193,9 @@ function AddWaybillModal(props) {
                                 </option>
                             ))}
                         </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a value.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -176,6 +209,11 @@ function AddWaybillModal(props) {
                                       htmlSize={3}
                                       style={{width: '100%'}}
                                       onChange={carHandler}
+                                      className={
+                                          errors.validationErrors.includes("car")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }
                         >
                             <option hidden>Choose...</option>
                             {cars.map(car => (
@@ -184,6 +222,9 @@ function AddWaybillModal(props) {
                                 </option>
                             ))}
                         </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a value.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -196,7 +237,12 @@ function AddWaybillModal(props) {
                         <Form.Control as="select" size="sm" drop="down"
                                       htmlSize={2}
                                       style={{width: '100%'}}
-                                      onChange={driverHandler}>
+                                      onChange={driverHandler}
+                                      className={
+                                          errors.validationErrors.includes("driver")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }>
                             <option hidden>Choose...</option>
                             {drivers.map(driver => (
                                 <option key={driver.id} value={driver.id}>
@@ -204,6 +250,9 @@ function AddWaybillModal(props) {
                                 </option>
                             ))}
                         </Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide a value.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -221,9 +270,32 @@ function AddWaybillModal(props) {
 
     const addAppToWaybill = (e) => {
         e.preventDefault();
+        checkValidationErrors('apps');
         let appId = e.currentTarget.id;
         setAddedApps([...addedApps, parseInt(appId)]);
     };
+
+    const saveWaybillHandler = (e) => {
+        e.preventDefault();
+        let validationResult = validateWaybill(waybill, addedApps);
+        if (validationResult.length === 0) {
+
+        } else {
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: validationResult
+            }))
+        }
+    };
+
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
 
     const removeAppFromWaybill = (e) => {
         e.preventDefault();
@@ -310,7 +382,8 @@ function AddWaybillModal(props) {
                         </Col>
                         <Col sm={3} className="waybill-card">
                             <Card className="total-card">
-                                <Card.Body>
+                                <Card.Body
+                                    className={errors.validationErrors.includes('capacity') ? "car-capacity-attention" : ''}>
                                     <h6>Available car capacity</h6>
                                     <Card.Text>
                                         <h3> {totalValues.carCapacity}</h3>
@@ -322,6 +395,11 @@ function AddWaybillModal(props) {
                 </Col>
             </Row>
         </React.Fragment>;
+
+    const addButton = <Button type="submit" className="mainButton pull-right"
+                              onClick={saveWaybillHandler}
+    >Save</Button>;
+
 
     return (
         <>
@@ -362,18 +440,21 @@ function AddWaybillModal(props) {
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     {waybillContentData}
-                    <Card border="primary" style={{width: '100%', marginTop: '15px'}}>
+                    <div className="validation-error">
+                        {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
+                    </div>
+                    <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
                         <Card.Header>
                         </Card.Header>
                         <Card.Body>
                             <Card.Text>
                             </Card.Text>
-                            {apps.length > 0 &&
-                            body}
+                            {apps.length > 0 && body}
                         </Card.Body>
                     </Card>
-                    <Form>
-                    </Form>
+                    <div className="float-right" style={{padding: '10px'}}>
+                        {addButton}
+                    </div>
                 </Modal.Body>
             </Modal>
         </>
