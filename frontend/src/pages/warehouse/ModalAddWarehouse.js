@@ -12,7 +12,6 @@ function ModalAddWarehouse(props) {
 
     const ref = React.createRef();
     const [stateOptions, setStateOptions] = useState([]);
-    const [isIdentifierExist, setIdentifierExist] = useState([]);
     const [dispatcherOptions, setDispatcherOptions] = useState([]);
     const [dispatchers, setDispatchers] = useState([]);
     const [dropdownMenuName, setDropdownMenuName] = useState("select type");
@@ -143,60 +142,57 @@ function ModalAddWarehouse(props) {
                 customerId: props.currentCustomerId
             }
         }
-        let validationResult = validateWarehouse(updateWarehouseDto, dropdownMenuName,
+
+        const validationResult = validateWarehouse(updateWarehouseDto, dropdownMenuName,
             updateWarehouseDto.dispatchersId);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
             serverErrors: ''
-        }))
+        }));
 
-        if (validationResult.length === 0) {
+        if (!validationResult.includes("identifier")) {
             fetch(`/customers/${props.currentCustomerId}/warehouses/identifier?identifier=${updateWarehouseDto.identifier}`)
                 .then(resp => resp.json())
-                .then(res => {
-                    // setIdentifierExist(preState => ({...preState, isExist: res}));
-                    setIdentifierExist(res);
-                }).then(function () {
-                    let validationResult = validateWarehouseWithIdentifierExist(updateWarehouseDto, dropdownMenuName,
+                .then(isIdentifierExist => {
+
+                    const validationResult = validateWarehouseWithIdentifierExist(updateWarehouseDto, dropdownMenuName,
                         updateWarehouseDto.dispatchersId, isIdentifierExist);
                     setErrors(preState => ({
                         ...preState,
                         validationErrors: validationResult,
                         serverErrors: ''
-                    }));
-                    if (validationResult.length === 0) {
-                        fetch('/customers/' + props.currentCustomerId + '/warehouses', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(updateWarehouseDto)
-                        })
-                            .then(function (response) {
-                                    if (response.status !== 201) {
-                                        setErrors({
-                                            serverErrors: "Something go wrong, try later",
-                                        });
-                                    } else {
-                                        setErrors(preState => ({
-                                            ...preState,
-                                            validationErrors: [],
-                                            serverErrors: ''
-                                        }));
-                                        setDispatchers([]);
-                                        setIdentifierExist(null);
-                                        setDropdownMenuName("select type");
-                                        props.onChange(false, warehouseDto)
-                                    }
-                                }
-                            )
-                    }
-
-                }
-            )
+                    }))
+                })
         }
-    };
+        if (validationResult.length === 0) {
+            fetch('/customers/' + props.currentCustomerId + '/warehouses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateWarehouseDto)
+            })
+                .then(function (response) {
+                        if (response.status !== 201) {
+                            setErrors({
+                                serverErrors: "Something go wrong, try later",
+                            });
+                        } else {
+                            setErrors(preState => ({
+                                ...preState,
+                                validationErrors: [],
+                                serverErrors: ''
+                            }));
+                            setDispatchers([]);
+                            setDropdownMenuName("select type");
+                            props.onChange(false, warehouseDto)
+                        }
+                    }
+                )
+        }
+    }
+
 
     const showDispatchers = dispatchers.map(disp =>
         <div key={disp.id}>
@@ -256,7 +252,6 @@ function ModalAddWarehouse(props) {
                     });
                     props.onChange(false);
                     setDropdownMenuName("select type");
-                    setIdentifierExist(null);
                 }}
                 aria-labelledby="modal-warehouse"
                 className="shadow"
