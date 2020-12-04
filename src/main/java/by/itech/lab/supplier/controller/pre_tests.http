@@ -57,7 +57,7 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany3",
+  "name": "SomeCompany",
   "adminEmail": "3j323@gmail.com"
 }
 
@@ -689,7 +689,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
@@ -719,7 +718,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
