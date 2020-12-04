@@ -1,60 +1,65 @@
+import ModalApp from "../../components/ModalApp";
 import React, {useEffect, useState} from "react";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
 import Table from "react-bootstrap/Table";
 import {FaTrash} from "react-icons/fa";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Form from 'react-bootstrap/Form'
-import ModalApp from "../../components/ModalApp";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Button from "react-bootstrap/Button";
-import {validateEditItem} from "../../validation/ItemValidationRules";
 import {validateEditApplication} from "../../validation/ApplicationValidationRules";
+import calculateItemPrice, {calculateDistance, recalculateItemWhenChangeWarehouse} from "./CalculatePrice";
+import {validateShipmentEditItem} from "../../validation/ItemValidationRules";
+import {checkItemsAtWarehouse} from "../../validation/ItemValidationRules";
 
-function EditSupplyAppModal(props) {
+function EditShipmentModal(props) {
 
-    const customerId = props.props.customerId;
     const [app, setApp] = useState();
     const [currentItem, setCurrentItem] = useState([]);
+    const customerId = props.props.customerId;
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
-    });
-    const [options, setOptions] = useState([]);
-    const filterBy = () => true;
-    const ref = React.createRef();
-    const [totalValues, setTotalValues] = useState({
-        totalAmount: '',
-        totalUnits: ''
     });
     const [warehouses, setWarehouses] = useState({
         source: [],
         destination: []
     });
+    const [totalValues, setTotalValues] = useState({
+        totalAmount: '',
+        totalUnits: ''
+    });
+    const [options, setOptions] = useState([]);
     const [deleted, setDeleted] = useState({
         deletedItems: []
     });
-    const status = app && app.applicationStatus === 'STARTED_PROCESSING';
+    const filterBy = () => true;
+    const ref = React.createRef();
+    const [taxes, setTaxes] = useState();
+    const [unavailableItems, setUnavailableItems] = useState();
 
     useEffect(() => {
         if (props.props.isOpen === true) {
+
             Promise.all([
-                fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`),
-                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`),
+                fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`),
+                fetch(`/taxes`)
             ]).then(res => Promise.all(res.map(r => r.json())))
-                .then(warehouses => {
+                .then(content => {
                     setWarehouses(preState => ({
                         ...preState,
-                        source: warehouses[0]
+                        source: content[0]
                     }));
                     setWarehouses(preState => ({
                         ...preState,
-                        destination: warehouses[1]
+                        destination: content[1]
                     }));
+                    setTaxes(content[2]);
                 });
         }
     }, [props]);
-
 
     useEffect(() => {
         if (props.props.isOpen === true) {
@@ -64,78 +69,83 @@ function EditSupplyAppModal(props) {
                     calculateTotalValues(res.items);
                     setApp(res);
                 });
-
         }
-
     }, [props.props.isOpen]);
 
-    const handleSourceLocations = (e) => {
-        const value = e.currentTarget.value;
-        setApp(preState => ({
-            ...preState,
-            sourceLocationDto: {id: value}
-        }))
-    };
-
-    const handleDestinationLocations = (e) => {
-        const value = e.currentTarget.value;
-        setApp(preState => ({
-            ...preState,
-            destinationLocationDto: {id: value}
-        }))
-    };
-
-    const deleteItem = (e) => {
-        let afterDelete = [];
-        app.items.forEach(i => {
-            if (i.itemDto.id != e.currentTarget.id) {
-                afterDelete.push(i);
-            } else {
-                i.deleted = true;
-                setDeleted(prevState => ({
-                    ...prevState,
-                    deletedItems: [...deleted.deletedItems, i]
-                }));
-            }
-        });
-        calculateTotalValues(afterDelete);
-        setApp(prevState => ({
-            ...prevState,
-            items: afterDelete
-        }));
-    };
-
-    const handleInputsAmountAndCost = (fieldName) =>
-        (e) => {
-            const value = e.target.value;
-            setCurrentItem(preState => ({
+    function calculateTotalValues(items) {
+        setTotalValues(preState => ({
                 ...preState,
-                [fieldName]: value
-            }))
-        };
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseFloat(i.amount), 0)
+            })
+        );
+    }
 
     const handleSearch = (query) => {
-        fetch(`/customers/${customerId}/item/upc?upc=${query}`)
+        fetch(`/customers/${customerId}/warehouses/${app.sourceLocationDto.id}/items?itemUpc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
-                    id: i.id,
-                    upc: i.upc,
-                    label: i.label,
-                    units: i.units
+                    id: i.item.id,
+                    upc: i.item.upc,
+                    label: i.item.label,
+                    units: i.item.units,
+                    category: i.item.categoryDto,
+                    cost: i.cost
                 }));
                 setOptions(optionsFromBack);
             });
     };
 
+    const handleSourceLocations = (e) => {
+        const value = e.currentTarget.value;
+        let itemsId = app.items.map(i => i.itemDto.id);
+        recalculateItemsPrice(itemsId, value, app.destinationLocationDto.id);
+    };
+
+    const handleDestinationLocations = (e) => {
+        const value = e.currentTarget.value;
+        let itemsId = app.items.map(i => i.itemDto.id);
+        recalculateItemsPrice(itemsId, app.sourceLocationDto.id, value);
+    };
+
+    function recalculateItemsPrice(itemsId, sourceId, destinationId) {
+        fetch(`/customers/${customerId}/warehouses/${sourceId}/warehouse-items?itemsId=${itemsId}`)
+            .then(response => response.json())
+            .then(res => {
+                let unavailable = checkItemsAtWarehouse(itemsId, res);
+                setUnavailableItems(unavailable);
+                let recalculatedApp = recalculateItemWhenChangeWarehouse(
+                    Object.assign({}, app), sourceId, destinationId, taxes, res, warehouses);
+                setApp(recalculatedApp);
+            });
+    }
+
+
+    const handleInputsAmount = (e) => {
+        const value = e.target.value;
+        checkValidationErrors("amount");
+        setCurrentItem(preState => ({
+            ...preState,
+            amount: value
+        }))
+    };
+
     const appNumberOnChange = (e) => {
         const value = e.target.value;
-        checkValidationErrors("number");
         setApp(preState => ({
             ...preState,
             number: value
         }))
     };
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
 
     const onChangeUpc = (e) => {
         checkValidationErrors("upc");
@@ -150,41 +160,53 @@ function EditSupplyAppModal(props) {
                 id: e[0].id,
                 upc: e[0].upc,
                 label: e[0].label,
-                units: e[0].units
+                units: e[0].units,
+                category: e[0].category,
+                cost: e[0].cost
             })) :
             setCurrentItem('');
     };
 
 
-    function checkValidationErrors(fieldName) {
-        let res = errors.validationErrors.filter(e => e != fieldName);
-        setErrors(prevState => ({
-            ...prevState,
-            validationErrors: res
-        }));
-    }
+    const deleteItem = (e) => {
+        let afterDelete = [];
+        app.items.forEach(i => {
+            if (i.itemDto.id != e.currentTarget.id) {
+                afterDelete.push(i);
+            } else {
+                if (i.id) {
+                    i.deleted = true;
+                    setDeleted(prevState => ({
+                        ...prevState,
+                        deletedItems: [...deleted.deletedItems, i]
+                    }));
+                }
+            }
+        });
 
-    function calculateTotalValues(items) {
-        setTotalValues(preState => ({
-                ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseFloat(i.amount), 0)
-            })
-        );
-    }
+        //remove deleted item from unavailable items
+        if (unavailableItems) {
+            let unavailableItemAfterDeletingItem = unavailableItems.filter(i => i != e.currentTarget.id);
+            setUnavailableItems(unavailableItemAfterDeletingItem);
+        }
+
+        calculateTotalValues(afterDelete);
+        setApp(prevState => ({
+            ...prevState,
+            items: afterDelete
+        }));
+    };
 
     const addItemHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateEditItem(currentItem, app.items);
+        let validationResult = validateShipmentEditItem(currentItem, app.items, app);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validationResult
         }));
         if (validationResult.length === 0) {
-
-            setCurrentItem('');
             let dtoItem = {
-                cost: currentItem.cost,
+                cost: currentItem.price,
                 amount: currentItem.amount,
                 itemDto: {
                     id: currentItem.id,
@@ -204,6 +226,7 @@ function EditSupplyAppModal(props) {
                 validationErrors: []
             }));
             ref.current.clear();
+            setCurrentItem('');
         }
     };
 
@@ -214,11 +237,10 @@ function EditSupplyAppModal(props) {
             ...prevState,
             validationErrors: validErrors
         }));
-        if (validErrors.length === 0) {
+        if (validErrors.length === 0 && (!unavailableItems || unavailableItems && unavailableItems.length === 0)) {
             let dtoApp = Object.assign({}, app);
             dtoApp.items = [...app.items, ...deleted.deletedItems];
-            console.log(deleted.deletedItems);
-            console.log(dtoApp);
+
             fetch(`/customers/${customerId}/application/${app.id}`, {
                 method: 'PUT',
                 headers: {
@@ -277,9 +299,7 @@ function EditSupplyAppModal(props) {
                             <Form.Group as={Row} controlId="appNumber">
                                 <Form.Label column sm="3">Number:</Form.Label>
                                 <Col sm="7">
-                                    <Form.Control size="sm" type="text" value={app.number}
-                                                  disabled={status}
-                                                  onChange={appNumberOnChange}
+                                    <Form.Control size="sm" type="text" value={app.number} onChange={appNumberOnChange}
                                                   className={
                                                       errors.validationErrors.includes("number")
                                                           ? "form-control is-invalid"
@@ -295,9 +315,8 @@ function EditSupplyAppModal(props) {
                             <Form.Group as={Row} controlId="sourceLocation">
                                 <Form.Label column sm="3">Source location:</Form.Label>
                                 <Col sm="7">
-                                    <Form.Control name="sourceId" size="sm" as="select"
-                                                  disabled={status}
-                                                  onChange={handleSourceLocations}>
+                                    <Form.Control name="sourceId" size="sm" onChange={handleSourceLocations}
+                                                  as="select">
                                         {warehouses && warehouses.source.map(f =>
                                             <option value={f.id} key={f.id}
                                                     selected={f.id === app.sourceLocationDto.id}>
@@ -315,6 +334,7 @@ function EditSupplyAppModal(props) {
                                 <Form.Label column sm="3">Destination location:</Form.Label>
                                 <Col sm="7">
                                     <Form.Control name="destinationLocationId" size="sm"
+                                                  disabled={unavailableItems && unavailableItems.length !== 0 && true}
                                                   onChange={handleDestinationLocations} as="select">
                                         {warehouses && warehouses.destination.map(f =>
                                             <option value={f.id} key={f.id}
@@ -325,10 +345,6 @@ function EditSupplyAppModal(props) {
                                             </option>
                                         )}
                                     </Form.Control>
-                                    {status &&
-                                    <Form.Text id="forwardAttention" className="forward-attention">
-                                        You can forward not accepted items to another warehouse.
-                                    </Form.Text>}
                                 </Col>
                             </Form.Group>
                         </Col>
@@ -361,30 +377,28 @@ function EditSupplyAppModal(props) {
     const itemsTable =
         <React.Fragment>
             {app && app.items && app.items.length > 0 &&
-            <Table bordered hover size="sm">
+            <Table bordered size="sm">
                 <thead>
                 <tr>
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
                     <th>Cost, $ per unit</th>
-                    <th>{status && 'Accepted at'}</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {app.items.map(i => (
                     <tr id={i.id} key={i.id}
-                        className={i.acceptedAt && i.acceptedAt !== null && "accepted-item"}>
+                        className={unavailableItems && unavailableItems.includes(i.itemDto.id) && "unavailable-item"}>
                         <td>{i.itemDto.upc}</td>
                         <td>{i.itemDto.label}</td>
                         <td>{i.amount}</td>
                         <td>{i.cost}</td>
-                        <td style={{textAlign: 'center', width: '10%'}}>
-                            {(!i.acceptedAt || i.acceptedAt === null) && !status &&
+                        <td style={{textAlign: 'center'}}>
                             <FaTrash id={i.itemDto.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
-                            />}
-                            {i.acceptedAt !== null && i.acceptedAt}
+                            />
                         </td>
                     </tr>
                 ))}
@@ -394,7 +408,6 @@ function EditSupplyAppModal(props) {
 
     const inputsAddItems =
         <>
-            {!status &&
             <Row>
                 <Col sm="3">
                     <AsyncTypeahead
@@ -425,7 +438,18 @@ function EditSupplyAppModal(props) {
                 <Col>
                     <Form.Control name="amount" size="sm" placeholder="amount" type="number" min='1'
                                   value={currentItem && currentItem.amount}
-                                  onChange={handleInputsAmountAndCost('amount')}
+                                  onChange={handleInputsAmount}
+                                  onBlur={() => {
+                                      let sourceId = app.sourceLocationDto.id;
+                                      let destinationId = app.destinationLocationDto.id;
+                                      let distance = calculateDistance(warehouses, sourceId, destinationId);
+                                      let itemPrice = calculateItemPrice(currentItem, taxes, distance, destinationId);
+                                      setCurrentItem(prevState => ({
+                                          ...prevState,
+                                          price: itemPrice
+                                      }));
+                                  }
+                                  }
                                   className={
                                       errors.validationErrors.includes("amount")
                                           ? "form-control is-invalid"
@@ -437,8 +461,8 @@ function EditSupplyAppModal(props) {
                 </Col>
                 <Col>
                     <Form.Control size="sm" name="cost" placeholder="cost" type="number" min='1'
-                                  value={currentItem && currentItem.cost}
-                                  onChange={handleInputsAmountAndCost('cost')}
+                                  value={currentItem && currentItem.price}
+                                  disabled
                                   className={
                                       errors.validationErrors.includes("cost")
                                           ? "form-control is-invalid"
@@ -457,16 +481,17 @@ function EditSupplyAppModal(props) {
                         Add
                     </Button>
                 </Col>
-            </Row>}
+            </Row>
         </>;
 
     const addButton = <Button type="submit" className="mainButton pull-right" onClick={addAppHandler}>Save</Button>;
+
 
     return (
         <>
             <ModalApp
                 isOpen={props}
-                title={"Edit supply application"}
+                title={"Edit shipment application"}
                 itemsTable={itemsTable}
                 appDataFields={appData}
                 status={app && app.applicationStatus.replace('_', ' ').toLowerCase()}
@@ -476,12 +501,12 @@ function EditSupplyAppModal(props) {
                 errors={errors}
                 button={addButton}
                 setCurrentItem={setCurrentItem}
-                setUnavailableItems={''}
-                unavailableItems={''}
+                setUnavailableItems={setUnavailableItems}
+                unavailableItems={unavailableItems}
             />
         </>
     );
 
 }
 
-export default EditSupplyAppModal;
+export default EditShipmentModal;

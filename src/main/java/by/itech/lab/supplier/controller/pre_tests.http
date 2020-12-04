@@ -57,7 +57,7 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany3",
+  "name": "SomeCompany",
   "adminEmail": "3j323@gmail.com"
 }
 
@@ -230,6 +230,19 @@ GET http://localhost:8080/customers/3/warehouses/8/items?itemUpc=829
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/customers/3/warehouses/8/warehouse-items?itemsId=19,18,5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
 
 ###
 
@@ -678,7 +691,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
@@ -708,7 +720,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {

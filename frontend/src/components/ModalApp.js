@@ -18,8 +18,11 @@ function ModalApp(props) {
         errors,
         setApp,
         button,
-        setCurrentItem
+        setCurrentItem,
+        setUnavailableItems,
+        unavailableItems
     } = props;
+
 
     const onHideModal = () => {
         setErrors({
@@ -28,6 +31,7 @@ function ModalApp(props) {
         });
         setApp('');
         setCurrentItem('');
+        unavailableItems && setUnavailableItems('');
         isOpen.onChange(false)
     };
 
@@ -42,7 +46,7 @@ function ModalApp(props) {
                 centered
                 backdrop="static">
                 <Modal.Header closeButton>
-                    <Modal.Title id="modal-custom">
+                    <Modal.Title style={{width: '100%'}} id="modal-custom">
                         {title}
                     </Modal.Title>
                     <div className="badge-edit-modal">
@@ -59,6 +63,9 @@ function ModalApp(props) {
                         <div className="validation-error">
                             {errors.validationErrors.includes("items") ? "Items shouldn't be empty" : ""}
                         </div>
+                        {unavailableItems && unavailableItems.length != 0 &&
+                        <ErrorMessage message={"The current warehouse doesn't have highlighted items"}/>}
+
                         <Card border="primary" style={{width: '100%'}}>
                             <Card.Header>
                                 {inputsAddItems}
