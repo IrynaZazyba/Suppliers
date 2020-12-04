@@ -31,6 +31,6 @@ public class WarehouseDto implements BaseDto {
     @NotBlank
     private AddressDto addressDto;
     private Long retailerId;
-    @NotEmpty(message = "You must have at least one dispatcher selected")
+//    @NotEmpty(message = "You must have at least one dispatcher selected")
     private List<Long> dispatchersId = new ArrayList<>();
 }

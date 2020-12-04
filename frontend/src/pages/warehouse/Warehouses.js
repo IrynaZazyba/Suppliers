@@ -18,6 +18,9 @@ export default (props) => {
         countPerPage: 10,
         countPages: 1
     });
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null
+        ? localStorage.getItem("currentCustomerId") : 0;
+
     const [checkBoxes, setCheckBox] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
     const [lgShow, setLgShow] = useState(false);
@@ -42,17 +45,17 @@ export default (props) => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${e.target.value}`);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
     }, []);
 
     function getWarehouses(url) {
@@ -76,19 +79,19 @@ export default (props) => {
                 editShow: false
             }));
         if (warehouseDto) {
-            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+            getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
         }
     };
 
     const closeModalAdd = (e, warehouseDto) => {
         setLgShow(e);
         if (warehouseDto) {
-            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+            getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
         }
     };
 
     function deleteWarehouse() {
-        fetch(`/customers/${props.currentCustomerId}/warehouses/delete-list`, {
+        fetch(`/customers/${currentCustomerId}/warehouses/delete-list`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,8 +104,15 @@ export default (props) => {
                         errorMessage: "Warehouse can not be deleted, because it is already used in application"
                     })
                 } else {
+                    fetch(`/customers/${currentCustomerId}/users/delete-list`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(checkBoxes)
+                    })
                     setCheckBox([]);
-                    getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+                    getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
                 }
             });
     }
@@ -133,9 +143,9 @@ export default (props) => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
-                                currentCustomerId={props.currentCustomerId}/>
+                                currentCustomerId={currentCustomerId}/>
             <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
-                               currentCustomerId={props.currentCustomerId}
+                               currentCustomerId={currentCustomerId}
             />
         </React.Fragment>;
 

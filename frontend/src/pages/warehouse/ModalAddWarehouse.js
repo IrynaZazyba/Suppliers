@@ -5,15 +5,16 @@ import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Dropdown from "react-bootstrap/Dropdown";
-import validateWarehouse from "../../validation/WarehouseValidationRules";
+import validateWarehouse, {validateWarehouseWithIdentifierExist} from "../../validation/WarehouseValidationRules";
 import {FaTrash} from "react-icons/fa";
 
 function ModalAddWarehouse(props) {
 
     const ref = React.createRef();
     const [stateOptions, setStateOptions] = useState([]);
+    const [isIdentifierExist, setIdentifierExist] = useState([]);
     const [dispatcherOptions, setDispatcherOptions] = useState([]);
-    const [dispatchersList, setDispatchersList] = useState([]);
+    const [dispatchers, setDispatchers] = useState([]);
     const [dropdownMenuName, setDropdownMenuName] = useState("select type");
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
@@ -47,11 +48,11 @@ function ModalAddWarehouse(props) {
         fetch(`/customers/${props.currentCustomerId}/users/dispatchers?username=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                const optionsFromBack = res.map((i) => ({
-                    id: i.id,
-                    name: i.name,
-                    surname: i.surname,
-                    username: i.username
+                const optionsFromBack = res.map((dispatcher) => ({
+                    id: dispatcher.id,
+                    name: dispatcher.name,
+                    surname: dispatcher.surname,
+                    username: dispatcher.username
                 }));
                 setDispatcherOptions(optionsFromBack);
             });
@@ -71,11 +72,10 @@ function ModalAddWarehouse(props) {
 
     const addDispatcher = (e) => {
         if (e.length !== 0) {
-            const dispatcherId = e[0].id;
-            const isContains = dispatchersList.filter((dispatcher) => dispatcher.id === dispatcherId);
-            if (isContains.length === 0) {
+            const isContains = dispatchers.find(disp => e[0].id === disp.id)
+            if (!isContains) {
                 e.map(dispatcher =>
-                    setDispatchersList(preState => ([
+                    setDispatchers(preState => ([
                         ...preState, dispatcher
                     ])));
             }
@@ -127,54 +127,122 @@ function ModalAddWarehouse(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
-        const dispatchersId = dispatchersList.map(dispatcher => dispatcher.id);
-        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
-        let validationResult = validateWarehouse(warehouseDto, dispatchersId, dropdownMenuName);
+
+        let updateWarehouseDto = {};
+        if (dispatchers.length) {
+            const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
+            updateWarehouseDto = {
+                ...warehouseDto,
+                dispatchersId: dispatchersId,
+                customerId: props.currentCustomerId
+            }
+        } else {
+            updateWarehouseDto = {
+                ...warehouseDto,
+                dispatchersId: [],
+                customerId: props.currentCustomerId
+            }
+        }
+        let validationResult = validateWarehouse(updateWarehouseDto, dropdownMenuName,
+            updateWarehouseDto.dispatchersId);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
             serverErrors: ''
-        }));
+        }))
+
         if (validationResult.length === 0) {
-            fetch('/customers/' + props.currentCustomerId + '/warehouses', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updateWarehouseDto)
-            })
-                .then(function (response) {
-                        if (response.status !== 201) {
-                            setErrors({
-                                serverErrors: "Something go wrong, try later",
-                            });
-                        } else {
-                            setErrors(preState => ({
-                                ...preState,
-                                validationErrors: [],
-                                serverErrors: ''
-                            }));
-                            setDispatchersList([]);
-                            setDropdownMenuName("select type");
-                            props.onChange(false, warehouseDto)
-                        }
+            fetch(`/customers/${props.currentCustomerId}/warehouses/identifier?identifier=${updateWarehouseDto.identifier}`)
+                .then(resp => resp.json())
+                .then(res => {
+                    // setIdentifierExist(preState => ({...preState, isExist: res}));
+                    setIdentifierExist(res);
+                }).then(function () {
+                    let validationResult = validateWarehouseWithIdentifierExist(updateWarehouseDto, dropdownMenuName,
+                        updateWarehouseDto.dispatchersId, isIdentifierExist);
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: validationResult,
+                        serverErrors: ''
+                    }));
+                    if (validationResult.length === 0) {
+                        fetch('/customers/' + props.currentCustomerId + '/warehouses', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(updateWarehouseDto)
+                        })
+                            .then(function (response) {
+                                    if (response.status !== 201) {
+                                        setErrors({
+                                            serverErrors: "Something go wrong, try later",
+                                        });
+                                    } else {
+                                        setErrors(preState => ({
+                                            ...preState,
+                                            validationErrors: [],
+                                            serverErrors: ''
+                                        }));
+                                        setDispatchers([]);
+                                        setIdentifierExist(null);
+                                        setDropdownMenuName("select type");
+                                        props.onChange(false, warehouseDto)
+                                    }
+                                }
+                            )
                     }
-                )
+
+                }
+            )
         }
     };
 
-    const showDispatchers = dispatchersList.map(disp =>
+    const showDispatchers = dispatchers.map(disp =>
         <div key={disp.id}>
-            {disp.name + " " + disp.surname + ", username: " + disp.username}
+            {disp.name} {disp.surname}, username: {disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
 
-                         setDispatchersList(
-                             dispatchersList.filter((dispatcher) => dispatcher.id !== disp.id));
+                         setDispatchers(
+                             dispatchers.filter((dispatcher) => dispatcher.id !== disp.id));
                      }}
             />
         </div>
     );
+
+    const dispatchersForm = (e) => {
+        if (e === "WAREHOUSE") {
+            return (
+                <Form>
+                    <Form.Group>
+                        {showDispatchers}
+                    </Form.Group>
+                    <Form.Group>
+                        <AsyncTypeahead
+                            style={{padding: '5px 10px'}}
+                            ref={ref}
+                            name="username"
+                            filterBy={filterByUsername}
+                            id="async-username"
+                            labelKey="username"
+                            minLength={3}
+                            options={dispatcherOptions}
+                            placeholder="Select dispatcher username..."
+                            onSearch={handleDispatcherSearch}
+                            onChange={addDispatcher}
+                        >
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("username") ? "Please provide a username" : ""}
+                            </div>
+                        </AsyncTypeahead>
+                    </Form.Group>
+                </Form>
+            );
+        } else {
+            return (<div/>)
+        }
+    }
 
     return (
         <>
@@ -188,6 +256,7 @@ function ModalAddWarehouse(props) {
                     });
                     props.onChange(false);
                     setDropdownMenuName("select type");
+                    setIdentifierExist(null);
                 }}
                 aria-labelledby="modal-warehouse"
                 className="shadow"
@@ -211,7 +280,6 @@ function ModalAddWarehouse(props) {
                                 Please provide a valid identifier.
                             </Form.Control.Feedback>
                         </Form.Group>
-
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
                             <Dropdown>
                                 <Dropdown.Toggle variant="btn btn-outline-primary" id="dropdown-basic">
@@ -220,7 +288,6 @@ function ModalAddWarehouse(props) {
                                 <Dropdown.Menu>
                                     <Dropdown.Item onClick={() => handleType("FACTORY")}>FACTORY</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleType("RETAILER")}>RETAILER</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                             <div className="validation-error">
@@ -287,26 +354,7 @@ function ModalAddWarehouse(props) {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group>
-                            {showDispatchers}
-                        </Form.Group>
-                        <Form.Group>
-                            <AsyncTypeahead
-                                style={{padding: '5px 10px'}}
-                                ref={ref}
-                                name="username"
-                                filterBy={filterByUsername}
-                                id="async-username"
-                                labelKey="username"
-                                minLength={3}
-                                options={dispatcherOptions}
-                                placeholder="Select dispatcher username..."
-                                onSearch={handleDispatcherSearch}
-                                onChange={addDispatcher}
-                            >
-                                <div className="validation-error">
-                                    {errors.validationErrors.includes("username") ? "Please provide a username" : ""}
-                                </div>
-                            </AsyncTypeahead>
+                            {dispatchersForm(warehouseDto.type)}
                         </Form.Group>
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"

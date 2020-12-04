@@ -36,5 +36,7 @@ public interface UserService extends BaseService<UserDto> {
 
     void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId);
 
-    void deleteWarehouseFromUsers(List<Long> dispatcherDeleteList);
+    void deleteWarehouseFromUsers(List<Long> dispatchers);
+
+    void deleteWarehousesForAllUsers(List<Long> warehouses);
 }

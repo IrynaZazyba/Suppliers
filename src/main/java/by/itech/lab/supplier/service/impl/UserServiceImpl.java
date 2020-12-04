@@ -129,7 +129,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteWarehouseFromUsers(final List<Long> dispatcherDeleteList) {
-        userRepository.deleteWarehouseFromUsers(dispatcherDeleteList);
+    public void deleteWarehouseFromUsers(final List<Long> dispatchers) {
+        userRepository.deleteWarehouseFromUsers(dispatchers);
+    }
+
+    @Override
+    public void deleteWarehousesForAllUsers(List<Long> warehouses) {
+        userRepository.deleteWarehousesForAllUsers(warehouses);
     }
 }

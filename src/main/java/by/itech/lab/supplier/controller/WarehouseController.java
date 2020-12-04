@@ -30,6 +30,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_DELETE_LIST;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_IDENTIFIER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEMS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_RETAILER_ID_PARAMETER;
@@ -51,6 +52,11 @@ public class WarehouseController {
     @GetMapping(URL_ID_PARAMETER)
     public WarehouseDto findById(@PathVariable final Long id) {
         return warehouseService.findById(id);
+    }
+
+    @GetMapping(URL_IDENTIFIER)
+    public Boolean isContainsIdentifier(@RequestParam final String identifier) {
+        return warehouseService.isContainsIdentifier(identifier);
     }
 
     @GetMapping(URL_RETAILER_ID_PARAMETER)

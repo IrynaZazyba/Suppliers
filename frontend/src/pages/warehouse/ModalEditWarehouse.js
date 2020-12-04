@@ -4,15 +4,14 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import Dropdown from "react-bootstrap/Dropdown";
-import validateWarehouse from "../../validation/WarehouseValidationRules";
+import {validateEditWarehouse} from "../../validation/WarehouseValidationRules";
 import {FaTrash} from "react-icons/fa";
 
 function ModalEditWarehouse(props) {
 
     const ref = React.createRef();
     const [dispatcherDeleteList, setDispatcherDeleteList] = useState([]);
-    const [dispatchersList, setDispatchersList] = useState([]);
+    const [dispatchers, setDispatchers] = useState([]);
     const [dispatcherOptions, setDispatcherOptions] = useState([]);
     const [stateOptions, setStateOptions] = useState([]);
     const [warehouseDto, setWarehouseDto] = useState({
@@ -54,9 +53,9 @@ function ModalEditWarehouse(props) {
             });
     };
 
-    function deleteWarehouseFromDispatchers() {
+    const deleteWarehouseFromDispatchers = (dispatcherDeleteList) => {
         if (dispatcherDeleteList.length > 0) {
-            fetch(`/customers/${props.currentCustomerId}/users/delete-list`, {
+            fetch(`/customers/${props.currentCustomerId}/users/dispatchers/delete-list`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -92,13 +91,13 @@ function ModalEditWarehouse(props) {
         fetch(`/customers/${props.currentCustomerId}/users/dispatchers/${id}?id=${id}`)
             .then(resp => resp.json())
             .then(res => {
-                const dispatchersFromBack = res.map((i) => ({
-                    id: i.id,
-                    name: i.name,
-                    surname: i.surname,
-                    username: i.username
+                const dispatchersFromBack = res.map((dispatcher) => ({
+                    id: dispatcher.id,
+                    name: dispatcher.name,
+                    surname: dispatcher.surname,
+                    username: dispatcher.username
                 }));
-                setDispatchersList(dispatchersFromBack);
+                setDispatchers(dispatchersFromBack);
             });
     };
 
@@ -116,22 +115,14 @@ function ModalEditWarehouse(props) {
 
     const addDispatcher = (e) => {
         if (e.length !== 0) {
-            const dispatcherId = e[0].id;
-            const isContains = dispatchersList.filter((dispatcher) => dispatcher.id === dispatcherId);
-            if (isContains.length===0) {
+            const isContains = dispatchers.find(disp => e[0].id === disp.id)
+            if (!isContains) {
                 e.map(dispatcher =>
-                    setDispatchersList(preState => ([
+                    setDispatchers(preState => ([
                         ...preState, dispatcher
                     ])));
             }
         }
-    };
-
-    const handleType = (e) => {
-        setWarehouseDto(preState => ({
-            ...preState,
-            type: e
-        }));
     };
 
     const handleCity = (e) => {
@@ -164,16 +155,16 @@ function ModalEditWarehouse(props) {
 
     const editWarehouseHandler = (e) => {
         e.preventDefault();
-        const dispatchersId = dispatchersList.map(dispatcher => dispatcher.id);
+        const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
         const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
-        deleteWarehouseFromDispatchers();
+        deleteWarehouseFromDispatchers(dispatcherDeleteList);
 
-        let validationResult = validateWarehouse(warehouseDto, dispatchersId);
+        let validationResult = validateEditWarehouse(updateWarehouseDto, dispatchersId);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult
         }));
-        if (validationResult.length === 0) {
+        if (!validationResult.length) {
             fetch('/customers/' + props.currentCustomerId + '/warehouses/' + warehouseDto.id, {
                 method: 'PUT',
                 headers: {
@@ -183,7 +174,6 @@ function ModalEditWarehouse(props) {
             })
                 .then(function (response) {
                     if (response.status !== 202 || errors.serverErrors !== '') {
-                        console.log("ooops 2")
                         setErrors(preState => ({
                             ...preState,
                             serverErrors: "Something go wrong, try later",
@@ -194,7 +184,7 @@ function ModalEditWarehouse(props) {
                             serverErrors: '',
                             validationErrors: []
                         }));
-                        setDispatchersList([]);
+                        setDispatchers([]);
                         setDispatcherDeleteList([])
                         props.onChange(false, warehouseDto);
                     }
@@ -202,20 +192,53 @@ function ModalEditWarehouse(props) {
         }
     };
 
-    const showDispatchers = dispatchersList.map(disp =>
+    const showDispatchers = dispatchers.map(disp =>
         <div key={disp.id}>
-            {disp.name + " " + disp.surname + ", username: " + disp.username}
+            {disp.name} {disp.surname}, username: {disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
 
-                         setDispatchersList(
-                             dispatchersList.filter((dispatcher) => dispatcher.id !== disp.id));
+                         setDispatchers(
+                             dispatchers.filter((dispatcher) => dispatcher.id !== disp.id));
 
                          setDispatcherDeleteList([...dispatcherDeleteList, disp.id]);
                      }}
             />
         </div>
     );
+
+    const dispatchersForm = (e) => {
+        if (e === "WAREHOUSE") {
+            return (
+                <Form>
+                    <Form.Group>
+                        {showDispatchers}
+                    </Form.Group>
+                    <Form.Group>
+                        <AsyncTypeahead
+                            style={{padding: '5px 10px'}}
+                            ref={ref}
+                            name="username"
+                            filterBy={filterByUsername}
+                            id="async-username"
+                            labelKey="username"
+                            minLength={3}
+                            options={dispatcherOptions}
+                            placeholder="Select dispatcher username..."
+                            onSearch={handleDispatcherSearch}
+                            onChange={addDispatcher}
+                        >
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("username") ? "Please provide a username" : ""}
+                            </div>
+                        </AsyncTypeahead>
+                    </Form.Group>
+                </Form>
+            );
+        } else {
+            return (<div/>)
+        }
+    }
 
     return (
         <>
@@ -249,17 +272,11 @@ function ModalEditWarehouse(props) {
                             />
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
-                            <Dropdown>
-                                <div>select type</div>
-                                <Dropdown.Toggle variant="btn btn-outline-primary" id="dropdown-basic">
-                                    {warehouseDto.type}
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => handleType("FACTORY")}>FACTORY</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleType("RETAILER")}>RETAILER</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
+                            Identifier
+                            <Form.Control type="text"
+                                          disabled
+                                          value={warehouseDto.type}
+                            />
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
@@ -332,27 +349,7 @@ function ModalEditWarehouse(props) {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group>
-                            <div>Selected dispatchers</div>
-                            {showDispatchers}
-                        </Form.Group>
-                        <Form.Group>
-                            <AsyncTypeahead
-                                style={{padding: '5px 10px'}}
-                                ref={ref}
-                                name="username"
-                                filterBy={filterByUsername}
-                                id="async-username"
-                                labelKey="username"
-                                minLength={3}
-                                options={dispatcherOptions}
-                                placeholder="Search, if want to add a new dispatcher..."
-                                onSearch={handleDispatcherSearch}
-                                onChange={addDispatcher}
-                            >
-                                <div className="validation-error">
-                                    {errors.validationErrors.includes("username") ? "Please provide a value" : ""}
-                                </div>
-                            </AsyncTypeahead>
+                            {dispatchersForm(warehouseDto.type)}
                         </Form.Group>
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"

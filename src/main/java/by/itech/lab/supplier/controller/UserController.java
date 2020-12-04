@@ -110,9 +110,15 @@ public class UserController {
         userService.delete(id);
     }
 
+    @PostMapping(URL_DISPATCHERS + URL_DELETE_LIST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWarehouseFromUsers(@RequestBody List<Long> dispatchers) {
+        userService.deleteWarehouseFromUsers(dispatchers);
+    }
+
     @PostMapping(URL_DELETE_LIST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody final List<Long> dispatcherDeleteList) {
-        userService.deleteWarehouseFromUsers(dispatcherDeleteList);
+    public void deleteWarehousesForAllUsers(@RequestBody List<Long> warehouses) {
+        userService.deleteWarehousesForAllUsers(warehouses);
     }
 }

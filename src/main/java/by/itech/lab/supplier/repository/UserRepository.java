@@ -54,6 +54,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findDispatchersByWarehouseId(final Long id);
 
     @Modifying
-    @Query("update User set warehouse = null where id in :dispatcherDeleteList")
-    void deleteWarehouseFromUsers(List<Long> dispatcherDeleteList);
+    @Query("update User set warehouse = null where id in :dispatchers")
+    void deleteWarehouseFromUsers(List<Long> dispatchers);
+
+    @Modifying
+    @Query("update User u set u.warehouse = null where u.warehouse.id in :warehouses")
+    void deleteWarehousesForAllUsers(List<Long> warehouses);
 }

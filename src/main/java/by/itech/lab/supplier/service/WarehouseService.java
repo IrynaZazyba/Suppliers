@@ -13,6 +13,8 @@ import java.util.Set;
 
 public interface WarehouseService{
 
+    Boolean isContainsIdentifier(final String identifier);
+
     WarehouseDto save(final WarehouseDto warehouseDto);
 
     WarehouseDto findById(final Long warehouseId);

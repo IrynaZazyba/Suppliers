@@ -1,18 +1,41 @@
-export default function validateWarehouse(dto, dispatchersId, dropdownMenuName) {
-        return [...validateIdentifier(dto), ...validateCity(dto),
-            ...validateAddressLine1(dto), ...validateAddressLine2(dto),
-            ...validateTotalCapacity(dto), ...validateState(dto),
-            ...validateUsername(dispatchersId), ...validateType(dropdownMenuName)];
+export default function validateWarehouse(dto, dropdownMenuName, dispatchersId) {
+    return [
+        ...validateIdentifier(dto), ...validateCity(dto),
+        ...validateAddressLine1(dto), ...validateAddressLine2(dto),
+        ...validateTotalCapacity(dto), ...validateState(dto),
+        ...validateUsername(dto, dispatchersId), ...validateType(dropdownMenuName)];
+}
+
+export function validateWarehouseWithIdentifierExist(dto, dropdownMenuName, dispatchersId, isIdentifierExist) {
+    return [
+        ...validateIdentifier(dto), ...validateIdentifierExist(isIdentifierExist),
+        ...validateCity(dto), ...validateAddressLine1(dto), ...validateAddressLine2(dto),
+        ...validateTotalCapacity(dto), ...validateState(dto),
+        ...validateUsername(dto, dispatchersId), ...validateType(dropdownMenuName)];
+}
+
+export function validateEditWarehouse(dto, dispatchersId) {
+    return [
+        ...validateCity(dto), ...validateAddressLine1(dto), ...validateAddressLine2(dto),
+        ...validateTotalCapacity(dto), ...validateState(dto), ...validateUsername(dto, dispatchersId)];
 }
 
 export function validateIdentifier(dto) {
     let errorsFields = [];
-    if (!dto.addressDto.city ||
-        (dto.identifier.length < 1 || dto.identifier.length > 50)) {
+
+    if (dto.identifier.length < 1 || dto.identifier.length > 50) {
         errorsFields.push("identifier");
     } else {
         const index = errorsFields.indexOf("identifier");
         errorsFields.splice(index, 1);
+    }
+    return errorsFields;
+}
+
+export function validateIdentifierExist(isIdentifierExist) {
+    let errorsFields = [];
+    if (isIdentifierExist) {
+        errorsFields.push("identifier");
     }
     return errorsFields;
 }
@@ -57,7 +80,7 @@ export function validateAddressLine2(dto) {
 export function validateTotalCapacity(dto) {
     let errorsFields = [];
 
-    if (!dto.addressDto.city ||
+    if (!dto.totalCapacity ||
         (dto.totalCapacity.length < 1 || dto.totalCapacity.length > 50)) {
         errorsFields.push("totalCapacity");
     } else {
@@ -78,9 +101,9 @@ export function validateState(dto) {
     return errorsFields;
 }
 
-export function validateUsername(dispatchersId) {
+export function validateUsername(dto, dispatchersId) {
     let errorsFields = [];
-    if (dispatchersId.length === 0) {
+    if (dto.type === "WAREHOUSE" && dispatchersId.length === 0) {
         errorsFields.push("username");
     } else {
         const index = errorsFields.indexOf("username");

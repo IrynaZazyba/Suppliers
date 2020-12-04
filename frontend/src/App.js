@@ -37,13 +37,15 @@ function App() {
     };
 
     const renderWarehouse = () => {
-        return <ProtectedComponent conditions={user} render={(() => {
-            return <Warehouses currentCustomerId={currentCustomerId}/>
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"
+        || user.role === "ROLE_ADMIN"} render={(() => {
+            return <Warehouses/>
         })}/>
     };
 
     const renderUser = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        } render={(() => {
             return <Users/>
         })}/>
     };

@@ -91,6 +91,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public Boolean isContainsIdentifier(final String identifier) {
+        Long id = warehouseRepository.findByIdentifier(identifier);
+        return id != null;
+    }
+
+    @Override
     @Transactional
     public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
@@ -110,7 +116,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
         warehouseMapper.map(warehouseDto, warehouse);
         Warehouse saved = warehouseRepository.save(warehouse);
-        System.out.println(warehouseDto.getDispatchersId());
         userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
         return saved;
     }
