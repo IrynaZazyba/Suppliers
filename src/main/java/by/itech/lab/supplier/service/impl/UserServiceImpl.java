@@ -104,10 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int changePassword(Long id, String password) {
-        UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal.getId().equals(id))
-        return userRepository.changePassword(passwordEncoder.encode(password), principal.getId());
-        return 0;
+        return userRepository.changePassword(passwordEncoder.encode(password), id);
     }
 
     @Override

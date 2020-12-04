@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,15 +77,15 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("#id==authentication.principal.id")
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
     public void changePassword(@PathVariable Long customerId, @PathVariable Long id, @RequestBody String password) {
-      if (customerId.equals(threadLocal.get()))
         userService.changePassword(id, password);
     }
 
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("#id==authentication.principal.id")
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
         return userService.save(userDTO);

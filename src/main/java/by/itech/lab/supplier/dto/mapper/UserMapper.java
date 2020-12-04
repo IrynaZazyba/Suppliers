@@ -55,7 +55,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
                 .email(userDTO.getEmail())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .password((userDTO.getId() != null || userDTO.getPassword() == null) ? userDTO.getPassword() : passwordEncoder.encode(userDTO.getPassword()))
                 .birthday(userDTO.getBirthday())
                 .active(userDTO.isActive())
                 .deletedAt(userDTO.getDeletedAt())
