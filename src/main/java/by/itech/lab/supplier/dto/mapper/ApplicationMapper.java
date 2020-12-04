@@ -96,19 +96,27 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
         return application;
     }
 
+
     private void updateItems(Set<ApplicationItem> forUpdate, Set<ApplicationItemDto> update) {
         for (ApplicationItemDto item : update) {
             ApplicationItem result = forUpdate.stream()
-                    .filter(Objects::nonNull)
+                    .filter(obj -> Objects.nonNull(obj.getId()))
                     .filter(p -> p.getId().equals(item.getId()))
                     .findAny()
                     .orElse(null);
-            if (Objects.nonNull(result)) {
+
+            if (Objects.nonNull(result) && Objects.isNull(item.getDeleted())) {
                 result.setAmount(item.getAmount());
                 result.setCost(item.getCost());
                 result.setAcceptedAt(item.getAcceptedAt());
                 result.setItem(itemMapper.map(item.getItemDto()));
-            } else {
+            }
+
+            if (Objects.nonNull(result) && Objects.nonNull(item.getDeleted())) {
+                forUpdate.remove(result);
+            }
+
+            if (Objects.isNull(result)) {
                 forUpdate.add(itemsInApplicationMapper.map(item));
             }
         }

@@ -33,6 +33,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ITEMS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_RETAILER_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE_ITEMS;
 
 @RestController
 @AllArgsConstructor
@@ -94,14 +95,21 @@ public class WarehouseController {
     }
 
     @GetMapping(ApiConstants.URL_TYPE)
-    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type) {
-        return warehouseService.findAllByType(type);
+    public List<WarehouseDto> findByType(@RequestParam final WarehouseType type,
+                                         @RequestParam(required = false) final Boolean byDispatcher) {
+        return warehouseService.findAllByType(type, byDispatcher);
     }
 
     @GetMapping(URL_ID_PARAMETER + URL_ITEMS)
     public List<WarehouseItemDto> getWarehouseItemsByUpc(@PathVariable final Long id,
                                                          @RequestParam final String itemUpc) {
         return warehouseService.getWarehouseItemsByUpc(id, itemUpc);
+    }
+
+    @GetMapping(URL_ID_PARAMETER + URL_WAREHOUSE_ITEMS)
+    public List<WarehouseItemDto> getWarehouseItemByItemsId(@PathVariable final Long id,
+                                                            @RequestParam final List<Long> itemsId) {
+        return warehouseService.getWarehouseItemContainingItems(id, itemsId);
     }
 
 }

@@ -57,8 +57,8 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany2",
-  "adminEmail": "1j323@gmail.com"
+  "name": "SomeCompany3",
+  "adminEmail": "3j323@gmail.com"
 }
 
 ###
@@ -227,6 +227,19 @@ GET http://localhost:8080/customers/3/warehouses/8/items?itemUpc=829
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/customers/3/warehouses/8/warehouse-items?itemsId=19,18,5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
 
 ###
 
