@@ -102,7 +102,6 @@ Cookie: {{test}}
   "totalCapacity": 151.0,
   "currentCapacity": 85.0,
   "addressDto": {
-    "id": 20,
     "city": "Pinto",
     "addressLine1": "6374 Posuere, St.",
     "addressLine2": "163-8189 Mi Ave",
@@ -352,7 +351,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "password": "password"
+  "password"
 }
 
 ###
@@ -692,7 +691,6 @@ Cookie: {{test}}
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
-      "id": 3,
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",

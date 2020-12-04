@@ -27,7 +27,6 @@ function ModalAddUser(props) {
         role: 'ROLE_SYSTEM_ADMIN',
         username: '',
         email: '',
-        password:'',
         customerId: currentCustomerId
     });
     const [validError, setError] = useState([]);
@@ -61,12 +60,7 @@ function ModalAddUser(props) {
             name: e.target.value
         }));
     };
-    const handlePassword = (e) => {
-        setUser(preState => ({
-            ...preState,
-            password: e.target.value
-        }));
-    };
+
     const handleSurname = (e) => {
         setUser(preState => ({
             ...preState,
@@ -189,15 +183,6 @@ function ModalAddUser(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="password" onChange={handlePassword}
-                                          className={
-                                              isValid("password")
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid password.
-                            </Form.Control.Feedback>
-                        </Form.Group>
 
                         <Form.Group controlId="formBasicDate" style={{padding: '5px 10px'}}>
                             <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
