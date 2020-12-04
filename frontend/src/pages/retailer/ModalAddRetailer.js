@@ -95,8 +95,15 @@ function ModalAddRetailer(props) {
 
 
     useEffect(() => {
-        getWarehouses(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`);
-    }, []);
+        fetch(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`)
+            .then(response => response.json())
+            .then(res => {
+                setWarehouses(preState => ({
+                        ...preState,
+                        destination: res
+                    })
+                );
+            });  }, []);
 
     function getWarehouses(url) {
         fetch(url)
