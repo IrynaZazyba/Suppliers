@@ -83,9 +83,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .map(from.getCreatedByUsersDto()) : to.getCreatedByUsers());
         to.setLastUpdatedByUsers(Objects.nonNull(from.getLastUpdatedByUsersDto()) ? userMapper
                 .map(from.getLastUpdatedByUsersDto()) : to.getLastUpdatedByUsers());
-        to.setWayBill(Objects.nonNull(from.getWayBillDto()) ? wayBillMapper.map(from.getWayBillDto()) : to.getWayBill());
-                .map(from.getLastUpdatedByUsersDto()) : null);
-        to.setWayBill(WayBill.builder().id(from.getWayBillId()).build());
+        to.setWayBill(Objects.nonNull(from.getWayBillId()) ? WayBill.builder().id(from.getWayBillId()).build() : null);
         to.setDeletedAt(from.getDeletedAt());
         to.setCustomerId(from.getCustomerId());
         to.setType(from.getType());

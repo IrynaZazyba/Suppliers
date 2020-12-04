@@ -21,6 +21,6 @@ public class UpdateWaybillNumberValidator implements ConstraintValidator<Waybill
         String[] splitted = request.getRequestURI().trim().split("/");
         Long appId = Long.valueOf(splitted[splitted.length - 1]);
         Optional<WayBillDto> waybillByNumber = waybillService.getWaybillByNumber(number);
-        return waybillByNumber.map(wayBillDto -> wayBillDto.getId().equals(appId)).orElse(false);
+        return waybillByNumber.map(wayBillDto -> wayBillDto.getId().equals(appId)).orElse(true);
     }
 }
