@@ -72,17 +72,16 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
     public void map(final ApplicationDto from, final Application to) {
         to.setApplicationStatus(from.getApplicationStatus());
         to.setNumber(from.getNumber());
-        to.setRegistrationDate(from.getRegistrationDate());
         to.setLastUpdated(from.getLastUpdated());
         to.setSourceLocationAddress(Objects.nonNull(from.getSourceLocationDto()) ? warehouseMapper
-                .map(from.getSourceLocationDto()) : null);
+                .map(from.getSourceLocationDto()) : to.getSourceLocationAddress());
         to.setDestinationLocationAddress(Objects.nonNull(from.getDestinationLocationDto()) ? warehouseMapper
-                .map(from.getDestinationLocationDto()) : null);
+                .map(from.getDestinationLocationDto()) : to.getDestinationLocationAddress());
         to.setCreatedByUsers(Objects.nonNull(from.getCreatedByUsersDto()) ? userMapper
-                .map(from.getCreatedByUsersDto()) : null);
+                .map(from.getCreatedByUsersDto()) : to.getCreatedByUsers());
         to.setLastUpdatedByUsers(Objects.nonNull(from.getLastUpdatedByUsersDto()) ? userMapper
-                .map(from.getLastUpdatedByUsersDto()) : null);
-        to.setWayBill(Objects.nonNull(from.getWayBillDto()) ? wayBillMapper.map(from.getWayBillDto()) : null);
+                .map(from.getLastUpdatedByUsersDto()) : to.getLastUpdatedByUsers());
+        to.setWayBill(Objects.nonNull(from.getWayBillDto()) ? wayBillMapper.map(from.getWayBillDto()) : to.getWayBill());
         to.setDeletedAt(from.getDeletedAt());
         to.setCustomerId(from.getCustomerId());
         to.setType(from.getType());
@@ -113,7 +112,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
             }
 
             if (Objects.nonNull(result) && Objects.nonNull(item.getDeleted())) {
-                forUpdate.remove(result);
+                forUpdate.removeIf(i -> i.getId().equals(result.getId()));
             }
 
             if (Objects.isNull(result)) {

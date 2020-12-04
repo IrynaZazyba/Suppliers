@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -40,8 +41,6 @@ public class UserController {
     private final UserService userService;
 
     private final CustomerService customerService;
-
-    private final ThreadLocal threadLocal;
 
     @GetMapping("/dispatchers")
     public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
@@ -63,9 +62,10 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @AdminAccess
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-       CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
-       userDto.setCustomerDto(customerDto);
+        CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
+        userDto.setCustomerDto(customerDto);
         return userService.save(userDto);
     }
 
@@ -82,7 +82,7 @@ public class UserController {
         userService.changePassword(id, password);
     }
 
-
+    //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
     @PreAuthorize("#id==authentication.principal.id")
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
