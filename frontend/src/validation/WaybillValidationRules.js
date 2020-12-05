@@ -32,6 +32,14 @@ export function checkCarCapacity(carCapacity, appsCapacity) {
     return errorsFields;
 }
 
+export function checkIfRouteExists(apps) {
+    let errorsFields = [];
+    if (apps.length === 0) {
+        errorsFields.push("route");
+    }
+    return errorsFields;
+
+}
 
 
 

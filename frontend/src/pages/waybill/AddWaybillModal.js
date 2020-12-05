@@ -12,7 +12,7 @@ import Table from "react-bootstrap/Table";
 import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
 import Page from "../../components/Page";
 import Button from "react-bootstrap/Button";
-import validateWaybill, {checkCarCapacity} from "../../validation/WaybillValidationRules";
+import validateWaybill, {checkCarCapacity, checkIfRouteExists} from "../../validation/WaybillValidationRules";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 
 
@@ -148,17 +148,25 @@ function AddWaybillModal(props) {
             ...prevState,
             carCapacity: car.currentCapacity
         }));
+        let res = errors.validationErrors.filter(e => e != 'car');
         let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
         setErrors(prevState => ({
             ...prevState,
-            validationErrors: [...errors.validationErrors, ...validRes]
+            validationErrors: [...res, ...validRes]
         }));
     };
 
 
     const addAppToWaybill = (e) => {
         e.preventDefault();
-        checkValidationErrors('apps');
+        setDirections([]);
+        setShowMap(false);
+        setWaypoints([]);
+        let res = errors.validationErrors.filter(e => e !== 'apps' && e !== 'route');
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
         let appId = e.currentTarget.id;
         setAddedApps([...addedApps, parseInt(appId)]);
     };
@@ -196,53 +204,65 @@ function AddWaybillModal(props) {
 
     const calculateOptimalRoute = (e) => {
         e.preventDefault();
-        setShowMap(true);
-        fetch(`/customers/${customerId}/waybills/route?waybillAppsId=${addedApps}`)
-            .then(response => response.json())
-            .then(commits => {
-                let countPoints = commits.wayPoints.length;
-                let points = commits.wayPoints.filter(wp => (wp.priority !== 0 && wp.priority !== (countPoints - 1)));
-                let endPoint = commits.wayPoints.filter(wp => wp.priority === (countPoints - 1));
-                let startPoint = commits.wayPoints.filter(wp => wp.priority === 0);
-                setMapCenter({lat: startPoint[0].address.latitude, lng: startPoint[0].address.longitude});
-                let waypoints = points.map(wp => {
-                    return {
-                        location: {
-                            lat: wp.address.latitude,
-                            lng: wp.address.longitude
-                        },
-                        stopover: true
-                    }
+        let validationRes = checkIfRouteExists(addedApps);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: [...errors.validationErrors, ...validationRes]
+        }));
+        if (validationRes.length === 0) {
+            setShowMap(true);
+            fetch(`/customers/${customerId}/waybills/route?waybillAppsId=${addedApps}`)
+                .then(response => response.json())
+                .then(commits => {
+                    let countPoints = commits.wayPoints.length;
+                    let points = commits.wayPoints.filter(wp => (wp.priority !== 0 && wp.priority !== (countPoints - 1)));
+                    let endPoint = commits.wayPoints.filter(wp => wp.priority === (countPoints - 1));
+                    let startPoint = commits.wayPoints.filter(wp => wp.priority === 0);
+                    setMapCenter({lat: startPoint[0].address.latitude, lng: startPoint[0].address.longitude});
+                    let waypoints = points.map(wp => {
+                        return {
+                            location: {
+                                lat: wp.address.latitude,
+                                lng: wp.address.longitude
+                            },
+                            stopover: true
+                        }
+                    });
+                    let waypointsWithEnd = [...points, ...endPoint];
+                    setWaypoints(waypointsWithEnd);
+                    setStartPoint(startPoint[0]);
+                    let start = {lat: startPoint[0].address.latitude, lng: startPoint[0].address.longitude};
+                    let end = {
+                        lat: endPoint[0].address.latitude,
+                        lng: endPoint[0].address.longitude
+                    };
+                    renderRoute(start, end, waypoints);
                 });
-                let waypointsWithEnd = [...points, ...endPoint];
-                setWaypoints(waypointsWithEnd);
-                setStartPoint(startPoint[0]);
-                let start = {lat: startPoint[0].address.latitude, lng: startPoint[0].address.longitude};
-                let end = {
-                    lat: endPoint[0].address.latitude,
-                    lng: endPoint[0].address.longitude
-                };
-
-                const directionsService = new google.maps.DirectionsService();
-                let directionsRenderer = new google.maps.DirectionsRenderer();
-
-                let requests = {
-                    origin: start,
-                    destination: end,
-                    waypoints: waypoints,
-                    travelMode: 'DRIVING'
-                };
-                directionsService.route(requests, function (result, status) {
-                    if (status == 'OK') {
-                        setDirections(result);
-                        directionsRenderer.setDirections(result);
-                    } else {
-                        console.log("error");
-                    }
-                });
-
-            });
+        }
     };
+
+    function renderRoute(start, end, waypoints) {
+        const directionsService = new google.maps.DirectionsService();
+        let directionsRenderer = new google.maps.DirectionsRenderer();
+        let requests = {
+            origin: start,
+            destination: end,
+            waypoints: waypoints,
+            travelMode: 'DRIVING'
+        };
+        directionsService.route(requests, function (result, status) {
+            if (status == 'OK') {
+                setDirections(result);
+                directionsRenderer.setDirections(result);
+            } else {
+                setErrors(prevState => ({
+                    ...prevState,
+                    serverErrors: "Something went wrong, please try later",
+                }));
+            }
+        });
+
+    }
 
     const MyMapComponent = withScriptjs(withGoogleMap((props) =>
         <GoogleMap
@@ -457,10 +477,11 @@ function AddWaybillModal(props) {
             </Row>
         </React.Fragment>;
 
-    const addButton = <Button type="submit" className="mainButton pull-right"
+    const addButton = <Button type="submit"
+                              className="mainButton pull-right waybill-button"
                               onClick={saveWaybillHandler}>Save</Button>;
 
-    const calculateRouteButton = <Button type="submit" className="mainButton pull-right"
+    const calculateRouteButton = <Button type="submit" className="mainButton pull-right waybill-button"
                                          onClick={calculateOptimalRoute}>Introduce route</Button>;
 
     const reorder = (list, startIndex, endIndex) => {
@@ -469,6 +490,25 @@ function AddWaybillModal(props) {
         result.splice(endIndex, 0, removed);
         return result;
     };
+
+    function reRenderRoute(reordered) {
+        let reorderdWaypoints = reordered.slice();
+        let start = {lat: startPoint.address.latitude, lng: startPoint.address.longitude};
+        let endWaypoint = reorderdWaypoints.pop();
+        let end = {lat: endWaypoint.address.latitude, lng: endWaypoint.address.longitude};
+
+        let waypointsToRender = reorderdWaypoints.map(wp => {
+            return {
+                location: {
+                    lat: wp.address.latitude,
+                    lng: wp.address.longitude
+                },
+                stopover: true
+            }
+        });
+
+        renderRoute(start, end, waypointsToRender)
+    }
 
     function onDragEnd(result) {
         if (!result.destination) {
@@ -485,12 +525,13 @@ function AddWaybillModal(props) {
             result.destination.index
         );
         setWaypoints(reordered);
+        reRenderRoute(reordered);
     }
 
     const map =
         <MyMapComponent
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD23in5ihBl4ARdXKdScS9eWXlEzwQjIPs&callback=initMap&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}
@@ -519,7 +560,7 @@ function AddWaybillModal(props) {
                                                         {...provided.dragHandleProps}
                                         ><FaMapMarkerAlt style={{textAlign: 'center', color: '#1A7FA8'}}
                                                          size={'1.1em'}/>
-                                            {m.address.addressLine1}
+                                            {m.address.addressLine1}{', '}{m.address.addressLine2}
                                         </ListGroup.Item>
                                     )}
                                 </Draggable>)}
@@ -554,6 +595,9 @@ function AddWaybillModal(props) {
                         totalAmount: 0,
                         totalUnits: 0
                     });
+                    setDirections([]);
+                    setShowMap(false);
+                    setWaypoints([]);
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
@@ -569,12 +613,12 @@ function AddWaybillModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
+                    {errors.validationErrors.includes("route") &&
+                    <ErrorMessage message="Choose applications"/>}
+
                     {waybillContentData}
                     <div className="validation-error">
                         {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
-                    </div>
-                    <div className="float-right" style={{padding: '10px'}}>
-                        {addButton}{calculateRouteButton}
                     </div>
                     <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
                         <Card.Header>
@@ -594,6 +638,9 @@ function AddWaybillModal(props) {
                             {waypoints.length > 0 && startPoint.address && dragAndDropWaypoints}
                         </Col>
                     </Row>
+                    <div className="float-right" style={{padding: '10px'}}>
+                        {calculateRouteButton}{addButton}
+                    </div>
                 </Modal.Body>
             </Modal>
         </>
