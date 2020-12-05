@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +25,13 @@ public class WarehouseDto implements BaseDto, Comparable<WarehouseDto> {
     @Size(min = 1, max = 50, message = "Your identifier should contains at least 1 letter")
     @NotBlank
     private String identifier;
-    @Size(min = 1, max = 50, message = "Your type should contains at least 1 letter")
-    @NotBlank
+    @NotNull
     private WarehouseType type;
-    @Size(min = 1, max = 10000, message = "Your totalCapacity shouldn't be empty")
-    @NotBlank
+    @DecimalMin(value = "0.0")
+    @NotNull
     private Double totalCapacity;
-    @NotBlank
+    @NotNull
+    @Valid
     private AddressDto addressDto;
     private Long retailerId;
     @NotEmpty(message = "You must have at least one dispatcher selected")

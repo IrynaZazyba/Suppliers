@@ -57,7 +57,7 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany3",
+  "name": "SomeCompany",
   "adminEmail": "3j323@gmail.com"
 }
 
@@ -691,7 +691,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
@@ -721,7 +720,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
@@ -744,7 +742,6 @@ Cookie: {{test}}
     "warehouse": null
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": null,
   "deletedAt": null,
   "items": [
     {
@@ -887,12 +884,12 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "number": "124844148853",
+  "number": "12853",
   "sourceLocationWarehouseDto": {
     "id": 1
   },
   "driverDto": {
-    "id": 67
+    "id": 61
   },
   "carDto": {
     "id": 1
@@ -915,7 +912,7 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/customers/3/waybills/104
+PUT http://localhost:8080/customers/3/waybills/21
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}

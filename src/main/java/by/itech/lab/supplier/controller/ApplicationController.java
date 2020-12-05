@@ -5,6 +5,8 @@ import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.ApplicationDto;
+import by.itech.lab.supplier.dto.validation.CreateDtoValidationGroup;
+import by.itech.lab.supplier.dto.validation.UpdateDtoValidationGroup;
 import by.itech.lab.supplier.service.ApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +36,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATION;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping(ApiConstants.URL_CUSTOMER + ApiConstants.URL_CUSTOMER_ID + URL_APPLICATION)
@@ -40,12 +44,14 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
+    @Validated(CreateDtoValidationGroup.class)
     @PostMapping
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public ApplicationDto save(@Valid @RequestBody ApplicationDto applicationDto) {
         return applicationService.save(applicationDto);
     }
 
+    @Validated(UpdateDtoValidationGroup.class)
     @PutMapping(URL_ID_PARAMETER)
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public ApplicationDto update(@PathVariable final Long id, @Valid @RequestBody final ApplicationDto applicationDto) {

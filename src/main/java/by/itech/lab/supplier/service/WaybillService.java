@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import java.util.Optional;
+
 public interface WaybillService {
 
     WayBillDto save(WayBillDto wayBillDto);
@@ -17,4 +19,6 @@ public interface WaybillService {
     Page<WayBillDto> findAll(Pageable pageable, WaybillStatus status);
 
     RouteDto calculateWaybillRoute(List<Long> appsIds);
+
+    Optional<WayBillDto> getWaybillByNumber(String number);
 }

@@ -1,7 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.auth.domain.UserImpl;
-import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.domain.WaybillStatus;
@@ -9,7 +8,6 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.RouteDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WayBillDto;
-import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WayBillMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -28,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,9 +48,19 @@ public class WaybillServiceImpl implements WaybillService {
         final User user = userMapper.map(userService.findById(principal.getId()));
 
         final WayBill wayBill = Optional.ofNullable(wayBillDto.getId())
-                .map(itemToSave -> updateWayBill(wayBillDto, user))
+                .map(itemToSave -> updateWayBill(wayBillDto))
                 .orElseGet(() -> createWayBill(wayBillDto, user));
-        return wayBillMapper.map(wayBill);
+
+        wayBill.setLastUpdated(LocalDateTime.now());
+        wayBill.setUpdatedByUsers(user);
+        wayBill.setCustomerId(user.getCustomer().getId());
+        final WayBill saved = waybillRepository.save(wayBill);
+
+        if (Objects.isNull(wayBillDto.getId())) {
+            final List<ApplicationDto> appDtos = getRelatedApplications(wayBillDto, saved);
+            applicationService.saveAll(appDtos);
+        }
+        return wayBillMapper.map(saved);
     }
 
     private WayBill createWayBill(final WayBillDto wayBillDto, final User user) {
@@ -59,37 +68,27 @@ public class WaybillServiceImpl implements WaybillService {
         wayBill.setRegistrationDate(LocalDateTime.now());
         wayBill.setCreatedByUsers(user);
         wayBill.setWaybillStatus(WaybillStatus.READY);
-        wayBill.setLastUpdated(LocalDateTime.now());
-        wayBill.setUpdatedByUsers(user);
-        wayBill.setCustomerId(user.getCustomer().getId());
-        final WayBill saved = waybillRepository.save(wayBill);
-        final List<Application> relatedApplications = getRelatedApplications(wayBillDto);
-        List<ApplicationDto> appDtos = relatedApplications
-                .stream().peek(a -> a.setWayBill(saved)).map(applicationMapper::map)
-                .collect(Collectors.toList());
-        applicationService.saveAll(appDtos);
         return wayBill;
     }
 
-
-    private WayBill updateWayBill(final WayBillDto wayBillDto, User user) {
-        final WayBill existing = waybillRepository
-                .findById(wayBillDto.getId())
-                .orElseThrow();
+    private WayBill updateWayBill(final WayBillDto wayBillDto) {
+        final WayBill existing = waybillRepository.findById(wayBillDto.getId()).orElseThrow();
         wayBillMapper.map(wayBillDto, existing);
-        existing.setLastUpdated(LocalDateTime.now());
-        existing.setUpdatedByUsers(user);
-        existing.setCustomerId(user.getCustomer().getId());
-        wayBillMapper.mapApplications(existing, wayBillDto);
         return waybillRepository.save(existing);
     }
 
-    private List<Application> getRelatedApplications(final WayBillDto wayBillDto) {
+    private List<ApplicationDto> getRelatedApplications(final WayBillDto wayBillDto, final WayBill savedWayBill) {
         final List<Long> appsIds = wayBillDto.getApplications().stream()
                 .map(ApplicationDto::getId)
                 .collect(Collectors.toList());
         return applicationService.getApplicationsByIds(appsIds)
-                .stream().map(applicationMapper::map).collect(Collectors.toList());
+                .stream().peek(a -> a.setWayBillId(savedWayBill.getId()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<WayBillDto> getWaybillByNumber(String number) {
+        return waybillRepository.findByNumber(number).map(wayBillMapper::map);
     }
 
     @Override
