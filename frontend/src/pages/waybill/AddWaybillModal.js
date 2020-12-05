@@ -1,17 +1,20 @@
+/*global google*/
 import React, {useContext, useEffect, useState} from "react";
 import ErrorMessage from "../../messages/errorMessage";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import {AuthContext} from "../../context/authContext";
-import {Row} from "react-bootstrap";
+import {ListGroup, Row} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import {GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps";
+import {DirectionsRenderer, GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps";
 import Table from "react-bootstrap/Table";
-import {FaMinus, FaPlus} from "react-icons/fa";
+import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
 import Page from "../../components/Page";
 import Button from "react-bootstrap/Button";
 import validateWaybill, {checkCarCapacity} from "../../validation/WaybillValidationRules";
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+
 
 function AddWaybillModal(props) {
 
@@ -44,7 +47,11 @@ function AddWaybillModal(props) {
         countPerPage: 5,
         countPages: 1
     });
-
+    const [directions, setDirections] = useState();
+    const [waypoints, setWaypoints] = useState([]);
+    const [startPoint, setStartPoint] = useState({});
+    const [showMap, setShowMap] = useState(false);
+    const [mapCenter, setMapCenter] = useState({lat: 51.494900, lng: -0.146231});
 
     useEffect(() => {
         Promise.all([
@@ -147,6 +154,107 @@ function AddWaybillModal(props) {
             validationErrors: [...errors.validationErrors, ...validRes]
         }));
     };
+
+
+    const addAppToWaybill = (e) => {
+        e.preventDefault();
+        checkValidationErrors('apps');
+        let appId = e.currentTarget.id;
+        setAddedApps([...addedApps, parseInt(appId)]);
+    };
+
+    const saveWaybillHandler = (e) => {
+        e.preventDefault();
+        let validationResult = validateWaybill(waybill, addedApps);
+        if (validationResult.length === 0) {
+
+        } else {
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: validationResult
+            }))
+        }
+    };
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
+
+    const removeAppFromWaybill = (e) => {
+        e.preventDefault();
+        setDirections([]);
+        setShowMap(false);
+        setWaypoints([]);
+        let appId = parseInt(e.currentTarget.id);
+        let result = addedApps.filter(app => app !== appId);
+        setAddedApps(result);
+    };
+
+    const calculateOptimalRoute = (e) => {
+        e.preventDefault();
+        setShowMap(true);
+        fetch(`/customers/${customerId}/waybills/route?waybillAppsId=${addedApps}`)
+            .then(response => response.json())
+            .then(commits => {
+                let countPoints = commits.wayPoints.length;
+                let points = commits.wayPoints.filter(wp => (wp.priority !== 0 && wp.priority !== (countPoints - 1)));
+                let endPoint = commits.wayPoints.filter(wp => wp.priority === (countPoints - 1));
+                let startPoint = commits.wayPoints.filter(wp => wp.priority === 0);
+                setMapCenter({lat: startPoint[0].address.latitude, lng: startPoint[0].address.longitude});
+                let waypoints = points.map(wp => {
+                    return {
+                        location: {
+                            lat: wp.address.latitude,
+                            lng: wp.address.longitude
+                        },
+                        stopover: true
+                    }
+                });
+                let waypointsWithEnd = [...points, ...endPoint];
+                setWaypoints(waypointsWithEnd);
+                setStartPoint(startPoint[0]);
+                let start = {lat: startPoint[0].address.latitude, lng: startPoint[0].address.longitude};
+                let end = {
+                    lat: endPoint[0].address.latitude,
+                    lng: endPoint[0].address.longitude
+                };
+
+                const directionsService = new google.maps.DirectionsService();
+                let directionsRenderer = new google.maps.DirectionsRenderer();
+
+                let requests = {
+                    origin: start,
+                    destination: end,
+                    waypoints: waypoints,
+                    travelMode: 'DRIVING'
+                };
+                directionsService.route(requests, function (result, status) {
+                    if (status == 'OK') {
+                        setDirections(result);
+                        directionsRenderer.setDirections(result);
+                    } else {
+                        console.log("error");
+                    }
+                });
+
+            });
+    };
+
+    const MyMapComponent = withScriptjs(withGoogleMap((props) =>
+        <GoogleMap
+            defaultZoom={15}
+            defaultCenter={mapCenter}>
+            <Marker position={mapCenter}/>
+            <DirectionsRenderer
+                directions={directions}
+            />
+        </GoogleMap>
+    ));
+
 
     const waybillInfo =
         <React.Fragment>
@@ -258,53 +366,6 @@ function AddWaybillModal(props) {
             </Form.Group>
         </React.Fragment>;
 
-
-    const MyMapComponent = withScriptjs(withGoogleMap((props) =>
-        <GoogleMap
-            defaultZoom={8}
-            defaultCenter={{lat: -34.397, lng: 150.644}}>
-            <Marker position={{lat: -34.397, lng: 150.644}}/>
-        </GoogleMap>
-    ));
-
-
-    const addAppToWaybill = (e) => {
-        e.preventDefault();
-        checkValidationErrors('apps');
-        let appId = e.currentTarget.id;
-        setAddedApps([...addedApps, parseInt(appId)]);
-    };
-
-    const saveWaybillHandler = (e) => {
-        e.preventDefault();
-        let validationResult = validateWaybill(waybill, addedApps);
-        if (validationResult.length === 0) {
-
-        } else {
-            setErrors(prevState => ({
-                ...prevState,
-                validationErrors: validationResult
-            }))
-        }
-    };
-
-
-    function checkValidationErrors(fieldName) {
-        let res = errors.validationErrors.filter(e => e != fieldName);
-        setErrors(prevState => ({
-            ...prevState,
-            validationErrors: res
-        }));
-    }
-
-    const removeAppFromWaybill = (e) => {
-        e.preventDefault();
-        let appId = parseInt(e.currentTarget.id);
-        let result = addedApps.filter(app => app !== appId);
-        setAddedApps(result);
-    };
-
-
     const appRows =
         <React.Fragment>
             {apps && apps.map(app => (
@@ -397,8 +458,77 @@ function AddWaybillModal(props) {
         </React.Fragment>;
 
     const addButton = <Button type="submit" className="mainButton pull-right"
-                              onClick={saveWaybillHandler}
-    >Save</Button>;
+                              onClick={saveWaybillHandler}>Save</Button>;
+
+    const calculateRouteButton = <Button type="submit" className="mainButton pull-right"
+                                         onClick={calculateOptimalRoute}>Introduce route</Button>;
+
+    const reorder = (list, startIndex, endIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+
+    function onDragEnd(result) {
+        if (!result.destination) {
+            return;
+        }
+
+        if (result.destination.index === result.source.index) {
+            return;
+        }
+
+        const reordered = reorder(
+            waypoints,
+            result.source.index,
+            result.destination.index
+        );
+        setWaypoints(reordered);
+    }
+
+    const map =
+        <MyMapComponent
+            isMarkerShown
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyD23in5ihBl4ARdXKdScS9eWXlEzwQjIPs&callback=initMap&libraries=geometry,drawing,places"
+            loadingElement={<div style={{height: `100%`}}/>}
+            containerElement={<div style={{height: `350px`}}/>}
+            mapElement={<div style={{height: `100%`}}/>}
+        />;
+
+    const dragAndDropWaypoints =
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="list">
+                {provided => (
+                    <div ref={provided.innerRef} {...provided.droppableProps}>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item key={startPoint.address.addressLine1}>
+                                <FaFlag
+                                    style={{textAlign: 'center', color: 'green'}}
+                                    size={'1.5em'}
+                                />{startPoint.address.addressLine1}{','}{startPoint.address.addressLine2}
+                            </ListGroup.Item>
+
+                            {waypoints.map((m, index) =>
+                                <Draggable key={m.address.addressLine1}
+                                           draggableId={m.address.addressLine1} index={index}>
+                                    {provided => (
+                                        <ListGroup.Item key={m.address.addressLine1}
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                        ><FaMapMarkerAlt style={{textAlign: 'center', color: '#1A7FA8'}}
+                                                         size={'1.1em'}/>
+                                            {m.address.addressLine1}
+                                        </ListGroup.Item>
+                                    )}
+                                </Draggable>)}
+                        </ListGroup>
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>;
 
 
     return (
@@ -443,6 +573,9 @@ function AddWaybillModal(props) {
                     <div className="validation-error">
                         {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
                     </div>
+                    <div className="float-right" style={{padding: '10px'}}>
+                        {addButton}{calculateRouteButton}
+                    </div>
                     <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
                         <Card.Header>
                         </Card.Header>
@@ -452,9 +585,15 @@ function AddWaybillModal(props) {
                             {apps.length > 0 && body}
                         </Card.Body>
                     </Card>
-                    <div className="float-right" style={{padding: '10px'}}>
-                        {addButton}
-                    </div>
+
+                    <Row style={{marginTop: '15px'}}>
+                        <Col sm={6}>
+                            {showMap && map}
+                        </Col>
+                        <Col sm={6}>
+                            {waypoints.length > 0 && startPoint.address && dragAndDropWaypoints}
+                        </Col>
+                    </Row>
                 </Modal.Body>
             </Modal>
         </>

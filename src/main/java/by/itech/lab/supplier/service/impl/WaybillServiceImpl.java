@@ -6,6 +6,8 @@ import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.domain.WaybillStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
+import by.itech.lab.supplier.dto.RouteDto;
+import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WayBillDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
@@ -13,6 +15,7 @@ import by.itech.lab.supplier.dto.mapper.WayBillMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.WaybillRepository;
 import by.itech.lab.supplier.service.ApplicationService;
+import by.itech.lab.supplier.service.CalculationService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WaybillService;
 import lombok.AllArgsConstructor;
@@ -38,6 +41,7 @@ public class WaybillServiceImpl implements WaybillService {
     private final UserService userService;
     private final ApplicationService applicationService;
     private final ApplicationMapper applicationMapper;
+    private final CalculationService calculationService;
 
     @Transactional
     public WayBillDto save(final WayBillDto wayBillDto) {
@@ -102,6 +106,16 @@ public class WaybillServiceImpl implements WaybillService {
         Page<WayBill> allByRoleAndStatus = waybillRepository
                 .findAllByRoleAndStatus(pageable, status, user.getId(), grantedAuthority.getAuthority());
         return allByRoleAndStatus.map(wayBillMapper::map);
+    }
+
+    @Override
+    public RouteDto calculateWaybillRoute(final List<Long> appsIds) {
+        final List<ApplicationDto> applicationsByIds = applicationService.getApplicationsByIds(appsIds);
+        final List<WarehouseDto> warehouses = applicationsByIds
+                .stream()
+                .map(ApplicationDto::getDestinationLocationDto)
+                .collect(Collectors.toList());
+        return calculationService.calculateOptimalRoute(warehouses, applicationsByIds.get(0).getSourceLocationDto());
     }
 
 

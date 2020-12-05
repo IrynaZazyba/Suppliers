@@ -37,4 +37,6 @@ public final class ApiConstants {
     public final static String URL_WAREHOUSE_ITEMS = "/warehouse-items";
     public final static String URL_ROLE = "/role";
     public final static String URL_APPLICATIONS ="/applications";
+    public final static String URL_ROUTE ="/route";
+
 }

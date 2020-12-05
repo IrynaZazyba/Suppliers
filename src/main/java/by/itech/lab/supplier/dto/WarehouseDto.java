@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WarehouseDto implements BaseDto {
+public class WarehouseDto implements BaseDto, Comparable<WarehouseDto> {
     private Long id;
     private Long customerId;
     @Size(min = 1, max = 50, message = "Your identifier should contains at least 1 letter")
@@ -33,4 +33,9 @@ public class WarehouseDto implements BaseDto {
     private Long retailerId;
     @NotEmpty(message = "You must have at least one dispatcher selected")
     private List<Long> usersId = new ArrayList<>();
+
+    @Override
+    public int compareTo(WarehouseDto o) {
+        return this.id.equals(o.getId()) ? 0 : 1;
+    }
 }

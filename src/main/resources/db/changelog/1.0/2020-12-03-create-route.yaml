@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - changeSet:
+      id: RT-C-1
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: route
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: waybill_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: RT-C-2
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: waybill_id
+            baseTableName: route
+            constraintName: fk_route_waybill
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: waybill
+  - changeSet:
+      id: WP-C-1
+      author: iryna_zazybo
+      changes:
+        - createTable:
+            tableName: waypoint
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: is_visited
+                  type: BOOLEAN
+                  constraints:
+                    nullable: true
+              - column:
+                  name: address_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: route_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: WP-C-2
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: address_id
+            baseTableName: waypoint
+            constraintName: fk_waypoint_address
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: address
+  - changeSet:
+      id: WP-C-3
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: route_id
+            baseTableName: waypoint
+            constraintName: fk_waypoint_route
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: route
+  - changeSet:
+      id: RT-C-3
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: waybill
+            columns:
+              - column:
+                  name: route_id
+                  type: BIGINT
+                  defaultValue: null
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: RT-C-4
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: route_id
+            baseTableName: waybill
+            constraintName: fk_waybill_route
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: route

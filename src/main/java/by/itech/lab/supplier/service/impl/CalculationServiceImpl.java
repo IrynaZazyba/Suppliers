@@ -3,14 +3,20 @@ package by.itech.lab.supplier.service.impl;
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.dto.AddressDto;
+import by.itech.lab.supplier.dto.RouteDto;
+import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
-import by.itech.lab.supplier.service.PriceCalculationService;
+import by.itech.lab.supplier.dto.WayPointDto;
+import by.itech.lab.supplier.service.CalculationService;
 import by.itech.lab.supplier.service.TaxService;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -18,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PriceCalculationServiceImpl implements PriceCalculationService {
+public class CalculationServiceImpl implements CalculationService {
 
     private final static Integer EARTH_RADIUS_IN_METERS = 6371000;
 
@@ -68,6 +74,53 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         BigDecimal cost = whi.getCost();
         double price = cost.doubleValue() * (1 + tax / 100) + (taxPerDistance.doubleValue() * (distance / 1000));
         appItem.setCost(new BigDecimal(price));
+    }
+
+    @Override
+    public RouteDto calculateOptimalRoute(final List<WarehouseDto> warehouseDto, final WarehouseDto source) {
+        final Deque<WarehouseDto> orderedWarehouses = new ArrayDeque<>();
+        orderedWarehouses.add(source);
+
+        while (warehouseDto.size() != 0) {
+            System.out.println("****************");
+
+            final WarehouseDto nextPoint = calculate(orderedWarehouses.getLast(), warehouseDto);
+            orderedWarehouses.add(nextPoint);
+            warehouseDto.removeIf(wh -> wh.getId().equals(nextPoint.getId()));
+        }
+        return buildRoute(orderedWarehouses);
+    }
+
+    private WarehouseDto calculate(final WarehouseDto source, final List<WarehouseDto> destinations) {
+        double distanceTemp = 0.0;
+        WarehouseDto whTemp = source;
+        for (WarehouseDto wh : destinations) {
+            double distance = calculateDistance(source.getAddressDto(), wh.getAddressDto());
+            System.out.println(distance);
+            if (distanceTemp == 0.0) {
+                distanceTemp = distance;
+            }
+            if (distanceTemp >= distance) {
+                distanceTemp = distance;
+                whTemp = wh;
+            }
+        }
+        return whTemp;
+    }
+
+    private RouteDto buildRoute(Deque<WarehouseDto> orderedWarehouses) {
+        int order = 0;
+        final List<WayPointDto> wayPoints = new ArrayList<>();
+        for (WarehouseDto wh : orderedWarehouses) {
+            final WayPointDto point = WayPointDto.builder()
+                    .address(wh.getAddressDto())
+                    .priority(order)
+                    .isVisited(false)
+                    .build();
+            wayPoints.add(point);
+            order++;
+        }
+        return RouteDto.builder().wayPoints(wayPoints).build();
     }
 
 }

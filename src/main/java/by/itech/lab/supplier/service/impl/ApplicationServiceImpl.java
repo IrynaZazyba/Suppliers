@@ -16,7 +16,7 @@ import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ApplicationRepository;
 import by.itech.lab.supplier.service.ApplicationService;
-import by.itech.lab.supplier.service.PriceCalculationService;
+import by.itech.lab.supplier.service.CalculationService;
 import by.itech.lab.supplier.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Lazy
     @Autowired
-    private PriceCalculationService calculationService;
+    private CalculationService calculationService;
 
     @Override
     @Transactional

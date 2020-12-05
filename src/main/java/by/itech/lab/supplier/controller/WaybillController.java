@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.domain.WaybillStatus;
+import by.itech.lab.supplier.dto.RouteDto;
 import by.itech.lab.supplier.dto.WayBillDto;
 import by.itech.lab.supplier.service.WaybillService;
 import lombok.AllArgsConstructor;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ROUTE;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAYBILL;
 
 @RestController
@@ -54,5 +58,10 @@ public class WaybillController {
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable,
             @RequestParam(required = false) final WaybillStatus status) {
         return waybillService.findAll(pageable, status);
+    }
+
+    @GetMapping(URL_ROUTE)
+    public RouteDto getWaybillRoute(@RequestParam List<Long> waybillAppsId) {
+        return waybillService.calculateWaybillRoute(waybillAppsId);
     }
 }
