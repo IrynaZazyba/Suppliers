@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: WB-1
+      author: iryna_zazybo
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: bigint
+            columnName: source_location_address_id
+            tableName: waybill
+  - changeSet:
+      id: WB-2
+      author: iryna_zazybo
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: waybill
+            constraintName: fk_waybill_source_address
+  - changeSet:
+      id: WB-3
+      author: iryna_zazybo
+      changes:
+        - renameColumn:
+            columnDataType: bigint
+            newColumnName: source_location_warehouse_id
+            oldColumnName: source_location_address_id
+            tableName: waybill
+  - changeSet:
+      id: IN-DA-1
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-12-01-update-waybill.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true
+  - changeSet:
+      id: IN-A-5
+      author: iryna_zazybo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: source_location_warehouse_id
+            baseTableName: waybill
+            constraintName: fk_waybill_source_warehouse
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: warehouse
+  - changeSet:
+      id: IN-DA-2
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-12-01-update-waybill-data.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true

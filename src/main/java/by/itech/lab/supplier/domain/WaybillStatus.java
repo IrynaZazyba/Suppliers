@@ -1,7 +1,7 @@
 package by.itech.lab.supplier.domain;
 
 public enum WaybillStatus {
-    WAITING("Waiting"), IN_PROGRESS("In progress"), COMPLETED("Completed");
+    OPEN("Open"), READY("Ready"), IN_PROGRESS("In progress"), FINISHED("Finished");
     private String status;
 
     WaybillStatus(final String status) {

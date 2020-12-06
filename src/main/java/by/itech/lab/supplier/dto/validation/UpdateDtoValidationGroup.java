@@ -1,4 +1,4 @@
 package by.itech.lab.supplier.dto.validation;
 
-public interface UpdateDtoValidationGroup {
+public @interface UpdateDtoValidationGroup {
 }
