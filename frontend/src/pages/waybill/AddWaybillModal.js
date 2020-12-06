@@ -36,10 +36,10 @@ function AddWaybillModal(props) {
     const [addedApps, setAddedApps] = useState([]);
     const [waybill, setWaybill] = useState({
         number: '',
-        source: '',
+        sourceLocationWarehouseDto: '',
         car: '',
         driver: '',
-        apps: [],
+        applications: [],
     });
     const [page, setPage] = useState({
         active: 1,
@@ -116,14 +116,14 @@ function AddWaybillModal(props) {
         getApps(`/customers/${customerId}/application/warehouses?warehouseId=${sourceId}&applicationStatus=OPEN&size=5`);
         setWaybill(prevState => ({
             ...prevState,
-            source: sourceId
+            sourceLocationWarehouseDto: sourceId
         }));
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.source}&applicationStatus=OPEN&page=${currentPage}&size=5`);
+        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&applicationStatus=OPEN&page=${currentPage}&size=5`);
     };
 
     const driverHandler = (e) => {
@@ -137,18 +137,17 @@ function AddWaybillModal(props) {
 
     const carHandler = (e) => {
         e.preventDefault();
-        checkValidationErrors('car');
         let carId = e.target.value;
         setWaybill(prevState => ({
             ...prevState,
-            driver: e.target.value
+            car: carId
         }));
         let car = cars.find(car => car.id == carId);
         setTotalValues(prevState => ({
             ...prevState,
             carCapacity: car.currentCapacity
         }));
-        let res = errors.validationErrors.filter(e => e != 'car');
+        let res = errors.validationErrors.filter(e => e != 'car' && e != 'capacity');
         let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
         setErrors(prevState => ({
             ...prevState,
@@ -174,15 +173,49 @@ function AddWaybillModal(props) {
     const saveWaybillHandler = (e) => {
         e.preventDefault();
         let validationResult = validateWaybill(waybill, addedApps);
-        if (validationResult.length === 0) {
+        let carCapacityValid = checkCarCapacity(totalValues.carCapacity, totalValues.totalUnits);
+        if (validationResult.length === 0 && carCapacityValid.length === 0) {
+            let waybillDto = buildWaybillDto();
+            fetch(`/customers/${customerId}/waybills`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(waybillDto)
+            })
+                .then(function (response) {
+                    if (response.status !== 200) {
+
+                    } else {
+
+
+                    }
+                });
+
 
         } else {
             setErrors(prevState => ({
                 ...prevState,
-                validationErrors: validationResult
+                validationErrors: [...validationResult, ...carCapacityValid]
             }))
         }
     };
+
+    function buildWaybillDto() {
+        waypoints.forEach((waypoint, i) => waypoint.priority = i + 1);
+        let route = {wayPoints: [...waypoints, startPoint]};
+        let applications = addedApps.map(app => {
+            return {id: app}
+        });
+        return {
+            route: route,
+            car: {id: waybill.car},
+            driver: {id: waybill.driver},
+            sourceLocationWarehouseDto: {id: parseInt(waybill.sourceLocationWarehouseDto)},
+            number: waybill.number,
+            applications: applications
+        };
+    }
 
     function checkValidationErrors(fieldName) {
         let res = errors.validationErrors.filter(e => e != fieldName);
@@ -524,6 +557,7 @@ function AddWaybillModal(props) {
             result.source.index,
             result.destination.index
         );
+
         setWaypoints(reordered);
         reRenderRoute(reordered);
     }
@@ -531,7 +565,7 @@ function AddWaybillModal(props) {
     const map =
         <MyMapComponent
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm-BUX0c9Pa7S5bylGeZAn05CGxjEJFv8&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}

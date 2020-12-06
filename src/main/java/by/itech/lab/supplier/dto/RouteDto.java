@@ -7,9 +7,9 @@ import java.util.List;
 
 @Builder
 @Data
-public class RouteDto {
+public class RouteDto implements BaseDto {
 
     private Long id;
     private List<WayPointDto> wayPoints;
-    private WayBillDto wayBillDto;
+
 }

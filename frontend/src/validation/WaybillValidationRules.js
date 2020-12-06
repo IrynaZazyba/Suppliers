@@ -5,7 +5,7 @@ export default function validateWaybill(waybill, addedApps) {
         errorsFields.push("number");
     }
 
-    if (!waybill.source) {
+    if (!waybill.sourceLocationWarehouseDto) {
         errorsFields.push("source");
     }
 

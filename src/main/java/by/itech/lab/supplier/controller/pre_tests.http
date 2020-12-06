@@ -884,14 +884,14 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "number": "12853",
+  "number": "1510",
   "sourceLocationWarehouseDto": {
     "id": 1
   },
-  "driverDto": {
+  "driver": {
     "id": 61
   },
-  "carDto": {
+  "car": {
     "id": 1
   },
   "applications": [
@@ -901,7 +901,25 @@ Cookie: {{test}}
     {
       "id": 1
     }
-  ]
+  ],
+  "route": {
+    "wayPoints": [
+      {
+        "address": {
+          "id": 3
+        },
+        "isVisited": false,
+        "priority": 0
+      },
+      {
+        "address": {
+          "id": 4
+        },
+        "isVisited": false,
+        "priority": 1
+      }
+    ]
+  }
 }
 
 > {%

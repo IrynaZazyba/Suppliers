@@ -39,7 +39,6 @@ public class WaybillServiceImpl implements WaybillService {
     private final UserMapper userMapper;
     private final UserService userService;
     private final ApplicationService applicationService;
-    private final ApplicationMapper applicationMapper;
     private final CalculationService calculationService;
 
     @Transactional
@@ -68,6 +67,7 @@ public class WaybillServiceImpl implements WaybillService {
         wayBill.setRegistrationDate(LocalDateTime.now());
         wayBill.setCreatedByUsers(user);
         wayBill.setWaybillStatus(WaybillStatus.READY);
+        wayBill.getRoute().getWayPoints().forEach(waypoint -> waypoint.setRoute(wayBill.getRoute()));
         return wayBill;
     }
 

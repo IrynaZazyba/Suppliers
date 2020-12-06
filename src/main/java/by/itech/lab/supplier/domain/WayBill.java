@@ -68,7 +68,7 @@ public class WayBill implements BaseEntity {
     private Long customerId;
     @OneToMany(mappedBy = "wayBill")
     private List<Application> applications = new ArrayList<>();
-    @OneToOne(mappedBy = "wayBill", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToOne(cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Route route;

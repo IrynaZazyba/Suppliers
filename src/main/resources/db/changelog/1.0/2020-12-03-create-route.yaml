@@ -13,23 +13,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-              - column:
-                  name: waybill_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-  - changeSet:
-      id: RT-C-2
-      author: iryna_zazybo
-      changes:
-        - addForeignKeyConstraint:
-            baseColumnNames: waybill_id
-            baseTableName: route
-            constraintName: fk_route_waybill
-            deferrable: false
-            initiallyDeferred: false
-            referencedColumnNames: id
-            referencedTableName: waybill
   - changeSet:
       id: WP-C-1
       author: iryna_zazybo

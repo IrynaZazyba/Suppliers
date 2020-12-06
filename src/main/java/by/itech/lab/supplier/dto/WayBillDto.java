@@ -36,10 +36,11 @@ public class WayBillDto implements BaseDto {
     private UserDto createdByUsersDto;
     private UserDto updatedByUsersDto;
     @NotNull(groups = CreateDtoValidationGroup.class, message = "Car must be specified")
-    private CarDto carDto;
+    private CarDto car;
     @NotNull(groups = CreateDtoValidationGroup.class, message = "Driver must be specified")
-    private UserDto driverDto;
+    private UserDto driver;
     @NotNull(groups = CreateDtoValidationGroup.class, message = "Applications shouldn't be empty")
     private List<ApplicationDto> applications = new ArrayList<>();
-
+    @NotNull(groups = CreateDtoValidationGroup.class, message = "Route should be specified")
+    private RouteDto route;
 }
