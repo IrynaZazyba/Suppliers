@@ -79,8 +79,8 @@ public class WarehouseController {
 
     @PostMapping(URL_DELETE_LIST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody final List<Long> deleteList) {
-        warehouseService.delete(deleteList);
+    public void delete(@RequestBody final List<Long> deleteByIds) {
+        warehouseService.delete(deleteByIds);
     }
 
     @DeleteMapping(URL_RETAILER_ID_PARAMETER)

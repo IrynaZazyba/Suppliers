@@ -142,9 +142,9 @@ export default (props) => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
+            <ModalEditWarehouse editWarehouse={editWarehouse} onChange={closeModalEdit}
                                 currentCustomerId={currentCustomerId}/>
-            <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
+            <ModalAddWarehouse lgShow={lgShow} onChange={closeModalAdd}
                                currentCustomerId={currentCustomerId}
             />
         </React.Fragment>;

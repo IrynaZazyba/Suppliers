@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Builder
 @Entity
 @Table
-public class State implements BaseEntity {
+public class UsState implements BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

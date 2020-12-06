@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AddressMapper implements BaseMapper<Address, AddressDto> {
 
-    private final StateMapper stateMapper;
+    private final UsStateMapper usStateMapper;
 
     @Override
     public Address map(final AddressDto addressDto) {
@@ -18,7 +18,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine1(addressDto.getAddressLine1())
                 .addressLine2(addressDto.getAddressLine2())
                 .id(addressDto.getId())
-                .state(stateMapper.map(addressDto.getState()))
+                .usState(usStateMapper.map(addressDto.getState()))
                 .latitude(addressDto.getLatitude())
                 .longitude(addressDto.getLongitude())
                 .build();
@@ -31,7 +31,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine1(address.getAddressLine1())
                 .addressLine2(address.getAddressLine2())
                 .id(address.getId())
-                .state(stateMapper.map(address.getState()))
+                .state(usStateMapper.map(address.getUsState()))
                 .latitude(address.getLatitude())
                 .longitude(address.getLongitude())
                 .build();
@@ -41,7 +41,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
         to.setCity(from.getCity());
         to.setAddressLine1(from.getAddressLine1());
         to.setAddressLine2(from.getAddressLine2());
-        to.setState(stateMapper.map(from.getState()));
+        to.setUsState(usStateMapper.map(from.getState()));
         to.setLatitude(from.getLatitude());
         to.setLongitude(from.getLongitude());
     }

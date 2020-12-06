@@ -12,7 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TaxMapper implements BaseMapper<Tax, TaxDto> {
 
-    private final StateMapper stateMapper;
+    private final UsStateMapper usStateMapper;
 
     @Override
     public Tax map(final TaxDto dto) {
@@ -21,7 +21,7 @@ public class TaxMapper implements BaseMapper<Tax, TaxDto> {
                 .amount(dto.getAmount())
                 .name(dto.getName())
                 .percentage(dto.getPercentage())
-                .state(!Objects.isNull(dto.getStateDto()) ? stateMapper.map(dto.getStateDto()) : null)
+                .usState(!Objects.isNull(dto.getStateDto()) ? usStateMapper.map(dto.getStateDto()) : null)
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class TaxMapper implements BaseMapper<Tax, TaxDto> {
                 .amount(tax.getAmount())
                 .name(tax.getName())
                 .percentage(tax.getPercentage())
-                .stateDto(!Objects.isNull(tax.getState()) ? stateMapper.map(tax.getState()) : null)
+                .stateDto(!Objects.isNull(tax.getUsState()) ? usStateMapper.map(tax.getUsState()) : null)
                 .build();
     }
 

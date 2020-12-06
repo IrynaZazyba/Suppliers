@@ -20,7 +20,7 @@ public class AddressDto implements BaseDto {
     @Size(min = 1, max = 50)
     @NotBlank
     private String addressLine2;
-    private StateDto state;
+    private UsStateDto state;
     private Double latitude;
     private Double longitude;
 

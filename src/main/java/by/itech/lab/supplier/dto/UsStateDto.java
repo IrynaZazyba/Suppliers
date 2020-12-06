@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @Builder
-public class StateDto implements BaseDto {
+public class UsStateDto implements BaseDto {
 
     private Long id;
     @NotBlank

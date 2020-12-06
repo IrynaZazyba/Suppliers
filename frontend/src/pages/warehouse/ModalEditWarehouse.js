@@ -32,15 +32,15 @@ function ModalEditWarehouse(props) {
     });
 
     useEffect(() => {
-        if (props.props.editShow === true) {
-            fetch("/customers/" + props.currentCustomerId + "/warehouses/" + props.props.warehouse.id)
+        if (props.editWarehouse.editShow === true) {
+            fetch("/customers/" + props.currentCustomerId + "/warehouses/" + props.editWarehouse.warehouse.id)
                 .then(response => response.json())
                 .then(res => {
                     setWarehouseDto(res);
                 })
-            handleSearchAllDispatchersById(props.props.warehouse.id);
+            handleSearchAllDispatchersById(props.editWarehouse.warehouse.id);
         }
-    }, [props.props.editShow]);
+    }, [props.editWarehouse.editShow]);
 
     const filterByState = () => true;
     const filterByUsername = () => true;
@@ -77,11 +77,11 @@ function ModalEditWarehouse(props) {
         fetch(`/customers/${props.currentCustomerId}/users/dispatchers?username=${query}`)
             .then(resp => resp.json())
             .then(res => {
-                const optionsFromBack = res.map((i) => ({
-                    id: i.id,
-                    name: i.name,
-                    surname: i.surname,
-                    username: i.username
+                const optionsFromBack = res.map((dispatcher) => ({
+                    id: dispatcher.id,
+                    name: dispatcher.name,
+                    surname: dispatcher.surname,
+                    username: dispatcher.username
                 }));
                 setDispatcherOptions(optionsFromBack);
             });
@@ -243,7 +243,7 @@ function ModalEditWarehouse(props) {
     return (
         <>
             <Modal
-                show={props.props.editShow}
+                show={props.editWarehouse.editShow}
                 backdrop="static"
                 onHide={() => {
                     setErrors({
@@ -322,8 +322,8 @@ function ModalEditWarehouse(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
-                            current state
+                        <Form.Group controlId="usState" style={{padding: '5px 10px'}}>
+                            current usState
                             <Form.Control type="text"
                                           value={warehouseDto.addressDto.state.state}
                                           disabled
@@ -336,10 +336,10 @@ function ModalEditWarehouse(props) {
                                 name="state"
                                 filterBy={filterByState}
                                 id="async-state"
-                                labelKey="state"
+                                labelKey="usState"
                                 minLength={3}
                                 options={stateOptions}
-                                placeholder="Search, if you want to change state..."
+                                placeholder="Search, if you want to change usState..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}
                             >

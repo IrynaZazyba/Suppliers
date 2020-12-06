@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findListByDispatcherUsername(final String username) {
+    public List<UserDto> findUsersByDispatcherUsername(final String username) {
         return userRepository.findByUsernameStartingWithAndActiveIsTrueAndRoleEqualsAndWarehouseEquals
                 (username, ROLE_DISPATCHER, null).stream()
                 .map(userMapper::map).collect(Collectors.toList());

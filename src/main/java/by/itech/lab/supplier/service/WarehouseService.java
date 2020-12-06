@@ -19,7 +19,7 @@ public interface WarehouseService{
 
     WarehouseDto findById(final Long warehouseId);
 
-    void delete(final List<Long> id);
+    void delete(final List<Long> deleteByIds);
 
     Page<WarehouseDto> findAll(Pageable pageable);
 

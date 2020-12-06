@@ -116,6 +116,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
         warehouseMapper.map(warehouseDto, warehouse);
         Warehouse saved = warehouseRepository.save(warehouse);
+        System.out.println(warehouseDto.getDispatchersId());
         userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
         return saved;
     }

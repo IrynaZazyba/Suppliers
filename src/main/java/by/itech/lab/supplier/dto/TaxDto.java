@@ -13,6 +13,6 @@ public class TaxDto implements BaseDto {
     private BigDecimal amount;
     private Double percentage;
     private String name;
-    private StateDto stateDto;
+    private UsStateDto stateDto;
 
 }

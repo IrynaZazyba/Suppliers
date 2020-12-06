@@ -58,7 +58,7 @@ function ModalAddWarehouse(props) {
     };
 
     const onChangeState = (e) => {
-        e.length > 0 ?
+        e.length !== 0 ?
             setWarehouseDto(preState => ({
                 ...preState,
                 addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].state}}
@@ -165,7 +165,7 @@ function ModalAddWarehouse(props) {
                     }))
                 })
         }
-        if (validationResult.length === 0) {
+        if (!validationResult.length) {
             fetch('/customers/' + props.currentCustomerId + '/warehouses', {
                 method: 'POST',
                 headers: {
@@ -243,7 +243,7 @@ function ModalAddWarehouse(props) {
     return (
         <>
             <Modal
-                show={props.props}
+                show={props.lgShow}
                 backdrop="static"
                 onHide={() => {
                     setErrors({
@@ -336,10 +336,10 @@ function ModalAddWarehouse(props) {
                                 name="state"
                                 filterBy={filterByState}
                                 id="async-state"
-                                labelKey="state"
+                                labelKey="usState"
                                 minLength={3}
                                 options={stateOptions}
-                                placeholder="Select state..."
+                                placeholder="Select usState..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}
                             >

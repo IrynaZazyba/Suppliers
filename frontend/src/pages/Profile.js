@@ -28,7 +28,7 @@ export default () => {
         username: '',
         email: ''
     });
-    const [state, setState] = useState({
+    const [usState, setState] = useState({
         id: '',
         state: ''
     });
@@ -234,7 +234,7 @@ export default () => {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>State</Form.Label>
-                            <Form.Control type="text" placeholder="state" value={state.state} readOnly={true}
+                            <Form.Control type="text" placeholder="usState" value={state.state} readOnly={true}
                             />
 
                         </Form.Group>

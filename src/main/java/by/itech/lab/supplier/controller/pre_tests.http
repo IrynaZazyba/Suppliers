@@ -106,9 +106,9 @@ Cookie: {{test}}
     "city": "Pinto",
     "addressLine1": "6374 Posuere, St.",
     "addressLine2": "163-8189 Mi Ave",
-    "state": {
+    "usState": {
       "id": 11,
-      "state": "Delaware"
+      "usState": "Delaware"
     }
   }
 }
@@ -130,9 +130,9 @@ Cookie: {{test}}
     "city": "Kanzas",
     "addressLine1": "Linkoln Str.",
     "addressLine2": "44",
-    "state": {
+    "usState": {
       "id": "5",
-      "state": "Alaska"
+      "usState": "Alaska"
     },
     "latitude": 40.854785,
     "longitude": -75.85785
@@ -156,9 +156,9 @@ Cookie: {{test}}
     "city": "Kanzas",
     "addressLine1": "Linkoln Str.",
     "addressLine2": "66",
-    "state": {
+    "usState": {
       "id": "6",
-      "state": "Arizona"
+      "usState": "Arizona"
     },
     "latitude": 40.854785,
     "longitude": -75.85785
@@ -430,9 +430,9 @@ Cookie: {{test}}
     "city": "NY",
     "addressLine1": "Lexington Avenue",
     "addressLine2": "Slobodskaya str.",
-    "state": {
+    "usState": {
       "id": 4,
-      "state": "Alabama"
+      "usState": "Alabama"
     },
     "latitude": 40.854785,
     "longitude": -75.85785
@@ -453,7 +453,7 @@ Cookie: {{test}}
   "username": "lh_powera",
   "email": "zazybo1q1.17@gfmail.com",
   "address": {
-    "state": "GB",
+    "usState": "GB",
     "city": "London",
     "addressLine1": "address 1",
     "addressLine2": "address 2"
@@ -697,9 +697,9 @@ Cookie: {{test}}
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
-      "state": {
+      "usState": {
         "id": 4,
-        "state": "Alabama"
+        "usState": "Alabama"
       }
     },
     "customerDto": {
@@ -727,9 +727,9 @@ Cookie: {{test}}
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
-      "state": {
+      "usState": {
         "id": 4,
-        "state": "Alabama"
+        "usState": "Alabama"
       }
     },
     "customerDto": {
