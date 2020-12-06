@@ -3,7 +3,7 @@ import isEmail from 'validator/lib/isEmail';
 export default function validateUser(dto) {
     let errorsFields = [];
 
-    if (dto.adminEmail.length < 5 || dto.adminEmail.length > 254 || !isEmail(dto.adminEmail)) {
+    if (dto.email.length < 5 || dto.email.length > 254 || !isEmail(dto.email)) {
         errorsFields.push("email");
     }
 

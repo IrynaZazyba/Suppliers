@@ -5,8 +5,6 @@ import by.itech.lab.supplier.dto.CarDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 
 @Component
 @AllArgsConstructor
@@ -23,7 +21,7 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
                 .currentCapacity(dto.getCurrentCapacity())
                 .address(dto.getAddressDto() != null ? addressMapper.map(dto.getAddressDto()) : null)
                 .number(dto.getNumber())
-                .customer(Objects.nonNull(dto.getCustomerDto()) ? customerMapper.map(dto.getCustomerDto()) : null)
+                .customer(dto.getCustomerDto() != null ? customerMapper.map(dto.getCustomerDto()) : null)
                 .build();
     }
 
@@ -35,7 +33,7 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
                 .currentCapacity(car.getCurrentCapacity())
                 .addressDto(car.getAddress() != null ? addressMapper.map(car.getAddress()) : null)
                 .number(car.getNumber())
-                .customerDto(Objects.nonNull(car.getCustomer()) ? customerMapper.map(car.getCustomer()) : null)
+                .customerDto(car.getCustomer() != null ? customerMapper.map(car.getCustomer()) : null)
                 .build();
     }
 
