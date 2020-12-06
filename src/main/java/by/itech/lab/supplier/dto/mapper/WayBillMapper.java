@@ -61,7 +61,6 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
         to.setSourceLocationWarehouse(Objects.nonNull(from.getSourceLocationWarehouseDto())
                 ? warehouseMapper.map(from.getSourceLocationWarehouseDto()) : to.getSourceLocationWarehouse());
         to.setDriver(Objects.nonNull(from.getDriver()) ? userMapper.map(from.getDriver()) : to.getDriver());
-        //todo route
         mapApplications(to, from);
     }
 

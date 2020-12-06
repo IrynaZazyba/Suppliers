@@ -11,11 +11,14 @@ import by.itech.lab.supplier.dto.WayBillDto;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WayBillMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.exception.ValidationException;
+import by.itech.lab.supplier.exception.domain.ValidationErrors;
 import by.itech.lab.supplier.repository.WaybillRepository;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.CalculationService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WaybillService;
+import by.itech.lab.supplier.service.validation.WaybillValidationService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,11 +43,18 @@ public class WaybillServiceImpl implements WaybillService {
     private final UserService userService;
     private final ApplicationService applicationService;
     private final CalculationService calculationService;
+    private final WaybillValidationService waybillValidationService;
 
     @Transactional
     public WayBillDto save(final WayBillDto wayBillDto) {
         final UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final User user = userMapper.map(userService.findById(principal.getId()));
+        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
+
+        final ValidationErrors validationResult = waybillValidationService.validateWaybill(wayBillDto, apps);
+        if (validationResult.getValidationMessages().size() > 0) {
+            throw new ValidationException("Invalid waybill data", validationResult);
+        }
 
         final WayBill wayBill = Optional.ofNullable(wayBillDto.getId())
                 .map(itemToSave -> updateWayBill(wayBillDto))
@@ -56,8 +66,10 @@ public class WaybillServiceImpl implements WaybillService {
         final WayBill saved = waybillRepository.save(wayBill);
 
         if (Objects.isNull(wayBillDto.getId())) {
-            final List<ApplicationDto> appDtos = getRelatedApplications(wayBillDto, saved);
+            final List<ApplicationDto> appDtos = apps.stream().peek(a -> a.setWayBillId(saved.getId()))
+                    .collect(Collectors.toList());
             applicationService.saveAll(appDtos);
+
         }
         return wayBillMapper.map(saved);
     }
@@ -77,13 +89,11 @@ public class WaybillServiceImpl implements WaybillService {
         return waybillRepository.save(existing);
     }
 
-    private List<ApplicationDto> getRelatedApplications(final WayBillDto wayBillDto, final WayBill savedWayBill) {
+    private List<ApplicationDto> getRelatedApplications(final WayBillDto wayBillDto) {
         final List<Long> appsIds = wayBillDto.getApplications().stream()
                 .map(ApplicationDto::getId)
                 .collect(Collectors.toList());
-        return applicationService.getApplicationsByIds(appsIds)
-                .stream().peek(a -> a.setWayBillId(savedWayBill.getId()))
-                .collect(Collectors.toList());
+        return applicationService.getApplicationsByIds(appsIds);
     }
 
     @Override

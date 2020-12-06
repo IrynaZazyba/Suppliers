@@ -906,7 +906,7 @@ Cookie: {{test}}
     "wayPoints": [
       {
         "address": {
-          "id": 3
+          "id": 18
         },
         "isVisited": false,
         "priority": 0
