@@ -32,4 +32,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 
     List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
+
+    List<WarehouseDto> getWarehousesWithOpenApplications();
 }

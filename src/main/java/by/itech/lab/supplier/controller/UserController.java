@@ -2,6 +2,7 @@ package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.CustomerService;
@@ -26,10 +27,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ROLE;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 
 @RestController
@@ -108,5 +111,10 @@ public class UserController {
     @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @GetMapping(URL_ROLE)
+    public List<UserDto> getUserByRole(@RequestParam Role role) {
+        return userService.findAllByRole(role);
     }
 }

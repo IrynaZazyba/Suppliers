@@ -20,6 +20,7 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
     private final CarMapper carMapper;
     private final UserMapper userMapper;
     private final ApplicationMapper applicationMapper;
+    private final RouteMapper routeMapper;
 
     @Override
     public WayBill map(final WayBillDto dto) {
@@ -30,9 +31,10 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
                 .registrationDate(dto.getRegistrationDate())
                 .lastUpdated(dto.getLastUpdated())
                 .sourceLocationWarehouse(warehouseMapper.map(dto.getSourceLocationWarehouseDto()))
-                .car(carMapper.map(dto.getCarDto()))
-                .driver(userMapper.map(dto.getDriverDto()))
+                .car(carMapper.map(dto.getCar()))
+                .driver(userMapper.map(dto.getDriver()))
                 .applications(dto.getApplications().stream().map(applicationMapper::map).collect(Collectors.toList()))
+                .route(Objects.nonNull(dto.getRoute()) ? routeMapper.map(dto.getRoute()) : null)
                 .build();
     }
 
@@ -47,9 +49,10 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
                 .createdByUsersDto(userMapper.map(wayBill.getCreatedByUsers()))
                 .updatedByUsersDto(userMapper.map(wayBill.getUpdatedByUsers()))
                 .sourceLocationWarehouseDto(warehouseMapper.map(wayBill.getSourceLocationWarehouse()))
-                .carDto(carMapper.map(wayBill.getCar()))
-                .driverDto(userMapper.map(wayBill.getDriver()))
+                .car(carMapper.map(wayBill.getCar()))
+                .driver(userMapper.map(wayBill.getDriver()))
                 .applications(wayBill.getApplications().stream().map(applicationMapper::map).collect(Collectors.toList()))
+                .route(Objects.nonNull(wayBill.getRoute()) ? routeMapper.map(wayBill.getRoute()) : null)
                 .build();
     }
 
@@ -57,7 +60,7 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
         to.setNumber(Objects.nonNull(from.getNumber()) ? from.getNumber() : to.getNumber());
         to.setSourceLocationWarehouse(Objects.nonNull(from.getSourceLocationWarehouseDto())
                 ? warehouseMapper.map(from.getSourceLocationWarehouseDto()) : to.getSourceLocationWarehouse());
-        to.setDriver(Objects.nonNull(from.getDriverDto()) ? userMapper.map(from.getDriverDto()) : to.getDriver());
+        to.setDriver(Objects.nonNull(from.getDriver()) ? userMapper.map(from.getDriver()) : to.getDriver());
         mapApplications(to, from);
     }
 

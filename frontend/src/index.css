@@ -193,6 +193,13 @@ a.page-link {
     width: 97%;
 }
 
+.waybill-modal {
+    min-width: 85% !important;
+}
+
+.waybill-app {
+    background-color: #c9efff;
+}
 .accepted-item {
     background-color: #c9efff;
 }
@@ -230,4 +237,16 @@ th.accept-all-item:hover {
 .edit-app-icon-disable{
     text-align: center;
     color: #9497AA;
+}
+
+.waybill-card {
+    margin: 0 15px;
+}
+
+.car-capacity-attention{
+    background-color: #fcc7ca;
+}
+
+.waybill-button{
+    margin: 5px;
 }
