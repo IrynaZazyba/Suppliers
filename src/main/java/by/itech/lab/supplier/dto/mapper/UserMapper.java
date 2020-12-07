@@ -3,6 +3,7 @@ package by.itech.lab.supplier.dto.mapper;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.dto.UserDto;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -13,7 +14,9 @@ public class UserMapper implements BaseMapper<User, UserDto> {
 
     private final AddressMapper addressMapper;
     private final WarehouseMapper warehouseMapper;
-    private final CustomerMapper customerMapper;
+    private final PasswordEncoder passwordEncoder;
+
+    private CustomerMapper customerMapper;
 
     @Override
     public UserDto map(User user) {
@@ -53,7 +56,7 @@ public class UserMapper implements BaseMapper<User, UserDto> {
                 .name(userDTO.getName())
                 .surname(userDTO.getSurname())
                 .email(userDTO.getEmail())
-                .password(userDTO.getPassword())
+                .password((userDTO.getId() != null || userDTO.getPassword() == null) ? userDTO.getPassword() : passwordEncoder.encode(userDTO.getPassword()))
                 .birthday(userDTO.getBirthday())
                 .active(userDTO.isActive())
                 .deletedAt(userDTO.getDeletedAt())

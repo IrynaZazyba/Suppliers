@@ -150,4 +150,27 @@ public class ApplicationServiceImpl implements ApplicationService {
         itemInApplicationRepository.setAcceptedAtForItemsInApplication(ids);
     }
 
+    @Override
+    public List<ApplicationDto> getApplicationsByWaybillIds(List<Long> waybillIds) {
+        return applicationRepository.findAllByWayBillIdIn(waybillIds)
+                .stream()
+                .map(applicationMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ApplicationDto> getApplicationsByIds(List<Long> appIds) {
+        return applicationRepository.findAllByIdIn(appIds)
+                .stream()
+                .map(applicationMapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<ApplicationDto> saveAll(List<ApplicationDto> appsDtos) {
+        List<Application> apps = appsDtos.stream().map(applicationMapper::map).collect(Collectors.toList());
+        return applicationRepository.saveAll(apps).stream().map(applicationMapper::map).collect(Collectors.toList());
+    }
+
 }

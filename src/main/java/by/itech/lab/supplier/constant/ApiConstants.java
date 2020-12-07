@@ -12,7 +12,7 @@ public final class ApiConstants {
     public final static String URL_RETAILER = "/retailers";
     public final static String URL_USER = "/users";
     public final static String URL_WAREHOUSE = "/warehouses";
-    public final static String URL_WAYBILL = "/waybill";
+    public final static String URL_WAYBILL = "/waybills";
     public final static String URL_WRITE_OFF_ACT = "/write-off-act";
     public final static String URL_LOGIN = "/login";
     public final static String URL_LOGOUT = "/logout";
@@ -29,6 +29,7 @@ public final class ApiConstants {
     public final static String URL_NUMBER = "/number";
     public final static String URL_LABEL = "/label";
     public final static String URL_STATUS = "/status";
+    public final static String URL_ACTIVATE = "/activate";
     public final static String URL_CAPACITY = "/capacity";
     public final static String URL_ITEMS = "/items";
     public final static String URL_UPC = "/upc";

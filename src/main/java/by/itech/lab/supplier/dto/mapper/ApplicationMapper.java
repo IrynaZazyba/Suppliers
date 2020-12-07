@@ -2,6 +2,7 @@ package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationItem;
+import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
 
     private final WarehouseMapper warehouseMapper;
     private final UserMapper userMapper;
-    private final WayBillMapper wayBillMapper;
     private final ApplicationItemMapper itemsInApplicationMapper;
     private final ItemMapper itemMapper;
 
@@ -38,10 +38,11 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .lastUpdatedByUsers(Objects.nonNull(dto.getLastUpdatedByUsersDto()) ? userMapper
                         .map(dto.getLastUpdatedByUsersDto()) : null)
                 .deletedAt(dto.getDeletedAt())
-                .items(dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .items(Objects.nonNull(dto.getItems()) ?
+                        dto.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()) : null)
                 .customerId(dto.getCustomerId())
                 .type(dto.getType())
-                .wayBill(Objects.nonNull(dto.getWayBillDto()) ? wayBillMapper.map(dto.getWayBillDto()) : null)
+                .wayBill(Objects.nonNull(dto.getWayBillId()) ? WayBill.builder().id(dto.getWayBillId()).build() : null)
                 .build();
     }
 
@@ -62,27 +63,27 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
                 .lastUpdatedByUsersDto(Objects.nonNull(entity.getLastUpdatedByUsers()) ? userMapper
                         .map(entity.getLastUpdatedByUsers()) : null)
                 .deletedAt(entity.getDeletedAt())
-                .items(entity.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()))
+                .items(Objects.nonNull(entity.getItems()) ?
+                        entity.getItems().stream().map(itemsInApplicationMapper::map).collect(Collectors.toSet()) : null)
                 .customerId(entity.getCustomerId())
                 .type(entity.getType())
-                .wayBillDto(Objects.nonNull(entity.getWayBill()) ? wayBillMapper.map(entity.getWayBill()) : null)
+                .wayBillId(Objects.nonNull(entity.getWayBill()) ? entity.getWayBill().getId() : null)
                 .build();
     }
 
     public void map(final ApplicationDto from, final Application to) {
         to.setApplicationStatus(from.getApplicationStatus());
         to.setNumber(from.getNumber());
-        to.setRegistrationDate(from.getRegistrationDate());
         to.setLastUpdated(from.getLastUpdated());
         to.setSourceLocationAddress(Objects.nonNull(from.getSourceLocationDto()) ? warehouseMapper
-                .map(from.getSourceLocationDto()) : null);
+                .map(from.getSourceLocationDto()) : to.getSourceLocationAddress());
         to.setDestinationLocationAddress(Objects.nonNull(from.getDestinationLocationDto()) ? warehouseMapper
-                .map(from.getDestinationLocationDto()) : null);
+                .map(from.getDestinationLocationDto()) : to.getDestinationLocationAddress());
         to.setCreatedByUsers(Objects.nonNull(from.getCreatedByUsersDto()) ? userMapper
-                .map(from.getCreatedByUsersDto()) : null);
+                .map(from.getCreatedByUsersDto()) : to.getCreatedByUsers());
         to.setLastUpdatedByUsers(Objects.nonNull(from.getLastUpdatedByUsersDto()) ? userMapper
-                .map(from.getLastUpdatedByUsersDto()) : null);
-        to.setWayBill(Objects.nonNull(from.getWayBillDto()) ? wayBillMapper.map(from.getWayBillDto()) : null);
+                .map(from.getLastUpdatedByUsersDto()) : to.getLastUpdatedByUsers());
+        to.setWayBill(Objects.nonNull(from.getWayBillId()) ? WayBill.builder().id(from.getWayBillId()).build() : null);
         to.setDeletedAt(from.getDeletedAt());
         to.setCustomerId(from.getCustomerId());
         to.setType(from.getType());
@@ -113,7 +114,7 @@ public class ApplicationMapper implements BaseMapper<Application, ApplicationDto
             }
 
             if (Objects.nonNull(result) && Objects.nonNull(item.getDeleted())) {
-                forUpdate.remove(result);
+                forUpdate.removeIf(i -> i.getId().equals(result.getId()));
             }
 
             if (Objects.isNull(result)) {
