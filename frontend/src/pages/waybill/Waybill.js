@@ -74,6 +74,7 @@ export default () => {
 
     const closeModalAdd = (e) => {
         setOpenAddModal(e);
+        getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
     };
 
 

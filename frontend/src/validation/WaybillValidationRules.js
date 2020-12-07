@@ -1,4 +1,4 @@
-export default function validateWaybill(waybill, addedApps) {
+export default function validateWaybill(waybill, addedApps, waypoints) {
     let errorsFields = [];
 
     if (!waybill.number) {
@@ -19,6 +19,10 @@ export default function validateWaybill(waybill, addedApps) {
 
     if (addedApps.length === 0) {
         errorsFields.push("apps");
+    }
+
+    if (waypoints.length === 0) {
+        errorsFields.push("introduce-route");
     }
 
     return errorsFields;

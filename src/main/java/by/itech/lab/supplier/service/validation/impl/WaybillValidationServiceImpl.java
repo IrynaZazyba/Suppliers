@@ -10,6 +10,7 @@ import by.itech.lab.supplier.service.validation.WaybillValidationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,13 +47,17 @@ public class WaybillValidationServiceImpl implements WaybillValidationService {
         return currentCarCapacity >= appsCapacity;
     }
 
-    private boolean checkRoute(final List<ApplicationDto> appDtos, final WayBillDto wayBillDto) {
+    private boolean checkRoute(List<ApplicationDto> appDtos, final WayBillDto wayBillDto) {
         List<Long> addressIds = appDtos
                 .stream()
                 .map(app -> app.getDestinationLocationDto().getAddressDto().getId())
                 .collect(Collectors.toList());
+        if (addressIds.size() > 0) {
+            addressIds.add(appDtos.get(0).getSourceLocationDto().getAddressDto().getId());
+        }
         List<Long> idsFromDto = wayBillDto.getRoute().getWayPoints()
-                .stream().map(wp -> wp.getAddress().getId())
+                .stream()
+                .map(wp -> wp.getAddress().getId())
                 .collect(Collectors.toList());
         return addressIds.containsAll(idsFromDto);
     }

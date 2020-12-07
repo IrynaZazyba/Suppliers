@@ -33,7 +33,7 @@ function AddWaybillModal(props) {
         carCapacity: 0
     });
     const [apps, setApps] = useState([]);
-    const[allLoadedApps, setAllLoadedApps]=useState([]);
+    const [allLoadedApps, setAllLoadedApps] = useState([]);
     const [addedApps, setAddedApps] = useState([]);
     const [waybill, setWaybill] = useState({
         number: '',
@@ -123,9 +123,6 @@ function AddWaybillModal(props) {
 
     const changePage = (e) => {
         e.preventDefault();
-        console.log("~~~~~~change page");
-
-        console.log(totalValues);
         let currentPage = e.target.innerHTML - 1;
         getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&applicationStatus=OPEN&page=${currentPage}&size=5`);
     };
@@ -176,8 +173,9 @@ function AddWaybillModal(props) {
 
     const saveWaybillHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateWaybill(waybill, addedApps);
+        let validationResult = validateWaybill(waybill, addedApps, waypoints);
         let carCapacityValid = checkCarCapacity(totalValues.carCapacity, totalValues.totalUnits);
+        //todo check directions exists
         if (validationResult.length === 0 && carCapacityValid.length === 0) {
             let waybillDto = buildWaybillDto();
             fetch(`/customers/${customerId}/waybills`, {
@@ -188,11 +186,27 @@ function AddWaybillModal(props) {
                 body: JSON.stringify(waybillDto)
             })
                 .then(function (response) {
-                    if (response.status !== 200) {
-
-                    } else {
-
-
+                    if (response.status === 400) {
+                        response.json().then(json => {
+                            let res = Object.values(json).join('. ');
+                            setErrors({
+                                serverErrors: res,
+                                validationErrors: ''
+                            });
+                        });
+                    }
+                    if (response.status !== 200 && response.status !== 400) {
+                        setErrors({
+                            serverErrors: "Something go wrong, try later",
+                            validationErrors: ''
+                        });
+                    }
+                    if (response.status === 200) {
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: []
+                        }));
+                        hideModalHandler();
                     }
                 });
 
@@ -204,6 +218,34 @@ function AddWaybillModal(props) {
             }))
         }
     };
+
+
+    const hideModalHandler = () => {
+        setErrors({
+            serverErrors: '',
+            validationErrors: []
+        });
+        setPage({
+            active: 1,
+            currentPage: 1,
+            countPerPage: 5,
+            countPages: 1
+        });
+        setWaybill({});
+        setAddedApps([]);
+        setApps([]);
+        setTotalValues({
+            carCapacity: 0,
+            totalAmount: 0,
+            totalUnits: 0
+        });
+        setDirections([]);
+        setShowMap(false);
+        setWaypoints([]);
+        setAllLoadedApps([]);
+        props.onChange(false);
+    };
+
 
     function buildWaybillDto() {
         waypoints.forEach((waypoint, i) => waypoint.priority = i + 1);
@@ -242,9 +284,10 @@ function AddWaybillModal(props) {
     const calculateOptimalRoute = (e) => {
         e.preventDefault();
         let validationRes = checkIfRouteExists(addedApps);
+        let afterCheckRouteError = errors.validationErrors.filter(errors => errors !== "introduce-route");
         setErrors(prevState => ({
             ...prevState,
-            validationErrors: [...errors.validationErrors, ...validationRes]
+            validationErrors: [...afterCheckRouteError, ...validationRes]
         }));
         if (validationRes.length === 0) {
             setShowMap(true);
@@ -569,7 +612,7 @@ function AddWaybillModal(props) {
     const map =
         <MyMapComponent
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm-BUX0c9Pa7S5bylGeZAn05CGxjEJFv8&callback=initMap&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}
@@ -614,31 +657,7 @@ function AddWaybillModal(props) {
         <>
             <Modal
                 show={props.modal}
-                onHide={() => {
-                    setErrors({
-                        serverErrors: '',
-                        validationErrors: []
-                    });
-                    setPage({
-                        active: 1,
-                        currentPage: 1,
-                        countPerPage: 5,
-                        countPages: 1
-                    });
-                    setWaybill({});
-                    setAddedApps([]);
-                    setApps([]);
-                    setTotalValues({
-                        carCapacity: 0,
-                        totalAmount: 0,
-                        totalUnits: 0
-                    });
-                    setDirections([]);
-                    setShowMap(false);
-                    setWaypoints([]);
-                    setAllLoadedApps([]);
-                    props.onChange(false);
-                }}
+                onHide={hideModalHandler}
                 aria-labelledby="modal-custom"
                 className="shadow"
                 dialogClassName="waybill-modal"
@@ -653,8 +672,9 @@ function AddWaybillModal(props) {
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     {errors.validationErrors.includes("route") &&
-                    <ErrorMessage message="Choose applications"/>}
-
+                    <ErrorMessage message="To calculate route choose applications"/>}
+                    {errors.validationErrors.includes("introduce-route") &&
+                    <ErrorMessage message="Please, calculate route"/>}
                     {waybillContentData}
                     <div className="validation-error">
                         {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
