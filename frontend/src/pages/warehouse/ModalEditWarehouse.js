@@ -320,8 +320,8 @@ function ModalEditWarehouse(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
-                            current state
+                        <Form.Group controlId="usState" style={{padding: '5px 10px'}}>
+                            current usState
                             <Form.Control type="text"
                                           value={warehouseDto.addressDto.state.state}
                                           disabled
@@ -334,10 +334,10 @@ function ModalEditWarehouse(props) {
                                 name="state"
                                 filterBy={filterByState}
                                 id="async-state"
-                                labelKey="state"
+                                labelKey="usState"
                                 minLength={3}
                                 options={stateOptions}
-                                placeholder="Search, if you want to change state..."
+                                placeholder="Search, if you want to change usState..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}
                             >
