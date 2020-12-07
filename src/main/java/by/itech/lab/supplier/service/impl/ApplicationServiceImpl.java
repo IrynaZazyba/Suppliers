@@ -52,11 +52,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     public ApplicationDto save(final ApplicationDto dto) {
         UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userMapper.map(userService.findById(principal.getId()));
-
         Application application = Optional.ofNullable(dto.getId())
                 .map(appToSave -> buildApplicationForUpdate(dto))
                 .orElseGet(() -> buildApplicationToCreate(dto, user));
 
+        if (application.getType() == ApplicationType.TRAFFIC) {
+            application = calculationService.calculateAppItemsPrice(application);
+        }
         application.setLastUpdated(LocalDate.now());
         application.setLastUpdatedByUsers(user);
         application = applicationMapper.mapItems(application);
@@ -73,9 +75,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     private Application buildApplicationToCreate(final ApplicationDto dto, final User user) {
-        if (dto.getType() == ApplicationType.TRAFFIC) {
-            dto.setItems(calculationService.calculateAppItemsPrice(dto));
-        }
         final Application app = applicationMapper.map(dto);
         app.setApplicationStatus(ApplicationStatus.OPEN);
         app.setRegistrationDate(LocalDate.now());

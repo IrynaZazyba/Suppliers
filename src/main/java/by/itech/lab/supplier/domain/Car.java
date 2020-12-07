@@ -3,12 +3,15 @@ package by.itech.lab.supplier.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,8 +46,10 @@ public class Car implements BaseEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Address address;
     private LocalDate deletedAt;
 

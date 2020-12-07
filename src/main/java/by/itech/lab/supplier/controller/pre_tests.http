@@ -3,7 +3,7 @@ Content-Type: application/json
 Connection: keep-alive
 
 {
-  "username": "disp@gmail.com",
+  "username": "zazybo1.17@gmail.com",
   "password": "pass"
 }
 
@@ -57,7 +57,7 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany3",
+  "name": "SomeCompany",
   "adminEmail": "3j323@gmail.com"
 }
 
@@ -102,7 +102,6 @@ Cookie: {{test}}
   "totalCapacity": 151.0,
   "currentCapacity": 85.0,
   "addressDto": {
-    "id": 20,
     "city": "Pinto",
     "addressLine1": "6374 Posuere, St.",
     "addressLine2": "163-8189 Mi Ave",
@@ -233,6 +232,19 @@ Cookie: {{test}}
 
 ###
 
+GET http://localhost:8080/customers/3/warehouses/8/warehouse-items?itemsId=19,18,5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
 DELETE http://localhost:8080/customers/3/warehouses/1
 Content-Type: application/json
 Connection: keep-alive
@@ -341,7 +353,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "password": "password"
+  "password"
 }
 
 ###
@@ -678,11 +690,9 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
-      "id": 3,
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
@@ -708,7 +718,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
@@ -731,7 +740,6 @@ Cookie: {{test}}
     "warehouse": null
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": null,
   "deletedAt": null,
   "items": [
     {
@@ -754,9 +762,6 @@ Cookie: {{test}}
     }
   ]
 }
-
-
-
 
 > {%
     client.test("Request executed successfully", function() {
@@ -874,12 +879,12 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "number": "124844148853",
+  "number": "12853",
   "sourceLocationWarehouseDto": {
     "id": 1
   },
   "driverDto": {
-    "id": 67
+    "id": 61
   },
   "carDto": {
     "id": 1
@@ -902,7 +907,7 @@ Cookie: {{test}}
 
 ###
 
-PUT http://localhost:8080/customers/3/waybills/104
+PUT http://localhost:8080/customers/3/waybills/21
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}

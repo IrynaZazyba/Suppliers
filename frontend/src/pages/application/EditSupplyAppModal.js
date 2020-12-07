@@ -34,6 +34,7 @@ function EditSupplyAppModal(props) {
     const [deleted, setDeleted] = useState({
         deletedItems: []
     });
+    const status = app && app.applicationStatus === 'STARTED_PROCESSING';
 
     useEffect(() => {
         if (props.props.isOpen === true) {
@@ -166,8 +167,8 @@ function EditSupplyAppModal(props) {
     function calculateTotalValues(items) {
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) + parseInt(i.amount), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.itemDto.units) * parseFloat(i.amount), 0)
             })
         );
     }
@@ -216,6 +217,8 @@ function EditSupplyAppModal(props) {
         if (validErrors.length === 0) {
             let dtoApp = Object.assign({}, app);
             dtoApp.items = [...app.items, ...deleted.deletedItems];
+            console.log(deleted.deletedItems);
+            console.log(dtoApp);
             fetch(`/customers/${customerId}/application/${app.id}`, {
                 method: 'PUT',
                 headers: {
@@ -274,7 +277,9 @@ function EditSupplyAppModal(props) {
                             <Form.Group as={Row} controlId="appNumber">
                                 <Form.Label column sm="3">Number:</Form.Label>
                                 <Col sm="7">
-                                    <Form.Control size="sm" type="text" value={app.number} onChange={appNumberOnChange}
+                                    <Form.Control size="sm" type="text" value={app.number}
+                                                  disabled={status}
+                                                  onChange={appNumberOnChange}
                                                   className={
                                                       errors.validationErrors.includes("number")
                                                           ? "form-control is-invalid"
@@ -290,8 +295,9 @@ function EditSupplyAppModal(props) {
                             <Form.Group as={Row} controlId="sourceLocation">
                                 <Form.Label column sm="3">Source location:</Form.Label>
                                 <Col sm="7">
-                                    <Form.Control name="sourceId" size="sm" onChange={handleSourceLocations}
-                                                  as="select">
+                                    <Form.Control name="sourceId" size="sm" as="select"
+                                                  disabled={status}
+                                                  onChange={handleSourceLocations}>
                                         {warehouses && warehouses.source.map(f =>
                                             <option value={f.id} key={f.id}
                                                     selected={f.id === app.sourceLocationDto.id}>
@@ -319,6 +325,10 @@ function EditSupplyAppModal(props) {
                                             </option>
                                         )}
                                     </Form.Control>
+                                    {status &&
+                                    <Form.Text id="forwardAttention" className="forward-attention">
+                                        You can forward not accepted items to another warehouse.
+                                    </Form.Text>}
                                 </Col>
                             </Form.Group>
                         </Col>
@@ -351,27 +361,30 @@ function EditSupplyAppModal(props) {
     const itemsTable =
         <React.Fragment>
             {app && app.items && app.items.length > 0 &&
-            <Table striped bordered hover size="sm">
+            <Table bordered hover size="sm">
                 <thead>
                 <tr>
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
-                    <th></th>
+                    <th>Cost, $ per unit</th>
+                    <th>{status && 'Accepted at'}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {app.items.map(i => (
-                    <tr id={i.id} key={i.id}>
+                    <tr id={i.id} key={i.id}
+                        className={i.acceptedAt && i.acceptedAt !== null && "accepted-item"}>
                         <td>{i.itemDto.upc}</td>
                         <td>{i.itemDto.label}</td>
                         <td>{i.amount}</td>
                         <td>{i.cost}</td>
-                        <td style={{textAlign: 'center'}}>
+                        <td style={{textAlign: 'center', width: '10%'}}>
+                            {(!i.acceptedAt || i.acceptedAt === null) && !status &&
                             <FaTrash id={i.itemDto.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
-                            />
+                            />}
+                            {i.acceptedAt !== null && i.acceptedAt}
                         </td>
                     </tr>
                 ))}
@@ -381,6 +394,7 @@ function EditSupplyAppModal(props) {
 
     const inputsAddItems =
         <>
+            {!status &&
             <Row>
                 <Col sm="3">
                     <AsyncTypeahead
@@ -443,7 +457,7 @@ function EditSupplyAppModal(props) {
                         Add
                     </Button>
                 </Col>
-            </Row>
+            </Row>}
         </>;
 
     const addButton = <Button type="submit" className="mainButton pull-right" onClick={addAppHandler}>Save</Button>;
@@ -462,6 +476,8 @@ function EditSupplyAppModal(props) {
                 errors={errors}
                 button={addButton}
                 setCurrentItem={setCurrentItem}
+                setUnavailableItems={''}
+                unavailableItems={''}
             />
         </>
     );

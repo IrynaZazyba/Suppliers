@@ -1,8 +1,8 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.Application;
+import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.dto.AddressDto;
-import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
 import by.itech.lab.supplier.service.PriceCalculationService;
 import by.itech.lab.supplier.service.TaxService;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,10 +41,10 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
     }
 
     @Override
-    public Set<ApplicationItemDto> calculateAppItemsPrice(final ApplicationDto appDto) {
-        final List<Long> itemsIds = appDto.getItems().stream().map(e -> e.getItemDto().getId()).collect(Collectors.toList());
-        final Long sourceLocationId = appDto.getSourceLocationDto().getId();
-        final Long destinationLocationId = appDto.getDestinationLocationDto().getId();
+    public Application calculateAppItemsPrice(final Application app) {
+        final List<Long> itemsIds = app.getItems().stream().map(e -> e.getItem().getId()).collect(Collectors.toList());
+        final Long sourceLocationId = app.getSourceLocationAddress().getId();
+        final Long destinationLocationId = app.getDestinationLocationAddress().getId();
 
         //mapped WarehouseItem by itemId
         final Map<Long, WarehouseItemDto> whItems = warehouseService
@@ -56,21 +55,19 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         final AddressDto sourceAddress = warehouseService.findById(destinationLocationId).getAddressDto();
         final double distance = calculateDistance(sourceAddress, destinationAddress);
         final Double tax = taxService.getTaxByState(destinationAddress.getState().getId()).getPercentage();
-
-        return appDto.getItems().stream().peek(item -> setItemPrice(item, whItems, distance, tax))
-                .collect(Collectors.toSet());
+        app.getItems().forEach(item -> setItemPrice(item, whItems, distance, tax));
+        return app;
     }
 
-    private ApplicationItemDto setItemPrice(final ApplicationItemDto appItem,
-                                            final Map<Long, WarehouseItemDto> whItems,
-                                            final double distance,
-                                            final Double tax) {
-        final WarehouseItemDto whi = whItems.get(appItem.getItemDto().getId());
+    private void setItemPrice(final ApplicationItem appItem,
+                              final Map<Long, WarehouseItemDto> whItems,
+                              final double distance,
+                              final Double tax) {
+        final WarehouseItemDto whi = whItems.get(appItem.getItem().getId());
         BigDecimal taxPerDistance = whi.getItem().getCategoryDto().getTaxRate();
         BigDecimal cost = whi.getCost();
         double price = cost.doubleValue() * (1 + tax / 100) + (taxPerDistance.doubleValue() * (distance / 1000));
         appItem.setCost(new BigDecimal(price));
-        return appItem;
     }
 
 }

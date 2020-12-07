@@ -29,11 +29,12 @@ public final class ApiConstants {
     public final static String URL_NUMBER = "/number";
     public final static String URL_LABEL = "/label";
     public final static String URL_STATUS = "/status";
+    public final static String URL_ACTIVATE = "/activate";
     public final static String URL_CAPACITY = "/capacity";
     public final static String URL_ITEMS = "/items";
     public final static String URL_UPC = "/upc";
     public final static String URL_TYPE = "/type";
     public final static String URL_TAXES = "/taxes";
-
+    public final static String URL_WAREHOUSE_ITEMS = "/warehouse-items";
 
 }

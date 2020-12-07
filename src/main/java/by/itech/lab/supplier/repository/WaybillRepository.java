@@ -9,8 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface WaybillRepository extends JpaRepository<WayBill, Long> {
+
+    Optional<WayBill> findByNumber(String number);
 
     @Query("select w from WayBill w where (:status is null or w.waybillStatus=:status) " +
             "and ((:role like 'ROLE_LOGISTICS_SPECIALIST' and w.createdByUsers.id=:userId) " +

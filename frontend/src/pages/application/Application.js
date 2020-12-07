@@ -13,7 +13,9 @@ import AddApplicationModal from "./AddApplicationModal";
 import {AuthContext} from "../../context/authContext";
 import Badge from "react-bootstrap/Badge";
 import AddShipmentApplication from "./AddShipmentApplication";
+import AcceptApplicationModal from "./AcceptApplicationModal";
 import EditSupplyAppModal from "./EditSupplyAppModal";
+import EditShipmentModal from "./EditShipmentModal";
 
 export default () => {
 
@@ -29,6 +31,7 @@ export default () => {
     });
     const [filter, setFilter] = useState([]);
     const filterOptions = {
+        'All': '',
         'Open': 'OPEN',
         'Started processing': 'STARTED_PROCESSING',
         'Finished processing': 'FINISHED_PROCESSING'
@@ -36,7 +39,17 @@ export default () => {
     const [errorMessage, setErrors] = useState('');
     const [modalAddSupplyOpen, setModalAddSupplyOpen] = useState(false);
     const [modalAddShipmentOpen, setModalAddShipmentOpen] = useState();
+    const [modalAcceptOpen, setModalAcceptOpen] = useState({
+        isOpen: false,
+        appId: '',
+        customerId: customerId
+    });
     const [openEditModal, setOpenEditModal] = useState({
+        isOpen: false,
+        app: [],
+        customerId: customerId
+    });
+    const [openEditShipmentModal, setOpenEditShipmentModal] = useState({
         isOpen: false,
         app: [],
         customerId: customerId
@@ -102,15 +115,28 @@ export default () => {
     const closeModalAddShipment = (isOpen, appDto) => {
         setModalAddShipmentOpen(isOpen);
         if (appDto) {
-            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}`);
+            getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
         }
     };
 
     const closeModalEdit = (e) => {
         setOpenEditModal(e);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
+
     };
 
-    const tableRows = applications.map(app => (
+    const closeModalEditShipment = (e) => {
+        setOpenEditShipmentModal(e);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
+    };
+
+    const closeModalAccept = (isOpen) => {
+        setModalAcceptOpen(isOpen);
+        getApplications(`/customers/${customerId}/application?page=${page.currentPage}&size=${page.countPerPage}&isAll=${isAll}&status=${filter}`);
+    };
+
+
+    const tableRows = applications && applications.map(app => (
         <tr key={app.id}>
             <td>{app.number}</td>
             <td style={{fontSize: '0.9rem'}}>{app.sourceLocationDto.identifier}{','}<br/>
@@ -127,19 +153,42 @@ export default () => {
                 <Badge className="badge-status">
                     {app.applicationStatus.replace('_', ' ').toLowerCase()}
                 </Badge></td>
-            <td><Button variant="link">Accept</Button>
-            </td>
-            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+            <td>
+                {app.type === 'SUPPLY' &&
+                <Button variant="link"
+                        disabled={app.applicationStatus === 'FINISHED_PROCESSING'}
                         onClick={() => {
-                            {app.type !== 'TRAFFIC' &&
-                                setOpenEditModal({
-                                    isOpen: true,
-                                    app: app,
-                                    customerId: customerId
-                                });
-                            }
-                        }}
-                        size={'1.3em'}
+                            setModalAcceptOpen({
+                                isOpen: true,
+                                appId: app.id,
+                                customerId: customerId
+                            });
+                        }}>Accept</Button>}
+            </td>
+            <td><FaEdit
+                className={app.applicationStatus === 'FINISHED_PROCESSING'
+                    ? "edit-app-icon-disable"
+                    : "edit-app-icon-active"}
+                size={'1.3em'}
+                onClick={() => {
+
+                    let statusRule = app.applicationStatus === 'OPEN'
+                        || app.applicationStatus === 'STARTED_PROCESSING';
+
+                    if (app.type === 'SUPPLY' && statusRule) {
+                        setOpenEditModal({
+                            isOpen: true,
+                            app: app,
+                            customerId: customerId
+                        });
+                    } else if (app.type === 'TRAFFIC' && statusRule) {
+                        setOpenEditShipmentModal({
+                            isOpen: true,
+                            app: app,
+                            customerId: customerId
+                        });
+                    }
+                }}
             />
             </td>
         </tr>
@@ -151,6 +200,9 @@ export default () => {
             <AddApplicationModal props={modalAddSupplyOpen} onChange={closeAddSupplyModel}/>
             <AddShipmentApplication props={modalAddShipmentOpen} onChange={closeModalAddShipment}/>
             <EditSupplyAppModal props={openEditModal} onChange={closeModalEdit}/>
+            <EditShipmentModal props={openEditShipmentModal} onChange={closeModalEditShipment}/>
+            <AcceptApplicationModal modal={modalAcceptOpen} onChange={closeModalAccept}/>
+
         </React.Fragment>;
 
     const header =
