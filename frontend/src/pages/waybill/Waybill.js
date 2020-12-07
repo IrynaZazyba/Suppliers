@@ -11,6 +11,7 @@ import TogglePage from "../../components/TogglePage";
 import Badge from "react-bootstrap/Badge";
 import {FaEdit} from "react-icons/fa";
 import AddWaybillModal from "./AddWaybillModal";
+import EditWaybillModal from "./EditWaybillModal";
 
 export default () => {
 
@@ -31,6 +32,11 @@ export default () => {
     };
     const [waybills, setWaybills] = useState([]);
     const [openAddModal, setOpenAddModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState({
+        isOpen: false,
+        waybillId: '',
+        customerId: customerId
+    });
 
     const changePage = (e) => {
         e.preventDefault();
@@ -77,6 +83,11 @@ export default () => {
         getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
     };
 
+    const closeModalEdit = (e) => {
+        setOpenEditModal(e);
+        getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
+    };
+
 
     function parseDestinationLocationsCities(waybill) {
         let map = waybill.applications.map(a =>
@@ -103,7 +114,11 @@ export default () => {
                 </Badge></td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         onClick={() => {
-
+                            setOpenEditModal({
+                                isOpen: true,
+                                waybillId: waybill.id,
+                                customerId: customerId
+                            });
                         }}
                         size={'1.3em'}
             />
@@ -137,7 +152,7 @@ export default () => {
     const modals =
         <React.Fragment>
             <AddWaybillModal modal={openAddModal} onChange={closeModalAdd}/>
-
+            <EditWaybillModal modal={openEditModal} onChange={closeModalEdit}/>
         </React.Fragment>;
 
     const header =

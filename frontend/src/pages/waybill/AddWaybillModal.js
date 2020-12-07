@@ -517,7 +517,6 @@ function AddWaybillModal(props) {
             <Row>
                 <Col sm={6}>
                     {waybillInfo}
-
                 </Col>
                 <Col sm={6}>
                     <Row>
@@ -612,7 +611,7 @@ function AddWaybillModal(props) {
     const map =
         <MyMapComponent
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm-BUX0c9Pa7S5bylGeZAn05CGxjEJFv8&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}
