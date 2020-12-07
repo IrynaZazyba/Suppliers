@@ -33,6 +33,7 @@ function AddWaybillModal(props) {
         carCapacity: 0
     });
     const [apps, setApps] = useState([]);
+    const[allLoadedApps, setAllLoadedApps]=useState([]);
     const [addedApps, setAddedApps] = useState([]);
     const [waybill, setWaybill] = useState({
         number: '',
@@ -68,7 +69,7 @@ function AddWaybillModal(props) {
 
     useEffect(() => {
         if (addedApps.length > 0) {
-            let waybillApps = apps.filter(a => addedApps.includes(a.id));
+            let waybillApps = allLoadedApps.filter(a => addedApps.includes(a.id));
             let totalAmount = waybillApps.reduce((total, app) => total + app.items.reduce((t, i) => t + i.amount, 0), 0);
             let totalUnits = waybillApps.reduce((total, app) => total + app.items.reduce((t, i) => t + (i.amount * i.itemDto.units), 0), 0);
             setTotalValues(prevState => ({
@@ -76,7 +77,6 @@ function AddWaybillModal(props) {
                 totalAmount: totalAmount,
                 totalUnits: totalUnits
             }));
-
             checkValidationErrors('capacity');
             let validRes = checkCarCapacity(totalValues.carCapacity, totalUnits);
             setErrors(prevState => ({
@@ -100,6 +100,7 @@ function AddWaybillModal(props) {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
+                setAllLoadedApps(apps.concat(commits.content));
                 setApps(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
@@ -122,6 +123,9 @@ function AddWaybillModal(props) {
 
     const changePage = (e) => {
         e.preventDefault();
+        console.log("~~~~~~change page");
+
+        console.log(totalValues);
         let currentPage = e.target.innerHTML - 1;
         getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&applicationStatus=OPEN&page=${currentPage}&size=5`);
     };
@@ -436,7 +440,7 @@ function AddWaybillModal(props) {
                     <td className="table-text-center">{app.number}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + i.amount, 0)}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + (i.amount * i.itemDto.units), 0)}</td>
-                    <td style={{fontSize: '0.9rem', width: '35%'}}>{app.destinationLocationDto.addressDto.city}{', '}
+                    <td style={{fontSize: '0.9rem', width: '37%'}}>{app.destinationLocationDto.addressDto.city}{', '}
                         {app.destinationLocationDto.addressDto.addressLine1}{', '}
                         {app.destinationLocationDto.addressDto.addressLine2}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0)}</td>
@@ -632,6 +636,7 @@ function AddWaybillModal(props) {
                     setDirections([]);
                     setShowMap(false);
                     setWaypoints([]);
+                    setAllLoadedApps([]);
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
