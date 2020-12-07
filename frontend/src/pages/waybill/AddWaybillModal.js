@@ -1,4 +1,5 @@
 /*global google*/
+/* eslint-disable no-undef */
 import React, {useContext, useEffect, useState} from "react";
 import ErrorMessage from "../../messages/errorMessage";
 import Form from "react-bootstrap/Form";
@@ -7,13 +8,20 @@ import {AuthContext} from "../../context/authContext";
 import {ListGroup, Row} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
-import {DirectionsRenderer, GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps";
 import Table from "react-bootstrap/Table";
 import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
 import Page from "../../components/Page";
 import Button from "react-bootstrap/Button";
-import validateWaybill, {checkCarCapacity, checkIfRouteExists} from "../../validation/WaybillValidationRules";
+import validateWaybill, {
+    checkCarCapacity,
+    checkIfRouteExists,
+    validateCar,
+    validateDriver,
+    validateSourceLocation
+} from "../../validation/WaybillValidationRules";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import MyMapComponent from "../../components/MyMapComponent";
+import {Typeahead} from 'react-bootstrap-typeahead';
 
 
 function AddWaybillModal(props) {
@@ -111,14 +119,26 @@ function AddWaybillModal(props) {
     }
 
     const sourceLocationHandler = (e) => {
-        e.preventDefault();
-        checkValidationErrors('source');
-        let sourceId = e.target.value;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${sourceId}&applicationStatus=OPEN&size=5`);
-        setWaybill(prevState => ({
-            ...prevState,
-            sourceLocationWarehouseDto: sourceId
-        }));
+        let validationRes = validateSourceLocation(e);
+        if (validationRes.length === 0) {
+            checkValidationErrors('source');
+            let sourceId = e[0].id;
+            sourceId && getApps(`/customers/${customerId}/application/warehouses?warehouseId=${sourceId}&applicationStatus=OPEN&size=5`);
+            setWaybill(prevState => ({
+                ...prevState,
+                sourceLocationWarehouseDto: sourceId
+            }));
+        } else {
+            setWaybill(prevState => ({
+                ...prevState,
+                sourceLocationWarehouseDto: ''
+            }));
+            setApps([]);
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...errors.validationErrors, ...validationRes]
+            }));
+        }
     };
 
     const changePage = (e) => {
@@ -128,32 +148,59 @@ function AddWaybillModal(props) {
     };
 
     const driverHandler = (e) => {
-        e.preventDefault();
-        checkValidationErrors('driver');
-        setWaybill(prevState => ({
-            ...prevState,
-            driver: e.target.value
-        }));
+        let validationRes = validateDriver(e);
+        if (validationRes.length === 0) {
+            checkValidationErrors('driver');
+            setWaybill(prevState => ({
+                ...prevState,
+                driver: e[0].id
+            }));
+        } else {
+            setWaybill(prevState => ({
+                ...prevState,
+                driver: ''
+            }));
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...errors.validationErrors, ...validationRes]
+            }));
+        }
     };
 
     const carHandler = (e) => {
-        e.preventDefault();
-        let carId = e.target.value;
-        setWaybill(prevState => ({
-            ...prevState,
-            car: carId
-        }));
-        let car = cars.find(car => car.id == carId);
-        setTotalValues(prevState => ({
-            ...prevState,
-            carCapacity: car.currentCapacity
-        }));
-        let res = errors.validationErrors.filter(e => e != 'car' && e != 'capacity');
-        let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
-        setErrors(prevState => ({
-            ...prevState,
-            validationErrors: [...res, ...validRes]
-        }));
+        let validationRes = validateCar(e);
+        if (validationRes.length === 0) {
+            checkValidationErrors('car');
+            let carId = e[0].id;
+            setWaybill(prevState => ({
+                ...prevState,
+                car: carId
+            }));
+            let car = cars.find(car => car.id == carId);
+            setTotalValues(prevState => ({
+                ...prevState,
+                carCapacity: car.currentCapacity
+            }));
+            let res = errors.validationErrors.filter(e => e != 'car' && e != 'capacity');
+            let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...res, ...validRes]
+            }));
+        } else {
+            setWaybill(prevState => ({
+                ...prevState,
+                car: ''
+            }));
+            setTotalValues(prevState => ({
+                ...prevState,
+                carCapacity: 0
+            }));
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...errors.validationErrors, ...validationRes]
+            }));
+        }
     };
 
 
@@ -175,7 +222,6 @@ function AddWaybillModal(props) {
         e.preventDefault();
         let validationResult = validateWaybill(waybill, addedApps, waypoints);
         let carCapacityValid = checkCarCapacity(totalValues.carCapacity, totalValues.totalUnits);
-        //todo check directions exists
         if (validationResult.length === 0 && carCapacityValid.length === 0) {
             let waybillDto = buildWaybillDto();
             fetch(`/customers/${customerId}/waybills`, {
@@ -321,7 +367,7 @@ function AddWaybillModal(props) {
         }
     };
 
-    function renderRoute(start, end, waypoints) {
+    function renderRoute (start, end, waypoints){
         const directionsService = new google.maps.DirectionsService();
         let directionsRenderer = new google.maps.DirectionsRenderer();
         let requests = {
@@ -343,17 +389,6 @@ function AddWaybillModal(props) {
         });
 
     }
-
-    const MyMapComponent = withScriptjs(withGoogleMap((props) =>
-        <GoogleMap
-            defaultZoom={15}
-            defaultCenter={mapCenter}>
-            <Marker position={mapCenter}/>
-            <DirectionsRenderer
-                directions={directions}
-            />
-        </GoogleMap>
-    ));
 
 
     const waybillInfo =
@@ -383,27 +418,17 @@ function AddWaybillModal(props) {
                         <Form.Label>Source location</Form.Label>
                     </Col>
                     <Col sm={8}>
-                        <Form.Control disabled={addedApps.length > 0}
-                                      defaultValue="Choose..."
-                                      htmlSize={3}
-                                      as="select" size="sm" drop="down"
-                                      onChange={sourceLocationHandler}
-                                      className={
-                                          errors.validationErrors.includes("source")
-                                              ? "form-control is-invalid"
-                                              : "form-control"
-                                      }
+                        <Typeahead
+                            id="basic-example"
+                            labelKey={option => `${option.identifier}, ${option.addressDto.addressLine1}, ${option.addressDto.addressLine2}`}
+                            onChange={sourceLocationHandler}
+                            options={sourceWarehouse}
+                            placeholder="Choose a source warehouse..."
                         >
-                            <option hidden>Choose...</option>
-                            {sourceWarehouse.map(warehouse => (
-                                <option key={warehouse.id} value={warehouse.id}>
-                                    {warehouse.identifier}, {warehouse.addressDto.city}, {warehouse.addressDto.addressLine1}
-                                </option>
-                            ))}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a value.
-                        </Form.Control.Feedback>
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("source") ? "Please provide a value" : ""}
+                            </div>
+                        </Typeahead>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -413,26 +438,17 @@ function AddWaybillModal(props) {
                         <Form.Label>Car</Form.Label>
                     </Col>
                     <Col sm={8}>
-                        <Form.Control as="select" size="sm" drop="down"
-                                      htmlSize={3}
-                                      style={{width: '100%'}}
-                                      onChange={carHandler}
-                                      className={
-                                          errors.validationErrors.includes("car")
-                                              ? "form-control is-invalid"
-                                              : "form-control"
-                                      }
+                        <Typeahead
+                            id="basic-example"
+                            labelKey={option => `${option.number}, ${option.addressDto.addressLine1}, ${option.addressDto.addressLine2}`}
+                            onChange={carHandler}
+                            options={cars}
+                            placeholder="Choose a car..."
                         >
-                            <option hidden>Choose...</option>
-                            {cars.map(car => (
-                                <option key={car.id} value={car.id}>
-                                    {car.number}, {car.addressDto.addressLine1}
-                                </option>
-                            ))}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a value.
-                        </Form.Control.Feedback>
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("car") ? "Please provide a value" : ""}
+                            </div>
+                        </Typeahead>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -442,25 +458,17 @@ function AddWaybillModal(props) {
                         <Form.Label>Driver</Form.Label>
                     </Col>
                     <Col sm={8}>
-                        <Form.Control as="select" size="sm" drop="down"
-                                      htmlSize={2}
-                                      style={{width: '100%'}}
-                                      onChange={driverHandler}
-                                      className={
-                                          errors.validationErrors.includes("driver")
-                                              ? "form-control is-invalid"
-                                              : "form-control"
-                                      }>
-                            <option hidden>Choose...</option>
-                            {drivers.map(driver => (
-                                <option key={driver.id} value={driver.id}>
-                                    {driver.username}, {driver.surname}
-                                </option>
-                            ))}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a value.
-                        </Form.Control.Feedback>
+                        <Typeahead
+                            id="basic-example"
+                            labelKey={option => `${option.surname}, ${option.username}`}
+                            onChange={driverHandler}
+                            options={drivers}
+                            placeholder="Choose a driver..."
+                        >
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("driver") ? "Please provide a value" : ""}
+                            </div>
+                        </Typeahead>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -478,7 +486,6 @@ function AddWaybillModal(props) {
                                 size={'1.0em'}
                                 onClick={addAppToWaybill}/>
                     }
-
                     </td>
                     <td className="table-text-center">{app.number}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + i.amount, 0)}</td>
@@ -611,8 +618,10 @@ function AddWaybillModal(props) {
 
     const map =
         <MyMapComponent
+            mapCenter={mapCenter}
+            directions={directions}
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm-BUX0c9Pa7S5bylGeZAn05CGxjEJFv8&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}

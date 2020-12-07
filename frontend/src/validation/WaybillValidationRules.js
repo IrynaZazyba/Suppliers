@@ -45,5 +45,28 @@ export function checkIfRouteExists(apps) {
 
 }
 
+export function validateSourceLocation(source) {
+    let errorsFields = [];
+    if (source.length === 0) {
+        errorsFields.push("source");
+    }
+    return errorsFields;
+}
+
+export function validateCar(car) {
+    let errorsFields = [];
+    if (car.length === 0) {
+        errorsFields.push("car");
+    }
+    return errorsFields;
+}
+
+export function validateDriver(driver) {
+    let errorsFields = [];
+    if (driver.length === 0) {
+        errorsFields.push("driver");
+    }
+    return errorsFields;
+}
 
 
