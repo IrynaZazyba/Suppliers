@@ -5,10 +5,12 @@ import by.itech.lab.supplier.dto.RetailerDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 @AllArgsConstructor
 public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
-
+    private final WarehouseMapper warehouseMapper;
     @Override
     public RetailerDto map(Retailer retailer) {
         return RetailerDto.builder()
@@ -37,7 +39,7 @@ public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
                 .identifier(retailerDto.getIdentifier())
                 .deletedAt(retailerDto.getDeletedAt())
                 .active(retailerDto.getActive())
-                .customerId(retailerDto.getCustomerId())
+                 .customerId(retailerDto.getCustomerId())
                 .build();
     }
 }

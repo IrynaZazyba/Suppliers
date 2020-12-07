@@ -285,10 +285,29 @@ Cookie: {{test}}
 
 {
   "fullName": "Tetya Motya",
-  "identifier": "1615091480024",
+  "identifier": "1615093480024",
   "deletedAt": null,
   "active": null,
-  "customerId": 4
+  "customerId": 4,
+"warehouses":[
+  {
+    "identifier": "1615093480024",
+    "customerId": 4,
+    "type": "FACTORY",
+    "totalCapacity": "1",
+    "addressDto": {
+      "city": "Kanzas",
+      "addressLine1": "Linkoln Str.",
+      "addressLine2": "66",
+      "state": {
+        "id": "6",
+        "state": "Arizona"
+      },
+      "latitude": 40.854785,
+      "longitude": -75.85785
+    }
+  }
+]
 }
 
 

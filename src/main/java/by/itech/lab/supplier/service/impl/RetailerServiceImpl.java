@@ -2,10 +2,12 @@ package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Retailer;
 import by.itech.lab.supplier.dto.RetailerDto;
+import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.RetailerMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.RetailerRepository;
 import by.itech.lab.supplier.service.RetailerService;
+import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 @Service
@@ -22,6 +25,8 @@ public class RetailerServiceImpl implements RetailerService {
     private final RetailerRepository retailerRepository;
 
     private final RetailerMapper retailerMapper;
+
+    private final WarehouseService warehouseService;
 
     @Override
     public RetailerDto findById(Long id) {
@@ -60,6 +65,11 @@ public class RetailerServiceImpl implements RetailerService {
                 .orElseGet(() -> retailerMapper.map(retailerDto));
 
         final Retailer saved = retailerRepository.save(retailer);
+        final Long retailerId = saved.getId();
+        for(WarehouseDto warehouseDto: retailerDto.getWarehouses()){
+            warehouseDto.setRetailerId(retailerId);
+            warehouseService.save(warehouseDto);
+        }
         return retailerMapper.map(saved);
     }
 

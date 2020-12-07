@@ -101,10 +101,13 @@ public class RetailerServiceTest {
         @MockBean
         private RetailerMapper retailerMapper;
 
+        @MockBean
+        private WarehouseService warehouseService;
+
 
         @Bean
         public RetailerService retailerService() {
-            return new RetailerServiceImpl(retailerRepository, retailerMapper);
+            return new RetailerServiceImpl(retailerRepository, retailerMapper, warehouseService);
         }
 
     }
