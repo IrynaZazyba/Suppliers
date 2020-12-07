@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
@@ -50,7 +51,7 @@ public class WarehouseController {
     }
 
     @GetMapping(URL_ID_PARAMETER)
-    public WarehouseDto findById(@PathVariable final Long id) {
+    public Optional<WarehouseDto> findById(@PathVariable final Long id) {
         return warehouseService.findById(id);
     }
 
@@ -67,20 +68,20 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WarehouseDto save(@Valid @RequestBody final WarehouseDto warehouseDto) {
+    public Optional<WarehouseDto> save(@Valid @RequestBody final WarehouseDto warehouseDto) {
         return warehouseService.save(warehouseDto);
     }
 
     @PutMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public WarehouseDto update(@Valid @RequestBody final WarehouseDto warehouseDto) {
+    public Optional<WarehouseDto> update(@Valid @RequestBody final WarehouseDto warehouseDto) {
         return warehouseService.save(warehouseDto);
     }
 
     @PostMapping(URL_DELETE_LIST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody final List<Long> deleteList) {
-        warehouseService.delete(deleteList);
+        warehouseService.deleteByIds(deleteList);
     }
 
     @DeleteMapping(URL_RETAILER_ID_PARAMETER)

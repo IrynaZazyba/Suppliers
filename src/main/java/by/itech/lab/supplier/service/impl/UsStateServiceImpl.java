@@ -1,9 +1,9 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.dto.StateDto;
-import by.itech.lab.supplier.dto.mapper.StateMapper;
-import by.itech.lab.supplier.repository.StateRepository;
-import by.itech.lab.supplier.service.StateService;
+import by.itech.lab.supplier.dto.UsStateDto;
+import by.itech.lab.supplier.dto.mapper.UsStateMapper;
+import by.itech.lab.supplier.repository.UsStateRepository;
+import by.itech.lab.supplier.service.UsStateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,19 +14,19 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class StateServiceImpl implements StateService {
+public class UsStateServiceImpl implements UsStateService {
 
-    private final StateRepository stateRepository;
-    private final StateMapper stateMapper;
+    private final UsStateRepository stateRepository;
+    private final UsStateMapper stateMapper;
 
     @Override
-    public List<StateDto> findListByState(final String state) {
+    public List<UsStateDto> findListByState(final String state) {
         return stateRepository.findByStateStartingWith(state).stream()
                 .map(stateMapper::map).collect(Collectors.toList());
     }
 
     @Override
-    public Page<StateDto> findAll(Pageable pageable) {
+    public Page<UsStateDto> findAll(Pageable pageable) {
         return stateRepository.findAll(pageable)
                 .map(stateMapper::map);
     }

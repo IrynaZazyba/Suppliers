@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
@@ -48,7 +47,7 @@ public class UserController {
 
     @GetMapping(URL_DISPATCHERS)
     public List<UserDto> getListByUsername(@RequestParam String username) {
-        return userService.findListByDispatcherUsername(username);
+        return userService.findUsersByDispatcherUsername(username);
     }
 
     @GetMapping(URL_DISPATCHERS + URL_ID_PARAMETER)

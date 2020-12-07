@@ -136,7 +136,7 @@ Cookie: {{test}}
     "latitude": 40.854785,
     "longitude": -75.85785
   },
-  "usersId": [
+  "dispatchersId": [
     3
   ]
 }
@@ -245,10 +245,12 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/customers/3/warehouses/1
+POST http://localhost:8080/customers/3/warehouses/delete-list
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+[3]
 
 ###
 #--------------------------------------------------Retailers---------------------------------------------#

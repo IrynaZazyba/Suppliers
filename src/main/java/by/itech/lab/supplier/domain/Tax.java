@@ -32,6 +32,6 @@ public class Tax implements BaseEntity {
     @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "state_id")
-    private State state;
+    private UsState state;
 
 }

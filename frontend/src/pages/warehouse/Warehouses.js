@@ -117,12 +117,16 @@ export default (props) => {
             });
     }
 
+    function showAddress(address) {
+        return `${address.city}, ${address.addressLine1}, 
+        ${address.addressLine2}, ${address.state.state}`
+    }
+
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
             <td>{warehouse.type}</td>
-            <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
-                {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
+            <td>{showAddress(warehouse.addressDto)}</td>
             <td>{warehouse.totalCapacity}</td>
             <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
                         size={'1.3em'}
@@ -142,9 +146,9 @@ export default (props) => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
+            <ModalEditWarehouse editWarehouse={editWarehouse} onChange={closeModalEdit}
                                 currentCustomerId={currentCustomerId}/>
-            <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
+            <ModalAddWarehouse lgShow={lgShow} onChange={closeModalAdd}
                                currentCustomerId={currentCustomerId}
             />
         </React.Fragment>;
