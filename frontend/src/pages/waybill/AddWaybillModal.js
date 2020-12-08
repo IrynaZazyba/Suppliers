@@ -579,12 +579,12 @@ function AddWaybillModal(props) {
     };
 
     function reRenderRoute(reordered) {
-        let reorderdWaypoints = reordered.slice();
+        let reorderedWaypoints = reordered.slice();
         let start = {lat: startPoint.address.latitude, lng: startPoint.address.longitude};
-        let endWaypoint = reorderdWaypoints.pop();
+        let endWaypoint = reorderedWaypoints.pop();
         let end = {lat: endWaypoint.address.latitude, lng: endWaypoint.address.longitude};
 
-        let waypointsToRender = reorderdWaypoints.map(wp => {
+        let waypointsToRender = reorderedWaypoints.map(wp => {
             return {
                 location: {
                     lat: wp.address.latitude,
@@ -621,7 +621,7 @@ function AddWaybillModal(props) {
             mapCenter={mapCenter}
             directions={directions}
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm-BUX0c9Pa7S5bylGeZAn05CGxjEJFv8&callback=initMap&libraries=geometry,drawing,places"
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}
