@@ -6,6 +6,7 @@ import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {validateEditWarehouse} from "../../validation/WarehouseValidationRules";
 import {FaTrash} from "react-icons/fa";
+import axios from "axios";
 
 function ModalEditWarehouse(props) {
 
@@ -24,7 +25,7 @@ function ModalEditWarehouse(props) {
         },
         totalCapacity: '',
         dispatchersId: [],
-        irrelevantDispatchersId : []
+        irrelevantDispatchersId: []
     });
 
     const [errors, setErrors] = useState({
@@ -136,41 +137,70 @@ function ModalEditWarehouse(props) {
 
     const editWarehouseHandler = (e) => {
         e.preventDefault();
-        const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
-        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId,
-            customerId: props.currentCustomerId, irrelevantDispatchersId : dispatcherDeleteList}
+        let location = `${warehouseDto.addressDto.state.state} 
+                        ${warehouseDto.addressDto.city} 
+                        ${warehouseDto.addressDto.addressLine1} 
+                        ${warehouseDto.addressDto.addressLine2}`
 
-        let validationResult = validateEditWarehouse(updateWarehouseDto, dispatchersId);
-        setErrors(preState => ({
-            ...preState,
-            validationErrors: validationResult
-        }));
-        if (!validationResult.length) {
-            fetch(`/customers/${props.currentCustomerId}/warehouses/${warehouseDto.id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updateWarehouseDto)
-            })
-                .then(function (response) {
-                    if (response.status !== 202 || errors.serverErrors !== '') {
-                        setErrors(preState => ({
-                            ...preState,
-                            serverErrors: "Something go wrong, try later",
-                        }));
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
-                            serverErrors: '',
-                            validationErrors: []
-                        }));
-                        setDispatchers([]);
-                        setDispatcherDeleteList([]);
-                        props.onChange(false, warehouseDto);
+        axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+            params: {
+                address: location,
+                key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
+            }
+        }).then(function (response) {
+            if (response.status !== 200) {
+                setErrors(preState => ({
+                    ...preState,
+                    serverErrors: "Something go wrong, try later",
+                }));
+            } else {
+                let warehouseUpdateDto = {};
+                let dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
+                warehouseUpdateDto = {
+                    ...warehouseDto,
+                    dispatchersId: dispatchersId,
+                    customerId: props.currentCustomerId,
+                    irrelevantDispatchersId: dispatcherDeleteList,
+                    addressDto: {
+                        ...warehouseDto.addressDto,
+                        latitude: response.data.results[0].geometry.location.lat,
+                        longitude: response.data.results[0].geometry.location.lng
                     }
-                });
-        }
+                }
+
+                let validationResult = validateEditWarehouse(warehouseUpdateDto, dispatchersId);
+                setErrors(preState => ({
+                    ...preState,
+                    validationErrors: validationResult
+                }));
+                if (!validationResult.length) {
+                    fetch(`/customers/${props.currentCustomerId}/warehouses/${warehouseDto.id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(warehouseUpdateDto)
+                    })
+                        .then(function (response) {
+                            if (response.status !== 202 || errors.serverErrors !== '') {
+                                setErrors(preState => ({
+                                    ...preState,
+                                    serverErrors: "Something go wrong, try later",
+                                }));
+                            } else {
+                                setErrors(preState => ({
+                                    ...preState,
+                                    serverErrors: '',
+                                    validationErrors: []
+                                }));
+                                setDispatchers([]);
+                                setDispatcherDeleteList([]);
+                                props.onChange(false, warehouseDto);
+                            }
+                        });
+                }
+            }
+        })
     };
 
     const showDispatchers = dispatchers.map(disp =>

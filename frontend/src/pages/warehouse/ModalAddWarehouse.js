@@ -7,6 +7,7 @@ import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Dropdown from "react-bootstrap/Dropdown";
 import validateWarehouse, {validateWarehouseWithIdentifierExist} from "../../validation/WarehouseValidationRules";
 import {FaTrash} from "react-icons/fa";
+import axios from "axios";
 
 function ModalAddWarehouse(props) {
 
@@ -126,73 +127,89 @@ function ModalAddWarehouse(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
+        let location = `${warehouseDto.addressDto.state.state} 
+                        ${warehouseDto.addressDto.city} 
+                        ${warehouseDto.addressDto.addressLine1} 
+                        ${warehouseDto.addressDto.addressLine2}`
 
-        let warehouseUpdateDto = {};
-        if (dispatchers.length) {
-            const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
-            warehouseUpdateDto = {
-                ...warehouseDto,
-                dispatchersId: dispatchersId,
-                customerId: props.currentCustomerId
+        axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+            params: {
+                address: location,
+                key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
             }
-        } else {
-            warehouseUpdateDto = {
-                ...warehouseDto,
-                dispatchersId: [],
-                customerId: props.currentCustomerId
-            }
-        }
+        }).then(function (response) {
+                if (response.status !== 200) {
+                    setErrors(preState => ({
+                        ...preState,
+                        serverErrors: "Something go wrong, try later",
+                    }));
+                } else {
+                    let warehouseUpdateDto = {};
+                    warehouseUpdateDto = {
+                        ...warehouseDto,
+                        dispatchersId: (dispatchers.length ? dispatchers.map(dispatcher => dispatcher.id) : []),
+                        customerId: props.currentCustomerId,
+                        addressDto: {
+                            ...warehouseDto.addressDto,
+                            latitude: response.data.results[0].geometry.location.lat,
+                            longitude: response.data.results[0].geometry.location.lng
+                        }
+                    }
 
-        const validationResult = validateWarehouse(warehouseUpdateDto, dropdownMenuName,
-            warehouseUpdateDto.dispatchersId);
-        setErrors(preState => ({
-            ...preState,
-            validationErrors: validationResult,
-            serverErrors: ''
-        }));
-
-        if (!validationResult.includes("identifier")) {
-            fetch(`/customers/${props.currentCustomerId}/warehouses/identifier?identifier=${warehouseUpdateDto.identifier}`)
-                .then(resp => resp.json())
-                .then(isIdentifierExist => {
-
-                    const validationResult = validateWarehouseWithIdentifierExist(warehouseUpdateDto, dropdownMenuName,
-                        warehouseUpdateDto.dispatchersId, isIdentifierExist);
+                    const validationResult = validateWarehouse(warehouseUpdateDto, dropdownMenuName,
+                        warehouseUpdateDto.dispatchersId);
                     setErrors(preState => ({
                         ...preState,
                         validationErrors: validationResult,
                         serverErrors: ''
                     }))
-                })
-                .then(function() {
-                    if (!validationResult.length) {
-                        fetch(`/customers/${props.currentCustomerId}/warehouses`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(warehouseUpdateDto)
-                        })
-                            .then(function (response) {
-                                    if (response.status !== 201) {
-                                        setErrors({
-                                            serverErrors: "Something go wrong, try later",
-                                        });
-                                    } else {
-                                        setErrors(preState => ({
-                                            ...preState,
-                                            validationErrors: [],
-                                            serverErrors: ''
-                                        }));
-                                        setDispatchers([]);
-                                        setDropdownMenuName("select type");
-                                        props.onChange(false, warehouseDto)
-                                    }
+                    console.log(validationResult)
+
+                    if (!validationResult.includes("identifier")) {
+                        fetch(`/customers/${props.currentCustomerId}/warehouses/identifier?identifier=${warehouseUpdateDto.identifier}`)
+                            .then(resp => resp.json())
+                            .then(isIdentifierExist => {
+
+                                const validationResult = validateWarehouseWithIdentifierExist(warehouseUpdateDto, dropdownMenuName,
+                                    warehouseUpdateDto.dispatchersId, isIdentifierExist);
+                                setErrors(preState => ({
+                                    ...preState,
+                                    validationErrors: validationResult,
+                                    serverErrors: ''
+                                }))
+                            })
+                            .then(function () {
+                                if (!validationResult.length) {
+                                    fetch(`/customers/${props.currentCustomerId}/warehouses`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(warehouseUpdateDto)
+                                    })
+                                        .then(function (response) {
+                                                if (response.status !== 201) {
+                                                    setErrors({
+                                                        serverErrors: "Something go wrong, try later",
+                                                    });
+                                                } else {
+                                                    setErrors(preState => ({
+                                                        ...preState,
+                                                        validationErrors: [],
+                                                        serverErrors: ''
+                                                    }));
+                                                    setDispatchers([]);
+                                                    setDropdownMenuName("select type");
+                                                    props.onChange(false, warehouseDto)
+                                                }
+                                            }
+                                        )
                                 }
-                            )
+                            })
                     }
-                })
-        }
+                }
+            }
+        )
     }
 
 
