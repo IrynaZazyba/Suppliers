@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
@@ -70,37 +72,43 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @AdminAccess
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
-       CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
-       userDto.setCustomerDto(customerDto);
+        CustomerDto customerDto = customerService.findById(userDto.getCustomerId());
+        userDto.setCustomerDto(customerDto);
         return userService.save(userDto);
     }
 
 
     @GetMapping(ApiConstants.URL_USERNAME_PARAMETER)
-    public UserDto getUseByUsername(@PathVariable String username) {
+    public UserDto getUserByUsername(@PathVariable String username) {
         log.debug("request to get User : {}", username);
         return userService.findByUsername(username);
     }
-    @AdminAccess
-    @ResponseStatus(HttpStatus.OK)
+
+    @PreAuthorize("#id==authentication.principal.id")
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_PASSWORD_PARAMETER)
-    public int changePassword(@PathVariable Long id, @RequestBody String password) {
-        return userService.changePassword(id, password);
+    public void changePassword(@PathVariable Long customerId, @PathVariable Long id, @RequestBody String password) {
+        userService.changePassword(id, password);
     }
 
     //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("#id==authentication.principal.id")
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
         return userService.save(userDTO);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+
     @AdminAccess
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
         userService.changeActiveStatus(id, status);
+    }
+
+
+    @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_ACTIVATE)
+    public void changeActive(@PathVariable Long id) {
+        userService.changeActive(id);
     }
 
     @DeleteMapping(ApiConstants.URL_ID_PARAMETER)
