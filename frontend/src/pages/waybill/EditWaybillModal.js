@@ -6,7 +6,11 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
-import {checkCarCapacity} from "../../validation/WaybillValidationRules";
+import {checkCarCapacity, validateCar, validateDriver} from "../../validation/WaybillValidationRules";
+import {Typeahead} from "react-bootstrap-typeahead";
+import Table from "react-bootstrap/Table";
+import Page from "../../components/Page";
+import {FaMinus, FaPlus} from "react-icons/fa";
 
 function EditWaybillModal(props) {
 
@@ -22,36 +26,65 @@ function EditWaybillModal(props) {
         totalUnits: 0,
         carCapacity: 0
     });
-    const [waybill, setWaybill] = useState({});
+    const [waybill, setWaybill] = useState([]);
     const [apps, setApps] = useState([]);
-
+    const [page, setPage] = useState({
+        active: 1,
+        currentPage: 1,
+        countPerPage: 5,
+        countPages: 1
+    });
 
     useEffect(() => {
         if (props.modal.isOpen) {
             Promise.all([
                 fetch(`/customers/${customerId}/car`),
                 fetch(`/customers/${customerId}/users/role?role=ROLE_DRIVER`),
-                fetch(`/customers/${customerId}/waybills/${props.modal.waybillId}`),
-              //  fetch(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&size=5`)
+                fetch(`/customers/${customerId}/waybills/${props.modal.waybillId}`)
             ]).then(res => Promise.all(res.map(r => r.json())))
                 .then(content => {
                     setCars(content[0].content);
                     setDrivers(content[1]);
-                    setWaybill(content[2]);
-                    let totalAmount = content[2].applications
-                        .reduce((total, app) => total + app.items.reduce((t, i) => t + i.amount, 0), 0);
-                    let totalUnits = content[2].applications
-                        .reduce((total, app) => total + app.items.reduce((t, i) => t + (i.amount * i.itemDto.units), 0), 0);
-                    setTotalValues({
-                        totalAmount: totalAmount,
-                        totalUnits: totalUnits,
-                        carCapacity: content[2].car.currentCapacity
-                    });
+                    let waybill = content[2];
+                    setWaybill(waybill);
+                    calculateTotalValues(waybill);
 
+                    getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&page=${page.currentPage}&size=5`);
 
                 });
         }
     }, [props.modal]);
+
+    function getApps(url) {
+        fetch(url)
+            .then(response => response.json())
+            .then(commits => {
+                setApps(commits.content);
+                setPage({
+                    active: (commits.pageable.pageNumber + 1),
+                    countPerPage: commits.size,
+                    countPages: commits.totalPages
+                });
+            });
+    }
+
+    const changePage = (e) => {
+        e.preventDefault();
+        let currentPage = e.target.innerHTML - 1;
+        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&page=${currentPage}&size=5`);
+    };
+
+    function calculateTotalValues(waybill) {
+        let totalAmount = waybill.applications
+            .reduce((total, app) => total + app.items.reduce((t, i) => t + i.amount, 0), 0);
+        let totalUnits = waybill.applications
+            .reduce((total, app) => total + app.items.reduce((t, i) => t + (i.amount * i.itemDto.units), 0), 0);
+        setTotalValues({
+            totalAmount: totalAmount,
+            totalUnits: totalUnits,
+            carCapacity: waybill.car.currentCapacity
+        });
+    }
 
 
     const numberHandler = (e) => {
@@ -63,31 +96,67 @@ function EditWaybillModal(props) {
     };
 
     const driverHandler = (e) => {
-        e.preventDefault();
-        setWaybill(prevState => ({
-            ...prevState,
-            driver: {id: e.target.value}
-        }));
+        let validationRes = validateDriver(e);
+        if (validationRes.length === 0) {
+            checkValidationErrors('driver');
+            setWaybill(prevState => ({
+                ...prevState,
+                driver: e[0]
+            }));
+        } else {
+            setWaybill(prevState => ({
+                ...prevState,
+                driver: ''
+            }));
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...errors.validationErrors, ...validationRes]
+            }));
+        }
     };
 
-    const carHandler = (e) => {
-        e.preventDefault();
-        let carId = e.target.value;
-        setWaybill(prevState => ({
-            ...prevState,
-            car: {id: carId}
-        }));
-        let car = cars.find(car => car.id == carId);
-        setTotalValues(prevState => ({
-            ...prevState,
-            carCapacity: car.currentCapacity
-        }));
-        let res = errors.validationErrors.filter(e => e != 'car' && e != 'capacity');
-        let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
+
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e != fieldName);
         setErrors(prevState => ({
             ...prevState,
-            validationErrors: [...res, ...validRes]
+            validationErrors: res
         }));
+    }
+
+    const carHandler = (e) => {
+        let validationRes = validateCar(e);
+        if (validationRes.length === 0) {
+            checkValidationErrors('car');
+            let car = e[0];
+            setWaybill(prevState => ({
+                ...prevState,
+                car: car
+            }));
+            setTotalValues(prevState => ({
+                ...prevState,
+                carCapacity: car.currentCapacity
+            }));
+            let res = errors.validationErrors.filter(e => e != 'car' && e != 'capacity');
+            let validRes = checkCarCapacity(car.currentCapacity, totalValues.totalUnits);
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...res, ...validRes]
+            }));
+        } else {
+            setWaybill(prevState => ({
+                ...prevState,
+                car: ''
+            }));
+            setTotalValues(prevState => ({
+                ...prevState,
+                carCapacity: 0
+            }));
+            setErrors(prevState => ({
+                ...prevState,
+                validationErrors: [...errors.validationErrors, ...validationRes]
+            }));
+        }
     };
 
 
@@ -101,6 +170,7 @@ function EditWaybillModal(props) {
     >Introduce route</Button>;
 
     const waybillInfo =
+        <>{waybill &&
         <React.Fragment>
             <Form.Group controlId="number">
                 <Form.Row>
@@ -129,9 +199,8 @@ function EditWaybillModal(props) {
                     </Col>
                     <Col sm={8}>
                         <Form.Control size="sm" type="text" disabled
-                                      value={waybill.sourceLocationWarehouseDto.identifier + ', ' +
-                                      waybill.sourceLocationWarehouseDto.addressDto.addressLine1 + ', ' +
-                                      waybill.sourceLocationWarehouseDto.addressDto.addressLine2}/>
+                            value={waybill.sourceLocationWarehouseDto.identifier}
+                        />
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -141,27 +210,18 @@ function EditWaybillModal(props) {
                         <Form.Label>Car</Form.Label>
                     </Col>
                     <Col sm={8}>
-                        <Form.Control as="select" size="sm" drop="down"
-                                      htmlSize={3}
-                                      style={{width: '100%'}}
-                                      onChange={carHandler}
-                                      className={
-                                          errors.validationErrors.includes("car")
-                                              ? "form-control is-invalid"
-                                              : "form-control"
-                                      }
+                        <Typeahead
+                            defaultSelected={cars.filter(car => car.id == waybill.car.id)}
+                            id="basic-example"
+                            labelKey={option => `${option.number}, ${option.addressDto.addressLine1}, ${option.addressDto.addressLine2}`}
+                            onChange={carHandler}
+                            options={cars}
+                            placeholder="Choose value..."
                         >
-                            <option hidden>Choose...</option>
-                            {cars.map(car => (
-                                <option key={car.id} value={car.id}
-                                        selected={waybill.car.id === car.id}>
-                                    {car.number}, {car.addressDto.addressLine1}
-                                </option>
-                            ))}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a value.
-                        </Form.Control.Feedback>
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("car") ? "Please provide a value" : ""}
+                            </div>
+                        </Typeahead>
                     </Col>
                 </Form.Row>
             </Form.Group>
@@ -171,30 +231,23 @@ function EditWaybillModal(props) {
                         <Form.Label>Driver</Form.Label>
                     </Col>
                     <Col sm={8}>
-                        <Form.Control as="select" size="sm" drop="down"
-                                      htmlSize={2}
-                                      style={{width: '100%'}}
-                                      onChange={driverHandler}
-                                      className={
-                                          errors.validationErrors.includes("driver")
-                                              ? "form-control is-invalid"
-                                              : "form-control"
-                                      }>
-                            <option hidden>Choose...</option>
-                            {drivers.map(driver => (
-                                <option key={driver.id} value={driver.id}
-                                        selected={waybill.driver.id === driver.id}>
-                                    {driver.username}, {driver.surname}
-                                </option>
-                            ))}
-                        </Form.Control>
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a value.
-                        </Form.Control.Feedback>
+                        <Typeahead
+                            defaultSelected={drivers.filter(driver => driver.id == waybill.driver.id)}
+                            id="basic-example"
+                            labelKey={option => `${option.surname}, ${option.username}`}
+                            onChange={driverHandler}
+                            options={drivers}
+                            placeholder="Choose value..."
+                        >
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("driver") ? "Please provide a value" : ""}
+                            </div>
+                        </Typeahead>
                     </Col>
                 </Form.Row>
             </Form.Group>
-        </React.Fragment>;
+        </React.Fragment>
+        }</>;
 
     const waybillContentData =
         <React.Fragment>
@@ -240,6 +293,54 @@ function EditWaybillModal(props) {
             </Row>
         </React.Fragment>;
 
+    const appRows =
+        <React.Fragment>
+            {apps && apps.map(app => (
+                <tr key={app.id}
+                    //className={addedApps.includes(app.id) ? 'waybill-app' : ''}
+                >
+                    <td>
+                    {/*    {addedApps.includes(app.id) ?*/}
+                    {/*    <FaMinus id={app.id} style={{textAlign: 'center', color: '#1A7FA8'}}*/}
+                    {/*             size={'1.0em'}*/}
+                    {/*             //onClick={removeAppFromWaybill}*/}
+                    {/*    /> :*/}
+                    {/*    <FaPlus id={app.id} style={{textAlign: 'center', color: '#1A7FA8'}}*/}
+                    {/*            size={'1.0em'}*/}
+                    {/*           // onClick={addAppToWaybill}*/}
+                    {/*    />*/}
+                    {/*}*/}
+                    </td>
+                    <td className="table-text-center">{app.number}</td>
+                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.amount, 0)}</td>
+                    <td className="table-text-center">{app.items.reduce((total, i) => total + (i.amount * i.itemDto.units), 0)}</td>
+                    <td style={{fontSize: '0.9rem', width: '37%'}}>{app.destinationLocationDto.addressDto.city}{', '}
+                        {app.destinationLocationDto.addressDto.addressLine1}{', '}
+                        {app.destinationLocationDto.addressDto.addressLine2}</td>
+                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0)}</td>
+                </tr>
+            ))}
+        </React.Fragment>;
+
+    const body =
+        <React.Fragment>
+            <Table hover size="sm">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th className="table-text-center">Number</th>
+                    <th className="table-text-center">Total amount of item</th>
+                    <th className="table-text-center">Total units</th>
+                    <th>Destination location</th>
+                    <th className="table-text-center">Total cost, $</th>
+                </tr>
+                </thead>
+                <tbody>
+                {appRows}
+                </tbody>
+            </Table>
+            <Page page={page} onChange={changePage}/>
+        </React.Fragment>;
 
     return (
         <>
@@ -272,13 +373,14 @@ function EditWaybillModal(props) {
                     <div className="validation-error">
                         {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
                     </div>
-                    {waybillContentData}
+                    {waybill.sourceLocationWarehouseDto && waybillContentData}
                     <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
                         <Card.Header>
                         </Card.Header>
                         <Card.Body>
                             <Card.Text>
                             </Card.Text>
+                            {apps.length > 0 && body}
                         </Card.Body>
                     </Card>
 
