@@ -9,7 +9,6 @@ function Header() {
     const {user, setUser} = useContext(AuthContext);
 
     const checkPermission = user && user.currentCustomerId;
-    const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN";
 
     function getClass(regexOfClass) {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
@@ -47,7 +46,7 @@ function Header() {
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
+                    {checkPermission &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={categoryClass}
@@ -58,7 +57,7 @@ function Header() {
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
+                    {checkPermission &&
                     <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
                     <UserProfile/>
                 </Nav>
