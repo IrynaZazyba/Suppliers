@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -17,4 +19,5 @@ public class WriteOffActDto implements BaseDto {
     private WriteOffActReasonDto writeOffActReasonDto;
     private LocalDate deletedAt;
     private Long customerId;
+    private Set<WriteOffItemDto> items = new HashSet<>();
 }

@@ -669,64 +669,10 @@ Cookie: {{test}}
     "id": 3
   },
   "createdByUsersDto": {
-    "active": true,
-    "deletedAt": null,
-    "id": 1,
-    "name": "Bob",
-    "surname": "Roberts",
-    "birthday": "1990-10-15",
-    "username": "admin",
-    "password": null,
-    "email": "zazybo1.17@gmail.com",
-    "role": "ROLE_SYSTEM_ADMIN",
-    "addressDto": {
-      "id": 3,
-      "city": "NY",
-      "addressLine1": "Lexington Avenue",
-      "addressLine2": "Slobodskaya str.",
-      "state": {
-        "id": 4,
-        "state": "Alabama"
-      }
-    },
-    "customerDto": {
-      "id": 3,
-      "name": "SystemCompany",
-      "registrationDate": "2020-10-19",
-      "active": true,
-      "adminEmail": null
-    },
-    "warehouse": null
+    "id": 1
   },
   "lastUpdatedByUsersDto": {
-    "active": true,
-    "deletedAt": null,
-    "id": 1,
-    "name": "Bob",
-    "surname": "Roberts",
-    "birthday": "1990-10-15",
-    "username": "admin",
-    "password": null,
-    "email": "zazybo1.17@gmail.com",
-    "role": "ROLE_SYSTEM_ADMIN",
-    "addressDto": {
-      "id": 3,
-      "city": "NY",
-      "addressLine1": "Lexington Avenue",
-      "addressLine2": "Slobodskaya str.",
-      "state": {
-        "id": 4,
-        "state": "Alabama"
-      }
-    },
-    "customerDto": {
-      "id": 3,
-      "name": "SystemCompany",
-      "registrationDate": "2020-10-19",
-      "active": true,
-      "adminEmail": null
-    },
-    "warehouse": null
+    "id": 1
   },
   "applicationStatus": "OPEN",
   "wayBillDto": null,
@@ -736,17 +682,7 @@ Cookie: {{test}}
       "cost": 55.0,
       "amount": 99,
       "itemDto": {
-        "id": 2,
-        "upc": 8.5,
-        "label": "label",
-        "units": 80.5,
-        "categoryDto": {
-          "id": 2,
-          "category": "EL",
-          "taxRate": 11,
-          "deletedAt": null
-        },
-        "deletedAt": null
+        "id": 2
       },
       "deletedAt": null
     }
@@ -867,4 +803,103 @@ Cookie: {{test}}
 
 ###-------------------------------------------------Write-off acts and reasons--------------------------------------
 
+POST http://localhost:8080/customers/3/write-off-act
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
+{
+  "identifier": "Test",
+  "customerId": 3,
+  "totalSum": 20.0,
+  "totalAmount": 10000,
+  "deletedAt": null,
+  "items": [
+    {
+      "sum": 20.0,
+      "amount": 10000,
+      "writeOffActReasonDto": {
+        "id": 1
+      },
+      "itemDto": {
+        "id": 2
+      }
+    }
+  ]
+}
+
+
+
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/3/write-off-act
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/3/write-off-act/2
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/3/write-off-act/reason?reason=lost
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+GET http://localhost:8080/customers/3/write-off-act/555
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 404, "Response status is not 404 status="+response.status);
+    });
+%}
+
+###
+
+DELETE http://localhost:8080/customers/3/write-off-act/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
+
+###

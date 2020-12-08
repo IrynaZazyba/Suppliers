@@ -44,7 +44,7 @@ public class WriteOffActController {
     }
 
     @GetMapping
-    public Page<WriteOffActDto> getAllNotDeleted(Pageable pageable) {
+    public Page<WriteOffActDto> getAllOrderByDate(Pageable pageable) {
         return writeOffActService.findAll(pageable);
     }
 

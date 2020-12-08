@@ -1,17 +1,20 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.WriteOffAct;
+import by.itech.lab.supplier.domain.WriteOffItem;
 import by.itech.lab.supplier.dto.WriteOffActDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class WriteOffActMapper implements BaseMapper<WriteOffAct, WriteOffActDto> {
 
     private WriteOffActReasonMapper reasonMapper;
+    private WriteOffItemMapper writeOffItemMapper;
 
     @Override
     public WriteOffAct map(final WriteOffActDto dto) {
@@ -23,9 +26,7 @@ public class WriteOffActMapper implements BaseMapper<WriteOffAct, WriteOffActDto
                 .totalSum(dto.getTotalSum())
                 .totalAmount(dto.getTotalAmount())
                 .identifier(dto.getIdentifier())
-                .writeOffActReason(Objects.nonNull(dto.getWriteOffActReasonDto())
-                        ? reasonMapper.map(dto.getWriteOffActReasonDto())
-                        : null)
+                .items(dto.getItems().stream().map(writeOffItemMapper::map).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -39,9 +40,14 @@ public class WriteOffActMapper implements BaseMapper<WriteOffAct, WriteOffActDto
                 .totalSum(entity.getTotalSum())
                 .totalAmount(entity.getTotalAmount())
                 .identifier(entity.getIdentifier())
-                .writeOffActReasonDto(Objects.nonNull(entity.getWriteOffActReason())
-                        ? reasonMapper.map(entity.getWriteOffActReason())
-                        : null)
+                .items(entity.getItems().stream().map(writeOffItemMapper::map).collect(Collectors.toSet()))
                 .build();
+    }
+
+    public WriteOffAct mapItems(final WriteOffAct writeOffAct) {
+        for (WriteOffItem item : writeOffAct.getItems()) {
+            item.setWriteOffAct(writeOffAct);
+        }
+        return writeOffAct;
     }
 }

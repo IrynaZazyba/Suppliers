@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.domain.WriteOffAct;
 import by.itech.lab.supplier.dto.WriteOffActDto;
 import by.itech.lab.supplier.dto.WriteOffActReasonDto;
 import by.itech.lab.supplier.dto.mapper.WriteOffActMapper;
@@ -36,7 +37,10 @@ public class WriteOffActServiceImpl implements WriteOffActService {
     @Override
     @Transactional
     public WriteOffActDto save(final WriteOffActDto dto) {
-        return writeOffActMapper.map(writeOffActRepository.save(writeOffActMapper.map(dto)));
+        WriteOffAct actToCreate = writeOffActMapper.map(dto);
+        actToCreate = writeOffActMapper.mapItems(actToCreate);
+        actToCreate.setDate(LocalDate.now());
+        return writeOffActMapper.map(writeOffActRepository.save(actToCreate));
     }
 
     @Override

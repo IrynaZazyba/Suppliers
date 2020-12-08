@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: total_amount
-                  type: decimal(10,2)
+                  type: double
                   constraints:
                     nullable: false
   - changeSet:
@@ -44,3 +44,95 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements:  true
             stripComments:  true
+  - changeSet:
+      id: SUP-52-write-off-5
+      author: alexander_popovich
+      changes:
+        - createTable:
+            tableName: write_off_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: write_off_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: item_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sum
+                  type: decimal(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: SUP-52-write-off-6
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: write_off_id
+            baseTableName: write_off_items
+            constraintName: fk_write_off_id
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: write_off_act
+  - changeSet:
+      id: SUP-52-write-off-7
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: item_id
+            baseTableName: write_off_items
+            constraintName: fk_write_off_item_id
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: item
+  - changeSet:
+      id: SUP-52-write-off-8
+      author: alexander_popovich
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: reason_id
+            baseTableName: write_off_items
+            constraintName: fk_write_off_reason_id
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: write_off_act_reason
+  - changeSet:
+      id: SUP-52-write-off-9
+      author: alexander_popovich
+      changes:
+        changes:
+          - dropForeignKeyConstraint:
+              baseTableName: write_off_act
+              constraintName: fk_write_off_act_reason
+  - changeSet:
+      id: SUP-52-write-off-10
+      author: alexander_popovich
+      changes:
+        - dropColumn:
+            tableName: write_off_act
+            columns:
+              - column:
+                  name: reason_id
