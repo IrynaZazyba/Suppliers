@@ -4,6 +4,7 @@ import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.dto.AddressDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.service.PriceCalculationService;
 import by.itech.lab.supplier.service.TaxService;
 import by.itech.lab.supplier.service.WarehouseService;
@@ -51,8 +52,8 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
                 .getWarehouseItemContainingItems(sourceLocationId, itemsIds).stream()
                 .collect(Collectors.toMap(e -> e.getItem().getId(), Function.identity()));
 
-        final AddressDto destinationAddress = warehouseService.findById(sourceLocationId).get().getAddressDto();
-        final AddressDto sourceAddress = warehouseService.findById(destinationLocationId).get().getAddressDto();
+        final AddressDto destinationAddress = warehouseService.findById(sourceLocationId).getAddressDto();
+        final AddressDto sourceAddress = warehouseService.findById(destinationLocationId).getAddressDto();
         final double distance = calculateDistance(sourceAddress, destinationAddress);
         final Double tax = taxService.getTaxByState(destinationAddress.getState().getId()).getPercentage();
         app.getItems().forEach(item -> setItemPrice(item, whItems, distance, tax));

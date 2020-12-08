@@ -111,9 +111,11 @@ export default (props) => {
                         },
                         body: JSON.stringify(checkBoxes)
                     })
-                    setCheckBox([]);
-                    getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
-                }
+                        .then(function () {
+                            setCheckBox([]);
+                            getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
+                        })
+                  }
             });
     }
 

@@ -14,11 +14,11 @@ import java.util.Set;
 
 public interface WarehouseService{
 
-    Boolean isContainsIdentifier(final String identifier);
+    Boolean isWarehouseWithIdentifierExist(final String identifier);
 
-    Optional<WarehouseDto> save(final WarehouseDto warehouseDto);
+    WarehouseDto save(final WarehouseDto warehouseDto);
 
-    Optional<WarehouseDto> findById(final Long warehouseId);
+    WarehouseDto findById(final Long warehouseId);
 
     void deleteByIds(final List<Long> id);
 

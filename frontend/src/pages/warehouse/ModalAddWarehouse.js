@@ -71,8 +71,8 @@ function ModalAddWarehouse(props) {
 
     const addDispatcher = (e) => {
         if (e.length) {
-            const isContains = dispatchers.find(disp => e[0].id === disp.id)
-            if (!isContains) {
+            const isDispatcherUsed = dispatchers.find(disp => e[0].id === disp.id)
+            if (!isDispatcherUsed) {
                 e.map(dispatcher =>
                     setDispatchers(preState => ([
                         ...preState, dispatcher
@@ -127,24 +127,24 @@ function ModalAddWarehouse(props) {
     const addWarehouseHandler = (e) => {
         e.preventDefault();
 
-        let updateWarehouseDto = {};
+        let warehouseUpdateDto = {};
         if (dispatchers.length) {
             const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
-            updateWarehouseDto = {
+            warehouseUpdateDto = {
                 ...warehouseDto,
                 dispatchersId: dispatchersId,
                 customerId: props.currentCustomerId
             }
         } else {
-            updateWarehouseDto = {
+            warehouseUpdateDto = {
                 ...warehouseDto,
                 dispatchersId: [],
                 customerId: props.currentCustomerId
             }
         }
 
-        const validationResult = validateWarehouse(updateWarehouseDto, dropdownMenuName,
-            updateWarehouseDto.dispatchersId);
+        const validationResult = validateWarehouse(warehouseUpdateDto, dropdownMenuName,
+            warehouseUpdateDto.dispatchersId);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
@@ -152,44 +152,46 @@ function ModalAddWarehouse(props) {
         }));
 
         if (!validationResult.includes("identifier")) {
-            fetch(`/customers/${props.currentCustomerId}/warehouses/identifier?identifier=${updateWarehouseDto.identifier}`)
+            fetch(`/customers/${props.currentCustomerId}/warehouses/identifier?identifier=${warehouseUpdateDto.identifier}`)
                 .then(resp => resp.json())
                 .then(isIdentifierExist => {
 
-                    const validationResult = validateWarehouseWithIdentifierExist(updateWarehouseDto, dropdownMenuName,
-                        updateWarehouseDto.dispatchersId, isIdentifierExist);
+                    const validationResult = validateWarehouseWithIdentifierExist(warehouseUpdateDto, dropdownMenuName,
+                        warehouseUpdateDto.dispatchersId, isIdentifierExist);
                     setErrors(preState => ({
                         ...preState,
                         validationErrors: validationResult,
                         serverErrors: ''
                     }))
                 })
-        }
-        if (!validationResult.length) {
-            fetch('/customers/' + props.currentCustomerId + '/warehouses', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updateWarehouseDto)
-            })
-                .then(function (response) {
-                        if (response.status !== 201) {
-                            setErrors({
-                                serverErrors: "Something go wrong, try later",
-                            });
-                        } else {
-                            setErrors(preState => ({
-                                ...preState,
-                                validationErrors: [],
-                                serverErrors: ''
-                            }));
-                            setDispatchers([]);
-                            setDropdownMenuName("select type");
-                            props.onChange(false, warehouseDto)
-                        }
+                .then(function() {
+                    if (!validationResult.length) {
+                        fetch(`/customers/${props.currentCustomerId}/warehouses`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(warehouseUpdateDto)
+                        })
+                            .then(function (response) {
+                                    if (response.status !== 201) {
+                                        setErrors({
+                                            serverErrors: "Something go wrong, try later",
+                                        });
+                                    } else {
+                                        setErrors(preState => ({
+                                            ...preState,
+                                            validationErrors: [],
+                                            serverErrors: ''
+                                        }));
+                                        setDispatchers([]);
+                                        setDropdownMenuName("select type");
+                                        props.onChange(false, warehouseDto)
+                                    }
+                                }
+                            )
                     }
-                )
+                })
         }
     }
 
@@ -281,7 +283,8 @@ function ModalAddWarehouse(props) {
                                     {dropdownMenuName}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item onClick={handleType.bind(this, "FACTORY")}>FACTORY</Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={handleType.bind(this, "FACTORY")}>FACTORY</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>

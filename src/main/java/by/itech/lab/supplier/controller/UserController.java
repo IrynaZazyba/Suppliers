@@ -104,7 +104,6 @@ public class UserController {
         userService.changeActiveStatus(id, status);
     }
 
-
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_ACTIVATE)
     public void changeActive(@PathVariable Long id) {
         userService.changeActive(id);
@@ -115,12 +114,6 @@ public class UserController {
     @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
-    }
-
-    @PostMapping(URL_DISPATCHERS + URL_DELETE_LIST)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteWarehouseFromUsers(@RequestBody List<Long> dispatchers) {
-        userService.deleteWarehouseFromUsers(dispatchers);
     }
 
     @PostMapping(URL_DELETE_LIST)

@@ -23,7 +23,8 @@ function ModalEditWarehouse(props) {
             state: {}
         },
         totalCapacity: '',
-        dispatchersId: []
+        dispatchersId: [],
+        irrelevantDispatchersId : []
     });
 
     const [errors, setErrors] = useState({
@@ -33,7 +34,7 @@ function ModalEditWarehouse(props) {
 
     useEffect(() => {
         if (props.editWarehouse.editShow === true) {
-            fetch("/customers/" + props.currentCustomerId + "/warehouses/" + props.editWarehouse.warehouse.id)
+            fetch(`/customers/${props.currentCustomerId}/warehouses/${props.editWarehouse.warehouse.id}`)
                 .then(response => response.json())
                 .then(res => {
                     setWarehouseDto(res);
@@ -51,26 +52,6 @@ function ModalEditWarehouse(props) {
             .then(res => {
                 setStateOptions(res);
             });
-    };
-
-    const deleteWarehouseFromDispatchers = (dispatcherDeleteList) => {
-        if (dispatcherDeleteList.length) {
-            fetch(`/customers/${props.currentCustomerId}/users/dispatchers/delete-list`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dispatcherDeleteList)
-            })
-                .then(function (response) {
-                        if (response.status !== 204) {
-                            setErrors({
-                                serverErrors: "Something go wrong, try later"
-                            });
-                        }
-                    }
-                )
-        }
     };
 
     const handleDispatcherSearch = (query) => {
@@ -115,8 +96,8 @@ function ModalEditWarehouse(props) {
 
     const addDispatcher = (e) => {
         if (e.length) {
-            const isContains = dispatchers.find(disp => e[0].id === disp.id)
-            if (!isContains) {
+            const isDispatcherUsed = dispatchers.find(disp => e[0].id === disp.id)
+            if (!isDispatcherUsed) {
                 e.map(dispatcher =>
                     setDispatchers(preState => ([
                         ...preState, dispatcher
@@ -156,8 +137,8 @@ function ModalEditWarehouse(props) {
     const editWarehouseHandler = (e) => {
         e.preventDefault();
         const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
-        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId, customerId: props.currentCustomerId}
-        deleteWarehouseFromDispatchers(dispatcherDeleteList);
+        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId,
+            customerId: props.currentCustomerId, irrelevantDispatchersId : dispatcherDeleteList}
 
         let validationResult = validateEditWarehouse(updateWarehouseDto, dispatchersId);
         setErrors(preState => ({
@@ -165,8 +146,8 @@ function ModalEditWarehouse(props) {
             validationErrors: validationResult
         }));
         if (!validationResult.length) {
-            fetch('/customers/' + props.currentCustomerId + '/warehouses/' + warehouseDto.id, {
-                method: 'PUT',
+            fetch(`/customers/${props.currentCustomerId}/warehouses/${warehouseDto.id}`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -185,7 +166,7 @@ function ModalEditWarehouse(props) {
                             validationErrors: []
                         }));
                         setDispatchers([]);
-                        setDispatcherDeleteList([])
+                        setDispatcherDeleteList([]);
                         props.onChange(false, warehouseDto);
                     }
                 });

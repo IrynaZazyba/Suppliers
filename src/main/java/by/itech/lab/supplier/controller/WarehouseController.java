@@ -5,6 +5,7 @@ import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
+import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
@@ -51,13 +51,13 @@ public class WarehouseController {
     }
 
     @GetMapping(URL_ID_PARAMETER)
-    public Optional<WarehouseDto> findById(@PathVariable final Long id) {
+    public WarehouseDto findById(@PathVariable final Long id) {
         return warehouseService.findById(id);
     }
 
     @GetMapping(URL_IDENTIFIER)
     public Boolean isContainsIdentifier(@RequestParam final String identifier) {
-        return warehouseService.isContainsIdentifier(identifier);
+        return warehouseService.isWarehouseWithIdentifierExist(identifier);
     }
 
     @GetMapping(URL_RETAILER_ID_PARAMETER)
@@ -68,13 +68,13 @@ public class WarehouseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Optional<WarehouseDto> save(@Valid @RequestBody final WarehouseDto warehouseDto) {
+    public WarehouseDto save(@Valid @RequestBody final WarehouseDto warehouseDto) {
         return warehouseService.save(warehouseDto);
     }
 
-    @PutMapping(URL_ID_PARAMETER)
+    @PostMapping(URL_ID_PARAMETER)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Optional<WarehouseDto> update(@Valid @RequestBody final WarehouseDto warehouseDto) {
+    public WarehouseDto update(@Valid @RequestBody final WarehouseDto warehouseDto) {
         return warehouseService.save(warehouseDto);
     }
 

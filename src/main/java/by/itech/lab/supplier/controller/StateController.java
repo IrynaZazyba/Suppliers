@@ -23,6 +23,6 @@ public class StateController {
 
     @GetMapping
     public List<StateDto> getListByState(@RequestParam String state) {
-        return stateService.findListByState(state);
+        return stateService.findByStates(state);
     }
 }

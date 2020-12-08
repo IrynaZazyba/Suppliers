@@ -34,4 +34,6 @@ public class WarehouseDto implements BaseDto {
     private AddressDto addressDto;
     private Long retailerId;
     private List<Long> dispatchersId = new ArrayList<>();
+    private List<Long> irrelevantDispatchersId = new ArrayList<>();
+
 }

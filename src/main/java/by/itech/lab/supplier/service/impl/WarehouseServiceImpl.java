@@ -69,9 +69,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Optional<WarehouseDto> findById(final Long warehouseId) {
-        return Optional.ofNullable(warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist")));
+    public WarehouseDto findById(final Long warehouseId) {
+        return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
     }
 
     @Override
@@ -91,18 +91,18 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Boolean isContainsIdentifier(final String identifier) {
-        Long id = warehouseRepository.findByIdentifier(identifier);
+    public Boolean isWarehouseWithIdentifierExist(final String identifier) {
+        Long id = warehouseRepository.findWarehouseIdByIdentifier(identifier);
         return id != null;
     }
 
     @Override
     @Transactional
-    public Optional<WarehouseDto> save(final WarehouseDto warehouseDto) {
+    public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
                 .map(item -> update(warehouseDto))
                 .orElseGet(() -> create(warehouseDto));
-        return Optional.ofNullable(warehouseMapper.map(warehouse));
+        return warehouseMapper.map(warehouse);
     }
 
     private Warehouse create(final WarehouseDto warehouseDto) {
@@ -117,6 +117,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         warehouseMapper.map(warehouseDto, warehouse);
         Warehouse saved = warehouseRepository.save(warehouse);
         userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
+        userService.deleteWarehouseFromUsers(warehouseDto.getIrrelevantDispatchersId());
         return saved;
     }
 

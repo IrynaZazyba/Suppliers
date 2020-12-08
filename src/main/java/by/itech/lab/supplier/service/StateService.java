@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StateService{
 
-    List<StateDto> findListByState(String state);
+    List<StateDto> findByStates(String state);
 
     Page<StateDto> findAll(Pageable pageable);
 }
