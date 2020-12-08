@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping(URL_DISPATCHERS)
     public List<UserDto> getListByUsername(@RequestParam String username) {
-        return userService.findListByDispatcherUsername(username);
+        return userService.findUsersByDispatcherUsername(username);
     }
 
     @GetMapping(URL_DISPATCHERS + URL_ID_PARAMETER)
