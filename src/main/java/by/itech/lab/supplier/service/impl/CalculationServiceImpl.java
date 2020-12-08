@@ -82,8 +82,6 @@ public class CalculationServiceImpl implements CalculationService {
         orderedWarehouses.add(source);
 
         while (warehouseDto.size() != 0) {
-            System.out.println("****************");
-
             final WarehouseDto nextPoint = calculate(orderedWarehouses.getLast(), warehouseDto);
             orderedWarehouses.add(nextPoint);
             warehouseDto.removeIf(wh -> wh.getId().equals(nextPoint.getId()));
@@ -96,7 +94,6 @@ public class CalculationServiceImpl implements CalculationService {
         WarehouseDto whTemp = source;
         for (WarehouseDto wh : destinations) {
             double distance = calculateDistance(source.getAddressDto(), wh.getAddressDto());
-            System.out.println(distance);
             if (distanceTemp == 0.0) {
                 distanceTemp = distance;
             }

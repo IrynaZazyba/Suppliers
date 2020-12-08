@@ -66,7 +66,7 @@ public class WaybillServiceImpl implements WaybillService {
         final WayBill saved = waybillRepository.save(wayBill);
 
         if (Objects.isNull(wayBillDto.getId())) {
-            final List<ApplicationDto> appDtos = apps.stream().peek(a -> a.setWayBillId(saved.getId()))
+            final List<ApplicationDto> appDtos = apps.stream().peek(app -> app.setWayBillId(saved.getId()))
                     .collect(Collectors.toList());
             applicationService.saveAll(appDtos);
 
