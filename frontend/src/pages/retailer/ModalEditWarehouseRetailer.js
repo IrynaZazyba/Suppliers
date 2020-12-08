@@ -42,19 +42,14 @@ function ModalEditWarehouseRetailer(props) {
             setErrors: '',
             validationErrors: []
         });
-        e.length > 0 ?
-            setWarehouseDto(preState => ({
-                ...preState,
-                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].stateZone}}
-            })) :
-            setWarehouseDto(preState => ({
-                ...preState,
-                addressDto: {...preState.addressDto, state: {id: '', state: ''}}
-            }));
+        setWarehouseDto(preState => ({
+            ...preState,
+            addressDto: {...preState.addressDto, state: e.length ? {id: e[0].id, state: e[0].stateZone} : {id: '', state: ''}}
+        }))
     };
 
     useEffect(() => {
-        if (props.props.editShow === true) {
+        if (props.props.editShow) {
             setWarehouseDto(props.props.warehouse);
 
         }
@@ -104,7 +99,7 @@ function ModalEditWarehouseRetailer(props) {
             validationErrors: validationResult,
             serverErrors: ''
         }));
-        if (validationResult.length === 0) {
+        if (!validationResult.length) {
             setWarehouseDto(warehouseDto);
             props.onEditWarehouse(warehouseDto);
             props.onChange(false, warehouseDto);

@@ -17,7 +17,7 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     @Modifying
     @Query("update Warehouse set deletedAt = current_timestamp where id in :id")
-    void delete(@Param("id") List<Long> id);
+    void deleteByWarehouseIds(@Param("id") List<Long> id);
 
     @Modifying
     @Query("update Warehouse set deletedAt = current_timestamp where retailerId = :id")

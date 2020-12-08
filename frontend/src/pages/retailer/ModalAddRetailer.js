@@ -1,25 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import validateCustomer from "../../validation/CustomerValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
 import CardContainer from "../../components/CardContainer";
 import Table from "react-bootstrap/Table";
-import Page from "../../components/Page";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import TogglePage from "../../components/TogglePage";
 import ModalEditWarehouseRetailer from "./ModalEditWarehouseRetailer";
 import ModalAddWarehouseRetailer from "./ModalAddWarehouseRetailer";
 import {FaEdit} from "react-icons/fa/index";
 import "./styles.css"
-import * as JSONwarehouses from "react-bootstrap";
-import {forEach} from "react-bootstrap/ElementChildren";
+
 function ModalAddRetailer(props) {
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     const [retailerDto, setRetailerDto] = useState({
         fullName: '',
@@ -28,9 +22,7 @@ function ModalAddRetailer(props) {
         warehouses: []
     });
 
-    const warehouse = localStorage.
-    getItem("warehouse") != null ? localStorage.
-    getItem("warehouse"): null;
+    const warehouse = localStorage.getItem("warehouse") != null ? localStorage.getItem("warehouse") : null;
 
     const [checkBoxes, setCheckBox] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
@@ -45,7 +37,7 @@ function ModalAddRetailer(props) {
     }
     const editWarehouseHandler = warehouse => {
         setWarehouses(preState =>
-         preState.map(wh => wh.identifier === warehouse.identifier ? warehouse : wh)
+            preState.map(wh => wh.identifier === warehouse.identifier ? warehouse : wh)
         )
     }
     const [errors, setErrors] = useState({
@@ -56,7 +48,7 @@ function ModalAddRetailer(props) {
     const handleFullName = (e) => {
         setRetailerDto(preState => ({
             ...preState,
-           fullName: e.target.value
+            fullName: e.target.value
         }));
     };
     const handleId = (e) => {
@@ -73,34 +65,33 @@ function ModalAddRetailer(props) {
             validationErrors: ''
         }));
 
-            fetch(`/customers/${currentCustomerId}/retailers`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(retailerDto)
-            })
-                .then(function (response) {
-                    if (response.status !== 201) {
-                        setErrors({
-                            serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
-                        });
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
-                            validationErrors: []
-                        }));
-                        props.onChange(false, retailerDto);
-                    }
-                });
+        fetch(`/customers/${currentCustomerId}/retailers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(retailerDto)
+        })
+            .then(function (response) {
+                if (response.status !== 201) {
+                    setErrors({
+                        serverErrors: "Something go wrong, try later",
+                        validationErrors: ''
+                    });
+                } else {
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: []
+                    }));
+                    props.onChange(false, retailerDto);
+                }
+            });
 
     };
 
     const handleCheckedChange = (warehouseId) => {
-            checkBoxes.push(warehouseId);
+        setCheckBox(preState => [...preState, warehouse])
     };
-
 
 
     const closeModalEdit = (e) => {
@@ -151,7 +142,8 @@ function ModalAddRetailer(props) {
     const modals =
         <React.Fragment>
 
-            <ModalEditWarehouseRetailer props={editWarehouse} onEditWarehouse={editWarehouseHandler} onChange={closeModalEdit}
+            <ModalEditWarehouseRetailer props={editWarehouse} onEditWarehouse={editWarehouseHandler}
+                                        onChange={closeModalEdit}
                                         currentCustomerId={currentCustomerId}/>
             <ModalAddWarehouseRetailer props={lgShow} onAddWarehouse={addWarehouseHandler} onChange={closeModalAdd}
                                        currentCustomerId={currentCustomerId}

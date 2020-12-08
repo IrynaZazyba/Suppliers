@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
 import java.util.Optional;
 
 @Service
@@ -46,8 +45,8 @@ public class RetailerServiceImpl implements RetailerService {
 
     @Override
     @Transactional
-    public int changeActive(Long id, Boolean status) {
-        return retailerRepository.setStatus(status, id);
+    public int changeActiveStatusRetailer(Long id, Boolean status) {
+        return retailerRepository.updateRetailerStatus(status, id);
     }
 
 

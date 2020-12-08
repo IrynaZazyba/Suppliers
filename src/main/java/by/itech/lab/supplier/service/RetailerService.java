@@ -13,7 +13,7 @@ public interface RetailerService extends BaseService<RetailerDto> {
 
     void delete(Long id);
 
-    int changeActive(Long id, Boolean status);
+    int changeActiveStatusRetailer(Long id, Boolean status);
 
     Page<RetailerDto> findAllByActive(final Pageable pageable, final Boolean status);
 }

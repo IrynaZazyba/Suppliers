@@ -47,8 +47,8 @@ public class RetailerController {
     }
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
-    public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
-        retailerService.changeActive(id, status);
+    public void changeRetailerStatus(@PathVariable Long id, @RequestBody boolean status) {
+        retailerService.changeActiveStatusRetailer(id, status);
     }
 
     @PostMapping
