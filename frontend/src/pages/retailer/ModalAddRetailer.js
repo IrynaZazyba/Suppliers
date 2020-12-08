@@ -89,7 +89,7 @@ function ModalAddRetailer(props) {
 
     };
 
-    const handleCheckedChange = (warehouseId) => {
+    const handleCheckedChange = (warehouse) => {
         setCheckBox(preState => [...preState, warehouse])
     };
 
@@ -107,14 +107,15 @@ function ModalAddRetailer(props) {
         setLgShow(e);
     };
 
-    function deleteWarehouse() {
-        const filtered = warehouses.filter(
-            function (e) {
-                return this.indexOf(e) < 0;
-            },
-            checkBoxes
-        );
-        setWarehouses(filtered);
+    function removeFromWarehouseArray() {
+        setWarehouses(preState =>
+            preState.filter(
+                function (e) {
+                    return this.indexOf(e) < 0;
+                },
+                checkBoxes
+            )
+        )
     }
 
     const tableRows = warehouses.filter(warehouse => warehouse != null).map(warehouse => (
@@ -177,7 +178,7 @@ function ModalAddRetailer(props) {
 
                 </Col>
                 <Col md={10}>
-                    <Button className="mainButton" size="sm" onClick={() => deleteWarehouse()}>
+                    <Button className="mainButton" size="sm" onClick={removeFromWarehouseArray}>
                         Delete
                     </Button>
                 </Col>
