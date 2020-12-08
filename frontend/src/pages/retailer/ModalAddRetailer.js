@@ -40,7 +40,14 @@ function ModalAddRetailer(props) {
         warehouse: []
     });
 
-
+    const addWarehouseHandler = warehouse => {
+        setWarehouses(preState => [...preState, warehouse]);
+    }
+    const editWarehouseHandler = warehouse => {
+        setWarehouses(preState =>
+         preState.map(wh => wh.identifier === warehouse.identifier ? warehouse : wh)
+        )
+    }
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
@@ -60,17 +67,12 @@ function ModalAddRetailer(props) {
     };
 
     const addRetailerHandler = (e) => {
-        e.preventDefault();
-       // let validationResult = validateCustomer(retailerDto);
+
         setErrors(preState => ({
             ...preState,
             validationErrors: ''
         }));
-     //   if (validationResult.length === 0) {
-        console.log(warehouse);
-        warehouses.push(warehouse);
-       // setWarehouses(warehouses);
-        console.log(warehouses);
+
             fetch(`/customers/${currentCustomerId}/retailers`, {
                 method: 'POST',
                 headers: {
@@ -92,7 +94,7 @@ function ModalAddRetailer(props) {
                         props.onChange(false, retailerDto);
                     }
                 });
-    //    }
+
     };
 
     const handleCheckedChange = (warehouseId) => {
@@ -101,75 +103,28 @@ function ModalAddRetailer(props) {
 
 
 
-    useEffect(() => {
-
-        console.log(warehouse);
-        warehouses.push(JSON.parse(warehouse));
-        localStorage.removeItem("warehouse");
-        console.log(warehouses);
-        if (warehouse != null && warehouses.length!=0){
-
-      }
-
-
-        }, []);
-
-    function getWarehouses(url) {
-        fetch(url)
-            .then(response => response.json())
-            .then(commits => {
-            //    setWarehouses(commits.content);
-                console.log(commits.content)
-            });
-    }
-
-    const closeModalEdit = (e, warehouseDto) => {
+    const closeModalEdit = (e) => {
         setEditWarehouse(
             preState => ({
                 ...preState,
                 editShow: false
             }));
-        if (warehouseDto) {
-            getWarehouses(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`);
-        }
+
     };
 
-    const closeModalAdd = (e, warehouseDto) => {
+    const closeModalAdd = (e) => {
         setLgShow(e);
-        if (warehouseDto) {
-            getWarehouses(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`);
-        }
     };
 
     function deleteWarehouse() {
-        console.log( JSON.stringify(checkBoxes));
         const filtered = warehouses.filter(
             function (e) {
                 return this.indexOf(e) < 0;
             },
             checkBoxes
         );
-        console.log(filtered);
-        // fetch(`/customers/${currentCustomerId}/warehouses/delete-list`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(checkBoxes)
-        // })
-        //     .then(response => {
-        //         if (response.status !== 204) {
-        //             setErrors({
-        //                 errorMessage: "Warehouse can not be deleted, because it is already used in application"
-        //             })
-        //         } else {
-        //             setCheckBox([]);
-        //             getWarehouses(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`);
-        //         }
-        //     });
+        setWarehouses(filtered);
     }
-
-
 
     const tableRows = warehouses.filter(warehouse => warehouse != null).map(warehouse => (
         <tr key={warehouse.identifier}>
@@ -196,9 +151,9 @@ function ModalAddRetailer(props) {
     const modals =
         <React.Fragment>
 
-            <ModalEditWarehouseRetailer props={editWarehouse} onChange={closeModalEdit}
+            <ModalEditWarehouseRetailer props={editWarehouse} onEditWarehouse={editWarehouseHandler} onChange={closeModalEdit}
                                         currentCustomerId={currentCustomerId}/>
-            <ModalAddWarehouseRetailer props={lgShow} onChange={closeModalAdd}
+            <ModalAddWarehouseRetailer props={lgShow} onAddWarehouse={addWarehouseHandler} onChange={closeModalAdd}
                                        currentCustomerId={currentCustomerId}
             />
         </React.Fragment>;
@@ -227,6 +182,7 @@ function ModalAddRetailer(props) {
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                         Add
                     </Button>
+
                 </Col>
                 <Col md={10}>
                     <Button className="mainButton" size="sm" onClick={() => deleteWarehouse()}>

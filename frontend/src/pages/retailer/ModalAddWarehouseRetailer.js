@@ -1,16 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import Dropdown from "react-bootstrap/Dropdown";
 import validateWarehouse from "../../validation/WarehouseValidationRules";
 
 function ModalAddWarehouseRetailer(props) {
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     const ref = React.createRef();
     const [dropdownMenuName, setDropdownMenuName] = useState("select type");
@@ -66,7 +63,6 @@ function ModalAddWarehouseRetailer(props) {
     };
 
 
-
     const handleCity = (e) => {
         setWarehouseDto(preState => ({
             ...preState,
@@ -104,9 +100,10 @@ function ModalAddWarehouseRetailer(props) {
             serverErrors: ''
         }));
         if (validationResult.length === 0) {
-            console.log(JSON.stringify(warehouseDto));
+
+            props.onAddWarehouse(warehouseDto);
+
             setWarehouseDto(warehouseDto);
-            localStorage.setItem("warehouse", JSON.stringify(warehouseDto));
             props.onChange(false, warehouseDto)
 
         }

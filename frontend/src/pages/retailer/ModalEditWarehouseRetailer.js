@@ -4,13 +4,10 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import Dropdown from "react-bootstrap/Dropdown";
 import validateWarehouse from "../../validation/WarehouseValidationRules";
 
 function ModalEditWarehouseRetailer(props) {
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     const ref = React.createRef();
     const [warehouseDto, setWarehouseDto] = useState({
@@ -58,12 +55,10 @@ function ModalEditWarehouseRetailer(props) {
 
     useEffect(() => {
         if (props.props.editShow === true) {
-
-                    setWarehouseDto(JSON.parse(localStorage.getItem("warehouse")));
+            setWarehouseDto(props.props.warehouse);
 
         }
     }, [props.props.editShow]);
-
 
 
     const handleCity = (e) => {
@@ -111,8 +106,8 @@ function ModalEditWarehouseRetailer(props) {
         }));
         if (validationResult.length === 0) {
             setWarehouseDto(warehouseDto);
-            localStorage.setItem("warehouse", JSON.stringify(warehouseDto));
-
+            props.onEditWarehouse(warehouseDto);
+            props.onChange(false, warehouseDto);
         }
     };
 
