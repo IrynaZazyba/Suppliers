@@ -367,7 +367,7 @@ function AddWaybillModal(props) {
         }
     };
 
-    function renderRoute (start, end, waypoints){
+    function renderRoute(start, end, waypoints) {
         const directionsService = new google.maps.DirectionsService();
         let directionsRenderer = new google.maps.DirectionsRenderer();
         let requests = {
@@ -688,15 +688,15 @@ function AddWaybillModal(props) {
                     <div className="validation-error">
                         {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
                     </div>
-                    <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
+                    {apps.length > 0 && <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
                         <Card.Header>
                         </Card.Header>
                         <Card.Body>
                             <Card.Text>
                             </Card.Text>
-                            {apps.length > 0 && body}
+                            {body}
                         </Card.Body>
-                    </Card>
+                    </Card>}
 
                     <Row style={{marginTop: '15px'}}>
                         <Col sm={6}>
