@@ -10,16 +10,27 @@ import Page from "../../components/Page";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
-import ModalEditWarehouse from "../warehouse/ModalEditWarehouse";
-import ModalAddWarehouse from "../warehouse/ModalAddWarehouse";
+import ModalEditWarehouseRetailer from "./ModalEditWarehouseRetailer";
+import ModalAddWarehouseRetailer from "./ModalAddWarehouseRetailer";
 import {FaEdit} from "react-icons/fa/index";
 import "./styles.css"
+import * as JSONwarehouses from "react-bootstrap";
+import {forEach} from "react-bootstrap/ElementChildren";
 function ModalAddRetailer(props) {
+    const currentCustomerId = localStorage.
+    getItem("currentCustomerId") != null ? localStorage.
+    getItem("currentCustomerId"): 0;
 
     const [retailerDto, setRetailerDto] = useState({
         fullName: '',
-        identifier: ''
+        identifier: '',
+        customerId: currentCustomerId,
+        warehouses: []
     });
+
+    const warehouse = localStorage.
+    getItem("warehouse") != null ? localStorage.
+    getItem("warehouse"): null;
 
     const [checkBoxes, setCheckBox] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
@@ -29,9 +40,6 @@ function ModalAddRetailer(props) {
         warehouse: []
     });
 
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
 
     const [errors, setErrors] = useState({
         validationErrors: [],
@@ -59,6 +67,10 @@ function ModalAddRetailer(props) {
             validationErrors: ''
         }));
      //   if (validationResult.length === 0) {
+        console.log(warehouse);
+        warehouses.push(warehouse);
+       // setWarehouses(warehouses);
+        console.log(warehouses);
             fetch(`/customers/${currentCustomerId}/retailers`, {
                 method: 'POST',
                 headers: {
@@ -84,32 +96,29 @@ function ModalAddRetailer(props) {
     };
 
     const handleCheckedChange = (warehouseId) => {
-        const index = checkBoxes.indexOf(warehouseId);
-        if (index > -1) {
-            checkBoxes.splice(index, 1);
-        } else {
             checkBoxes.push(warehouseId);
-        }
     };
 
 
 
     useEffect(() => {
-        fetch(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
-                        ...preState,
-                        destination: res
-                    })
-                );
-            });  }, []);
+
+        console.log(warehouse);
+        warehouses.push(JSON.parse(warehouse));
+        localStorage.removeItem("warehouse");
+        console.log(warehouses);
+        if (warehouse != null && warehouses.length!=0){
+
+      }
+
+
+        }, []);
 
     function getWarehouses(url) {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                setWarehouses(commits.content);
+            //    setWarehouses(commits.content);
                 console.log(commits.content)
             });
     }
@@ -133,53 +142,64 @@ function ModalAddRetailer(props) {
     };
 
     function deleteWarehouse() {
-        fetch(`/customers/${currentCustomerId}/warehouses/delete-list`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        console.log( JSON.stringify(checkBoxes));
+        const filtered = warehouses.filter(
+            function (e) {
+                return this.indexOf(e) < 0;
             },
-            body: JSON.stringify(checkBoxes)
-        })
-            .then(response => {
-                if (response.status !== 204) {
-                    setErrors({
-                        errorMessage: "Warehouse can not be deleted, because it is already used in application"
-                    })
-                } else {
-                    setCheckBox([]);
-                    getWarehouses(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`);
-                }
-            });
+            checkBoxes
+        );
+        console.log(filtered);
+        // fetch(`/customers/${currentCustomerId}/warehouses/delete-list`, {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(checkBoxes)
+        // })
+        //     .then(response => {
+        //         if (response.status !== 204) {
+        //             setErrors({
+        //                 errorMessage: "Warehouse can not be deleted, because it is already used in application"
+        //             })
+        //         } else {
+        //             setCheckBox([]);
+        //             getWarehouses(`/customers/${currentCustomerId}/warehouses/type?type=RETAILER`);
+        //         }
+        //     });
     }
-    // const tableRows = warehouses.map(warehouse => (
-    //     <tr key={warehouse.id}>
-    //         <td>{warehouse.identifier}</td>
-    //         <td>{warehouse.type}</td>
-    //         <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
-    //             {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
-    //         <td>{warehouse.totalCapacity}</td>
-    //         <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
-    //                     size={'1.3em'}
-    //                     onClick={() => {
-    //                         setEditWarehouse({
-    //                             editShow: true,
-    //                             warehouse: warehouse
-    //                         });
-    //                     }}/>
-    //         </td>
-    //         <td>
-    //             <input type="checkbox" onClick={() => handleCheckedChange(warehouse.id)}/>
-    //         </td>
-    //     </tr>
-    // ));
+
+
+
+    const tableRows = warehouses.filter(warehouse => warehouse != null).map(warehouse => (
+        <tr key={warehouse.identifier}>
+            <td>{warehouse.identifier}</td>
+            <td>{warehouse.type}</td>
+            <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
+                {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
+            <td>{warehouse.totalCapacity}</td>
+            <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
+                        size={'1.3em'}
+                        onClick={() => {
+                            setEditWarehouse({
+                                editShow: true,
+                                warehouse: warehouse
+                            });
+                        }}/>
+            </td>
+            <td>
+                <input type="checkbox" onClick={() => handleCheckedChange(warehouse)}/>
+            </td>
+        </tr>
+    ));
 
     const modals =
         <React.Fragment>
 
-            <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
-                                currentCustomerId={props.currentCustomerId}/>
-            <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
-                               currentCustomerId={props.currentCustomerId}
+            <ModalEditWarehouseRetailer props={editWarehouse} onChange={closeModalEdit}
+                                        currentCustomerId={currentCustomerId}/>
+            <ModalAddWarehouseRetailer props={lgShow} onChange={closeModalAdd}
+                                       currentCustomerId={currentCustomerId}
             />
         </React.Fragment>;
 
@@ -195,7 +215,7 @@ function ModalAddRetailer(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {/*{tableRows}*/}
+                {tableRows}
                 </tbody>
             </Table>
         </React.Fragment>;

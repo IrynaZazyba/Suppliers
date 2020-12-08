@@ -8,7 +8,9 @@ import Warehouse from "./pages/warehouse/Warehouses";
 function Header() {
 
     const {user, setUser} = useContext(AuthContext);
-
+    const currentCustomerId = localStorage.
+    getItem("currentCustomerId") != null ? localStorage.
+    getItem("currentCustomerId"): 0;
     const checkPermission = user && user.currentCustomerId;
     const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
 
@@ -37,30 +39,31 @@ function Header() {
                 <Nav className="mr-auto navigation">
                     {checkPermission &&
                     <Nav.Link className={profileClass}
-                              href={`/customers/${user.currentCustomerId}/profile`}>Profile
+                              href={`/customers/${currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
                     {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
                     <Nav.Link className={appClass}
-                              href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
+                              href={`/customers/${currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     {checkPermission &&
                     <Nav.Link className={warehousesClass}
-                              href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
+                              href={`/customers/${currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
                     {isPermittedAndRoleAdmin &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={categoryClass}
-                              href={`/customers/${user.currentCustomerId}/category`}>
+                              href={`/customers/${currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={itemClass}
-                              href={`/customers/${user.currentCustomerId}/item`}>Items
+                              href={`/customers/${currentCustomerId}/item`}>Items
                     </Nav.Link>}
+                    {isPermittedAndRoleAdmin &&
                     <Nav.Link className={retailerClass}
-                              href={`/customers/${user.currentCustomerId}/retailers`}>Retailers
+                              href={`/customers/${currentCustomerId}/retailers`}>Retailers
                     </Nav.Link>}
                     <UserProfile/>
                 </Nav>

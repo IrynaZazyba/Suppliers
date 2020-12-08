@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -16,5 +18,5 @@ public class RetailerDto implements BaseDto {
     private LocalDate deletedAt;
     private Boolean active;
     private Long customerId;
-  //  private WarehouseDto warehouseDto;
+    private Set<WarehouseDto> warehouses = new HashSet<>();
 }
