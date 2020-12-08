@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -61,7 +62,7 @@ public class Application implements BaseEntity {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus applicationStatus;
     @ManyToOne
-    @JoinColumn(name = "waybill_id")
+    @JoinColumn(name = "waybill_id", referencedColumnName = "id")
     private WayBill wayBill;
     private LocalDate deletedAt;
     @OneToMany(mappedBy = "application", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)

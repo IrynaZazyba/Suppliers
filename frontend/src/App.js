@@ -6,14 +6,14 @@ import Footer from './Footer';
 import {Route, Switch} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedComponent from "./components/ProtectedComponent";
-
+import Users from "./pages/user/Users";
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
-import Users from "./pages/user/Users"
 import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
+import Cars from "./pages/car/Cars";
 import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
 
@@ -44,8 +44,7 @@ function App() {
     };
 
     const renderUser = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
-        } render={(() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
             return <Users/>
         })}/>
     };
@@ -72,6 +71,12 @@ function App() {
         })}/>
     };
 
+    const renderCar = () => {
+       return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" | user.role === "ROLE_ADMIN"} render={(() => {
+            return <Cars/>
+        })}/>
+    };
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -87,14 +92,13 @@ function App() {
             <Switch>
                 <Route exact path='/' component={Login}/>
                 <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
-                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>
-                <Route path={'/customers/' + currentCustomerId + '/application'} render={renderApplication}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
+                <Route path={'/cars'} render={renderCar}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

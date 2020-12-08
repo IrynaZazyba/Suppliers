@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -44,4 +45,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
                                                          @Param("flag") Boolean roleFlag,
                                                          @Param("status") ApplicationStatus status,
                                                          @Param("warehouseId") Long warehouseId);
+
+    List<Application> findAllByWayBillIdIn(List<Long> waybillsIds);
+
+    List<Application> findAllByIdIn(List<Long> ids);
+
 }

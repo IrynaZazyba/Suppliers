@@ -5,6 +5,7 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -29,4 +30,10 @@ public interface ApplicationService extends BaseService<ApplicationDto> {
     Set<ApplicationItemDto> getItemsById(List<Long> itemsId, Long applicationId);
 
     void setItemInApplicationAcceptedAt(List<Long> ids);
+
+    List<ApplicationDto> getApplicationsByWaybillIds(List<Long> ids);
+
+    List<ApplicationDto> getApplicationsByIds(List<Long> appIds);
+
+    List<ApplicationDto> saveAll(List<ApplicationDto> appsDtos);
 }
