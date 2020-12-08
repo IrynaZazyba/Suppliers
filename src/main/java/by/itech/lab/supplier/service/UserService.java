@@ -28,6 +28,8 @@ public interface UserService extends BaseService<UserDto>{
 
     int changeActiveStatus(Long id, Boolean status);
 
+    int changeActive(Long id);
+
     int changePassword(Long id, String password);
 
     Page<UserDto> getAllActive(Pageable pageable, Boolean status);

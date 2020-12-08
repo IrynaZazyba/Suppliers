@@ -7,6 +7,8 @@ import by.itech.lab.supplier.dto.validation.CreateDtoValidationGroup;
 import by.itech.lab.supplier.dto.validation.UpdateDtoValidationGroup;
 import by.itech.lab.supplier.service.WaybillService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

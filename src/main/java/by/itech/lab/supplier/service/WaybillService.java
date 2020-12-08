@@ -14,6 +14,8 @@ public interface WaybillService {
 
     WayBillDto save(WayBillDto wayBillDto);
 
+    Optional<WayBillDto> getWaybillByNumber(String number);
+
     WayBillDto findById(Long id);
 
     Page<WayBillDto> findAll(Pageable pageable, WaybillStatus status);

@@ -9,7 +9,7 @@ function Header() {
     const {user, setUser} = useContext(AuthContext);
 
     const checkPermission = user && user.currentCustomerId;
-    const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
+    const isPermittedAndRoleAdmin = user && user.currentCustomerId && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN");
 
     function getClass(regexOfClass) {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
@@ -17,6 +17,7 @@ function Header() {
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
+    const carsClass = window.location.pathname === "/cars" ? "active" : "";
 
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
@@ -57,12 +58,13 @@ function Header() {
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
+                    {isPermittedAndRoleAdmin &&
+                    <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-    );
-
+    )
 }
 
 
