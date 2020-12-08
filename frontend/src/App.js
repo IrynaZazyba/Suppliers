@@ -6,15 +6,15 @@ import Footer from './Footer';
 import {Route, Switch} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedComponent from "./components/ProtectedComponent";
-
+import Users from "./pages/user/Users";
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Customers from "./pages/customer/Customers";
-import Users from "./pages/user/Users"
 import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 import Warehouses from "./pages/warehouse/Warehouses";
+import Cars from "./pages/car/Cars";
 import Application from "./pages/application/Application";
 import Retailers from "./pages/retailer/Retailers";
 
@@ -78,6 +78,12 @@ function App() {
         })}/>
     };
 
+    const renderCar = () => {
+       return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" | user.role === "ROLE_ADMIN"} render={(() => {
+            return <Cars/>
+        })}/>
+    };
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -103,6 +109,7 @@ function App() {
                 <Route path={retailerPath} render={renderRetailer}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
+                <Route path={'/cars'} render={renderCar}/>
                 <Route path={'/login'} component={Login}/>
             </Switch>
             <Footer/>

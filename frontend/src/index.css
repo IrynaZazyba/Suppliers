@@ -153,7 +153,81 @@ a.page-link {
     text-align: center;
 }
 
-.badge-status{
+.badge-status {
     background-color: #E8E8EE;
     text-align: center;
+}
+
+.edit-appList {
+    font-weight: bold;
+}
+
+.status-in-modal {
+    float: right;
+    color: #009edd;
+    margin-top: 5px;
+}
+
+.badge-edit-modal {
+    display: inline-block;
+    width: 73%;
+    float: left;
+}
+
+.checkbox-all-app {
+    text-align: end;
+    margin-top: 3px;
+}
+
+.unavailable-item {
+    background-color: #f2b5ba;
+}
+
+.unavailable-item:hover {
+    background-color: #f2b5ba;
+}
+
+.wh-capacity-bar {
+    margin-top: 5px;
+    margin-left: -10px;
+    width: 97%;
+}
+
+.accepted-item {
+    background-color: #c9efff;
+}
+
+.accept-all-item {
+    text-align: center;
+    width: 10% !important;
+}
+
+th.accept-all-item:hover {
+    background-color: #c9efff;
+    box-shadow: inset 0 0 0 1px #1A7FA8;
+}
+
+.already-accepted {
+    background-color: #E8E8EE;
+}
+
+.forward-attention {
+    padding-left: 5px;
+    color: yellowgreen !important;
+}
+
+.capacity-warning {
+    color: #dc3545 !important;
+    padding-bottom: 35px;
+    margin: 3px;
+}
+
+.edit-app-icon-active{
+    text-align: center;
+    color: #1A7FA8;
+}
+
+.edit-app-icon-disable{
+    text-align: center;
+    color: #9497AA;
 }

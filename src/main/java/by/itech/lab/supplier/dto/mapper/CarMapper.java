@@ -21,7 +21,7 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
                 .currentCapacity(dto.getCurrentCapacity())
                 .address(dto.getAddressDto() != null ? addressMapper.map(dto.getAddressDto()) : null)
                 .number(dto.getNumber())
-                .customer(customerMapper.map(dto.getCustomerDto()))
+                .customer(dto.getCustomerDto() != null ? customerMapper.map(dto.getCustomerDto()) : null)
                 .build();
     }
 
@@ -33,7 +33,7 @@ public class CarMapper implements BaseMapper<Car, CarDto> {
                 .currentCapacity(car.getCurrentCapacity())
                 .addressDto(car.getAddress() != null ? addressMapper.map(car.getAddress()) : null)
                 .number(car.getNumber())
-                .customerDto(customerMapper.map(car.getCustomer()))
+                .customerDto(car.getCustomer() != null ? customerMapper.map(car.getCustomer()) : null)
                 .build();
     }
 

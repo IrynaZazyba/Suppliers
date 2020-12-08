@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.Warehouse;
@@ -12,11 +13,16 @@ import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.mail.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -30,14 +36,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     private final MailService mailService;
 
     @Override
-    public Page<UserDto> findAllByActive( Pageable pageable,  Boolean status) {
+    public Page<UserDto> findAllByActive(Pageable pageable, Boolean status) {
         return userRepository.findByStatus(pageable, status).map(userMapper::map);
     }
-
 
     @Override
     public UserDto findById(Long id) {
@@ -71,7 +77,9 @@ public class UserServiceImpl implements UserService {
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
-                .orElseGet(() -> userMapper.map(userDTO));
+                .orElseGet(() -> {
+                    userDTO.setPassword(RandomStringUtils.random(10, 97, 122, true, true));
+                    return userMapper.map(userDTO);});
         if (Objects.isNull(user.getId())) {
             mailService.sendMail(userDTO);
         }
@@ -87,8 +95,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public int changeActive(Long id) {
+        return userRepository.setStatus(true, id);
+    }
+
+
+    @Override
+    @Transactional
     public int changePassword(Long id, String password) {
-        return userRepository.changePassword(password, id);
+        return userRepository.changePassword(passwordEncoder.encode(password), id);
     }
 
     @Override

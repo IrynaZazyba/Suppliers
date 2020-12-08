@@ -152,39 +152,32 @@ function AddShipmentApplication(props) {
         setCurrentItem('');
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units) * parseFloat(i.amount), 0)
             })
         );
     }, [items]);
 
     useEffect(() => {
-
-        fetch(`/taxes`)
-            .then(response => response.json())
-            .then(commits => {
-                setTaxes(commits);
-            });
-
-        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
+        if (props.props) {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`),
+                fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`),
+                fetch(`/taxes`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(content => {
+                    setWarehouses(preState => ({
                         ...preState,
-                        source: res
-                    })
-                );
-            });
-        fetch(`/customers/${customerId}/warehouses/type?type=RETAILER`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
+                        source: content[0]
+                    }));
+                    setWarehouses(preState => ({
                         ...preState,
-                        destination: res
-                    })
-                );
-            });
-    }, []);
+                        destination: content[1]
+                    }));
+                    setTaxes(content[2]);
+                });
+        }
+    }, [props]);
 
     const addItemHandler = (e) => {
         e.preventDefault();
@@ -250,23 +243,32 @@ function AddShipmentApplication(props) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(application)
-            })
-                .then(function (response) {
-                    if (response.status !== 200) {
+            }).then(response => {
+                if (response.status === 400) {
+                    response.json().then(json => {
+                        let res = Object.values(json).join('. ');
                         setErrors({
-                            serverErrors: "Something go wrong, try later",
-                            validationErrors: []
+                            serverErrors: res,
+                            validationErrors: ''
                         });
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
-                            validationErrors: []
-                        }));
-                        setApp([]);
-                        setItems([]);
-                        props.onChange(false, appDto);
-                    }
-                });
+                    });
+                }
+                if (response.status !== 200 && response.status !== 400) {
+                    setErrors({
+                        serverErrors: "Something go wrong, try later",
+                        validationErrors: ''
+                    });
+                }
+                if (response.status === 200) {
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: []
+                    }));
+                    setApp([]);
+                    setItems([]);
+                    props.onChange(false, appDto);
+                }
+            });
         }
     };
 

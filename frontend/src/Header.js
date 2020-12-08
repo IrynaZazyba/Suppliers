@@ -12,7 +12,7 @@ function Header() {
     getItem("currentCustomerId") != null ? localStorage.
     getItem("currentCustomerId"): 0;
     const checkPermission = user && user.currentCustomerId;
-    const isPermittedAndRoleAdmin = user && user.currentCustomerId && user.role === "ROLE_SYSTEM_ADMIN";
+    const isPermittedAndRoleAdmin = user && user.currentCustomerId && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN");
 
     function getClass(regexOfClass) {
         return window.location.pathname.match(regexOfClass) ? "active" : "";
@@ -21,6 +21,7 @@ function Header() {
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
+    const carsClass = window.location.pathname === "/cars" ? "active" : "";
 
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
@@ -65,12 +66,13 @@ function Header() {
                     <Nav.Link className={retailerClass}
                               href={`/customers/${currentCustomerId}/retailers`}>Retailers
                     </Nav.Link>}
+                    {isPermittedAndRoleAdmin &&
+                    <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-    );
-
+    )
 }
 
 

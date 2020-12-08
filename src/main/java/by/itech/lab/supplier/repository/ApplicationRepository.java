@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,18 +20,14 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("select app from Application app where app.number = :number")
     Optional<Application> findByNumber(@Param("number") final String number);
 
-    @Query("select app from Application app where (:flag = true " +
-            "or (:flag = false and app.wayBill is null)) and :status is null or app.applicationStatus=:status")
-    Page<Application> findAllByRoleAndStatus(Pageable pageable,
-                                             @Param("flag") Boolean roleFlag,
-                                             @Param("status") ApplicationStatus status);
 
     @Query("select app from Application app where :status is null or app.applicationStatus=:status")
     Page<Application> findAllByStatus(Pageable pageable,
                                       @Param("status") ApplicationStatus status);
 
     @Query("select app from Application app where :flag = true or (:flag = false and app.type like 'TRAFFIC')")
-    Page<Application> findAllByUserRole(Pageable pageable, @Param("flag") Boolean roleFlag);
+    Page<Application> findAllByUserRole(Pageable pageable,
+                                        @Param("flag") Boolean roleFlag);
 
     @Modifying
     @Query("update Application set applicationStatus = :status where id = :id")
@@ -39,5 +36,18 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Modifying
     @Query("update Application set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
+
+
+    @Query("select app from Application app where (:flag = true or (:flag = false and app.wayBill is null)) " +
+            "and (:status is null or app.applicationStatus=:status) " +
+            "and (:warehouseId is null or (app.sourceLocationAddress.id=:warehouseId or app.destinationLocationAddress.id=:warehouseId))")
+    Page<Application> findAllByRoleAndStatusAndWarehouse(Pageable pageable,
+                                                         @Param("flag") Boolean roleFlag,
+                                                         @Param("status") ApplicationStatus status,
+                                                         @Param("warehouseId") Long warehouseId);
+
+    List<Application> findAllByWayBillIdIn(List<Long> waybillsIds);
+
+    List<Application> findAllByIdIn(List<Long> ids);
 
 }

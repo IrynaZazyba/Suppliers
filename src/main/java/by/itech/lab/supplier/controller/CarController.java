@@ -30,6 +30,7 @@ public class CarController {
     private final CarService carService;
     private final CustomerService customerService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public CarDto save(@Valid @RequestBody CarDto carDto,
                        @PathVariable Long customerId) {

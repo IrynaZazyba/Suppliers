@@ -63,7 +63,7 @@ public class ApplicationServiceTest {
         applicationDto = ApplicationDto.builder()
                 .id(17L)
                 .number("Test")
-                .wayBillDto(null)
+                .wayBillId(null)
                 //.lastUpdatedByUsersDto(null)
                 .lastUpdated(LocalDate.now())
                 //.createdByUsersDto(null)
@@ -83,11 +83,12 @@ public class ApplicationServiceTest {
         Page<Application> applicationPage = new PageImpl<>(applicationList);
 
         Mockito.when(applicationRepository
-                .findAllByRoleAndStatus(pageRequest, true, null)).thenReturn(applicationPage);
+                .findAllByRoleAndStatusAndWarehouse(pageRequest, true, null, null))
+                .thenReturn(applicationPage);
         Mockito.when(applicationMapper.map(application)).thenReturn(applicationDto);
 
         Assertions.assertEquals(applicationDtoPage,
-                applicationService.findAllByRoleAndStatus(pageRequest, true, null));
+                applicationService.findAllByRoleAndStatus(pageRequest, true, null, null));
 
     }
 

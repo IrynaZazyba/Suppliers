@@ -53,6 +53,7 @@ function AddApplicationModal(props) {
                 setOptions(optionsFromBack);
             });
     };
+
     const filterBy = () => true;
     const onChangeUpc = (e) => {
 
@@ -121,33 +122,31 @@ function AddApplicationModal(props) {
         setCurrentItem('');
         setTotalValues(preState => ({
                 ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units), 0)
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalUnits: items.reduce((totalUnits, i) => totalUnits + parseFloat(i.units)*parseFloat(i.amount), 0)
             })
         );
     }, [items]);
 
 
     useEffect(() => {
-        fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
+        if (props.props) {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/type?type=FACTORY`),
+                fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE&byDispatcher=true`)
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(warehouses => {
+                    setWarehouses(preState => ({
                         ...preState,
-                        source: res
-                    })
-                );
-            });
-        fetch(`/customers/${customerId}/warehouses/type?type=WAREHOUSE`)
-            .then(response => response.json())
-            .then(res => {
-                setWarehouses(preState => ({
+                        source: warehouses[0]
+                    }));
+                    setWarehouses(preState => ({
                         ...preState,
-                        destination: res
-                    })
-                );
-            });
-    }, []);
+                        destination: warehouses[1]
+                    }));
+                });
+        }
+    }, [props]);
 
     const addItemHandler = (e) => {
         e.preventDefault();
@@ -213,14 +212,24 @@ function AddApplicationModal(props) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(application)
-            })
-                .then(function (response) {
-                    if (response.status !== 200) {
+            }).then(response => {
+                if (response.status === 400) {
+                    response.json().then(json => {
+                       let res=Object.values(json).join('. ');
                         setErrors({
-                            serverErrors: "Something go wrong, try later",
+                            serverErrors: res,
                             validationErrors: ''
                         });
-                    } else {
+                    });
+                }
+                if (response.status !== 200 && response.status !== 400) {
+                    setErrors({
+                        serverErrors: "Something go wrong, try later",
+                        validationErrors: ''
+                    });
+                }
+                if (response.status === 200) {
+                    response.json().then(json => {
                         setErrors(preState => ({
                             ...preState,
                             validationErrors: []
@@ -228,8 +237,9 @@ function AddApplicationModal(props) {
                         setApp([]);
                         setItems([]);
                         props.onChange(false, appDto);
-                    }
-                });
+                    })
+                }
+            });
         }
     };
 
@@ -242,7 +252,7 @@ function AddApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost</th>
+                    <th>Cost, $ per unit</th>
                     <th></th>
 
                 </tr>
@@ -343,7 +353,7 @@ function AddApplicationModal(props) {
                                               : "form-control"
                                       }/>
                         <Form.Control.Feedback type="invalid">
-                            Please provide a number.
+                            Please provide a valid number.
                         </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
