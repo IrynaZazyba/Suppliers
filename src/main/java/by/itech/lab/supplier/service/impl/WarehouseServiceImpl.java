@@ -125,6 +125,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public void deleteByIds(final List<Long> id) {
         warehouseRepository.deleteByIds(id);
+        userService.deleteWarehousesForAllUsers(id);
     }
 
     @Transactional

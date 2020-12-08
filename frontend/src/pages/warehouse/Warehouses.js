@@ -104,18 +104,9 @@ export default (props) => {
                         errorMessage: "Warehouse can not be deleted, because it is already used in application"
                     })
                 } else {
-                    fetch(`/customers/${currentCustomerId}/users/delete-list`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(checkBoxes)
-                    })
-                        .then(function () {
-                            setCheckBox([]);
-                            getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
-                        })
-                  }
+                    setCheckBox([]);
+                    getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
+                }
             });
     }
 

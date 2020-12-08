@@ -30,7 +30,6 @@ import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
-import static by.itech.lab.supplier.constant.ApiConstants.URL_DELETE_LIST;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_DISPATCHERS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
@@ -97,7 +96,6 @@ public class UserController {
         return userService.save(userDTO);
     }
 
-
     @AdminAccess
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
@@ -114,11 +112,5 @@ public class UserController {
     @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
-    }
-
-    @PostMapping(URL_DELETE_LIST)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteWarehousesForAllUsers(@RequestBody List<Long> warehouses) {
-        userService.deleteWarehousesForAllUsers(warehouses);
     }
 }
