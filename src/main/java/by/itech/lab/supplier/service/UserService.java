@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public interface UserService extends BaseService<UserDto> {
-    List<UserDto> findListByDispatcherUsername(String username);
+    List<UserDto> findUsersByDispatcherUsername(String username);
 
     List<UserDto> findDispatchersByWarehouseId(Long id);
 

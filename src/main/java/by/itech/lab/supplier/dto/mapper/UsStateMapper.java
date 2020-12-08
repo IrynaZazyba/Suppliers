@@ -1,30 +1,30 @@
 package by.itech.lab.supplier.dto.mapper;
 
-import by.itech.lab.supplier.domain.State;
-import by.itech.lab.supplier.dto.StateDto;
+import by.itech.lab.supplier.domain.UsState;
+import by.itech.lab.supplier.dto.UsStateDto;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class StateMapper implements BaseMapper<State, StateDto> {
+public class UsStateMapper implements BaseMapper<UsState, UsStateDto> {
 
     @Override
-    public State map(final StateDto dto) {
-        return State.builder()
+    public UsState map(final UsStateDto dto) {
+        return UsState.builder()
                 .id(dto.getId())
                 .state(dto.getState())
                 .build();
     }
 
     @Override
-    public StateDto map(final State entity) {
-        return StateDto.builder()
+    public UsStateDto map(final UsState entity) {
+        return UsStateDto.builder()
                 .id(entity.getId())
                 .state(entity.getState())
                 .build();
     }
 
-    public void map(final StateDto from, final State to) {
+    public void map(final UsStateDto from, final UsState to) {
         to.setState(from.getState());
     }
 }

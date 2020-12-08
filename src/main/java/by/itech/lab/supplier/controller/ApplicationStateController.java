@@ -1,8 +1,8 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
-import by.itech.lab.supplier.dto.StateDto;
-import by.itech.lab.supplier.service.StateService;
+import by.itech.lab.supplier.dto.UsStateDto;
+import by.itech.lab.supplier.service.UsStateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ApiConstants.URL_STATES)
 public class ApplicationStateController {
 
-    private final StateService stateService;
+    private final UsStateService stateService;
 
     @GetMapping()
-    public Page<StateDto> getStates(@PageableDefault(size = 50, sort = {"id"},
+    public Page<UsStateDto> getStates(@PageableDefault(size = 50, sort = {"id"},
             direction = Sort.Direction.DESC) final Pageable pageable) {
         return stateService.findAll(pageable);
     }

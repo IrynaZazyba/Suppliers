@@ -66,7 +66,7 @@ export function validateAddressLine2(dto) {
 
 export function validateTotalCapacity(dto) {
     let errorsFields = [];
-
+    console.log(dto.totalCapacity)
     if (!dto.totalCapacity ||
         (dto.totalCapacity.length < 1 || dto.totalCapacity.length > 50)) {
         errorsFields.push("totalCapacity");
@@ -76,6 +76,7 @@ export function validateTotalCapacity(dto) {
 
 export function validateState(dto) {
     let errorsFields = [];
+    console.log(dto.addressDto.state.state)
     if (!dto.addressDto.state.state) {
         errorsFields.push("state");
     }

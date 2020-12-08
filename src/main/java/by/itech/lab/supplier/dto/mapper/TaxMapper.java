@@ -12,7 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class TaxMapper implements BaseMapper<Tax, TaxDto> {
 
-    private final StateMapper stateMapper;
+    private final UsStateMapper stateMapper;
 
     @Override
     public Tax map(final TaxDto dto) {

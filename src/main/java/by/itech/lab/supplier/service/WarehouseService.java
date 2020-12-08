@@ -9,17 +9,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface WarehouseService{
 
     Boolean isContainsIdentifier(final String identifier);
 
-    WarehouseDto save(final WarehouseDto warehouseDto);
+    Optional<WarehouseDto> save(final WarehouseDto warehouseDto);
 
-    WarehouseDto findById(final Long warehouseId);
+    Optional<WarehouseDto> findById(final Long warehouseId);
 
-    void delete(final List<Long> id);
+    void deleteByIds(final List<Long> id);
 
     Page<WarehouseDto> findAll(Pageable pageable);
 

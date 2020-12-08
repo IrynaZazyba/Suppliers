@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AddressMapper implements BaseMapper<Address, AddressDto> {
 
-    private final StateMapper stateMapper;
+    private final UsStateMapper stateMapper;
 
     @Override
     public Address map(final AddressDto addressDto) {

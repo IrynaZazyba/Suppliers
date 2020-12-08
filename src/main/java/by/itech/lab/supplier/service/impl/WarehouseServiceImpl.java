@@ -69,9 +69,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public WarehouseDto findById(final Long warehouseId) {
-        return warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
-                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist"));
+    public Optional<WarehouseDto> findById(final Long warehouseId) {
+        return Optional.ofNullable(warehouseRepository.findById(warehouseId).map(warehouseMapper::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Warehouse with id=" + warehouseId + " doesn't exist")));
     }
 
     @Override
@@ -98,11 +98,11 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     @Transactional
-    public WarehouseDto save(final WarehouseDto warehouseDto) {
+    public Optional<WarehouseDto> save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
                 .map(item -> update(warehouseDto))
                 .orElseGet(() -> create(warehouseDto));
-        return warehouseMapper.map(warehouse);
+        return Optional.ofNullable(warehouseMapper.map(warehouse));
     }
 
     private Warehouse create(final WarehouseDto warehouseDto) {
@@ -116,14 +116,15 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
         warehouseMapper.map(warehouseDto, warehouse);
         Warehouse saved = warehouseRepository.save(warehouse);
+        System.out.println(warehouseDto.getDispatchersId());
         userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
         return saved;
     }
 
     @Transactional
     @Override
-    public void delete(final List<Long> id) {
-        warehouseRepository.delete(id);
+    public void deleteByIds(final List<Long> id) {
+        warehouseRepository.deleteByIds(id);
     }
 
     @Transactional

@@ -85,13 +85,14 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
+    const warehousePath = pathWithCustomer(`/warehouses`);
 
     return (
         <UserContext>
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
-                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
+                <Route path={warehousePath} render={renderWarehouse}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>

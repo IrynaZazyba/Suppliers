@@ -58,19 +58,17 @@ function ModalAddWarehouse(props) {
     };
 
     const onChangeState = (e) => {
-        e.length > 0 ?
-            setWarehouseDto(preState => ({
-                ...preState,
-                addressDto: {...preState.addressDto, state: {id: e[0].id, state: e[0].state}}
-            })) :
-            setWarehouseDto(preState => ({
-                ...preState,
-                addressDto: {...preState.addressDto, state: {id: '', state: ''}}
-            }));
+        setWarehouseDto (preState => ({
+            ...preState,
+            addressDto: {...preState.addressDto,
+                state: ( e.length ?
+                    {id: e[0].id, state: e[0].state}
+                    : {id: '', state: ''})
+        }}));
     };
 
     const addDispatcher = (e) => {
-        if (e.length !== 0) {
+        if (e.length) {
             const isContains = dispatchers.find(disp => e[0].id === disp.id)
             if (!isContains) {
                 e.map(dispatcher =>
@@ -165,7 +163,7 @@ function ModalAddWarehouse(props) {
                     }))
                 })
         }
-        if (validationResult.length === 0) {
+        if (!validationResult.length) {
             fetch('/customers/' + props.currentCustomerId + '/warehouses', {
                 method: 'POST',
                 headers: {
@@ -243,7 +241,7 @@ function ModalAddWarehouse(props) {
     return (
         <>
             <Modal
-                show={props.props}
+                show={props.lgShow}
                 backdrop="static"
                 onHide={() => {
                     setErrors({
@@ -281,7 +279,7 @@ function ModalAddWarehouse(props) {
                                     {dropdownMenuName}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => handleType("FACTORY")}>FACTORY</Dropdown.Item>
+                                    <Dropdown.Item onClick={handleType.bind(this, "FACTORY")}>FACTORY</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>

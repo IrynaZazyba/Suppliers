@@ -1,6 +1,5 @@
 package by.itech.lab.supplier.service.impl;
 
-import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.Warehouse;
@@ -14,15 +13,12 @@ import by.itech.lab.supplier.service.mail.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -128,7 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findListByDispatcherUsername(final String username) {
+    public List<UserDto> findUsersByDispatcherUsername(final String username) {
         return userRepository.findByUsernameStartingWithAndActiveIsTrueAndRoleEqualsAndWarehouseEquals
                 (username, ROLE_DISPATCHER, null).stream()
                 .map(userMapper::map).collect(Collectors.toList());
