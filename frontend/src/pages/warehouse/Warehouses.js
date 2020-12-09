@@ -32,15 +32,15 @@ export default (props) => {
     const [errorMessage, setErrors] = useState('');
 
     const handleCheckedChange = (warehouseId) => {
-        let temp = checkBoxes.slice();
+        let checkboxUpdate = checkBoxes.slice();
 
-        const index = temp.indexOf(warehouseId);
+        const index = checkboxUpdate.indexOf(warehouseId);
         if (index > -1) {
-            temp.splice(index, 1);
+            checkboxUpdate.splice(index, 1);
         } else {
-            temp = [...temp, warehouseId];
+            checkboxUpdate = [...checkboxUpdate, warehouseId];
         }
-        setCheckBox(temp);
+        setCheckBox(checkboxUpdate);
     };
 
     const handleCountPerPage = (e) => {
@@ -137,7 +137,7 @@ export default (props) => {
             </td>
             <td>
                 <input type="checkbox"
-                    // checked={this.state.selected[warehouse.id] === true}
+                       checked={checkBoxes.find(e => e === warehouse.id)}
                        onClick={() => handleCheckedChange(warehouse.id)}/>
             </td>
         </tr>

@@ -291,6 +291,25 @@ function ModalAddWarehouse(props) {
                                 {errors.validationErrors.includes("type") ? "Please provide a type" : ""}
                             </div>
                         </Form.Group>
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Select state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}
+                            >
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
+                                </div>
+                            </AsyncTypeahead>
+                        </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
                             <Form.Control type="text"
@@ -330,25 +349,6 @@ function ModalAddWarehouse(props) {
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group>
-                            <AsyncTypeahead
-                                style={{padding: '5px 10px'}}
-                                ref={ref}
-                                name="state"
-                                filterBy={filterByState}
-                                id="async-state"
-                                labelKey="state"
-                                minLength={3}
-                                options={stateOptions}
-                                placeholder="Select state..."
-                                onSearch={handleStateSearch}
-                                onChange={onChangeState}
-                            >
-                                <div className="validation-error">
-                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
-                                </div>
-                            </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group>
                             {dispatchersForm(warehouseDto.type)}
