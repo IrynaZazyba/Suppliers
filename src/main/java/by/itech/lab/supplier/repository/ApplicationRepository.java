@@ -53,12 +53,16 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> findAllByIdIn(List<Long> ids);
 
     @Query("select distinct a.sourceLocationAddress from Application a where a.applicationStatus='OPEN' " +
-            "and a.sourceLocationAddress.type='WAREHOUSE'")
+            "and a.sourceLocationAddress.type='WAREHOUSE' and a.wayBill is null")
     List<Warehouse> getWarehousesWithOpenApplications();
 
+    @Query("select app from Application app where app.applicationStatus=:status " +
+            "and app.sourceLocationAddress.id=:warehouseId and app.type=:type and (app.wayBill is null or " +
+            "(:waybillId is not null and app.wayBill.id=:waybillId))")
     Page<Application> findAllByTypeAndApplicationStatusAndSourceLocationAddressId(Pageable pageable,
                                                                                   ApplicationType type,
                                                                                   ApplicationStatus status,
-                                                                                  Long warehouseId);
+                                                                                  Long warehouseId,
+                                                                                  Long waybillId);
 
 }

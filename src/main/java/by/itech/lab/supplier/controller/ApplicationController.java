@@ -112,10 +112,12 @@ public class ApplicationController {
 
     @GetMapping(URL_WAREHOUSE)
     public Page<ApplicationDto> getShipmentApplicationByWarehouseAndStatus(
-            @PageableDefault Pageable pageable,
-            @RequestParam Long warehouseId,
-            @RequestParam ApplicationStatus applicationStatus) {
-        return applicationService.getShipmentApplicationsByWarehouseAndStatus(pageable, warehouseId, applicationStatus);
+            @PageableDefault(sort = {"wayBill"}, direction = Sort.Direction.DESC) final Pageable pageable,
+            @RequestParam final Long warehouseId,
+            @RequestParam final ApplicationStatus applicationStatus,
+            @RequestParam(required = false) final Long waybillId) {
+        return applicationService
+                .getShipmentApplicationsByWarehouseAndStatus(pageable, warehouseId, applicationStatus, waybillId);
     }
 
 }

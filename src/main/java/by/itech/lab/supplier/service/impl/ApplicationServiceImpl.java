@@ -185,10 +185,11 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Page<ApplicationDto> getShipmentApplicationsByWarehouseAndStatus(Pageable pageable,
                                                                             Long warehouseId,
-                                                                            ApplicationStatus status) {
+                                                                            ApplicationStatus status,
+                                                                            Long waybillId) {
         return applicationRepository
                 .findAllByTypeAndApplicationStatusAndSourceLocationAddressId(pageable,
-                        ApplicationType.TRAFFIC, status, warehouseId).map(applicationMapper::map);
+                        ApplicationType.TRAFFIC, status, warehouseId, waybillId).map(applicationMapper::map);
     }
 
 }

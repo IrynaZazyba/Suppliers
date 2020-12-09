@@ -42,7 +42,14 @@ export function checkIfRouteExists(apps) {
         errorsFields.push("route");
     }
     return errorsFields;
+}
 
+export function checkIfRouteCalculated(waypoints) {
+    let errorsFields = [];
+    if (waypoints.length === 0) {
+        errorsFields.push("introduce-route");
+    }
+    return errorsFields;
 }
 
 export function validateSourceLocation(source) {
@@ -70,3 +77,38 @@ export function validateDriver(driver) {
 }
 
 
+export function validateUpdatedWaybill(waybill) {
+    let errorsFields = [];
+
+    if (!waybill.number) {
+        errorsFields.push("number");
+    }
+
+    if (!waybill.sourceLocationWarehouseDto) {
+        errorsFields.push("source");
+    }
+
+    if (!waybill.driver) {
+        errorsFields.push("driver");
+    }
+
+    if (!waybill.car) {
+        errorsFields.push("car");
+    }
+
+    if (waybill.applications.length === 0) {
+        errorsFields.push("apps");
+    }
+
+    let notDeleted = JSON.parse(JSON.stringify(waybill.applications)).filter(app => !app.deleteFromWaybill);
+    if (notDeleted.length === 0) {
+        errorsFields.push("apps");
+    }
+
+
+    if (waybill.route.wayPoints.length === 0) {
+        errorsFields.push("introduce-route");
+    }
+
+    return errorsFields;
+};
