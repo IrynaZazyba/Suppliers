@@ -14,6 +14,7 @@ import ModalAddWarehouse from "./ModalAddWarehouse";
 export default (props) => {
 
     const [page, setPage] = useState({
+        active: 1,
         currentPage: 1,
         countPerPage: 10,
         countPages: 1
@@ -31,12 +32,15 @@ export default (props) => {
     const [errorMessage, setErrors] = useState('');
 
     const handleCheckedChange = (warehouseId) => {
-        const index = checkBoxes.indexOf(warehouseId);
+        let temp = checkBoxes.slice();
+
+        const index = temp.indexOf(warehouseId);
         if (index > -1) {
-            checkBoxes.splice(index, 1);
+            temp.splice(index, 1);
         } else {
-            checkBoxes.push(warehouseId);
+            temp = [...temp, warehouseId];
         }
+        setCheckBox(temp);
     };
 
     const handleCountPerPage = (e) => {
@@ -64,6 +68,7 @@ export default (props) => {
             .then(commits => {
                 setWarehouses(commits.content);
                 setPage({
+                        active: (commits.pageable.pageNumber + 1),
                         countPerPage: commits.size,
                         countPages: commits.totalPages
                     }
@@ -131,7 +136,9 @@ export default (props) => {
                         }}/>
             </td>
             <td>
-                <input type="checkbox" onClick={() => handleCheckedChange(warehouse.id)}/>
+                <input type="checkbox"
+                    // checked={this.state.selected[warehouse.id] === true}
+                       onClick={() => handleCheckedChange(warehouse.id)}/>
             </td>
         </tr>
     ));
@@ -149,17 +156,22 @@ export default (props) => {
     const header =
         <React.Fragment>
             <Row>
-                <Col>
+                <Col md={1}>
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                         Add
                     </Button>
                 </Col>
-                <Col md={10}>
-                    <Button className="mainButton" size="sm" onClick={() => deleteWarehouse()}>
+                <Col md={1}>
+                    <Button
+                        variant="link"
+                        disabled={checkBoxes.length === 0}
+                        className="deleteButton" size="sm"
+                        onClick={() => deleteWarehouse()}>
                         Delete
                     </Button>
                 </Col>
-                <Col md={14}>
+                <Col md={9}/>
+                <Col md={1}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>
@@ -174,6 +186,8 @@ export default (props) => {
                     <th>Type</th>
                     <th>Full Address</th>
                     <th>Total Capacity</th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>

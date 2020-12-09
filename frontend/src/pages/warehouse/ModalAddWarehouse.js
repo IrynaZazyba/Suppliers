@@ -156,16 +156,15 @@ function ModalAddWarehouse(props) {
                 .then(resp => resp.json())
                 .then(isIdentifierExist => {
 
-                    const validationResult = validateWarehouseWithIdentifierExist(warehouseUpdateDto, dropdownMenuName,
+                    const validationResult2 = validateWarehouseWithIdentifierExist(warehouseUpdateDto, dropdownMenuName,
                         warehouseUpdateDto.dispatchersId, isIdentifierExist);
                     setErrors(preState => ({
                         ...preState,
-                        validationErrors: validationResult,
+                        validationErrors: validationResult2,
                         serverErrors: ''
-                    }))
-                })
-                .then(function() {
-                    if (!validationResult.length) {
+                    }));
+
+                    if (!validationResult2.length) {
                         fetch(`/customers/${props.currentCustomerId}/warehouses`, {
                             method: 'POST',
                             headers: {
