@@ -280,7 +280,7 @@ function ModalAddWarehouse(props) {
                         {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                         <Form>
                             <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
-                                Identifier
+                                identifier
                                 <Form.Control type="text"
                                               onChange={handleIdentifier}
                                               className={errors.validationErrors.includes("identifier")
