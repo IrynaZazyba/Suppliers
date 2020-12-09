@@ -71,7 +71,6 @@ public class WaybillServiceImpl implements WaybillService {
             final List<ApplicationDto> appDtos = apps.stream().peek(app -> app.setWayBillId(saved.getId()))
                     .collect(Collectors.toList());
             applicationService.saveAll(appDtos);
-
         }
         return wayBillMapper.map(saved);
     }
