@@ -12,7 +12,6 @@ import java.util.Objects;
 public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
     private final AddressMapper addressMapper;
-    private final CustomerMapper customerMapper;
 
     @Override
     public Warehouse map(final WarehouseDto dto) {
