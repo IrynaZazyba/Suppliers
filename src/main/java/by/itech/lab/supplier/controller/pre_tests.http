@@ -150,7 +150,7 @@ Cookie: {{test}}
   "id": "1",
   "identifier": "35421828199",
   "type": "FACTORY",
-  "totalCapacity": "333",
+  "totalCapacity": "343",
   "addressDto": {
     "id": "3",
     "city": "Kanzas",
@@ -249,7 +249,13 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
-[24]
+[21]
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
 
 ###
 #--------------------------------------------------Retailers---------------------------------------------#
@@ -464,7 +470,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/users/dispatchers
+GET http://localhost:8080/customers/3/users/dispatchers?username=harry+potter
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}

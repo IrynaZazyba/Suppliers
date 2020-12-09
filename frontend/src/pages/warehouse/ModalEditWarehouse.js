@@ -24,7 +24,7 @@ function ModalEditWarehouse(props) {
         },
         totalCapacity: '',
         dispatchersId: [],
-        irrelevantDispatchersId : []
+        irrelevantDispatchersId: []
     });
 
     const [errors, setErrors] = useState({
@@ -137,8 +137,10 @@ function ModalEditWarehouse(props) {
     const editWarehouseHandler = (e) => {
         e.preventDefault();
         const dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
-        const updateWarehouseDto = {...warehouseDto, dispatchersId: dispatchersId,
-            customerId: props.currentCustomerId, irrelevantDispatchersId : dispatcherDeleteList}
+        const updateWarehouseDto = {
+            ...warehouseDto, dispatchersId: dispatchersId,
+            customerId: props.currentCustomerId, irrelevantDispatchersId: dispatcherDeleteList
+        }
 
         let validationResult = validateEditWarehouse(updateWarehouseDto, dispatchersId);
         setErrors(preState => ({
@@ -246,18 +248,22 @@ function ModalEditWarehouse(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
-                            Identifier
+                            identifier
                             <Form.Control type="text"
                                           disabled
-                                          value={warehouseDto.identifier}
-                            />
+                                          value={warehouseDto.identifier}/>
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
-                            Identifier
+                            current type
                             <Form.Control type="text"
                                           disabled
-                                          value={warehouseDto.type}
-                            />
+                                          value={warehouseDto.type}/>
+                        </Form.Group>
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
+                            current state
+                            <Form.Control type="text"
+                                          value={warehouseDto.addressDto.state.state}
+                                          disabled/>
                         </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
@@ -320,12 +326,6 @@ function ModalEditWarehouse(props) {
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
-                            current state
-                            <Form.Control type="text"
-                                          value={warehouseDto.addressDto.state.state}
-                                          disabled/>
                         </Form.Group>
                         <Form.Group>
                             {dispatchersForm(warehouseDto.type)}

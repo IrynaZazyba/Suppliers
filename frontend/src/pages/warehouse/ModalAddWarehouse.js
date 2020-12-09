@@ -227,8 +227,7 @@ function ModalAddWarehouse(props) {
                             options={dispatcherOptions}
                             placeholder="Select dispatcher username..."
                             onSearch={handleDispatcherSearch}
-                            onChange={addDispatcher}
-                        >
+                            onChange={addDispatcher}>
                             <div className="validation-error">
                                 {errors.validationErrors.includes("username") ? "Please provide a username" : ""}
                             </div>
