@@ -52,5 +52,6 @@ public class Car implements BaseEntity {
     @ToString.Exclude
     private Address address;
     private LocalDate deletedAt;
+    private boolean isOnTheWay;
 
 }

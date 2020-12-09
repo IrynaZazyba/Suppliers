@@ -11,6 +11,7 @@ import TogglePage from "../../components/TogglePage";
 import Badge from "react-bootstrap/Badge";
 import {FaEdit} from "react-icons/fa";
 import AddWaybillModal from "./AddWaybillModal";
+import DeliveryModal from "./DeliveryModal";
 
 export default () => {
 
@@ -31,6 +32,10 @@ export default () => {
     };
     const [waybills, setWaybills] = useState([]);
     const [openAddModal, setOpenAddModal] = useState(false);
+    const [openDeliveryModal, setOpenDeliveryModal] = useState({
+        isOpen: false,
+        waybillId: ''
+    });
 
     const changePage = (e) => {
         e.preventDefault();
@@ -77,6 +82,11 @@ export default () => {
         getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
     };
 
+    const closeDeliveryModal = (e) => {
+        setOpenDeliveryModal(e);
+        getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
+    };
+
 
     function parseDestinationLocationsCities(waybill) {
         let cities = waybill.applications.map(a =>
@@ -86,7 +96,14 @@ export default () => {
     }
 
     const tableRows = waybills.map(waybill => (
-        <tr key={waybill.id}>
+
+        <tr key={waybill.id}
+            onClick={() => {
+                setOpenDeliveryModal({
+                    isOpen: true,
+                    waybillId: waybill.id
+                })
+            }}>
             <td>{waybill.number}</td>
             <td style={{fontSize: '0.9rem'}}>{waybill.sourceLocationWarehouseDto.identifier}{','}<br/>
                 {waybill.sourceLocationWarehouseDto.addressDto.city}{','}<br/>
@@ -109,6 +126,7 @@ export default () => {
             />
             </td>
         </tr>
+
     ));
 
 
@@ -137,7 +155,7 @@ export default () => {
     const modals =
         <React.Fragment>
             <AddWaybillModal modal={openAddModal} onChange={closeModalAdd}/>
-
+            <DeliveryModal modal={openDeliveryModal} onChange={closeDeliveryModal}/>
         </React.Fragment>;
 
     const header =

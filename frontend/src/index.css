@@ -250,3 +250,9 @@ th.accept-all-item:hover {
 .waybill-button{
     margin: 5px;
 }
+
+.badge-delivery-modal {
+    display: inline-block;
+    width: 90%;
+    float: left;
+}

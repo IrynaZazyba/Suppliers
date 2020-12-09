@@ -72,5 +72,6 @@ public class WayBill implements BaseEntity {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Route route;
+    private LocalDateTime deliveryStart;
 
 }

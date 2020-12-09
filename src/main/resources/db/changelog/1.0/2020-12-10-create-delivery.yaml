@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: DP-IN-1
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: car
+            columns:
+              - column:
+                  name: is_on_the_way
+                  type: BOOLEAN
+                  defaultValue: false
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: DP-IN-2
+      author: iryna_zazybo
+      changes:
+        - addColumn:
+            tableName: waybill
+            columns:
+              - column:
+                  name: delivery_start
+                  type: datetime
+                  constraints:
+                    nullable: true
