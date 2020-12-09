@@ -111,6 +111,7 @@ public class ApplicationController {
     }
 
     @GetMapping(URL_WAREHOUSE)
+    @Secured({"ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public Page<ApplicationDto> getShipmentApplicationByWarehouseAndStatus(
             @PageableDefault Pageable pageable,
             @RequestParam Long warehouseId,

@@ -8,6 +8,7 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.RouteDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WayBillDto;
+import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WayBillMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
@@ -44,21 +45,22 @@ public class WaybillServiceImpl implements WaybillService {
     private final ApplicationService applicationService;
     private final CalculationService calculationService;
     private final WaybillValidationService waybillValidationService;
+    private final ApplicationMapper applicationMapper;
 
     @Transactional
     public WayBillDto save(final WayBillDto wayBillDto) {
         final UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final User user = userMapper.map(userService.findById(principal.getId()));
-        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
-
-        final ValidationErrors validationResult = waybillValidationService.validateWaybill(wayBillDto, apps);
-        if (validationResult.getValidationMessages().size() > 0) {
-            throw new ValidationException("Invalid waybill data", validationResult);
-        }
 
         final WayBill wayBill = Optional.ofNullable(wayBillDto.getId())
                 .map(itemToSave -> updateWayBill(wayBillDto))
                 .orElseGet(() -> createWayBill(wayBillDto, user));
+
+        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
+        final ValidationErrors validationResult = validateWaybill(wayBill, apps);
+        if (validationResult.getValidationMessages().size() > 0) {
+            throw new ValidationException("Invalid waybill data", validationResult);
+        }
 
         wayBill.setLastUpdated(LocalDateTime.now());
         wayBill.setUpdatedByUsers(user);
@@ -94,6 +96,16 @@ public class WaybillServiceImpl implements WaybillService {
                 .map(ApplicationDto::getId)
                 .collect(Collectors.toList());
         return applicationService.getApplicationsByIds(appsIds);
+    }
+
+    private ValidationErrors validateWaybill(final WayBill wayBill, final List<ApplicationDto> apps) {
+        final List<ApplicationDto> updatedApps = wayBill.getApplications()
+                .stream()
+                .filter(app -> Objects.nonNull(app.getWayBill()))
+                .map(applicationMapper::map)
+                .collect(Collectors.toList());
+        final List<ApplicationDto> waybillApps = Objects.isNull(wayBill.getId()) ? apps : updatedApps;
+        return waybillValidationService.validateWaybill(wayBill, waybillApps);
     }
 
     @Override
