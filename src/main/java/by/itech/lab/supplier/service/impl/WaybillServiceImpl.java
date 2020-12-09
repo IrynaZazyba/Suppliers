@@ -48,15 +48,15 @@ public class WaybillServiceImpl implements WaybillService {
     private final ApplicationMapper applicationMapper;
 
     @Transactional
+    @Override
     public WayBillDto save(final WayBillDto wayBillDto) {
         final UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final User user = userMapper.map(userService.findById(principal.getId()));
-
+        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
         final WayBill wayBill = Optional.ofNullable(wayBillDto.getId())
                 .map(itemToSave -> updateWayBill(wayBillDto))
                 .orElseGet(() -> createWayBill(wayBillDto, user));
 
-        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
         final ValidationErrors validationResult = validateWaybill(wayBill, apps);
         if (validationResult.getValidationMessages().size() > 0) {
             throw new ValidationException("Invalid waybill data", validationResult);
@@ -74,6 +74,7 @@ public class WaybillServiceImpl implements WaybillService {
             applicationService.saveAll(appDtos);
         }
         return wayBillMapper.map(saved);
+
     }
 
     private WayBill createWayBill(final WayBillDto wayBillDto, final User user) {

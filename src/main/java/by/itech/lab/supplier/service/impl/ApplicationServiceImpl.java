@@ -162,6 +162,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    @Transactional
     public List<ApplicationDto> getApplicationsByIds(List<Long> appIds) {
         return applicationRepository.findAllByIdIn(appIds)
                 .stream()
@@ -170,7 +171,6 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    @Transactional
     public List<ApplicationDto> saveAll(List<ApplicationDto> appsDtos) {
         List<Application> apps = appsDtos.stream().map(applicationMapper::map).collect(Collectors.toList());
         return applicationRepository.saveAll(apps).stream().map(applicationMapper::map).collect(Collectors.toList());
