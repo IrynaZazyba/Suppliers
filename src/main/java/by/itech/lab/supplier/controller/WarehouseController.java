@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
+import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
@@ -26,6 +27,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATIONS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
@@ -41,6 +43,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE_ITEMS;
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
+
 
     @GetMapping
     public Page<WarehouseDto> findAll(@PageableDefault final Pageable pageable) {
@@ -110,6 +113,11 @@ public class WarehouseController {
     public List<WarehouseItemDto> getWarehouseItemByItemsId(@PathVariable final Long id,
                                                             @RequestParam final List<Long> itemsId) {
         return warehouseService.getWarehouseItemContainingItems(id, itemsId);
+    }
+
+    @GetMapping(URL_APPLICATIONS)
+    public List<WarehouseDto> findByOpenApplicationStatus() {
+        return warehouseService.getWarehousesWithOpenApplications();
     }
 
 }

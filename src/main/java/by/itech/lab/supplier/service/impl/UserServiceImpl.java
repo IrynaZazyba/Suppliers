@@ -26,6 +26,7 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -132,5 +133,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId) {
         userRepository.setWarehouseIntoUser(warehouse, usersId);
+    }
+
+    @Override
+    public List<UserDto> findAllByRole(Role role) {
+        return userRepository.findAllByRole(role).stream().map(userMapper::map).collect(Collectors.toList());
     }
 }

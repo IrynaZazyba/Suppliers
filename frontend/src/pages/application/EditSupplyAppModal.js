@@ -217,8 +217,6 @@ function EditSupplyAppModal(props) {
         if (validErrors.length === 0) {
             let dtoApp = Object.assign({}, app);
             dtoApp.items = [...app.items, ...deleted.deletedItems];
-            console.log(deleted.deletedItems);
-            console.log(dtoApp);
             fetch(`/customers/${customerId}/application/${app.id}`, {
                 method: 'PUT',
                 headers: {

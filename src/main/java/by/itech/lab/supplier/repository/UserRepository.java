@@ -51,4 +51,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.customer.id = :customerId " +
             "and u.role = :role and u.active=true")
     Page<User> getAllDispatchers(Long customerId, Pageable pageable, Role role);
+
+    List<User> findAllByRole(Role role);
 }

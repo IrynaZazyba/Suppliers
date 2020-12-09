@@ -23,6 +23,7 @@ function Header() {
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);
     const appClass = getClass(/.application/);
+    const waybillClass = getClass(/.waybills/);
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -48,6 +49,10 @@ function Header() {
                     <Nav.Link className={categoryClass}
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
+                    </Nav.Link>}
+                    {checkPermission &&
+                    <Nav.Link className={waybillClass}
+                              href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={itemClass}
