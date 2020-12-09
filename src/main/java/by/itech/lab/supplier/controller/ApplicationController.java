@@ -34,6 +34,7 @@ import java.util.Objects;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATION;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE;
 
 @Validated
 @RestController
@@ -107,6 +108,15 @@ public class ApplicationController {
     @Secured({"ROLE_DISPATCHER", "ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
     public void delete(@PathVariable Long id) {
         applicationService.delete(id);
+    }
+
+    @GetMapping(URL_WAREHOUSE)
+    @Secured({"ROLE_LOGISTICS_SPECIALIST", "ROLE_SYSTEM_ADMIN"})
+    public Page<ApplicationDto> getShipmentApplicationByWarehouseAndStatus(
+            @PageableDefault Pageable pageable,
+            @RequestParam Long warehouseId,
+            @RequestParam ApplicationStatus applicationStatus) {
+        return applicationService.getShipmentApplicationsByWarehouseAndStatus(pageable, warehouseId, applicationStatus);
     }
 
 }

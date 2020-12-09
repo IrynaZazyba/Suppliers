@@ -78,7 +78,8 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseGet(() -> {
                     userDTO.setPassword(RandomStringUtils.random(10, 97, 122, true, true));
-                    return userMapper.map(userDTO);});
+                    return userMapper.map(userDTO);
+                });
         if (Objects.isNull(user.getId())) {
             mailService.sendMail(userDTO);
         }
@@ -149,5 +150,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteWarehousesForAllUsers(List<Long> warehouses) {
         userRepository.deleteWarehousesForAllUsers(warehouses);
+    }
+
+    @Override
+    public List<UserDto> findAllByRole(Role role) {
+        return userRepository.findAllByRole(role).stream().map(userMapper::map).collect(Collectors.toList());
     }
 }

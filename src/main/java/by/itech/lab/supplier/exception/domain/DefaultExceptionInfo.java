@@ -1,4 +1,4 @@
-package by.itech.lab.supplier.exception;
+package by.itech.lab.supplier.exception.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
