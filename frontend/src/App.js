@@ -16,6 +16,7 @@ import {AuthContext} from "./context/authContext";
 import Cars from "./pages/car/Cars";
 import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
+import Waybill from "./pages/waybill/Waybill";
 
 function App() {
 
@@ -77,6 +78,13 @@ function App() {
         })}/>
     };
 
+    const renderWaybill = () => {
+        return <ProtectedComponent conditions={user} render={(() => {
+            return <Waybill/>
+        })}/>
+    };
+
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -85,6 +93,7 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
+    const waybillPath = pathWithCustomer(`/waybills`);
 
     return (
         <UserContext>
@@ -96,6 +105,7 @@ function App() {
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
+                <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
                 <Route path={'/cars'} render={renderCar}/>

@@ -61,4 +61,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("update User u set u.warehouse = null where u.warehouse.id in :warehouses")
     void deleteWarehousesForAllUsers(List<Long> warehouses);
+
+    List<User> findAllByRole(Role role);
 }

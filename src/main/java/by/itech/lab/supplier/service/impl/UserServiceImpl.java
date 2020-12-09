@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service.impl;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.Warehouse;
@@ -13,15 +14,19 @@ import by.itech.lab.supplier.service.mail.MailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Collectors;
 
 import static by.itech.lab.supplier.domain.Role.ROLE_DISPATCHER;
@@ -149,5 +154,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteWarehousesForAllUsers(List<Long> warehouses) {
         userRepository.deleteWarehousesForAllUsers(warehouses);
+    }
+
+    @Override
+    public List<UserDto> findAllByRole(Role role) {
+        return userRepository.findAllByRole(role).stream().map(userMapper::map).collect(Collectors.toList());
     }
 }

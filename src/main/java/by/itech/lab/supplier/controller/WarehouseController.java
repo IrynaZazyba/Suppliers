@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
+import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATIONS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
@@ -43,6 +46,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_WAREHOUSE_ITEMS;
 public class WarehouseController {
 
     private final WarehouseService warehouseService;
+
 
     @GetMapping
     public Page<WarehouseDto> findAll(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) final Pageable pageable) {
@@ -116,4 +120,10 @@ public class WarehouseController {
                                                             @RequestParam final List<Long> itemsId) {
         return warehouseService.getWarehouseItemContainingItems(id, itemsId);
     }
+
+    @GetMapping(URL_APPLICATIONS)
+    public List<WarehouseDto> findByOpenApplicationStatus() {
+        return warehouseService.getWarehousesWithOpenApplications();
+    }
+
 }

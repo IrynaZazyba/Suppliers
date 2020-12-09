@@ -7,6 +7,7 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationItemMapper;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
+import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.repository.ApplicationItemRepository;
 import by.itech.lab.supplier.repository.ApplicationRepository;
@@ -144,6 +145,9 @@ public class ApplicationServiceTest {
         @MockBean
         private UserMapper userMapper;
 
+        @MockBean
+        private WarehouseMapper warehouseMapper;
+
         @Bean
         public ApplicationService applicationService() {
             return new ApplicationServiceImpl(applicationRepository,
@@ -151,7 +155,8 @@ public class ApplicationServiceTest {
                     itemInApplicationRepository,
                     itemsInApplicationMapper,
                     userService,
-                    userMapper);
+                    userMapper,
+                    warehouseMapper);
         }
 
     }

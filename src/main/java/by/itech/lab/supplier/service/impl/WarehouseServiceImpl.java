@@ -289,4 +289,9 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .map(warehouseItemMapper::map)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<WarehouseDto> getWarehousesWithOpenApplications() {
+        return applicationService.getWarehousesWithOpenApplications();
+    }
 }

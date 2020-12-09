@@ -57,7 +57,7 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany3",
+  "name": "SomeCompany",
   "adminEmail": "3j323@gmail.com"
 }
 
@@ -102,7 +102,6 @@ Cookie: {{test}}
   "totalCapacity": 151.0,
   "currentCapacity": 85.0,
   "addressDto": {
-    "id": 20,
     "city": "Pinto",
     "addressLine1": "6374 Posuere, St.",
     "addressLine2": "163-8189 Mi Ave",
@@ -355,7 +354,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "password": "password"
+  "password"
 }
 
 ###
@@ -471,6 +470,19 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
+
+GET http://localhost:8080/customers/3/users/role?role=ROLE_DRIVER
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+
 #---------------------------------------------------Category----------------------------------------------------------
 
 POST http://localhost:8080/customers/3/category
@@ -692,11 +704,9 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
-      "id": 3,
       "city": "NY",
       "addressLine1": "Lexington Avenue",
       "addressLine2": "Slobodskaya str.",
@@ -722,7 +732,6 @@ Cookie: {{test}}
     "surname": "Roberts",
     "birthday": "1990-10-15",
     "username": "admin",
-    "password": null,
     "email": "zazybo1.17@gmail.com",
     "role": "ROLE_SYSTEM_ADMIN",
     "addressDto": {
@@ -745,7 +754,6 @@ Cookie: {{test}}
     "warehouse": null
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": null,
   "deletedAt": null,
   "items": [
     {
@@ -768,9 +776,6 @@ Cookie: {{test}}
     }
   ]
 }
-
-
-
 
 > {%
     client.test("Request executed successfully", function() {
@@ -871,6 +876,113 @@ Cookie: {{test}}
 
 ###-------------------------------------------------------Taxes---------------------------------------------------
 GET http://localhost:8080/taxes
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###-------------------------------------------------------Waybills---------------------------------------------------
+POST http://localhost:8080/customers/3/waybills
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "number": "1510",
+  "sourceLocationWarehouseDto": {
+    "id": 1
+  },
+  "driver": {
+    "id": 61
+  },
+  "car": {
+    "id": 1
+  },
+  "applications": [
+    {
+      "id": 21
+    },
+    {
+      "id": 1
+    }
+  ],
+  "route": {
+    "wayPoints": [
+      {
+        "address": {
+          "id": 18
+        },
+        "isVisited": false,
+        "priority": 0
+      },
+      {
+        "address": {
+          "id": 4
+        },
+        "isVisited": false,
+        "priority": 1
+      }
+    ]
+  }
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+PUT http://localhost:8080/customers/3/waybills/21
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "applications": [
+    {
+      "id": 21,
+      "deleteFromWaybill": true
+    },
+    {
+      "id": 1
+    }
+  ]
+}
+
+###
+
+GET http://localhost:8080/customers/3/waybills
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+GET http://localhost:8080/customers/3/waybills/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+GET http://localhost:8080/customers/3/application/warehouses?warehouseId=8&applicationStatus=OPEN&size=5
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}

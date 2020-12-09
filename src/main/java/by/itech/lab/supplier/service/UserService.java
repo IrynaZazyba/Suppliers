@@ -1,5 +1,6 @@
 package by.itech.lab.supplier.service;
 
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
@@ -41,4 +42,6 @@ public interface UserService extends BaseService<UserDto> {
     void deleteWarehouseFromUsers(List<Long> dispatchers);
 
     void deleteWarehousesForAllUsers(List<Long> warehouses);
+
+    List<UserDto> findAllByRole(Role role);
 }

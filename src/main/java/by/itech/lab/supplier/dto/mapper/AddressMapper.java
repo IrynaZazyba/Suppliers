@@ -5,6 +5,8 @@ import by.itech.lab.supplier.dto.AddressDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @AllArgsConstructor
 public class AddressMapper implements BaseMapper<Address, AddressDto> {
@@ -18,7 +20,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine1(addressDto.getAddressLine1())
                 .addressLine2(addressDto.getAddressLine2())
                 .id(addressDto.getId())
-                .state(stateMapper.map(addressDto.getState()))
+                .state(Objects.nonNull(addressDto.getState()) ? stateMapper.map(addressDto.getState()) : null)
                 .latitude(addressDto.getLatitude())
                 .longitude(addressDto.getLongitude())
                 .build();
@@ -31,7 +33,7 @@ public class AddressMapper implements BaseMapper<Address, AddressDto> {
                 .addressLine1(address.getAddressLine1())
                 .addressLine2(address.getAddressLine2())
                 .id(address.getId())
-                .state(stateMapper.map(address.getState()))
+                .state(Objects.nonNull(address.getState()) ? stateMapper.map(address.getState()) : null)
                 .latitude(address.getLatitude())
                 .longitude(address.getLongitude())
                 .build();
