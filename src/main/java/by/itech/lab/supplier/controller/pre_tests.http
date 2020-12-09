@@ -151,7 +151,7 @@ Cookie: {{test}}
   "id": "1",
   "identifier": "35421828199",
   "type": "FACTORY",
-  "totalCapacity": "1",
+  "totalCapacity": "333",
   "addressDto": {
     "id": "3",
     "city": "Kanzas",
