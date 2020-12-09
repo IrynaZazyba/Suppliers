@@ -79,9 +79,9 @@ export default () => {
 
 
     function parseDestinationLocationsCities(waybill) {
-        let map = waybill.applications.map(a =>
+        let cities = waybill.applications.map(a =>
             a.destinationLocationDto.addressDto.city);
-        return map.join(',\n');
+        return cities.join(',\n');
 
     }
 
