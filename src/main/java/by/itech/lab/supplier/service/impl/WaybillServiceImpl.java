@@ -87,7 +87,7 @@ public class WaybillServiceImpl implements WaybillService {
     private WayBill updateWayBill(final WayBillDto wayBillDto) {
         final WayBill existing = waybillRepository.findById(wayBillDto.getId()).orElseThrow();
         wayBillMapper.map(wayBillDto, existing);
-        return waybillRepository.save(existing);
+        return existing;
     }
 
     private List<ApplicationDto> getRelatedApplications(final WayBillDto wayBillDto) {
