@@ -633,10 +633,8 @@ function EditWaybillModal(props) {
                     <td className="table-text-center">{app.number}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + i.amount, 0)}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + (i.amount * i.itemDto.units), 0)}</td>
-                    <td style={{
-                        fontSize: '0.9rem',
-                        width: '37%'
-                    }}>{app.destinationLocationDto.addressDto.city}{', '}
+                    <td style={{fontSize: '0.9rem', width: '37%'}}>
+                        {app.destinationLocationDto.addressDto.city}{', '}
                         {app.destinationLocationDto.addressDto.addressLine1}{', '}
                         {app.destinationLocationDto.addressDto.addressLine2}</td>
                     <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0)}</td>
