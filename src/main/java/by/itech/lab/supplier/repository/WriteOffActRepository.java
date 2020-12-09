@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Repository
 public interface WriteOffActRepository extends JpaRepository<WriteOffAct, Long> {
 
-    Page<WriteOffAct> findAllByOrderByDate(Pageable pageable);
+    Page<WriteOffAct> findAllByOrderByDateDesc(Pageable pageable);
 
     @Modifying
     @Query("update WriteOffAct set deletedAt = :deletedTime where id = :id")

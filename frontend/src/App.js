@@ -16,6 +16,7 @@ import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 import Application from "./pages/application/Application";
 import WarehouseItems from "./pages/warehouse/WarehouseItems";
+import WriteOffAct from "./pages/write-off/WriteOffPage";
 
 function App() {
 
@@ -72,6 +73,14 @@ function App() {
         })}/>
     };
 
+    const renderWriteOffActs =() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_DRIVER"
+        || user.role === "ROLE_DIRECTOR"} render={(() => {
+            return <WriteOffAct/>
+        })}/>
+    }
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -81,6 +90,7 @@ function App() {
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
     const warehouseItemsPath = pathWithCustomer(`/warehouses/items/:warehouseId`);
+    const writeOffPath = pathWithCustomer(`/write-off-act`);
 
     return (
         <UserContext>
@@ -92,6 +102,7 @@ function App() {
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
                 <Route path={warehouseItemsPath} render={renderWarehouseItems}/>
+                <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
                 <Route path={'/login'} component={Login}/>

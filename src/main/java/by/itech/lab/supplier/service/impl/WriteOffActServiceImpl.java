@@ -30,7 +30,7 @@ public class WriteOffActServiceImpl implements WriteOffActService {
 
     @Override
     public Page<WriteOffActDto> findAll(final Pageable pageable) {
-        return writeOffActRepository.findAllByOrderByDate(pageable)
+        return writeOffActRepository.findAllByOrderByDateDesc(pageable)
                 .map(writeOffActMapper::map);
     }
 
