@@ -57,8 +57,8 @@ Content-Type: application/json
 Cookie: {{test}}
 
 {
-  "name": "SomeCompany2",
-  "adminEmail": "1j323@gmail.com"
+  "name": "SomeCompany",
+  "adminEmail": "3j323@gmail.com"
 }
 
 ###
@@ -102,7 +102,6 @@ Cookie: {{test}}
   "totalCapacity": 151.0,
   "currentCapacity": 85.0,
   "addressDto": {
-    "id": 20,
     "city": "Pinto",
     "addressLine1": "6374 Posuere, St.",
     "addressLine2": "163-8189 Mi Ave",
@@ -137,7 +136,9 @@ Cookie: {{test}}
     "latitude": 40.854785,
     "longitude": -75.85785
   },
-  "usersId": [3]
+  "usersId": [
+    3
+  ]
 }
 
 ###
@@ -228,6 +229,19 @@ GET http://localhost:8080/customers/3/warehouses/8/items?itemUpc=829
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+###
+
+GET http://localhost:8080/customers/3/warehouses/8/warehouse-items?itemsId=19,18,5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
 
 ###
 
@@ -339,7 +353,7 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "password": "password"
+  "password"
 }
 
 ###
@@ -649,7 +663,6 @@ Cookie: {{test}}
 ###
 
 #-------------------------------------------------------Application---------------------------------------------------
-# Note: put commentaries before @Secured in ApplicationController
 
 POST http://localhost:8080/customers/3/application
 Content-Type: application/json
@@ -675,7 +688,6 @@ Cookie: {{test}}
     "id": 1
   },
   "applicationStatus": "OPEN",
-  "wayBillDto": null,
   "deletedAt": null,
   "items": [
     {
@@ -688,9 +700,6 @@ Cookie: {{test}}
     }
   ]
 }
-
-
-
 
 > {%
     client.test("Request executed successfully", function() {
@@ -827,10 +836,6 @@ Cookie: {{test}}
     }
   ]
 }
-
-
-
-
 > {%
     client.test("Request executed successfully", function() {
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
@@ -853,6 +858,7 @@ Cookie: {{test}}
 ###
 
 GET http://localhost:8080/customers/3/write-off-act/2
+
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -892,6 +898,7 @@ Cookie: {{test}}
 ###
 
 DELETE http://localhost:8080/customers/3/write-off-act/1
+
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -901,5 +908,71 @@ Cookie: {{test}}
         client.assert(response.status === 204, "Response status is not 204 status="+response.status);
     });
 %}
+
+
+###-------------------------------------------------------Waybills---------------------------------------------------
+POST http://localhost:8080/customers/3/waybills
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "number": "12853",
+  "sourceLocationWarehouseDto": {
+    "id": 1
+  },
+  "driverDto": {
+    "id": 61
+  },
+  "carDto": {
+    "id": 1
+  },
+  "applications": [
+    {
+      "id": 21
+    },
+    {
+      "id": 1
+    }
+  ]
+}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+
+PUT http://localhost:8080/customers/3/waybills/21
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "applications": [
+    {
+      "id": 21,
+      "deleteFromWaybill": true
+    },
+    {
+      "id": 1
+    }
+  ]
+}
+
+###
+
+GET http://localhost:8080/customers/3/waybills
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+GET http://localhost:8080/customers/3/waybills/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
 
 ###

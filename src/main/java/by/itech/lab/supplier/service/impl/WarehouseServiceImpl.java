@@ -76,8 +76,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public List<WarehouseDto> findAllByType(final WarehouseType warehouseType) {
-        if (warehouseType == WarehouseType.WAREHOUSE) {
+    public List<WarehouseDto> findAllByType(final WarehouseType warehouseType, final Boolean byUser) {
+        if (warehouseType == WarehouseType.WAREHOUSE && Objects.nonNull(byUser) && byUser) {
             UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             UserDto currentUser = userService.findById(principal.getId());
             return Collections.singletonList(currentUser.getWarehouseDto());

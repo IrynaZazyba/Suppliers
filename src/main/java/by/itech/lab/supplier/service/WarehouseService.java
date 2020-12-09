@@ -8,15 +8,14 @@ import by.itech.lab.supplier.dto.WarehouseItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Set;
-
 import java.util.List;
+import java.util.Set;
 
 public interface WarehouseService extends BaseService<WarehouseDto> {
 
     Page<WarehouseDto> findAll(Pageable pageable);
 
-    List<WarehouseDto> findAllByType(WarehouseType warehouseType);
+    List<WarehouseDto> findAllByType(WarehouseType warehouseType, Boolean byUser);
 
     void acceptApplication(ApplicationDto appDto, Long warehouseId);
 

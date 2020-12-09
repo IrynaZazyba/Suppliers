@@ -4,19 +4,18 @@ export default function validateItem(currentItem, items) {
         errorsFields.push("upc");
     }
 
-    if (!currentItem.amount) {
+    if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
     }
 
-    if (!currentItem.cost) {
+    if (!currentItem.cost || currentItem.cost < 0) {
         errorsFields.push("cost");
     }
 
-    items.forEach(i => {
-        if (i.id === currentItem.id) {
-            errorsFields.push("exist")
-        }
-    });
+    let item = items.filter(i => i.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
 
     return errorsFields;
 };
@@ -27,7 +26,7 @@ export function validateShipmentItem(currentItem, items, app) {
         errorsFields.push("upc");
     }
 
-    if (!currentItem.amount) {
+    if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
     }
 
@@ -45,7 +44,56 @@ export function validateShipmentItem(currentItem, items, app) {
     }
 
     return errorsFields;
-};
+}
+
+export function validateEditItem(currentItem, itemsInApp) {
+
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount || currentItem.amount < 0) {
+        errorsFields.push("amount");
+    }
+
+    if (!currentItem.cost) {
+        errorsFields.push("cost");
+    }
+
+    let item = itemsInApp.filter(i => i.itemDto.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
+    return errorsFields;
+}
+
+export function validateShipmentEditItem(currentItem, itemsInApp) {
+
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount || currentItem.amount < 0) {
+        errorsFields.push("amount");
+    }
+
+    let item = itemsInApp.filter(i => i.itemDto.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
+    return errorsFields;
+}
+
+export function checkItemsAtWarehouse(appItemsIds, whItems) {
+    let itemIds = whItems.map(i => i.item.id);
+    return appItemsIds.filter(appItem => !itemIds.includes(appItem));
+}
+
+
 
 export function validateWriteOffItem(currentItem, items, app) {
     let errorsFields = [];
