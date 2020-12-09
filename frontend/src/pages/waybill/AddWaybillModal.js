@@ -63,7 +63,6 @@ function AddWaybillModal(props) {
     const [mapCenter, setMapCenter] = useState({lat: 51.494900, lng: -0.146231});
 
     useEffect(() => {
-
         Promise.all([
             fetch(`/customers/${customerId}/warehouses/applications`),
             fetch(`/customers/${customerId}/car`),
@@ -366,7 +365,7 @@ function AddWaybillModal(props) {
         }
     };
 
-    function renderRoute (start, end, waypoints){
+    function renderRoute(start, end, waypoints) {
         const directionsService = new google.maps.DirectionsService();
         let directionsRenderer = new google.maps.DirectionsRenderer();
         let requests = {
@@ -577,12 +576,12 @@ function AddWaybillModal(props) {
     };
 
     function reRenderRoute(reordered) {
-        let reorderdWaypoints = reordered.slice();
+        let reorderedWaypoints = reordered.slice();
         let start = {lat: startPoint.address.latitude, lng: startPoint.address.longitude};
-        let endWaypoint = reorderdWaypoints.pop();
+        let endWaypoint = reorderedWaypoints.pop();
         let end = {lat: endWaypoint.address.latitude, lng: endWaypoint.address.longitude};
 
-        let waypointsToRender = reorderdWaypoints.map(wp => {
+        let waypointsToRender = reorderedWaypoints.map(wp => {
             return {
                 location: {
                     lat: wp.address.latitude,
@@ -685,15 +684,15 @@ function AddWaybillModal(props) {
                     <div className="validation-error">
                         {errors.validationErrors.includes("apps") ? "Apps should be specified" : ""}
                     </div>
-                    <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
+                    {apps.length > 0 && <Card border="primary" style={{width: '100%', marginTop: '5px'}}>
                         <Card.Header>
                         </Card.Header>
                         <Card.Body>
                             <Card.Text>
                             </Card.Text>
-                            {apps.length > 0 && body}
+                            {body}
                         </Card.Body>
-                    </Card>
+                    </Card>}
 
                     <Row style={{marginTop: '15px'}}>
                         <Col sm={6}>

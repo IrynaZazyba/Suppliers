@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_WAYBILL;
 @RestController
 @AllArgsConstructor
 @Validated
-//@Secured({"ROLE_LOGISTICS_SPECIALIST", "ROLE_DRIVER", "ROLE_SYSTEM_ADMIN"})
+@Secured({"ROLE_LOGISTICS_SPECIALIST", "ROLE_DRIVER", "ROLE_SYSTEM_ADMIN"})
 @RequestMapping(URL_CUSTOMER + URL_CUSTOMER_ID + URL_WAYBILL)
 public class WaybillController {
 

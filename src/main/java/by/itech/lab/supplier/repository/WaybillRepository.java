@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface WaybillRepository extends JpaRepository<WayBill, Long> {
 
+    Optional<WayBill> findByNumber(String number);
+
     @Query("select w from WayBill w where (:status is null or w.waybillStatus=:status) " +
             "and ((:role like 'ROLE_LOGISTICS_SPECIALIST' and w.createdByUsers.id=:userId) " +
             "or (:role like 'ROLE_DRIVER' and w.waybillStatus='READY' and w.driver.id=:userId))")
@@ -21,8 +23,5 @@ public interface WaybillRepository extends JpaRepository<WayBill, Long> {
                                          WaybillStatus status,
                                          Long userId,
                                          @Param("role") String userRole);
-
-
-    Optional<WayBill> findByNumber(String number);
 
 }

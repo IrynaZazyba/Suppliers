@@ -469,6 +469,19 @@ Connection: keep-alive
 Cookie: {{test}}
 
 ###
+
+GET http://localhost:8080/customers/3/users/role?role=ROLE_DRIVER
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+
 #---------------------------------------------------Category----------------------------------------------------------
 
 POST http://localhost:8080/customers/3/category
@@ -949,10 +962,34 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
 ###
 GET http://localhost:8080/customers/3/waybills/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+GET http://localhost:8080/customers/3/application/warehouses?warehouseId=8&applicationStatus=OPEN&size=5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
 
 ###
