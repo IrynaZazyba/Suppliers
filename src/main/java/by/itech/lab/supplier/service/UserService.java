@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface UserService extends BaseService<UserDto>{
+public interface UserService extends BaseService<UserDto> {
+    List<UserDto> findUsersByDispatcherUsername(String username);
+
+    List<UserDto> findDispatchersByWarehouseId(Long id);
 
     UserDto createAdmin(CustomerDto customerDto);
 
@@ -34,9 +37,11 @@ public interface UserService extends BaseService<UserDto>{
 
     Page<UserDto> getAllActive(Pageable pageable, Boolean status);
 
-    Page<UserDto> getAllDispatchers(Long customerId, Pageable pageable);
-
     void setWarehouseIntoUser(Warehouse warehouse, List<Long> usersId);
+
+    void deleteWarehouseFromUsers(List<Long> dispatchers);
+
+    void deleteWarehousesForAllUsers(List<Long> warehouses);
 
     List<UserDto> findAllByRole(Role role);
 }
