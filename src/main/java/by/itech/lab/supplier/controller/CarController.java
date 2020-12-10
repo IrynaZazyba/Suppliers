@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.util.Objects;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAR;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_UNPAGED;
 
 @RestController
 @AllArgsConstructor
@@ -41,8 +43,13 @@ public class CarController {
     }
 
     @GetMapping
-    public Page<CarDto> getAllNotDeleted(@RequestParam(required = false) Pageable pageable) {
+    public Page<CarDto> getAllNotDeleted(@Null final Pageable pageable) {
         return Objects.isNull(pageable) ? carService.findAll(Pageable.unpaged()) : carService.findAll(pageable);
+    }
+
+    @GetMapping(URL_UNPAGED)
+    public Page<CarDto> getAll() {
+        return carService.findAll(Pageable.unpaged());
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

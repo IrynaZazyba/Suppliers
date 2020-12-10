@@ -55,7 +55,7 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
-                    {checkPermission &&
+                    {checkPermission && (user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "DRIVER")&&
                     <Nav.Link className={waybillClass}
                               href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}

@@ -60,7 +60,7 @@ function EditWaybillModal(props) {
 
         if (props.modal.isOpen) {
             Promise.all([
-                fetch(`/customers/${customerId}/car`),
+                fetch(`/customers/${customerId}/car/unpaged`),
                 fetch(`/customers/${customerId}/users/role?role=ROLE_DRIVER`),
                 fetch(`/customers/${customerId}/waybills/${props.modal.waybillId}`)
             ]).then(res => Promise.all(res.map(r => r.json())))

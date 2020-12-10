@@ -68,7 +68,7 @@ export default () => {
             .then(response => response.json())
             .then(res => {
                 setUserDto(res);
-                setState(res.addressDto.state);
+                userDto.addressDto && setState(res.addressDto.state);
             });
 
 
@@ -145,7 +145,7 @@ export default () => {
                                           onChange={handleName}
                                           value={userDto.name}
                                           className={
-                                             isValid("name")
+                                              isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid name.
@@ -209,7 +209,8 @@ export default () => {
 
                         <Form.Group controlId="formBasicCity" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city" value={userDto.addressDto.city}
+                            <Form.Control type="text" placeholder="city"
+                                          value={userDto.addressDto && userDto.addressDto.city}
                                           readOnly={true}
                             />
 
@@ -218,7 +219,7 @@ export default () => {
                         <Form.Group controlId="formBasicAddress" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
                             <Form.Control type="text" placeholder="address line 1"
-                                          value={userDto.addressDto.addressLine1} readOnly={true}
+                                          value={userDto.addressDto && userDto.addressDto.addressLine1} readOnly={true}
                             />
 
                         </Form.Group>
@@ -226,7 +227,7 @@ export default () => {
                         <Form.Group controlId="formBasicAddress" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
                             <Form.Control type="text" placeholder="address line 2"
-                                          value={userDto.addressDto.addressLine2} readOnly={true}
+                                          value={userDto.addressDto && userDto.addressDto.addressLine2} readOnly={true}
                             />
 
                         </Form.Group>

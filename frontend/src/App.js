@@ -45,7 +45,7 @@ function App() {
     };
 
     const renderUser = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"||user.role==="ROLE_ADMIN"} render={(() => {
             return <Users/>
         })}/>
     };
@@ -79,7 +79,7 @@ function App() {
     };
 
     const renderWaybill = () => {
-        return <ProtectedComponent conditions={user} render={(() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_LOGISTICS_SPECIALIST"||user.role==="ROLE_DRIVER"} render={(() => {
             return <Waybill/>
         })}/>
     };
