@@ -17,11 +17,11 @@ export default function validateWaybill(waybill, addedApps, waypoints) {
         errorsFields.push("car");
     }
 
-    if (addedApps.length === 0) {
+    if (!addedApps.length) {
         errorsFields.push("apps");
     }
 
-    if (waypoints.length === 0) {
+    if (!waypoints.length) {
         errorsFields.push("introduce-route");
     }
 
@@ -38,7 +38,7 @@ export function checkCarCapacity(carCapacity, appsCapacity) {
 
 export function checkIfRouteExists(apps) {
     let errorsFields = [];
-    if (apps.length === 0) {
+    if (!apps.length) {
         errorsFields.push("route");
     }
     return errorsFields;
@@ -46,7 +46,7 @@ export function checkIfRouteExists(apps) {
 
 export function checkIfRouteCalculated(waypoints) {
     let errorsFields = [];
-    if (waypoints.length === 0) {
+    if (!waypoints.length) {
         errorsFields.push("introduce-route");
     }
     return errorsFields;
@@ -54,7 +54,7 @@ export function checkIfRouteCalculated(waypoints) {
 
 export function validateSourceLocation(source) {
     let errorsFields = [];
-    if (source.length === 0) {
+    if (!source.length) {
         errorsFields.push("source");
     }
     return errorsFields;
@@ -62,7 +62,7 @@ export function validateSourceLocation(source) {
 
 export function validateCar(car) {
     let errorsFields = [];
-    if (car.length === 0) {
+    if (!car.length) {
         errorsFields.push("car");
     }
     return errorsFields;
@@ -70,7 +70,7 @@ export function validateCar(car) {
 
 export function validateDriver(driver) {
     let errorsFields = [];
-    if (driver.length === 0) {
+    if (!driver.length) {
         errorsFields.push("driver");
     }
     return errorsFields;
@@ -96,17 +96,17 @@ export function validateUpdatedWaybill(waybill) {
         errorsFields.push("car");
     }
 
-    if (waybill.applications.length === 0) {
+    if (!waybill.applications.length) {
         errorsFields.push("apps");
     }
 
     let notDeleted = JSON.parse(JSON.stringify(waybill.applications)).filter(app => !app.deleteFromWaybill);
-    if (notDeleted.length === 0) {
+    if (!notDeleted.length) {
         errorsFields.push("apps");
     }
 
 
-    if (waybill.route.wayPoints.length === 0) {
+    if (!waybill.route.wayPoints.length) {
         errorsFields.push("introduce-route");
     }
 
