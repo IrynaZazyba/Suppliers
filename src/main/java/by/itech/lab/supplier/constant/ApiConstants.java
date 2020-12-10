@@ -39,4 +39,10 @@ public final class ApiConstants {
     public final static String URL_WAREHOUSE_ITEMS = "/warehouse-items";
     public final static String DRIVER = "/driver";
     public static final String IDENTIFIER = "/identifier";
+    public final static String URL_ROLE = "/role";
+    public final static String URL_APPLICATIONS = "/applications";
+    public final static String URL_ROUTE = "/route";
+    public final static String URL_DELETE_LIST = "/delete-list";
+    public final static String URL_DISPATCHERS = "/dispatchers";
+    public final static String URL_IDENTIFIER = "/identifier";
 }

@@ -23,6 +23,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -72,5 +74,4 @@ public class User implements BaseEntity {
     private boolean active;
 
     private LocalDate deletedAt;
-
 }

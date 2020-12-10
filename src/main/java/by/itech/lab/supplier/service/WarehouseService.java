@@ -11,7 +11,15 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Set;
 
-public interface WarehouseService extends BaseService<WarehouseDto> {
+public interface WarehouseService {
+
+    Boolean isWarehouseWithIdentifierExist(final String identifier);
+
+    WarehouseDto save(final WarehouseDto warehouseDto);
+
+    WarehouseDto findById(final Long warehouseId);
+
+    void deleteByIds(final List<Long> id);
 
     Page<WarehouseDto> findAll(Pageable pageable);
 
@@ -36,4 +44,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
 
     List<WarehouseDto> getWarehouseByTypeAndIdentifier(String identifier, WarehouseType warehouseType);
+
+    List<WarehouseDto> getWarehousesWithOpenApplications();
 }

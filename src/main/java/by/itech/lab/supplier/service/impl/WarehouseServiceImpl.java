@@ -92,6 +92,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public Boolean isWarehouseWithIdentifierExist(final String identifier) {
+        Long id = warehouseRepository.findWarehouseIdByIdentifier(identifier);
+        return id != null;
+    }
+
+    @Override
     @Transactional
     public WarehouseDto save(final WarehouseDto warehouseDto) {
         Warehouse warehouse = Optional.ofNullable(warehouseDto.getId())
@@ -103,21 +109,24 @@ public class WarehouseServiceImpl implements WarehouseService {
     private Warehouse create(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseMapper.map(warehouseDto);
         Warehouse saved = warehouseRepository.save(warehouse);
-        userService.setWarehouseIntoUser(saved, warehouseDto.getUsersId());
+        userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
         return saved;
     }
 
     private Warehouse update(final WarehouseDto warehouseDto) {
         Warehouse warehouse = warehouseRepository.findById(warehouseDto.getId()).orElseThrow();
         warehouseMapper.map(warehouseDto, warehouse);
-        return warehouseRepository.save(warehouse);
+        Warehouse saved = warehouseRepository.save(warehouse);
+        userService.setWarehouseIntoUser(saved, warehouseDto.getDispatchersId());
+        userService.deleteWarehouseFromUsers(warehouseDto.getIrrelevantDispatchersId());
+        return saved;
     }
-
 
     @Transactional
     @Override
-    public void delete(final Long id) {
-        warehouseRepository.delete(id);
+    public void deleteByIds(final List<Long> id) {
+        warehouseRepository.deleteByIds(id);
+        userService.deleteWarehousesForAllUsers(id);
     }
 
     @Transactional
@@ -293,5 +302,10 @@ public class WarehouseServiceImpl implements WarehouseService {
                                                               final WarehouseType warehouseType) {
         return warehouseRepository.findByTypeAndIdentifierStartingWith(warehouseType, identifier).stream()
                 .map(warehouseMapper::map).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WarehouseDto> getWarehousesWithOpenApplications() {
+        return applicationService.getWarehousesWithOpenApplications();
     }
 }

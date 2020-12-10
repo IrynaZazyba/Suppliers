@@ -24,5 +24,4 @@ public interface WaybillRepository extends JpaRepository<WayBill, Long> {
                                          Long userId,
                                          @Param("role") String userRole);
 
-
 }

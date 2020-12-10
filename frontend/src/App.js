@@ -14,9 +14,11 @@ import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 import Cars from "./pages/car/Cars";
+import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
 import WarehouseItems from "./pages/warehouse/WarehouseItems";
 import WriteOffAct from "./pages/write-off/WriteOffPage";
+import Waybill from "./pages/waybill/Waybill";
 
 function App() {
 
@@ -34,6 +36,13 @@ function App() {
     const renderCustomer = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
             return <Customers/>
+        })}/>
+    };
+
+    const renderWarehouse = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"
+        || user.role === "ROLE_ADMIN"} render={(() => {
+            return <Warehouses/>
         })}/>
     };
 
@@ -86,6 +95,13 @@ function App() {
         })}/>
     };
 
+    const renderWaybill = () => {
+        return <ProtectedComponent conditions={user} render={(() => {
+            return <Waybill/>
+        })}/>
+    };
+
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -96,18 +112,21 @@ function App() {
     const applicationPath = pathWithCustomer(`/application`);
     const warehouseItemsPath = pathWithCustomer(`/warehouses/items/:warehouseId`);
     const writeOffPath = pathWithCustomer(`/write-off-act`);
+    const waybillPath = pathWithCustomer(`/waybills`);
 
     return (
         <UserContext>
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
                 <Route path={warehouseItemsPath} render={renderWarehouseItems}/>
                 <Route path={writeOffPath} render={renderWriteOffActs}/>
+                <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
                 <Route path={'/cars'} render={renderCar}/>

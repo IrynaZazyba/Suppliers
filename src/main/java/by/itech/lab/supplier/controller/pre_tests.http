@@ -136,24 +136,23 @@ Cookie: {{test}}
     "latitude": 40.854785,
     "longitude": -75.85785
   },
-  "usersId": [
-    3
-  ]
+  "dispatchersId" : [3]
 }
 
 ###
 
-PUT http://localhost:8080/customers/3/warehouses/1
+POST http://localhost:8080/customers/3/warehouses/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "id": "21",
+  "id": "1",
+  "identifier": "35421828199",
   "type": "FACTORY",
-  "totalCapacity": "1",
+  "totalCapacity": "343",
   "addressDto": {
-    "id": "104",
+    "id": "3",
     "city": "Kanzas",
     "addressLine1": "Linkoln Str.",
     "addressLine2": "66",
@@ -245,10 +244,18 @@ Cookie: {{test}}
 
 ###
 
-DELETE http://localhost:8080/customers/3/warehouses/1
+POST http://localhost:8080/customers/3/warehouses/delete-list
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+[21]
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 204, "Response status is not 204 status="+response.status);
+    });
+%}
 
 ###
 #--------------------------------------------------Retailers---------------------------------------------#
@@ -463,12 +470,25 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/users/dispatchers
+GET http://localhost:8080/customers/3/users/dispatchers?username=harry+potter
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
 ###
+
+GET http://localhost:8080/customers/3/users/role?role=ROLE_DRIVER
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+###
+
 #---------------------------------------------------Category----------------------------------------------------------
 
 POST http://localhost:8080/customers/3/category
@@ -924,14 +944,14 @@ Connection: keep-alive
 Cookie: {{test}}
 
 {
-  "number": "12853",
+  "number": "1510",
   "sourceLocationWarehouseDto": {
     "id": 1
   },
-  "driverDto": {
+  "driver": {
     "id": 61
   },
-  "carDto": {
+  "car": {
     "id": 1
   },
   "applications": [
@@ -941,7 +961,25 @@ Cookie: {{test}}
     {
       "id": 1
     }
-  ]
+  ],
+  "route": {
+    "wayPoints": [
+      {
+        "address": {
+          "id": 18
+        },
+        "isVisited": false,
+        "priority": 0
+      },
+      {
+        "address": {
+          "id": 4
+        },
+        "isVisited": false,
+        "priority": 1
+      }
+    ]
+  }
 }
 
 > {%
@@ -976,10 +1014,34 @@ Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
 
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
 ###
 GET http://localhost:8080/customers/3/waybills/1
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
+
+###
+GET http://localhost:8080/customers/3/application/warehouses?warehouseId=8&applicationStatus=OPEN&size=5
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+> {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Response status is not 200 status="+response.status);
+    });
+%}
 
 ###

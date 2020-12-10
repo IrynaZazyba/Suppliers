@@ -16,6 +16,7 @@ function Header() {
     }
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
+    const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
     const usersClass = window.location.pathname === "/users" ? "active" : "";
     const carsClass = window.location.pathname === "/cars" ? "active" : "";
 
@@ -23,7 +24,11 @@ function Header() {
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);
     const appClass = getClass(/.application/);
+<<<<<<< HEAD
     const writeOffActClass = getClass(/.write-off-act/)
+=======
+    const waybillClass = getClass(/.waybills/);
+>>>>>>> 2985d43e213a171ab9aa85470b66a8d6dd106177
 
     const itemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -47,6 +52,10 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
+                    {checkPermission &&
+                    <Nav.Link className={warehousesClass}
+                              href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
+                    </Nav.Link>}
                     {isPermittedAndRoleAdmin &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryPermission &&
@@ -54,7 +63,15 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
+<<<<<<< HEAD
                     {itemPermission &&
+=======
+                    {checkPermission &&
+                    <Nav.Link className={waybillClass}
+                              href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
+                    </Nav.Link>}
+                    {categoryAndItemPermission &&
+>>>>>>> 2985d43e213a171ab9aa85470b66a8d6dd106177
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}
