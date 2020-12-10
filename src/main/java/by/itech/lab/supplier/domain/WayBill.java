@@ -66,7 +66,7 @@ public class WayBill implements BaseEntity {
     @JoinColumn(name = "car_driver_id")
     private User driver;
     private Long customerId;
-    @OneToMany(mappedBy = "wayBill")
+    @OneToMany(mappedBy = "wayBill", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<Application> applications = new ArrayList<>();
     @OneToOne(cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude

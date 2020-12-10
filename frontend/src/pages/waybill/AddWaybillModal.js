@@ -237,14 +237,14 @@ function AddWaybillModal(props) {
                             let res = Object.values(json).join('. ');
                             setErrors({
                                 serverErrors: res,
-                                validationErrors: ''
+                                validationErrors: []
                             });
                         });
                     }
                     if (response.status !== 200 && response.status !== 400) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     }
                     if (response.status === 200) {
@@ -255,8 +255,6 @@ function AddWaybillModal(props) {
                         hideModalHandler();
                     }
                 });
-
-
         } else {
             setErrors(prevState => ({
                 ...prevState,
@@ -524,7 +522,6 @@ function AddWaybillModal(props) {
             <Row>
                 <Col sm={6}>
                     {waybillInfo}
-
                 </Col>
                 <Col sm={6}>
                     <Row>
@@ -621,7 +618,6 @@ function AddWaybillModal(props) {
             mapCenter={mapCenter}
             directions={directions}
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}
