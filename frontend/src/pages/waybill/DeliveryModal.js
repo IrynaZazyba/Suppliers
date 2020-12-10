@@ -273,7 +273,6 @@ function DeliveryModal(props) {
             mapCenter={mapCenter}
             directions={directions}
             isMarkerShown
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap&libraries=geometry,drawing,places"
             loadingElement={<div style={{height: `100%`}}/>}
             containerElement={<div style={{height: `350px`}}/>}
             mapElement={<div style={{height: `100%`}}/>}
