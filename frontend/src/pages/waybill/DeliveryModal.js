@@ -184,11 +184,7 @@ function DeliveryModal(props) {
                      style={{marginRight: '5px', textAlign: 'center', color: 'green'}}
                      size={'1.5em'}/> :
             <FaRegSquare id={wp.id}
-                         style={{
-                             marginRight: '5px',
-                             textAlign: 'center',
-                             color: '#1A7FA8'
-                         }}
+                         style={{marginRight: '5px', textAlign: 'center', color: '#1A7FA8'}}
                          size={'1.4em'}
                          onClick={setVisited}/>;
     };
@@ -239,7 +235,6 @@ function DeliveryModal(props) {
                     </Row>
                 </Col>
                 <Col style={{textAlign: 'end', fontSize: '1.5em'}} sm={5}>
-
                     {waybill.waybillStatus === 'READY' && startDeliveryButton}
                     {waybill.waybillStatus === 'IN_PROGRESS' &&
                     <>
