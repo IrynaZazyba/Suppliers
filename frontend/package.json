@@ -24,7 +24,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.0",
     "validate.js": "^0.13.1",
-    "validator": "^13.1.17"
+    "validator": "^13.1.17",
+    "react-moment": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
