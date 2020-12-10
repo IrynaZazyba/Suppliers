@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.domain.Retailer;
+import by.itech.lab.supplier.domain.Warehouse;
 import by.itech.lab.supplier.dto.RetailerDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.mapper.RetailerMapper;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -29,8 +32,11 @@ public class RetailerServiceImpl implements RetailerService {
 
     @Override
     public RetailerDto findById(Long id) {
-        return retailerRepository.findById(id).map(retailerMapper::map)
+        RetailerDto retailerDto = retailerRepository.findById(id).map(retailerMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Retailer with id=" + id + " doesn't exist"));
+       Set<WarehouseDto> warehouses = warehouseService.findByRetailerId(id);
+       retailerDto.setWarehouses(warehouses);
+       return retailerDto;
     }
 
     @Override

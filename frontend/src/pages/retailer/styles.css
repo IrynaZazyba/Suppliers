@@ -5,3 +5,7 @@
     width: 1600px;
 
 }
+.warehouseContainer .mainContainer{
+    padding: 0 10px !important;
+    margin: 10px 0px !important;
+}

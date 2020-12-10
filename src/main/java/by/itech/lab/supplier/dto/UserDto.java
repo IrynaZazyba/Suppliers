@@ -30,9 +30,6 @@ public class UserDto implements BaseDto {
     @NotBlank
     @Size(min = 1, max = 50)
     private String username;
-    @NotBlank
-    @Size(min = 4, max = 150, message = "Password should contain at least 4 characters")
-    private String password;
     @Email
     @Size(min = 5, max = 254)
     private String email;

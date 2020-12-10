@@ -3,47 +3,48 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
-import CardContainer from "../../components/CardContainer";
-import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import CardContainer from "../../components/CardContainer";
+import {FaEdit} from "react-icons/fa";
 import ModalEditWarehouseRetailer from "./ModalEditWarehouseRetailer";
 import ModalAddWarehouseRetailer from "./ModalAddWarehouseRetailer";
-import {FaEdit} from "react-icons/fa/index";
-import "./styles.css"
+import Table from "react-bootstrap/Table";
+import Col from "react-bootstrap/Col";
 
-function ModalAddRetailer(props) {
-    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
+function ModalEditRetailer(props) {
+
+    const ref = React.createRef();
+    const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
     const [retailerDto, setRetailerDto] = useState({
         fullName: '',
         identifier: '',
         customerId: currentCustomerId,
-        warehouses: ''
+        warehouses: []
+    });
+    const [warehouses, setWarehouses] = useState([]);
+    const [warehouseDto, setWarehouseDto] = useState({
+        id: '',
+        customerId: '',
+        identifier: '',
+        type: '',
+        addressDto: {
+            state: {}
+        },
+        totalCapacity: ''
     });
 
-    const warehouse = localStorage.getItem("warehouse") != null ? localStorage.getItem("warehouse") : null;
-
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
     const [checkBoxes, setCheckBox] = useState([]);
-    const [warehouses, setWarehouses] = useState([]);
     const [lgShow, setLgShow] = useState(false);
     const [editWarehouse, setEditWarehouse] = useState({
         editShow: false,
         warehouse: []
     });
-
-    const addWarehouseHandler = warehouse => {
-        setWarehouses(preState => [...preState, warehouse]);
-    }
-    const editWarehouseHandler = warehouse => {
-        setWarehouses(preState =>
-            preState.map(wh => wh.identifier === warehouse.identifier ? warehouse : wh)
-        )
-    }
-    const [errors, setErrors] = useState({
-        validationErrors: [],
-        serverErrors: ''
-    });
+    const [options, setOptions] = useState([]);
 
     const handleFullName = (e) => {
         setRetailerDto(preState => ({
@@ -51,6 +52,11 @@ function ModalAddRetailer(props) {
             fullName: e.target.value
         }));
     };
+    const editWarehouseHandler = warehouse => {
+        setWarehouses(preState =>
+            preState.map(wh => wh.identifier === warehouse.identifier ? warehouse : wh)
+        )
+    }
     const handleId = (e) => {
         setRetailerDto(preState => ({
             ...preState,
@@ -58,66 +64,11 @@ function ModalAddRetailer(props) {
         }));
     };
 
-    useEffect(() => {
-        if (props.props.editShow) {
-            fetch(`customers/${currentCustomerId}/retailers/${props.props.retailer.id}`)
-                .then(response => response.json())
-                .then(res => {
-                    setRetailerDto(res);
-                });
-        }
-    }, [props.props.editShow]);
-    const addRetailerHandler = (e) => {
-
-        setErrors(preState => ({
-            ...preState,
-            validationErrors: ''
-        }));
-        retailerDto.warehouses = warehouses;
-        fetch(`/customers/${currentCustomerId}/retailers`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(retailerDto)
-        })
-            .then(function (response) {
-                if (response.status !== 201) {
-                    setErrors({
-                        serverErrors: "Something go wrong, try later",
-                        validationErrors: ''
-                    });
-                } else {
-                    setErrors(preState => ({
-                        ...preState,
-                        validationErrors: []
-                    }));
-                    props.onChange(false, retailerDto);
-                }
-            });
-
-    };
-
     const handleCheckedChange = (warehouse) => {
         setCheckBox(preState => [...preState, warehouse])
     };
 
-
-    const closeModalEdit = (e) => {
-        setEditWarehouse(
-            preState => ({
-                ...preState,
-                editShow: false
-            }));
-
-    };
-
-    const closeModalAdd = (e) => {
-        setLgShow(e);
-    };
-
     function removeFromWarehouseArray() {
-        console.log("");
         setWarehouses(preState =>
             preState.filter(
                 function (e) {
@@ -128,6 +79,64 @@ function ModalAddRetailer(props) {
         )
     }
 
+    useEffect(() => {
+        if (props.props.editShow) {
+
+            fetch(`/customers/${currentCustomerId}/retailers/${props.props.retailer.id}`)
+                .then(response => response.json())
+                .then(res => {
+                    setRetailerDto(res);
+                });
+            fetch(`/customers/${currentCustomerId}/warehouses/retailers/${props.props.retailer.id}`)
+                .then(response => response.json())
+                .then(res => {
+                    setWarehouses(res);
+                });
+        }
+    }, [props.props.editShow]);
+
+    const closeModalAdd = (e) => {
+        setLgShow(e);
+    };
+    const closeModalEdit = (e) => {
+        setEditWarehouse(
+            preState => ({
+                ...preState,
+                editShow: false
+            }));
+
+    };
+    const addWarehouseHandler = warehouse => {
+        setWarehouses(preState => [...preState, warehouse]);
+    };
+    const editRetailerHandler = (e) => {
+        e.preventDefault();
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: ''
+        }));
+        fetch(`/customers/${currentCustomerId}/retailers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(retailerDto)
+        })
+            .then(response => {
+                if (response.status !== 200) {
+                    setErrors({
+                        serverErrors: "Something went wrong, try later",
+                        validationErrors: ''
+                    });
+                } else {
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: []
+                    }));
+                    props.onChange(false, retailerDto);
+                }
+            });
+    };
     const tableRows = warehouses.filter(warehouse => warehouse != null).map(warehouse => (
         <tr key={warehouse.identifier}>
             <td>{warehouse.identifier}</td>
@@ -200,26 +209,19 @@ function ModalAddRetailer(props) {
                 <Col md={11}/>
             </Row>
         </React.Fragment>;
-
     return (
         <>
             <Modal
-                contentClassName="custom-modal-style"
-                show={props.props}
-                onHide={() => {
-                    setErrors({
-                        serverErrors: '',
-                        validationErrors: []
-                    });
-                    props.onChange(false);
-                }}
+                show={props.props.editShow}
+                onHide={() => props.onChange(false)}
                 aria-labelledby="modal-custom"
                 className="shadow"
+
                 centered
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
-                        Add retailer
+                        Edit retailer
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -227,24 +229,18 @@ function ModalAddRetailer(props) {
                     <Row>
                         <Form>
                             <Form.Group controlId="formBasicText" style={{padding: '0px 10px'}}>
-                                <Form.Control type="text" placeholder="Name" onChange={handleFullName}
-                                              className={
-                                                  errors.validationErrors.includes("fullName")
-                                                      ? "form-control is-invalid"
-                                                      : "form-control"
-                                              }/>
+                                <Form.Control type="text" placeholder="Name" value={retailerDto.fullName}
+                                              onChange={handleFullName}
+                                />
                                 <Form.Control.Feedback type="invalid">
-                                    Please provide a valid customer name.
+                                    Please provide a valid full name.
                                 </Form.Control.Feedback>
                             </Form.Group>
 
                             <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                                <Form.Control type="text" placeholder="Identifier" onChange={handleId}
-                                              className={
-                                                  errors.validationErrors.includes("identifier")
-                                                      ? "form-control is-invalid"
-                                                      : "form-control"
-                                              }/>
+                                <Form.Control type="text" placeholder="Identifier" value={retailerDto.identifier}
+                                              onChange={handleId}
+                                />
                                 <Form.Control.Feedback type="invalid">
                                     Please provide a valid identifier.
                                 </Form.Control.Feedback>
@@ -262,16 +258,14 @@ function ModalAddRetailer(props) {
                     </Row>
                     <div className="float-right" style={{paddingRight: '0px'}}>
                         <Button type="submit" className="mainButton pull-right"
-                                onClick={addRetailerHandler}>
+                                onClick={editRetailerHandler}>
                             Save
                         </Button>
                     </div>
                 </Modal.Body>
             </Modal>
-
         </>
-
     );
 }
 
-export default ModalAddRetailer;
+export default ModalEditRetailer;

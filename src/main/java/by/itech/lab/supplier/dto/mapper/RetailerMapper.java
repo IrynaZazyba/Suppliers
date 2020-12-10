@@ -5,6 +5,7 @@ import by.itech.lab.supplier.dto.RetailerDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,7 +40,9 @@ public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
                 .identifier(retailerDto.getIdentifier())
                 .deletedAt(retailerDto.getDeletedAt())
                 .active(retailerDto.getActive())
-                 .customerId(retailerDto.getCustomerId())
+//                .warehouses(Objects.nonNull(retailerDto.getWarehouses()) ?
+//                        retailerDto.getWarehouses().stream().map(warehouseMapper::map).collect(Collectors.toSet()) : null)
+                .customerId(retailerDto.getCustomerId())
                 .build();
     }
 }

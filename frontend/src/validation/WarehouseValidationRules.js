@@ -76,7 +76,7 @@ export function validateTotalCapacity(dto) {
 
 export function validateState(dto) {
     let errorsFields = [];
-    if (!dto.addressDto.state.state) {
+    if (!dto.addressDto.state) {
         errorsFields.push("state");
     }
     return errorsFields;

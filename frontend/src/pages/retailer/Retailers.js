@@ -8,14 +8,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import ModalAddRetailer from "./ModalAddRetailer";
+import ModalEditRetailer from "./ModalEditRetailer";
 import CardContainer from "../../components/CardContainer";
 import ErrorMessage from "../../messages/errorMessage";
 
+
 export default () => {
 
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     const [page, setPage] = useState({
         active: 1,
@@ -72,6 +72,16 @@ export default () => {
                 }
             });
     };
+    const closeModalEdit = (e, customerDto) => {
+        setEditRetailer(
+            preState => ({
+                ...preState,
+                editShow: false
+            }));
+        if (customerDto) {
+            getRetailers(`/customers/${currentCustomerId}/retailers?status=${filter}&size=${page.countPerPage}`);
+        }
+    };
 
 
     const changePage = (e) => {
@@ -106,7 +116,6 @@ export default () => {
     };
 
 
-
     const tableRows = retailers.map(retailer => (
         <tr key={retailer.id}>
             <td>{retailer.fullName}</td>
@@ -120,7 +129,14 @@ export default () => {
                 value={retailer.active}
             />
             </td>
-            <td>
+            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+                        size={'1.3em'}
+                        onClick={() => {
+                            setEditRetailer({
+                                editShow: true,
+                                retailer: retailer
+                            });
+                        }}/>
             </td>
         </tr>
     ));
@@ -129,6 +145,7 @@ export default () => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <ModalAddRetailer props={lgShow} onChange={closeModalAdd}/>
+            <ModalEditRetailer contentClassName="custom-modal-style" props={editRetailer} onChange={closeModalEdit}/>
         </React.Fragment>;
 
     const header =
@@ -163,7 +180,7 @@ export default () => {
                 <tr>
                     <th> Full name</th>
                     <th>Identifier</th>
-                    <th>status</th>
+                    <th>Status</th>
                     <th></th>
                 </tr>
                 </thead>

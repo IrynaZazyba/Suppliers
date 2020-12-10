@@ -10,7 +10,6 @@ function ModalAddWarehouseRetailer(props) {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     const ref = React.createRef();
-    const [dropdownMenuName, setDropdownMenuName] = useState("select type");
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
         customerId: currentCustomerId,
@@ -46,7 +45,10 @@ function ModalAddWarehouseRetailer(props) {
         });
         setWarehouseDto(preState => ({
             ...preState,
-            addressDto: {...preState.addressDto, state: e.length ? {id: e[0].id, state: e[0].stateZone} : {id: '', state: ''}}
+            addressDto: {
+                ...preState.addressDto,
+                state: e.length ? {id: e[0].id, state: e[0].stateZone} : {id: '', state: ''}
+            }
         }))
     };
 
@@ -134,7 +136,25 @@ function ModalAddWarehouseRetailer(props) {
                                 Please provide a valid identifier.
                             </Form.Control.Feedback>
                         </Form.Group>
-
+                        <Form.Group>
+                            <AsyncTypeahead
+                                ref={ref}
+                                style={{padding: '5px 10px'}}
+                                name="state"
+                                filterBy={filterBy}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={options}
+                                placeholder="Select state..."
+                                onSearch={handleSearch}
+                                onChange={onChangeState}
+                            >
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
+                                </div>
+                            </AsyncTypeahead>
+                        </Form.Group>
 
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             city
@@ -188,24 +208,7 @@ function ModalAddWarehouseRetailer(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group>
-                            <AsyncTypeahead
-                                ref={ref}
-                                name="state"
-                                filterBy={filterBy}
-                                id="async-state"
-                                labelKey="state"
-                                minLength={3}
-                                options={options}
-                                placeholder="Select state..."
-                                onSearch={handleSearch}
-                                onChange={onChangeState}
-                            >
-                                <div className="validation-error">
-                                    {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
-                                </div>
-                            </AsyncTypeahead>
-                        </Form.Group>
+
 
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"

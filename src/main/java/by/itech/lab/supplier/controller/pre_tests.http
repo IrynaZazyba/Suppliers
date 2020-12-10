@@ -272,7 +272,7 @@ Cookie: {{test}}
 %}
 
 ###
-GET http://localhost:8080/customers/3/retailers/1
+GET http://localhost:8080/customers/3/retailers/101
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
