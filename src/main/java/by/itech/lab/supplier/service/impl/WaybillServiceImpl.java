@@ -51,15 +51,15 @@ public class WaybillServiceImpl implements WaybillService {
     private final CarService carService;
 
     @Transactional
+    @Override
     public WayBillDto save(final WayBillDto wayBillDto) {
         final UserImpl principal = (UserImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final User user = userMapper.map(userService.findById(principal.getId()));
-
+        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
         final WayBill wayBill = Optional.ofNullable(wayBillDto.getId())
                 .map(itemToSave -> updateWayBill(wayBillDto))
                 .orElseGet(() -> createWayBill(wayBillDto, user));
 
-        final List<ApplicationDto> apps = getRelatedApplications(wayBillDto);
         final ValidationErrors validationResult = validateWaybill(wayBill, apps);
         if (validationResult.getValidationMessages().size() > 0) {
             throw new ValidationException("Invalid waybill data", validationResult);
@@ -68,6 +68,7 @@ public class WaybillServiceImpl implements WaybillService {
         wayBill.setLastUpdated(LocalDateTime.now());
         wayBill.setUpdatedByUsers(user);
         wayBill.setCustomerId(user.getCustomer().getId());
+        wayBill.getRoute().getWayPoints().forEach(waypoint -> waypoint.setRoute(wayBill.getRoute()));
         final WayBill saved = waybillRepository.save(wayBill);
 
         if (Objects.isNull(wayBillDto.getId())) {
@@ -76,6 +77,7 @@ public class WaybillServiceImpl implements WaybillService {
             applicationService.saveAll(appDtos);
         }
         return wayBillMapper.map(saved);
+
     }
 
     private WayBill createWayBill(final WayBillDto wayBillDto, final User user) {
@@ -83,14 +85,13 @@ public class WaybillServiceImpl implements WaybillService {
         wayBill.setRegistrationDate(LocalDateTime.now());
         wayBill.setCreatedByUsers(user);
         wayBill.setWaybillStatus(WaybillStatus.READY);
-        wayBill.getRoute().getWayPoints().forEach(waypoint -> waypoint.setRoute(wayBill.getRoute()));
         return wayBill;
     }
 
     private WayBill updateWayBill(final WayBillDto wayBillDto) {
         final WayBill existing = waybillRepository.findById(wayBillDto.getId()).orElseThrow();
         wayBillMapper.map(wayBillDto, existing);
-        return waybillRepository.save(existing);
+        return existing;
     }
 
     private List<ApplicationDto> getRelatedApplications(final WayBillDto wayBillDto) {

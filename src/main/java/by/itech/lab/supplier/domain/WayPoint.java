@@ -29,7 +29,7 @@ public class WayPoint implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @JoinColumn(name = "address_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

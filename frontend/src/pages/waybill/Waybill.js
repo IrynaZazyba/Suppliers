@@ -12,6 +12,7 @@ import Badge from "react-bootstrap/Badge";
 import {FaEdit} from "react-icons/fa";
 import AddWaybillModal from "./AddWaybillModal";
 import DeliveryModal from "./DeliveryModal";
+import EditWaybillModal from "./EditWaybillModal";
 
 export default () => {
 
@@ -35,6 +36,11 @@ export default () => {
     const [openDeliveryModal, setOpenDeliveryModal] = useState({
         isOpen: false,
         waybillId: ''
+    });
+    const [openEditModal, setOpenEditModal] = useState({
+        isOpen: false,
+        waybillId: '',
+        customerId: customerId
     });
 
     const changePage = (e) => {
@@ -87,6 +93,11 @@ export default () => {
         getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
     };
 
+    const closeModalEdit = (e) => {
+        setOpenEditModal(e);
+        getWaybill(`/customers/${customerId}/waybills?size=${page.countPerPage}`);
+    };
+
 
     function parseDestinationLocationsCities(waybill) {
         let cities = waybill.applications.map(a =>
@@ -118,15 +129,19 @@ export default () => {
                 <Badge className="badge-status">
                     {waybill.waybillStatus.replace('_', ' ').toLowerCase()}
                 </Badge></td>
-            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
+            <td> {user&&user.role==='ROLE_LOGISTICS_SPECIALIST'&&
+            <FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         onClick={() => {
-
+                            setOpenEditModal({
+                                isOpen: true,
+                                waybillId: waybill.id,
+                                customerId: customerId
+                            });
                         }}
                         size={'1.3em'}
-            />
+            />}
             </td>
         </tr>
-
     ));
 
 
@@ -156,15 +171,17 @@ export default () => {
         <React.Fragment>
             <AddWaybillModal modal={openAddModal} onChange={closeModalAdd}/>
             <DeliveryModal modal={openDeliveryModal} onChange={closeDeliveryModal}/>
+            <EditWaybillModal modal={openEditModal} onChange={closeModalEdit}/>
         </React.Fragment>;
 
     const header =
         <React.Fragment>
             <Row>
                 <Col md={2}>
+                    {user&&user.role==='ROLE_LOGISTICS_SPECIALIST'&&
                     <Button className="mainButton" size="sm" onClick={() => setOpenAddModal(true)}>
                         Create waybill
-                    </Button>
+                    </Button>}
                 </Col>
                 <Col md={7} className="checkbox-all-app">
                 </Col>
