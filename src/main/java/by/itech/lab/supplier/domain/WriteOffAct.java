@@ -54,5 +54,8 @@ public class WriteOffAct implements BaseEntity {
     @OneToMany(mappedBy = "writeOffAct", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude
     private Set<WriteOffItem> items = new HashSet<>();
+    @Column(nullable = false)
+    private Long creatorId;
+    private Long warehouseId;
 
 }

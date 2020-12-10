@@ -287,4 +287,11 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .map(warehouseItemMapper::map)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<WarehouseDto> getWarehouseByTypeAndIdentifier(final String identifier,
+                                                              final WarehouseType warehouseType) {
+        return warehouseRepository.findByTypeAndIdentifierStartingWith(warehouseType, identifier).stream()
+                .map(warehouseMapper::map).collect(Collectors.toList());
+    }
 }

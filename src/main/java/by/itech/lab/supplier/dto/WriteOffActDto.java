@@ -20,4 +20,6 @@ public class WriteOffActDto implements BaseDto {
     private LocalDate deletedAt;
     private Long customerId;
     private Set<WriteOffItemDto> items = new HashSet<>();
+    private Long creatorId;
+    private Long warehouseId;
 }

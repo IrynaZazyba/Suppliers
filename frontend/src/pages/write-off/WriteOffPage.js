@@ -10,6 +10,7 @@ import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import CardContainer from "../../components/CardContainer";
 import {AuthContext} from "../../context/authContext";
+import ModalAddActDispatcher from "./WriteOffModalDispatcher";
 
 export default () => {
 
@@ -22,6 +23,7 @@ export default () => {
         countPerPage: 10,
         countPages: 1
     });
+    const [lgShow, setLgShow] = useState(false);
     const [acts, setActs] = useState([]);
     const [errorMessage, setErrors] = useState('');
 
@@ -31,32 +33,36 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getWriteOffActs(`/customers/${currentCustomerId}/write-off-act?size=${e.target.value}`);
+        getActsByRole(user.role, `size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getWriteOffActs(`/customers/${currentCustomerId}/write-off-act?page=${currentPage}&size=${page.countPerPage}`);
+        getActsByRole(user.role, `page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getWriteOffActs(`/customers/${currentCustomerId}/write-off-act?size=${page.countPerPage}`);
+        getActsByRole(user.role, `size=${page.countPerPage}`);
     }, []);
 
-    function getActsByRole(user) {
-        switch (user.role) {
+    function getActsByRole(role, parameters) {
+        switch (role) {
             case "ROLE_DRIVER":
-                getWriteOffActs(`/customers/${currentCustomerId}/write-off-act/driver?size=${page.countPerPage}`);
+                getWriteOffActs(`/customers/${currentCustomerId}/write-off-act/driver?${parameters}`);
                 break;
             case "ROLE_DISPATCHER":
-                getWriteOffActs(`/customers/${currentCustomerId}/write-off-act/dispatcher/?size=${page.countPerPage}`);
+                getWriteOffActs(`/customers/${currentCustomerId}/write-off-act/warehouses?${parameters}`);
                 break;
-            case "ROLE_ADMIN" || "ROLE_SYSTEM_ADMIN" || "ROLE_DIRECTOR":
-                getWriteOffActs(`/customers/${currentCustomerId}/write-off-act?size=${page.countPerPage}`);
+            case "ROLE_ADMIN":
+            case "ROLE_SYSTEM_ADMIN":
+            case "ROLE_DIRECTOR":
+                getWriteOffActs(`/customers/${currentCustomerId}/write-off-act?${parameters}`);
                 break;
-
+            default:
+                break;
         }
+
     }
 
     function getWriteOffActs(url) {
@@ -72,6 +78,13 @@ export default () => {
             });
     }
 
+    const closeModalDispatcher = (e, actDto) => {
+        setLgShow(e);
+        if (actDto) {
+            getActsByRole(user.role);
+        }
+    };
+
     const tableRows = acts.map(act => (
         <tr key={act.id}>
             <td onClick={() => document.location.href = `/customers/${currentCustomerId}/write-off-act/items/${act.id}`}>
@@ -85,14 +98,16 @@ export default () => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
+            <ModalAddActDispatcher props={lgShow} onChange={closeModalDispatcher}/>
         </React.Fragment>;
 
     const header =
         <React.Fragment>
-            {(user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN") &&
+            {(user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN" || user.role === "ROLE_DIRECTOR") &&
             <Row>
                 <Col md={3}>
                     <Button className="mainButton" size="sm" onClick={() => {
+                        setLgShow(true)
                     }}>
                         Write off warehouse items
                     </Button>
@@ -112,6 +127,7 @@ export default () => {
             <Row>
                 <Col md={3}>
                     <Button className="mainButton" size="sm" onClick={() => {
+                        setLgShow(true)
                     }}>
                         Write off warehouse items
                     </Button>

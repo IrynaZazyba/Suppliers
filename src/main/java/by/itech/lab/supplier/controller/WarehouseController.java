@@ -118,4 +118,10 @@ public class WarehouseController {
         return warehouseService.getWarehouseItemContainingItems(id, itemsId);
     }
 
+    @GetMapping(ApiConstants.URL_TYPE + ApiConstants.IDENTIFIER)
+    public List<WarehouseDto> findByTypeAndIdentifier(@RequestParam final String identifier,
+                                                      @RequestParam final WarehouseType type) {
+        return warehouseService.getWarehouseByTypeAndIdentifier(identifier, type);
+    }
+
 }

@@ -61,4 +61,16 @@ public class WriteOffActServiceImpl implements WriteOffActService {
         return writeOffReasonRepository.findByReasonStartingWith(reasonName).stream()
                 .map(writeOffActReasonMapper::map).collect(Collectors.toList());
     }
+
+    @Override
+    public Page<WriteOffActDto> findAllByCreatorId(final Long creatorId, final Pageable pageable) {
+        return writeOffActRepository.findAllByCreatorIdOrderByDateDesc(creatorId, pageable)
+                .map(writeOffActMapper::map);
+    }
+
+    @Override
+    public Page<WriteOffActDto> findAllByWarehouseId(final Long warehouseId, final Pageable pageable) {
+        return writeOffActRepository.findAllByWarehouseIdOrderByDateDesc(warehouseId, pageable)
+                .map(writeOffActMapper::map);
+    }
 }

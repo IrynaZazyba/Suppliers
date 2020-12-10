@@ -24,4 +24,22 @@ export default function validateWriteOffAct(act, items) {
     return errorsFields;
 };
 
+export function validateWriteOffActItem(currentItem, items) {
+    let errorsFields = [];
+    if (!currentItem.upc) {
+        errorsFields.push("upc");
+    }
+
+    if (!currentItem.amount || currentItem.amount < 0) {
+        errorsFields.push("amount");
+    }
+
+    let item = items.filter(i => i.id === currentItem.id);
+    if (item.length > 0) {
+        errorsFields.push("exist");
+    }
+
+    return errorsFields;
+}
+
 

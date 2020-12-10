@@ -1,14 +1,19 @@
 package by.itech.lab.supplier.controller;
 
+import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.constant.ApiConstants;
 import by.itech.lab.supplier.domain.WriteOffActReason;
+import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WriteOffActDto;
 import by.itech.lab.supplier.dto.WriteOffActReasonDto;
+import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WriteOffActService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +40,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_WRITE_OFF_ACT;
 public class WriteOffActController {
 
     private WriteOffActService writeOffActService;
+    private UserService userService;
 
     @PostMapping
     public WriteOffActDto save(@Valid @RequestBody WriteOffActDto writeOffActDto,
@@ -46,6 +52,18 @@ public class WriteOffActController {
     @GetMapping
     public Page<WriteOffActDto> getAllOrderByDate(Pageable pageable) {
         return writeOffActService.findAll(pageable);
+    }
+
+    @GetMapping(ApiConstants.DRIVER)
+    public Page<WriteOffActDto> getAllByCreatorOrderByDate(Pageable pageable) {
+        return writeOffActService.findAllByCreatorId(getCurrentUserId(), pageable);
+    }
+
+    @GetMapping(ApiConstants.URL_WAREHOUSE)
+    public Page<WriteOffActDto> getAllByWarehouseOrderByDate(Pageable pageable) {
+        UserDto userDto = userService.findById(getCurrentUserId());
+        return writeOffActService.findAllByWarehouseId(userDto.getWarehouseDto().getId(), pageable);
+
     }
 
     @GetMapping(URL_ID_PARAMETER)
@@ -62,5 +80,15 @@ public class WriteOffActController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         writeOffActService.delete(id);
+    }
+
+    private Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = null;
+        if (authentication.getPrincipal() instanceof UserImpl) {
+            UserImpl user = (UserImpl) authentication.getPrincipal();
+            userId = user.getId();
+        }
+        return userId;
     }
 }

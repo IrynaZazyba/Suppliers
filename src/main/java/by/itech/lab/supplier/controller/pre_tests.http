@@ -909,6 +909,13 @@ Cookie: {{test}}
     });
 %}
 
+###
+
+GET http://localhost:8080/customers/3/warehouses/type/identifier?type=WAREHOUSE&identifier=9
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
 
 ###-------------------------------------------------------Waybills---------------------------------------------------
 POST http://localhost:8080/customers/3/waybills

@@ -34,4 +34,6 @@ public interface WarehouseService extends BaseService<WarehouseDto> {
     Page<WarehouseItemDto> getItemsByWarehouseId(Long warehouseId, Pageable pageable);
 
     List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
+
+    List<WarehouseDto> getWarehouseByTypeAndIdentifier(String identifier, WarehouseType warehouseType);
 }

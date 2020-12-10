@@ -27,6 +27,8 @@ public class WriteOffActMapper implements BaseMapper<WriteOffAct, WriteOffActDto
                 .totalAmount(dto.getTotalAmount())
                 .identifier(dto.getIdentifier())
                 .items(dto.getItems().stream().map(writeOffItemMapper::map).collect(Collectors.toSet()))
+                .creatorId(dto.getCreatorId())
+                .warehouseId(dto.getWarehouseId())
                 .build();
     }
 
@@ -41,6 +43,8 @@ public class WriteOffActMapper implements BaseMapper<WriteOffAct, WriteOffActDto
                 .totalAmount(entity.getTotalAmount())
                 .identifier(entity.getIdentifier())
                 .items(entity.getItems().stream().map(writeOffItemMapper::map).collect(Collectors.toSet()))
+                .creatorId(entity.getCreatorId())
+                .warehouseId(entity.getWarehouseId())
                 .build();
     }
 

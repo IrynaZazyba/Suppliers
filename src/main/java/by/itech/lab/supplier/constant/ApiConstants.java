@@ -37,5 +37,6 @@ public final class ApiConstants {
     public final static String URL_TAXES = "/taxes";
     public final static String URL_REASON = "/reason";
     public final static String URL_WAREHOUSE_ITEMS = "/warehouse-items";
-
+    public final static String DRIVER = "/driver";
+    public static final String IDENTIFIER = "/identifier";
 }

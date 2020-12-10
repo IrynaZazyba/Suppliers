@@ -4,41 +4,46 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {FaTrash} from "react-icons/fa";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import {validateWriteOffActItem} from "../../validation/WriteOffValidationRules";
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
-import validateWriteOffItem from "../../validation/ItemValidationRules";
-import validateWriteOffAct from "../../validation/WriteOffValidationRules";
 
-
-function WriteOffWarehouseModal(props) {
+function ModalAddWriteOff(props) {
 
     const ref = React.createRef();
     const [customerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
-    const [warehouseDto, setWarehouse] = useState({
-        id: '',
-        identifier: '',
-        type: ''
-    });
-    const [reason, setReason] = useState({
-        id: '',
-        reason: ''
+
+    const [categoryDto, setCategory] = useState({
+        category: '',
+        taxRate: ''
     });
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
+    const [reason, setReason] = useState({
+        id: '',
+        reason: ''
+    });
+    const [currentWarehouse, setCurrentWarehouse] = useState({
+        id: '',
+        identifier: '',
+        address: ''
+    });
     const [writeOffDto, setWriteOff] = useState({
+        identifier: '',
         total_sum: '',
         total_amount: '',
         reason_id: '',
         customer_id: '',
         items: []
     });
-    const [options, setOptions] = useState([]);
+    const [warehouseOptions, setWarehouseOptions] = useState([]);
     const [reasonOptions, setReasonOptions] = useState([]);
+    const [itemOptions, setItemOptions] = useState([]);
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState([]);
     const [totalValues, setTotalValues] = useState({
@@ -46,8 +51,29 @@ function WriteOffWarehouseModal(props) {
         totalSum: ''
     });
 
-    const handleSearch = (query) => {
-        fetch(`/customers/${customerId}/warehouses/${props.props.warehouseId}/items?itemUpc=${query}`)
+    function checkValidationErrors(fieldName) {
+        let res = errors.validationErrors.filter(e => e !== fieldName);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
+    }
+
+    const handleSearchWarehouse = (query) => {
+        fetch(`/customers/${customerId}/warehouses/type/identifier?type=WAREHOUSE&identifier=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                const optionsFromBack = res.map((i) => ({
+                    id: i.id,
+                    identifier: i.identifier,
+                    address: i.addressDto
+                }));
+                setWarehouseOptions(optionsFromBack);
+            });
+    };
+
+    const handleSearchItems = (query) => {
+        fetch(`/customers/${customerId}/warehouses/${currentWarehouse.id}/items?itemUpc=${query}`)
             .then(resp => resp.json())
             .then(res => {
                 const optionsFromBack = res.map((i) => ({
@@ -55,10 +81,10 @@ function WriteOffWarehouseModal(props) {
                     upc: i.item.upc,
                     label: i.item.label,
                     units: i.item.units,
-                    cost: i.cost
+                    cost: i.cost,
+                    amount: i.amount
                 }));
-
-                setOptions(optionsFromBack);
+                setItemOptions(optionsFromBack);
             });
     };
 
@@ -76,6 +102,18 @@ function WriteOffWarehouseModal(props) {
 
     const filterBy = () => true;
 
+    const onChangeWarehouse = (e) => {
+        checkValidationErrors('identifier');
+        e.length > 0 ?
+            setCurrentWarehouse(preState => ({
+                ...preState,
+                id: e[0].id,
+                identifier: e[0].identifier,
+                address: e[0].address
+            })) :
+            setCurrentWarehouse('');
+    };
+
     const onChangeUpc = (e) => {
         checkValidationErrors('upc');
         checkValidationErrors('exist');
@@ -86,8 +124,8 @@ function WriteOffWarehouseModal(props) {
                 upc: e[0].upc,
                 label: e[0].label,
                 units: e[0].units,
-                cost: e[0].cost
-
+                sum: e[0].cost * e[0].amount,
+                amount: e[0].amount
             })) :
             setCurrentItem('');
     };
@@ -97,10 +135,12 @@ function WriteOffWarehouseModal(props) {
         e.length > 0 ?
             setCurrentItem(preState => ({
                 ...preState,
-                id: e[0].id,
-                reason: e[0].reason
+                reason: {
+                    id: e[0].id,
+                    reason: e[0].reason
+                }
             })) :
-            setCurrentItem('');
+            setReason('');
     };
 
     const handleInput = (fieldName) =>
@@ -113,6 +153,13 @@ function WriteOffWarehouseModal(props) {
             }));
         };
 
+    const handleIdentifier = (e) => {
+        setWriteOff(preState => ({
+            ...preState,
+            identifier: e.target.value
+        }));
+    };
+
     const deleteItem = (e) => {
         let afterDelete = [];
         items.forEach(i => {
@@ -123,36 +170,9 @@ function WriteOffWarehouseModal(props) {
         setItems(afterDelete);
     };
 
-    function checkValidationErrors(fieldName) {
-        let res = errors.validationErrors.filter(e => e != fieldName);
-        setErrors(prevState => ({
-            ...prevState,
-            validationErrors: res
-        }));
-    }
-
-    useEffect(() => {
-        setCurrentItem('');
-        setTotalValues(preState => ({
-                ...preState,
-                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseInt(i.amount), 0),
-            })
-        );
-    }, [items]);
-
-    useEffect(() => {
-        if (props.props.writeOffShow === true) {
-            fetch(`/customers/${customerId}/warehouses/${props.props.warehouseId}`)
-                .then(response => response.json())
-                .then(res => {
-                    setWarehouse(res);
-                });
-        }
-    }, [props.props.writeOffShow]);
-
     const addItemHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateWriteOffItem(currentItem, items);
+        let validationResult = validateWriteOffActItem(currentItem, items);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validationResult
@@ -170,51 +190,16 @@ function WriteOffWarehouseModal(props) {
         }
     };
 
-    function prepareWriteOff() {
-        return {
-            total_sum: totalValues.totalSum,
-            total_amount: totalValues.totalAmount,
-            reason_id: reason.id,
-            customer_id: customerId
-        };
-    }
-
-    const warehouseHandler = (e) => {
-        e.preventDefault();
-
-        let validErrors = validateWriteOffAct(writeOffDto, items);
-        setErrors(prevState => ({
-            ...prevState,
-            validationErrors: validErrors
-        }));
-
-        if (validErrors.length === 0) {
-            let writeOff = prepareWriteOff();
-            fetch(`/customers/${customerId}/writeOff`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(writeOff)
+    useEffect(() => {
+        setCurrentItem('');
+        setTotalValues(preState => ({
+                ...preState,
+                totalAmount: items.reduce((totalAmount, i) => totalAmount + parseFloat(i.amount), 0),
+                totalSum: items.reduce((totalSum, i) => totalSum + parseFloat(i.sum), 0)
             })
-                .then(function (response) {
-                    if (response.status !== 200) {
-                        setErrors({
-                            serverErrors: "Something went wrong, try later",
-                            validationErrors: []
-                        });
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
-                            validationErrors: []
-                        }));
-                        setWriteOff([]);
-                        setItems([]);
-                        props.onChange(false, writeOffDto);
-                    }
-                });
-        }
-    };
+        );
+    }, [items]);
+
 
     const itemsTable =
         <React.Fragment>
@@ -223,7 +208,9 @@ function WriteOffWarehouseModal(props) {
                 <thead>
                 <tr>
                     <th>Item upc</th>
+                    <th>Label</th>
                     <th>Amount</th>
+                    <th>Sum</th>
                     <th></th>
 
                 </tr>
@@ -232,7 +219,9 @@ function WriteOffWarehouseModal(props) {
                 {items.map(i => (
                     <tr id={i.id} key={i.id}>
                         <td>{i.upc}</td>
+                        <td>{i.label}</td>
                         <td>{i.amount}</td>
+                        <td>{i.sum}</td>
                         <td style={{textAlign: 'center'}}>
                             <FaTrash id={i.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
@@ -255,9 +244,9 @@ function WriteOffWarehouseModal(props) {
                         id="async-example"
                         labelKey="upc"
                         minLength={3}
-                        options={options}
+                        options={itemOptions}
                         placeholder="Search item..."
-                        onSearch={handleSearch}
+                        onSearch={handleSearchItems}
                         onChange={onChangeUpc}
                     >
                         <div className="validation-error">
@@ -276,6 +265,13 @@ function WriteOffWarehouseModal(props) {
                     <Form.Control name="amount" placeholder="amount" type="number" min='1'
                                   value={currentItem && currentItem.amount}
                                   onChange={handleInput('amount')}
+                                  onBlur={() => {
+                                      let itemSum = currentItem.amount * currentItem.cost;
+                                      setCurrentItem(prevState => ({
+                                          ...prevState,
+                                          sum: itemSum
+                                      }));
+                                  }}
                                   className={
                                       errors.validationErrors.includes("amount")
                                           ? "form-control is-invalid"
@@ -284,6 +280,12 @@ function WriteOffWarehouseModal(props) {
                     <Form.Control.Feedback type="invalid">
                         Please provide a value.
                     </Form.Control.Feedback>
+                </Col>
+                <Col>
+                    <Form.Control name="sum" placeholder="sum" type="text"
+                                  disabled
+                                  value={currentItem && currentItem.sum}
+                    />
                 </Col>
                 <Col sm="3">
                     <AsyncTypeahead
@@ -317,23 +319,51 @@ function WriteOffWarehouseModal(props) {
     const actDataFields =
         <Row>
             <Col sm={8}>
-                <Form.Group as={Row} controlId="identifier">
+                <Form.Group as={Row} controlId="actIdentifier">
                     <Form.Label column sm="3">Identifier</Form.Label>
                     <Col sm="7">
-                        <Form.Control type="text"
-                                      disabled
-                                      value={warehouseDto.identifier}
-                                      />
+                        <AsyncTypeahead
+                            ref={ref}
+                            name="identifier"
+                            filterBy={filterBy}
+                            id="async-example"
+                            labelKey="identifier"
+                            minLength={3}
+                            options={warehouseOptions}
+                            placeholder="Search warehouse by identifier..."
+                            onSearch={handleSearchWarehouse}
+                            onChange={onChangeWarehouse}
+                        >
+                            <div className="validation-error">
+                                {errors.validationErrors.includes("identifier") ? "Please provide a value" : ""}
+                            </div>
+                        </AsyncTypeahead>
                     </Col>
                 </Form.Group>
-                <Form.Group as={Row} controlId="type">
-                    <Form.Label column sm="3">Warehouse type</Form.Label>
-                    <Col sm="7">
-                        <Form.Control type="text"
-                                      disabled
-                                      value={warehouseDto.type}
-                                      />
-                    </Col>
+                <Form.Group controlId="addressLine1">
+                    <Form.Control type="text"
+                                  value={currentWarehouse.address.addressLine1}
+                                  placeholder="Address line 1"
+                                  disabled
+                    />
+                </Form.Group>
+                <Form.Group controlId="addressLine2">
+                    <Form.Control type="text"
+                                  value={currentWarehouse.address.addressLine2}
+                                  placeholder="Address line 2"
+                                  disabled
+                    />
+                </Form.Group>
+                <Form.Group controlId="formBasicText">
+                    <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
+                                  className={
+                                      errors.validationErrors.includes("identifier")
+                                          ? "form-control is-invalid"
+                                          : "form-control"
+                                  }/>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a valid identifier.
+                    </Form.Control.Feedback>
                 </Form.Group>
             </Col>
             <Col sm={2} style={{marginLeft: '-25px'}}>
@@ -349,9 +379,9 @@ function WriteOffWarehouseModal(props) {
             <Col sm={2}>
                 <Card className="total-card">
                     <Card.Body>
-                        <h6>Total number of units</h6>
+                        <h6>Total sum of items</h6>
                         <Card.Text>
-                            <h3> {totalValues.totalUnits}</h3>
+                            <h3> {totalValues.totalSum}</h3>
                         </Card.Text>
                     </Card.Body>
                 </Card>
@@ -369,7 +399,8 @@ function WriteOffWarehouseModal(props) {
                         validationErrors: []
                     });
                     setItems([]);
-                    setWriteOff([]);
+                    setCurrentWarehouse({address: ''});
+                    setReason({});
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
@@ -379,7 +410,7 @@ function WriteOffWarehouseModal(props) {
                 backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
-                        Create write-off modal
+                        Create write-off act
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -400,7 +431,7 @@ function WriteOffWarehouseModal(props) {
                             </Card.Body>
                         </Card>
                         <div className="float-right" style={{padding: '10px'}}>
-                            <Button type="submit" className="mainButton pull-right" onClick={warehouseHandler}>
+                            <Button type="submit" className="mainButton pull-right" onClick={addItemHandler}>
                                 Create
                             </Button>
                         </div>
@@ -412,4 +443,4 @@ function WriteOffWarehouseModal(props) {
 
 }
 
-export default WriteOffWarehouseModal;
+export default ModalAddWriteOff;

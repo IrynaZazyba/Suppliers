@@ -16,6 +16,10 @@ public interface WriteOffActRepository extends JpaRepository<WriteOffAct, Long> 
 
     Page<WriteOffAct> findAllByOrderByDateDesc(Pageable pageable);
 
+    Page<WriteOffAct> findAllByCreatorIdOrderByDateDesc(Long creatorId, Pageable pageable);
+
+    Page<WriteOffAct> findAllByWarehouseIdOrderByDateDesc(Long warehouseId, Pageable pageable);
+
     @Modifying
     @Query("update WriteOffAct set deletedAt = :deletedTime where id = :id")
     void deleteById(@Param("id") Long id, @Param("deletedTime") LocalDate deletedTime);
