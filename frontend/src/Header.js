@@ -3,7 +3,6 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import UserProfile from "./components/UserProfile";
 import {AuthContext} from "./context/authContext";
-import Warehouse from "./pages/warehouse/Warehouses";
 
 function Header() {
 
@@ -28,6 +27,7 @@ function Header() {
     const itemClass = getClass(/.item/);
     const retailerClass = getClass(/.retailers/);
     const appClass = getClass(/.application/);
+    const waybillClass = getClass(/.waybills/);
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -57,6 +57,10 @@ function Header() {
                     <Nav.Link className={categoryClass}
                               href={`/customers/${currentCustomerId}/category`}>
                         Categories
+                    </Nav.Link>}
+                    {checkPermission &&
+                    <Nav.Link className={waybillClass}
+                              href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}
                     {categoryAndItemPermission &&
                     <Nav.Link className={itemClass}

@@ -19,8 +19,7 @@ public class StateServiceImpl implements StateService {
     private final StateRepository stateRepository;
     private final StateMapper stateMapper;
 
-    @Override
-    public List<StateDto> findListByState(final String state) {
+    public List<StateDto> findByStates(final String state) {
         return stateRepository.findByStateStartingWith(state).stream()
                 .map(stateMapper::map).collect(Collectors.toList());
     }

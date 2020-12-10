@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: ADD-D-1
+      author: alexey_overchenko
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-12-09-fill-data-dispatchers.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true

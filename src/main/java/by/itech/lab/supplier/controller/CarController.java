@@ -1,7 +1,6 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.constant.ApiConstants;
-import by.itech.lab.supplier.domain.Customer;
 import by.itech.lab.supplier.dto.CarDto;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.service.CarService;
@@ -16,10 +15,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAR;
 
@@ -40,8 +41,8 @@ public class CarController {
     }
 
     @GetMapping
-    public Page<CarDto> getAllNotDeleted(Pageable pageable) {
-        return carService.findAll(pageable);
+    public Page<CarDto> getAllNotDeleted(@RequestParam(required = false) Pageable pageable) {
+        return Objects.isNull(pageable) ? carService.findAll(Pageable.unpaged()) : carService.findAll(pageable);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)

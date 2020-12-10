@@ -17,6 +17,7 @@ import Warehouses from "./pages/warehouse/Warehouses";
 import Cars from "./pages/car/Cars";
 import Application from "./pages/application/Application";
 import Retailers from "./pages/retailer/Retailers";
+import Waybill from "./pages/waybill/Waybill";
 
 function App() {
 
@@ -38,8 +39,9 @@ function App() {
     };
 
     const renderWarehouse = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"} render={(() => {
-            return <Warehouses currentCustomerId={currentCustomerId}/>
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"
+        || user.role === "ROLE_ADMIN"} render={(() => {
+            return <Warehouses/>
         })}/>
     };
 
@@ -84,6 +86,13 @@ function App() {
         })}/>
     };
 
+    const renderWaybill = () => {
+        return <ProtectedComponent conditions={user} render={(() => {
+            return <Waybill/>
+        })}/>
+    };
+
+
     function pathWithCustomer(urlAfterCustomer) {
         return `/customers/${currentCustomerId}${urlAfterCustomer}`
     }
@@ -92,6 +101,8 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
+    const waybillPath = pathWithCustomer(`/waybills`);
+
     const retailerPath = pathWithCustomer(`/retailers`);
     return (
         <UserContext>
@@ -99,13 +110,11 @@ function App() {
             <Switch>
                 <Route exact path='/' component={Login}/>
                 <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
-                <Route path={'/customers/' + currentCustomerId + '/warehouses/type'} render={renderWarehouse}/>
-                <Route path={'/customers/' + currentCustomerId + '/profile'} render={renderProfile}/>
-                <Route path={'/customers/' + currentCustomerId + '/application'} render={renderApplication}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
+                <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={retailerPath} render={renderRetailer}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>

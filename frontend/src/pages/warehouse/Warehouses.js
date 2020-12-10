@@ -14,10 +14,14 @@ import ModalAddWarehouse from "./ModalAddWarehouse";
 export default (props) => {
 
     const [page, setPage] = useState({
+        active: 1,
         currentPage: 1,
         countPerPage: 10,
         countPages: 1
     });
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null
+        ? localStorage.getItem("currentCustomerId") : 0;
+
     const [checkBoxes, setCheckBox] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
     const [lgShow, setLgShow] = useState(false);
@@ -28,12 +32,15 @@ export default (props) => {
     const [errorMessage, setErrors] = useState('');
 
     const handleCheckedChange = (warehouseId) => {
-        const index = checkBoxes.indexOf(warehouseId);
+        let checkboxUpdate = checkBoxes.slice();
+
+        const index = checkboxUpdate.indexOf(warehouseId);
         if (index > -1) {
-            checkBoxes.splice(index, 1);
+            checkboxUpdate.splice(index, 1);
         } else {
-            checkBoxes.push(warehouseId);
+            checkboxUpdate = [...checkboxUpdate, warehouseId];
         }
+        setCheckBox(checkboxUpdate);
     };
 
     const handleCountPerPage = (e) => {
@@ -42,17 +49,17 @@ export default (props) => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${e.target.value}`);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
     }, []);
 
     function getWarehouses(url) {
@@ -60,8 +67,8 @@ export default (props) => {
             .then(response => response.json())
             .then(commits => {
                 setWarehouses(commits.content);
-                console.log(commits.content)
                 setPage({
+                        active: (commits.pageable.pageNumber + 1),
                         countPerPage: commits.size,
                         countPages: commits.totalPages
                     }
@@ -70,25 +77,26 @@ export default (props) => {
     }
 
     const closeModalEdit = (e, warehouseDto) => {
+
         setEditWarehouse(
             preState => ({
                 ...preState,
                 editShow: false
             }));
         if (warehouseDto) {
-            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+            getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
         }
     };
 
     const closeModalAdd = (e, warehouseDto) => {
         setLgShow(e);
         if (warehouseDto) {
-            getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+            getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
         }
     };
 
     function deleteWarehouse() {
-        fetch(`/customers/${props.currentCustomerId}/warehouses/delete-list`, {
+        fetch(`/customers/${currentCustomerId}/warehouses/delete-list`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -102,17 +110,21 @@ export default (props) => {
                     })
                 } else {
                     setCheckBox([]);
-                    getWarehouses(`/customers/${props.currentCustomerId}/warehouses?size=${page.countPerPage}`);
+                    getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
                 }
             });
+    }
+
+    function showAddress(address) {
+        return `${address.city}, ${address.addressLine1}, 
+        ${address.addressLine2}, ${address.state.state}`
     }
 
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
             <td>{warehouse.identifier}</td>
             <td>{warehouse.type}</td>
-            <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
-                {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
+            <td>{showAddress(warehouse.addressDto)}</td>
             <td>{warehouse.totalCapacity}</td>
             <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
                         size={'1.3em'}
@@ -124,7 +136,9 @@ export default (props) => {
                         }}/>
             </td>
             <td>
-                <input type="checkbox" onClick={() => handleCheckedChange(warehouse.id)}/>
+                <input type="checkbox"
+                       checked={checkBoxes.find(e => e === warehouse.id)}
+                       onClick={() => handleCheckedChange(warehouse.id)}/>
             </td>
         </tr>
     ));
@@ -132,27 +146,32 @@ export default (props) => {
     const modals =
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalEditWarehouse props={editWarehouse} onChange={closeModalEdit}
-                                currentCustomerId={props.currentCustomerId}/>
-            <ModalAddWarehouse props={lgShow} onChange={closeModalAdd}
-                               currentCustomerId={props.currentCustomerId}
+            <ModalEditWarehouse editWarehouse={editWarehouse} onChange={closeModalEdit}
+                                currentCustomerId={currentCustomerId}/>
+            <ModalAddWarehouse lgShow={lgShow} onChange={closeModalAdd}
+                               currentCustomerId={currentCustomerId}
             />
         </React.Fragment>;
 
     const header =
         <React.Fragment>
             <Row>
-                <Col>
+                <Col md={1}>
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                         Add
                     </Button>
                 </Col>
-                <Col md={10}>
-                    <Button className="mainButton" size="sm" onClick={() => deleteWarehouse()}>
+                <Col md={1}>
+                    <Button
+                        variant="link"
+                        disabled={checkBoxes.length === 0}
+                        className="deleteButton" size="sm"
+                        onClick={() => deleteWarehouse()}>
                         Delete
                     </Button>
                 </Col>
-                <Col md={14}>
+                <Col md={9}/>
+                <Col md={1}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>
@@ -167,6 +186,8 @@ export default (props) => {
                     <th>Type</th>
                     <th>Full Address</th>
                     <th>Total Capacity</th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>

@@ -4,6 +4,8 @@ import by.itech.lab.supplier.domain.State;
 import by.itech.lab.supplier.dto.StateDto;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 
 @Component
 public class StateMapper implements BaseMapper<State, StateDto> {
@@ -12,7 +14,7 @@ public class StateMapper implements BaseMapper<State, StateDto> {
     public State map(final StateDto dto) {
         return State.builder()
                 .id(dto.getId())
-                .state(dto.getState())
+                .state(Objects.nonNull(dto.getState()) ? dto.getState() : null)
                 .build();
     }
 

@@ -13,11 +13,13 @@ import java.util.Set;
 
 public interface WarehouseService{
 
+    Boolean isWarehouseWithIdentifierExist(final String identifier);
+
     WarehouseDto save(final WarehouseDto warehouseDto);
 
     WarehouseDto findById(final Long warehouseId);
 
-    void delete(final List<Long> id);
+    void deleteByIds(final List<Long> id);
 
     Page<WarehouseDto> findAll(Pageable pageable);
 
@@ -38,4 +40,6 @@ public interface WarehouseService{
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 
     List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
+
+    List<WarehouseDto> getWarehousesWithOpenApplications();
 }

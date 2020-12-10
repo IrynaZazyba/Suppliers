@@ -2,6 +2,7 @@ package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.advisor.AdminAccess;
 import by.itech.lab.supplier.constant.ApiConstants;
+import by.itech.lab.supplier.domain.Role;
 import by.itech.lab.supplier.dto.CustomerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.service.CustomerService;
@@ -27,9 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ROLE;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_DISPATCHERS;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_USER;
 
 @RestController
@@ -42,9 +47,14 @@ public class UserController {
 
     private final CustomerService customerService;
 
-    @GetMapping("/dispatchers")
-    public Page<UserDto> getAllDispatchers(@PathVariable Long customerId, @PageableDefault Pageable pageable) {
-        return userService.getAllDispatchers(customerId, pageable);
+    @GetMapping(URL_DISPATCHERS)
+    public List<UserDto> getListByUsername(@RequestParam String username) {
+        return userService.findUsersByDispatcherUsername(username);
+    }
+
+    @GetMapping(URL_DISPATCHERS + URL_ID_PARAMETER)
+    public List<UserDto> getAllDispatchersForCurrentWarehouse(@RequestParam Long id) {
+        return userService.findDispatchersByWarehouseId(id);
     }
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
@@ -58,7 +68,6 @@ public class UserController {
             @RequestParam(required = false) final Boolean status) {
         return userService.findAllByActive(pageable, status);
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -90,13 +99,11 @@ public class UserController {
         return userService.save(userDTO);
     }
 
-
     @AdminAccess
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_STATUS)
     public void changeActive(@PathVariable Long id, @RequestBody boolean status) {
         userService.changeActiveStatus(id, status);
     }
-
 
     @PutMapping(ApiConstants.URL_ID_PARAMETER + ApiConstants.URL_ACTIVATE)
     public void changeActive(@PathVariable Long id) {
@@ -108,5 +115,10 @@ public class UserController {
     @AdminAccess
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @GetMapping(URL_ROLE)
+    public List<UserDto> getUserByRole(@RequestParam Role role) {
+        return userService.findAllByRole(role);
     }
 }

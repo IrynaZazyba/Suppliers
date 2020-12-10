@@ -1,9 +1,13 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateException;
-import by.itech.lab.supplier.exception.DefaultExceptionInfo;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
+import by.itech.lab.supplier.exception.ValidationException;
+import by.itech.lab.supplier.exception.domain.DefaultExceptionInfo;
+import by.itech.lab.supplier.exception.domain.ValidationErrors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+@Log4j2
 @ControllerAdvice
 @RequiredArgsConstructor
 public class AdviceController extends ResponseEntityExceptionHandler {
@@ -74,5 +79,14 @@ public class AdviceController extends ResponseEntityExceptionHandler {
                 ConstraintViolation::getMessage));
         return ResponseEntity.status(BAD_REQUEST).body(errors);
     }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleValidationException(ValidationException ex) {
+        log.error("Invalid data: " +
+                StringUtils.join(ex.getValidationErrors().getValidationMessages(), ", "), ex);
+        ValidationErrors validationErrors = ex.getValidationErrors();
+        return ResponseEntity.status(CONFLICT).body(validationErrors);
+    }
+
 
 }
