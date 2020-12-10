@@ -14,6 +14,7 @@ import Items from "./pages/item/ItemsOfCustomer";
 import Category from "./pages/category/Category";
 import {AuthContext} from "./context/authContext";
 import Cars from "./pages/car/Cars";
+import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
 import Waybill from "./pages/waybill/Waybill";
 
@@ -33,6 +34,13 @@ function App() {
     const renderCustomer = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
             return <Customers/>
+        })}/>
+    };
+
+    const renderWarehouse = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"
+        || user.role === "ROLE_ADMIN"} render={(() => {
+            return <Warehouses/>
         })}/>
     };
 
@@ -92,6 +100,7 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
