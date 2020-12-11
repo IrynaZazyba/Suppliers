@@ -115,6 +115,7 @@ function ModalEditRetailer(props) {
             ...preState,
             validationErrors: ''
         }));
+        retailerDto.warehouses = warehouses;
         fetch(`/customers/${currentCustomerId}/retailers`, {
             method: 'POST',
             headers: {
@@ -123,7 +124,7 @@ function ModalEditRetailer(props) {
             body: JSON.stringify(retailerDto)
         })
             .then(response => {
-                if (response.status !== 200) {
+                if (response.status !== 200 || response.status !== 201) {
                     setErrors({
                         serverErrors: "Something went wrong, try later",
                         validationErrors: ''
