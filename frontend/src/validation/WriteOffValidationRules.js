@@ -1,6 +1,9 @@
 export default function validateWriteOffAct(act, items) {
     let errorsFields = [];
 
+   console.log(!act.identifier);
+    console.log(act);
+
     if (!act.identifier) {
         errorsFields.push("identifier");
     }
@@ -41,5 +44,6 @@ export function validateWriteOffActItem(currentItem, items) {
 
     return errorsFields;
 }
+
 
 

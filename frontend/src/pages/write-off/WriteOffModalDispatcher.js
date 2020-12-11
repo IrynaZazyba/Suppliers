@@ -35,8 +35,8 @@ function ModalAddWriteOff(props) {
     const [items, setItems] = useState([]);
     const [currentItem, setCurrentItem] = useState([]);
     const [totalValues, setTotalValues] = useState({
-        totalAmount: '',
-        totalSum: ''
+        totalAmount: 0,
+        totalSum: 0
     });
 
     function checkValidationErrors(fieldName) {
@@ -413,21 +413,27 @@ function ModalAddWriteOff(props) {
                         </AsyncTypeahead>
                     </Col>
                 </Form.Group>
-                <Form.Group controlId="addressLine1">
+                <Form.Group as={Row} controlId="addressLine1">
+                    <Form.Label column sm="3">Address line1</Form.Label>
+                    <Col sm="6">
                     <Form.Control type="text"
                                   value={currentWarehouse.address.addressLine1}
                                   placeholder="Address line 1"
                                   disabled
-                    />
+                    /></Col>
                 </Form.Group>
-                <Form.Group controlId="addressLine2">
+                <Form.Group as={Row} controlId="addressLine2">
+                    <Form.Label column sm="3">Address line2</Form.Label>
+                    <Col sm="6">
                     <Form.Control type="text"
                                   value={currentWarehouse.address.addressLine2}
                                   placeholder="Address line 2"
                                   disabled
-                    />
+                    /></Col>
                 </Form.Group>
-                <Form.Group controlId="formBasicText">
+                <Form.Group as={Row} controlId="formBasicText">
+                    <Form.Label column sm="3">Act identifier</Form.Label>
+                    <Col sm="6">
                     <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
                                   className={
                                       errors.validationErrors.includes("identifier")
@@ -437,6 +443,7 @@ function ModalAddWriteOff(props) {
                     <Form.Control.Feedback type="invalid">
                         Please provide a valid identifier.
                     </Form.Control.Feedback>
+                    </Col>
                 </Form.Group>
             </Col>
             <Col sm={2} style={{marginLeft: '-25px'}}>

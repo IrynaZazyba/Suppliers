@@ -110,7 +110,7 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
-    const warehouseItemsPath = pathWithCustomer(`/warehouses/items/:warehouseId`);
+    const warehouseItemsPath = pathWithCustomer(`/warehouses/:warehouseId/items`);
     const writeOffPath = pathWithCustomer(`/write-off-act`);
     const waybillPath = pathWithCustomer(`/waybills`);
 
