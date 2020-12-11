@@ -26,7 +26,7 @@ export function validateItemUnits(dto) {
 export function validateUpc(dto) {
     let errorFields = [];
 
-    if (!(/[0-9]/.test(dto.upc))) {
+    if (!dto || !(/[0-9]/.test(dto.upc))) {
         errorFields.push("upc");
     }
     return errorFields;
@@ -35,7 +35,7 @@ export function validateUpc(dto) {
 export function validateItemCategory(dto) {
     let errorFields = [];
 
-    if (validateCategory(dto).length !== 0) {
+    if (!dto || validateCategory(dto).length !== 0) {
         errorFields.push("category");
     }
 

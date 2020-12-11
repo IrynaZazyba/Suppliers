@@ -165,31 +165,32 @@ export default () => {
                             });
                         }}>Accept</Button>}
             </td>
-            <td><FaEdit
-                className={app.applicationStatus === 'FINISHED_PROCESSING'
-                    ? "edit-app-icon-disable"
-                    : "edit-app-icon-active"}
-                size={'1.3em'}
-                onClick={() => {
+            <td>
+                {user.role === 'ROLE_DISPATCHER' && <FaEdit
+                    className={app.applicationStatus === 'FINISHED_PROCESSING'
+                        ? "edit-app-icon-disable"
+                        : "edit-app-icon-active"}
+                    size={'1.3em'}
+                    onClick={() => {
 
-                    let statusRule = app.applicationStatus === 'OPEN'
-                        || app.applicationStatus === 'STARTED_PROCESSING';
+                        let statusRule = app.applicationStatus === 'OPEN'
+                            || app.applicationStatus === 'STARTED_PROCESSING';
 
-                    if (app.type === 'SUPPLY' && statusRule) {
-                        setOpenEditModal({
-                            isOpen: true,
-                            app: app,
-                            customerId: customerId
-                        });
-                    } else if (app.type === 'TRAFFIC' && statusRule) {
-                        setOpenEditShipmentModal({
-                            isOpen: true,
-                            app: app,
-                            customerId: customerId
-                        });
-                    }
-                }}
-            />
+                        if (app.type === 'SUPPLY' && statusRule) {
+                            setOpenEditModal({
+                                isOpen: true,
+                                app: app,
+                                customerId: customerId
+                            });
+                        } else if (app.type === 'TRAFFIC' && statusRule) {
+                            setOpenEditShipmentModal({
+                                isOpen: true,
+                                app: app,
+                                customerId: customerId
+                            });
+                        }
+                    }}
+                />}
             </td>
         </tr>
     ));
@@ -208,16 +209,17 @@ export default () => {
     const header =
         <React.Fragment>
             <Row>
-                <Col md={'auto'}>
-                    <Button className="mainButton" size="sm" onClick={() => setModalAddSupplyOpen(true)}>
-                        Add supply
-                    </Button>
-                </Col>
-                <Col md={'auto'}>
-                    <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
-                        Add shipment
-                    </Button>
-                </Col>
+                {user.role === 'ROLE_DISPATCHER' ? <>
+                    <Col md={'auto'}>
+                        <Button className="mainButton" size="sm" onClick={() => setModalAddSupplyOpen(true)}>
+                            Add supply
+                        </Button>
+                    </Col>
+                    <Col md={'auto'}>
+                        <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
+                            Add shipment
+                        </Button>
+                    </Col></> : <Col md={3}></Col>}
                 <Col md={4}></Col>
                 <Col md={2} className="checkbox-all-app">
                     <Form.Group controlId="formBasicCheckbox">

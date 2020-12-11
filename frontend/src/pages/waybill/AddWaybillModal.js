@@ -66,7 +66,7 @@ function AddWaybillModal(props) {
         if(props.modal) {
             Promise.all([
                 fetch(`/customers/${customerId}/warehouses/applications`),
-                fetch(`/customers/${customerId}/car`),
+                fetch(`/customers/${customerId}/car/unpaged`),
                 fetch(`/customers/${customerId}/users/role?role=ROLE_DRIVER`),
             ]).then(res => Promise.all(res.map(r => r.json())))
                 .then(content => {
