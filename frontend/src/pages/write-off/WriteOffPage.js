@@ -112,13 +112,7 @@ export default () => {
                         Write off warehouse items
                     </Button>
                 </Col>
-                <Col md={3}>
-                    <Button className="mainButton" size="sm" onClick={() => {
-                    }}>
-                        Write off car items
-                    </Button>
-                </Col>
-                <Col md={5}/>
+                <Col md={8}/>
                 <Col md={1}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
@@ -139,13 +133,7 @@ export default () => {
             </Row>}
             {user.role === "ROLE_DRIVER" &&
             <Row>
-                <Col md={3}>
-                    <Button className="mainButton" size="sm" onClick={() => {
-                    }}>
-                        Write off car items
-                    </Button>
-                </Col>
-                <Col md={8}/>
+                <Col md={11}/>
                 <Col md={1}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
