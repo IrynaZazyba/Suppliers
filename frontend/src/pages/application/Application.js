@@ -165,7 +165,8 @@ export default () => {
                             });
                         }}>Accept</Button>}
             </td>
-            <td><FaEdit
+            <td>
+                {user.role === 'ROLE_DISPATCHER' &&<FaEdit
                 className={app.applicationStatus === 'FINISHED_PROCESSING'
                     ? "edit-app-icon-disable"
                     : "edit-app-icon-active"}
@@ -189,7 +190,7 @@ export default () => {
                         });
                     }
                 }}
-            />
+            />}
             </td>
         </tr>
     ));
@@ -208,16 +209,17 @@ export default () => {
     const header =
         <React.Fragment>
             <Row>
-                <Col md={'auto'}>
-                    <Button className="mainButton" size="sm" onClick={() => setModalAddSupplyOpen(true)}>
-                        Add supply
-                    </Button>
-                </Col>
-                <Col md={'auto'}>
-                    <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
-                        Add shipment
-                    </Button>
-                </Col>
+                {user.role === 'ROLE_DISPATCHER' ? <>
+                    <Col md={'auto'}>
+                        <Button className="mainButton" size="sm" onClick={() => setModalAddSupplyOpen(true)}>
+                            Add supply
+                        </Button>
+                    </Col>
+                    <Col md={'auto'}>
+                        <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
+                            Add shipment
+                        </Button>
+                    </Col></> : <Col md={3}></Col>}
                 <Col md={4}></Col>
                 <Col md={2} className="checkbox-all-app">
                     <Form.Group controlId="formBasicCheckbox">

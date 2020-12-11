@@ -38,8 +38,7 @@ function App() {
     };
 
     const renderWarehouse = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"
-        || user.role === "ROLE_ADMIN"} render={(() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_ADMIN"||user.role === "ROLE_DISPATCHER"} render={(() => {
             return <Warehouses/>
         })}/>
     };

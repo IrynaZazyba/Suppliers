@@ -116,6 +116,13 @@ function ModalAddItem(props) {
                             ...preState,
                             validationErrors: []
                         }));
+                        setItem({
+                            label: '',
+                            upc: '',
+                            units: '',
+                            customerId: currentCustomerId,
+                            categoryDto: ''
+                        });
                         props.onChange(false, itemDto);
                     }
                 });
@@ -130,6 +137,13 @@ function ModalAddItem(props) {
                     setErrors({
                         serverErrors: '',
                         validationErrors: []
+                    });
+                    setItem({
+                        label: '',
+                        upc: '',
+                        units: '',
+                        customerId: currentCustomerId,
+                        categoryDto: ''
                     });
                     props.onChange(false);
                 }}
