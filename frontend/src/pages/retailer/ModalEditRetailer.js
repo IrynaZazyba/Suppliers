@@ -25,9 +25,10 @@ function ModalEditRetailer(props) {
     const [warehouses, setWarehouses] = useState([]);
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
-        customerId: '',
+        customerId: currentCustomerId,
         identifier: '',
         type: '',
+        deletedAt: '',
         addressDto: {
             state: {}
         },
@@ -76,7 +77,23 @@ function ModalEditRetailer(props) {
                 },
                 checkBoxes
             )
-        )
+        );
+        fetch(`/customers/${currentCustomerId}/warehouses/delete-list`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(checkBoxes.map(e => e.id))
+        })
+            .then(response => {
+                if (response.status !== 204) {
+                    setErrors({
+                        errorMessage: "Warehouse can not be deleted, because it is already used in application"
+                    })
+                } else {
+                    setCheckBox([]);
+                }
+            });
     }
 
     useEffect(() => {
@@ -90,6 +107,7 @@ function ModalEditRetailer(props) {
             fetch(`/customers/${currentCustomerId}/warehouses/retailers/${props.props.retailer.id}`)
                 .then(response => response.json())
                 .then(res => {
+                    console.log(res);
                     setWarehouses(res);
                 });
         }
@@ -115,7 +133,10 @@ function ModalEditRetailer(props) {
             ...preState,
             validationErrors: ''
         }));
-        retailerDto.warehouses = warehouses;
+        setRetailerDto(preState => ({
+            ...preState,
+            warehouses: warehouses
+        }));
         fetch(`/customers/${currentCustomerId}/retailers`, {
             method: 'POST',
             headers: {
@@ -124,7 +145,7 @@ function ModalEditRetailer(props) {
             body: JSON.stringify(retailerDto)
         })
             .then(response => {
-                if (response.status !== 200 || response.status !== 201) {
+                if (response.status !== 201) {
                     setErrors({
                         serverErrors: "Something went wrong, try later",
                         validationErrors: ''

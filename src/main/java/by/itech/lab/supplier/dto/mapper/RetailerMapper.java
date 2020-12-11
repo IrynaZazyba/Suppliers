@@ -40,8 +40,6 @@ public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
                 .identifier(retailerDto.getIdentifier())
                 .deletedAt(retailerDto.getDeletedAt())
                 .active(retailerDto.getActive())
-//                .warehouses(Objects.nonNull(retailerDto.getWarehouses()) ?
-//                        retailerDto.getWarehouses().stream().map(warehouseMapper::map).collect(Collectors.toSet()) : null)
                 .customerId(retailerDto.getCustomerId())
                 .build();
     }

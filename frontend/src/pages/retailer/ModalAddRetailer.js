@@ -22,8 +22,6 @@ function ModalAddRetailer(props) {
         warehouses: ''
     });
 
-    const warehouse = localStorage.getItem("warehouse") != null ? localStorage.getItem("warehouse") : null;
-
     const [checkBoxes, setCheckBox] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
     const [lgShow, setLgShow] = useState(false);
@@ -73,7 +71,10 @@ function ModalAddRetailer(props) {
             ...preState,
             validationErrors: ''
         }));
-        retailerDto.warehouses = warehouses;
+        setRetailerDto(preState => ({
+            ...preState,
+            warehouses: warehouses
+        }));
         fetch(`/customers/${currentCustomerId}/retailers`, {
             method: 'POST',
             headers: {
@@ -117,7 +118,6 @@ function ModalAddRetailer(props) {
     };
 
     function removeFromWarehouseArray() {
-        console.log("");
         setWarehouses(preState =>
             preState.filter(
                 function (e) {

@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import validateWarehouse from "../../validation/WarehouseValidationRules";
+import axios from "axios";
 
 function ModalEditWarehouseRetailer(props) {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
@@ -93,7 +94,35 @@ function ModalEditWarehouseRetailer(props) {
 
     const editWarehouseHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateWarehouse(warehouseDto);
+        let warehouseUpdateDto = {};
+        // let location = `${warehouseDto.addressDto.state.state}
+        //                 ${warehouseDto.addressDto.city}
+        //                 ${warehouseDto.addressDto.addressLine1}
+        //                 ${warehouseDto.addressDto.addressLine2}`
+        //
+        // axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+        //     params: {
+        //         address: location,
+        //         key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
+        //     }
+        // }).then(function (response) {
+        //     if (response.status !== 200) {
+        //         setErrors(preState => ({
+        //             ...preState,
+        //             serverErrors: "Something go wrong, try later",
+        //         }));
+        //     } else {
+        //
+        //         warehouseUpdateDto = {
+        //             ...warehouseDto,
+        //             customerId: currentCustomerId,
+        //             addressDto: {
+        //                 ...warehouseDto.addressDto,
+        //                 latitude: response.data.results[0].geometry.location.lat,
+        //                 longitude: response.data.results[0].geometry.location.lng
+        //             }
+        //         }}})
+        let validationResult = validateWarehouse(warehouseUpdateDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult,
