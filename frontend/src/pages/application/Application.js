@@ -166,31 +166,31 @@ export default () => {
                         }}>Accept</Button>}
             </td>
             <td>
-                {user.role === 'ROLE_DISPATCHER' &&<FaEdit
-                className={app.applicationStatus === 'FINISHED_PROCESSING'
-                    ? "edit-app-icon-disable"
-                    : "edit-app-icon-active"}
-                size={'1.3em'}
-                onClick={() => {
+                {user.role === 'ROLE_DISPATCHER' && <FaEdit
+                    className={app.applicationStatus === 'FINISHED_PROCESSING'
+                        ? "edit-app-icon-disable"
+                        : "edit-app-icon-active"}
+                    size={'1.3em'}
+                    onClick={() => {
 
-                    let statusRule = app.applicationStatus === 'OPEN'
-                        || app.applicationStatus === 'STARTED_PROCESSING';
+                        let statusRule = app.applicationStatus === 'OPEN'
+                            || app.applicationStatus === 'STARTED_PROCESSING';
 
-                    if (app.type === 'SUPPLY' && statusRule) {
-                        setOpenEditModal({
-                            isOpen: true,
-                            app: app,
-                            customerId: customerId
-                        });
-                    } else if (app.type === 'TRAFFIC' && statusRule) {
-                        setOpenEditShipmentModal({
-                            isOpen: true,
-                            app: app,
-                            customerId: customerId
-                        });
-                    }
-                }}
-            />}
+                        if (app.type === 'SUPPLY' && statusRule) {
+                            setOpenEditModal({
+                                isOpen: true,
+                                app: app,
+                                customerId: customerId
+                            });
+                        } else if (app.type === 'TRAFFIC' && statusRule) {
+                            setOpenEditShipmentModal({
+                                isOpen: true,
+                                app: app,
+                                customerId: customerId
+                            });
+                        }
+                    }}
+                />}
             </td>
         </tr>
     ));

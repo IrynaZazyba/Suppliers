@@ -38,15 +38,17 @@ function App() {
     };
 
     const renderWarehouse = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_ADMIN"||user.role === "ROLE_DISPATCHER"} render={(() => {
-            return <Warehouses/>
-        })}/>
+        return <ProtectedComponent conditions={user.role === "ROLE_ADMIN" || user.role === "ROLE_DISPATCHER"}
+                                   render={(() => {
+                                       return <Warehouses/>
+                                   })}/>
     };
 
     const renderUser = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"||user.role==="ROLE_ADMIN"} render={(() => {
-            return <Users/>
-        })}/>
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"}
+                                   render={(() => {
+                                       return <Users/>
+                                   })}/>
     };
 
 
@@ -72,15 +74,17 @@ function App() {
     };
 
     const renderCar = () => {
-       return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" | user.role === "ROLE_ADMIN"} render={(() => {
-            return <Cars/>
-        })}/>
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" | user.role === "ROLE_ADMIN"}
+                                   render={(() => {
+                                       return <Cars/>
+                                   })}/>
     };
 
     const renderWaybill = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_LOGISTICS_SPECIALIST"||user.role==="ROLE_DRIVER"} render={(() => {
-            return <Waybill/>
-        })}/>
+        return <ProtectedComponent conditions={user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_DRIVER"}
+                                   render={(() => {
+                                       return <Waybill/>
+                                   })}/>
     };
 
 
