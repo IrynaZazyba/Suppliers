@@ -56,13 +56,12 @@ public class WriteOffActController {
 
     @GetMapping(ApiConstants.DRIVER)
     public Page<WriteOffActDto> getAllByCreatorOrderByDate(Pageable pageable) {
-        return writeOffActService.findAllByCreatorId(getCurrentUserId(), pageable);
+        return writeOffActService.findAllByCreatorId(pageable);
     }
 
     @GetMapping(ApiConstants.URL_WAREHOUSE)
     public Page<WriteOffActDto> getAllByWarehouseOrderByDate(Pageable pageable) {
-        UserDto userDto = userService.findById(getCurrentUserId());
-        return writeOffActService.findAllByWarehouseId(userDto.getWarehouseDto().getId(), pageable);
+        return writeOffActService.findAllByWarehouseId(pageable);
 
     }
 
@@ -82,13 +81,4 @@ public class WriteOffActController {
         writeOffActService.delete(id);
     }
 
-    private Long getCurrentUserId() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = null;
-        if (authentication.getPrincipal() instanceof UserImpl) {
-            UserImpl user = (UserImpl) authentication.getPrincipal();
-            userId = user.getId();
-        }
-        return userId;
-    }
 }

@@ -10,37 +10,25 @@ import {validateWriteOffActItem} from "../../validation/WriteOffValidationRules"
 import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
+import validateWriteOffAct from "../../validation/WriteOffValidationRules";
 
 function ModalAddWriteOff(props) {
 
-    const ref = React.createRef();
+    const refIdentifier = React.createRef();
+    const refUpc = React.createRef();
+    const refReason = React.createRef();
     const [customerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
-    const [categoryDto, setCategory] = useState({
-        category: '',
-        taxRate: ''
-    });
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
-    });
-    const [reason, setReason] = useState({
-        id: '',
-        reason: ''
     });
     const [currentWarehouse, setCurrentWarehouse] = useState({
         id: '',
         identifier: '',
         address: ''
     });
-    const [writeOffDto, setWriteOff] = useState({
-        identifier: '',
-        total_sum: '',
-        total_amount: '',
-        reason_id: '',
-        customer_id: '',
-        items: []
-    });
+    const [writeOffDto, setWriteOff] = useState({});
     const [warehouseOptions, setWarehouseOptions] = useState([]);
     const [reasonOptions, setReasonOptions] = useState([]);
     const [itemOptions, setItemOptions] = useState([]);
@@ -117,17 +105,22 @@ function ModalAddWriteOff(props) {
     const onChangeUpc = (e) => {
         checkValidationErrors('upc');
         checkValidationErrors('exist');
-        e.length > 0 ?
+        if (e.length > 0) {
             setCurrentItem(preState => ({
                 ...preState,
                 id: e[0].id,
                 upc: e[0].upc,
                 label: e[0].label,
                 units: e[0].units,
+                cost: e[0].cost,
                 sum: e[0].cost * e[0].amount,
-                amount: e[0].amount
-            })) :
+                amount: e[0].amount,
+                reason: ''
+            }));
+            refReason.current.clear();
+        } else {
             setCurrentItem('');
+        }
     };
 
     const onChangeReason = (e) => {
@@ -140,7 +133,10 @@ function ModalAddWriteOff(props) {
                     reason: e[0].reason
                 }
             })) :
-            setReason('');
+            setCurrentItem(preState => ({
+                ...preState,
+                reason: ''
+            }))
     };
 
     const handleInput = (fieldName) =>
@@ -181,12 +177,13 @@ function ModalAddWriteOff(props) {
             setItems([
                 ...items, currentItem
             ]);
-            setCurrentItem('');
+            setCurrentItem({});
             setErrors(prevState => ({
                 ...prevState,
                 validationErrors: []
             }));
-            ref.current.clear();
+            refUpc.current.clear();
+            refReason.current.clear();
         }
     };
 
@@ -200,6 +197,80 @@ function ModalAddWriteOff(props) {
         );
     }, [items]);
 
+    const addActHandler = (e) => {
+        e.preventDefault();
+
+        let writeOffAct = prepareActDto();
+        let validErrors = validateWriteOffAct(writeOffAct, items);
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: validErrors
+        }));
+
+        if (validErrors.length === 0) {
+            fetch(`/customers/${customerId}/write-off-act`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(writeOffAct)
+            }).then(response => {
+                if (response.status === 400) {
+                    response.json().then(json => {
+                        let res = Object.values(json).join('. ');
+                        setErrors({
+                            serverErrors: res,
+                            validationErrors: ''
+                        });
+                    });
+                }
+                if (response.status !== 200 && response.status !== 400) {
+                    setErrors({
+                        serverErrors: "Something go wrong, try later",
+                        validationErrors: ''
+                    });
+                }
+                if (response.status === 200) {
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: []
+                    }));
+                    setWriteOff([]);
+                    setItems([]);
+                    setCurrentWarehouse({
+                        address: ''
+                    });
+                    props.onChange(false, writeOffDto);
+                }
+            });
+            refIdentifier.current.clear();
+        }
+    };
+
+    function prepareActDto() {
+        let itemInAct = [];
+        items.forEach(i => {
+            let itemAct = {
+                sum: i.sum,
+                amount: i.amount,
+                itemDto: {
+                    id: i.id,
+                },
+                writeOffActReasonDto: i.reason
+            };
+            itemInAct.push(itemAct);
+        });
+
+        return {
+            identifier: writeOffDto.identifier,
+            totalSum: totalValues.totalSum,
+            totalAmount: totalValues.totalAmount,
+            items: itemInAct,
+            customerId: customerId,
+            warehouseId: currentWarehouse.id
+        };
+    }
+
 
     const itemsTable =
         <React.Fragment>
@@ -211,6 +282,7 @@ function ModalAddWriteOff(props) {
                     <th>Label</th>
                     <th>Amount</th>
                     <th>Sum</th>
+                    <th>Reason</th>
                     <th></th>
 
                 </tr>
@@ -222,6 +294,7 @@ function ModalAddWriteOff(props) {
                         <td>{i.label}</td>
                         <td>{i.amount}</td>
                         <td>{i.sum}</td>
+                        <td>{i.reason.reason}</td>
                         <td style={{textAlign: 'center'}}>
                             <FaTrash id={i.id} style={{color: '#1A7FA8'}}
                                      onClick={deleteItem}
@@ -236,9 +309,9 @@ function ModalAddWriteOff(props) {
     const inputsAddItems =
         <>
             <Row>
-                <Col sm="3">
+                <Col sm="2">
                     <AsyncTypeahead
-                        ref={ref}
+                        ref={refUpc}
                         name="upc"
                         filterBy={filterBy}
                         id="async-example"
@@ -257,7 +330,7 @@ function ModalAddWriteOff(props) {
                         </div>
                     </AsyncTypeahead>
                 </Col>
-                <Col sm="3">
+                <Col sm="2">
                     <Form.Control name="label" disabled placeholder="label" type="text"
                                   value={currentItem && currentItem.label}/>
                 </Col>
@@ -287,9 +360,9 @@ function ModalAddWriteOff(props) {
                                   value={currentItem && currentItem.sum}
                     />
                 </Col>
-                <Col sm="3">
+                <Col sm="2">
                     <AsyncTypeahead
-                        ref={ref}
+                        ref={refReason}
                         name="reason"
                         filterBy={filterBy}
                         id="async-example"
@@ -321,9 +394,9 @@ function ModalAddWriteOff(props) {
             <Col sm={8}>
                 <Form.Group as={Row} controlId="actIdentifier">
                     <Form.Label column sm="3">Identifier</Form.Label>
-                    <Col sm="7">
+                    <Col sm="6">
                         <AsyncTypeahead
-                            ref={ref}
+                            ref={refIdentifier}
                             name="identifier"
                             filterBy={filterBy}
                             id="async-example"
@@ -379,7 +452,7 @@ function ModalAddWriteOff(props) {
             <Col sm={2}>
                 <Card className="total-card">
                     <Card.Body>
-                        <h6>Total sum of items</h6>
+                        <h6>Total summary of items</h6>
                         <Card.Text>
                             <h3> {totalValues.totalSum}</h3>
                         </Card.Text>
@@ -400,7 +473,7 @@ function ModalAddWriteOff(props) {
                     });
                     setItems([]);
                     setCurrentWarehouse({address: ''});
-                    setReason({});
+                    setWriteOff({});
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
@@ -431,7 +504,7 @@ function ModalAddWriteOff(props) {
                             </Card.Body>
                         </Card>
                         <div className="float-right" style={{padding: '10px'}}>
-                            <Button type="submit" className="mainButton pull-right" onClick={addItemHandler}>
+                            <Button type="submit" className="mainButton pull-right" onClick={addActHandler}>
                                 Create
                             </Button>
                         </div>

@@ -5,16 +5,12 @@ export default function validateWriteOffAct(act, items) {
         errorsFields.push("identifier");
     }
 
-    if (!act.total_sum) {
-        errorsFields.push("total_sum");
+    if (!act.totalSum) {
+        errorsFields.push("totalSum");
     }
 
-    if (!act.total_amount) {
-        errorsFields.push("total_amount");
-    }
-
-    if (!act.reason_id) {
-        errorsFields.push("reason");
+    if (!act.totalAmount) {
+        errorsFields.push("totalAmount");
     }
 
     if (items.length === 0) {
@@ -32,6 +28,10 @@ export function validateWriteOffActItem(currentItem, items) {
 
     if (!currentItem.amount || currentItem.amount < 0) {
         errorsFields.push("amount");
+    }
+
+    if (!currentItem.reason) {
+        errorsFields.push("reason");
     }
 
     let item = items.filter(i => i.id === currentItem.id);

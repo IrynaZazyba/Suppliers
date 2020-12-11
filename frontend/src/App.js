@@ -119,12 +119,12 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={warehouseItemsPath} render={renderWarehouseItems}/>
                 <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
-                <Route path={warehouseItemsPath} render={renderWarehouseItems}/>
                 <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={'/customers'} render={renderCustomer}/>

@@ -24,11 +24,8 @@ function Header() {
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);
     const appClass = getClass(/.application/);
-<<<<<<< HEAD
     const writeOffActClass = getClass(/.write-off-act/)
-=======
     const waybillClass = getClass(/.waybills/);
->>>>>>> 2985d43e213a171ab9aa85470b66a8d6dd106177
 
     const itemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
         user.role === "ROLE_DISPATCHER" ||
@@ -63,15 +60,11 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
-<<<<<<< HEAD
-                    {itemPermission &&
-=======
                     {checkPermission &&
                     <Nav.Link className={waybillClass}
                               href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}
-                    {categoryAndItemPermission &&
->>>>>>> 2985d43e213a171ab9aa85470b66a8d6dd106177
+                    {itemPermission &&
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
                     </Nav.Link>}

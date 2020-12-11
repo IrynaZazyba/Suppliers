@@ -5,6 +5,7 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
+import by.itech.lab.supplier.dto.WriteOffActDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -46,4 +47,6 @@ public interface WarehouseService {
     List<WarehouseDto> getWarehouseByTypeAndIdentifier(String identifier, WarehouseType warehouseType);
 
     List<WarehouseDto> getWarehousesWithOpenApplications();
+
+    void writeOffItems(WriteOffActDto writeOffActDto);
 }

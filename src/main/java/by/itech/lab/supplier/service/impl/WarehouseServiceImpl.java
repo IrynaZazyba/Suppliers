@@ -10,6 +10,8 @@ import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
+import by.itech.lab.supplier.dto.WriteOffActDto;
+import by.itech.lab.supplier.dto.WriteOffItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -259,9 +261,14 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Page<WarehouseItemDto> getItemsByWarehouseId(final Long warehouseId, final Pageable pageable) {
-        return warehouseItemRepository.findItemsByWarehouseId(warehouseId, pageable)
-                .map(warehouseItemMapper::map);
+    @Transactional
+    public void writeOffItems(final WriteOffActDto writeOffActDto) {
+        for (WriteOffItemDto item : writeOffActDto.getItems()) {
+            WarehouseItem warehouseItem = itemInWarehouseRepository
+                    .findByItemId(item.getItemDto().getId(), writeOffActDto.getWarehouseId()).get();
+            itemInWarehouseRepository.save(writeOffItem(item, warehouseItem));
+        }
+
     }
 
     private Map<Long, Map<Long, WarehouseItem>> findOnlyRelatedItems(final List<ApplicationDto> apps) {
@@ -276,6 +283,22 @@ public class WarehouseServiceImpl implements WarehouseService {
                                            final WarehouseItem itemInWarehouse) {
         if (Objects.isNull(itemInWarehouse)) {
             throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Warehouse doesn't have item with id = " + item.getItemDto().getId());
+        }
+        final Double amountAtWarehouse = itemInWarehouse.getAmount();
+        final Double amountAfterReducing = amountAtWarehouse - item.getAmount();
+        if (amountAfterReducing < 0) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Required amount of items bigger than existing at warehouse");
+        }
+        itemInWarehouse.setAmount(amountAfterReducing);
+        return itemInWarehouse;
+    }
+
+    private WarehouseItem writeOffItem(final WriteOffItemDto item,
+                                       final WarehouseItem itemInWarehouse) {
+        if (Objects.isNull(itemInWarehouse)) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
                     "Warehouse doesn't have item with id=" + item.getItemDto().getId());
         }
         final Double amountAtWarehouse = itemInWarehouse.getAmount();
@@ -286,6 +309,12 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
         itemInWarehouse.setAmount(amountAfterReducing);
         return itemInWarehouse;
+    }
+
+    @Override
+    public Page<WarehouseItemDto> getItemsByWarehouseId(final Long warehouseId, final Pageable pageable) {
+        return warehouseItemRepository.findItemsByWarehouseId(warehouseId, pageable)
+                .map(warehouseItemMapper::map);
     }
 
     @Override

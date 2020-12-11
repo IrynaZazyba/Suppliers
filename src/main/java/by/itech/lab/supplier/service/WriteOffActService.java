@@ -11,8 +11,8 @@ public interface WriteOffActService extends BaseSimpleService<WriteOffActDto> {
 
     List<WriteOffActReasonDto> findReasons(String reasonName);
 
-    Page<WriteOffActDto> findAllByCreatorId(Long creatorId, Pageable pageable);
+    Page<WriteOffActDto> findAllByCreatorId(Pageable pageable);
 
-    Page<WriteOffActDto> findAllByWarehouseId(Long warehouseId, Pageable pageable);
+    Page<WriteOffActDto> findAllByWarehouseId(Pageable pageable);
 
 }
