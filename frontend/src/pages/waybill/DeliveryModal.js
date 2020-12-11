@@ -241,16 +241,14 @@ function DeliveryModal(props) {
                         <FaRegClock style={{marginRight: '5px', textAlign: 'center', color: '#1A7FA8'}}/>
                         <Moment date={waybill.deliveryStart}
                                 durationFromNow
-                                interval={1000}
-                        />
+                                interval={1000}/>
                     </>
                     }
                     {waybill.waybillStatus === 'FINISHED' &&
                     <>
                         <FaStopwatch style={{marginRight: '5px', textAlign: 'center', color: '#1A7FA8'}}/>
                         <Moment date={waybill.deliveryStart}
-                                durationFromNow
-                        />
+                                durationFromNow/>
                     </>}
                 </Col>
             </Row>}
