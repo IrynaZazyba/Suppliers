@@ -5,13 +5,14 @@ import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
+import by.itech.lab.supplier.dto.WriteOffActDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
 
-public interface WarehouseService{
+public interface WarehouseService {
 
     Boolean isWarehouseWithIdentifierExist(final String identifier);
 
@@ -39,7 +40,13 @@ public interface WarehouseService{
 
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 
+    Page<WarehouseItemDto> getItemsByWarehouseId(Long warehouseId, Pageable pageable);
+
     List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId);
 
+    List<WarehouseDto> getWarehouseByTypeAndIdentifier(String identifier, WarehouseType warehouseType);
+
     List<WarehouseDto> getWarehousesWithOpenApplications();
+
+    void writeOffItems(WriteOffActDto writeOffActDto);
 }

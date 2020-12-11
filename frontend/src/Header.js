@@ -24,10 +24,16 @@ function Header() {
     const categoryClass = getClass(/.category/);
     const itemClass = getClass(/.item/);
     const appClass = getClass(/.application/);
+    const writeOffActClass = getClass(/.write-off-act/)
     const waybillClass = getClass(/.waybills/);
 
-    const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
-        user.role === "ROLE_DISPATCHER"|| user.role === "ROLE_ADMIN");
+    const itemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
+        user.role === "ROLE_DISPATCHER" ||
+        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
+    const categoryPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
+        user.role === "ROLE_DIRECTOR" || user.role === "ROLE_ADMIN");
+    const writeOffActPermission = checkPermission && (user.role === "ROLE_ADMIN" || user.role === "ROLE_DISPATCHER"
+        || user.role === "ROLE_DIRECTOR" || user.role === "ROLE_DRIVER" || user.role === "ROLE_SYSTEM_ADMIN");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -49,7 +55,7 @@ function Header() {
                     </Nav.Link>}
                     {isPermittedAndRoleAdmin &&
                     <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
-                    {categoryAndItemPermission &&
+                    {categoryPermission &&
                     <Nav.Link className={categoryClass}
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
@@ -58,9 +64,13 @@ function Header() {
                     <Nav.Link className={waybillClass}
                               href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}
-                    {categoryAndItemPermission &&
+                    {itemPermission &&
                     <Nav.Link className={itemClass}
                               href={`/customers/${user.currentCustomerId}/item`}>Items
+                    </Nav.Link>}
+                    {writeOffActPermission &&
+                    <Nav.Link className={writeOffActClass}
+                              href={`/customers/${user.currentCustomerId}/write-off-act`}>Write-off acts
                     </Nav.Link>}
                     {isPermittedAndRoleAdmin &&
                     <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}

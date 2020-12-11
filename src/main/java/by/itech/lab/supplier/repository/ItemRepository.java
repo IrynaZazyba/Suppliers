@@ -27,4 +27,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     List<Item> findByUpcStartsWith(String upc);
 
+    @Query("select count(i) from Item i where i.category.id=:categoryId")
+    int countOfCategoryUsages(@Param("categoryId") Long categoryId);
+
 }

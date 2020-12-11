@@ -1,6 +1,8 @@
 package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.WarehouseItem;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -19,9 +21,11 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
             "from WarehouseItem as i where i.warehouse.id=:warehouseId")
     Double getAvailableCapacity(@Param("warehouseId") Long warehouseId);
 
+    @Query("select i from WarehouseItem i where i.warehouse.id=:warehouseId")
+    Page<WarehouseItem> findItemsByWarehouseId(@Param("warehouseId") Long warehouseId, Pageable pageable);
+
     List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemUpcStartsWith(Long id, String upc);
 
     List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemIdIn(Long id, List<Long> itemIds);
-
 
 }

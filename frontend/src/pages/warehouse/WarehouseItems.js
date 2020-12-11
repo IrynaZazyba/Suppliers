@@ -1,19 +1,20 @@
 import {useEffect, useState} from "react";
-import Page from "../../components/Page";
-import {FaEdit} from "react-icons/fa";
 import React from "react";
 import ErrorMessage from "../../messages/errorMessage";
-import ModalAddCategory from "./ModalAddCategory";
-import ModalEditCategory from "./ModalEditCategory";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TogglePage from "../../components/TogglePage";
 import CardContainer from "../../components/CardContainer";
+import {useParams} from "react-router-dom";
+import ModalWriteOff from "../write-off/WriteOffModalWarehouse"
+import Page from "../../components/Page";
+
 
 export default () => {
 
+    const {warehouseId} = useParams();
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
     const [page, setPage] = useState({
@@ -22,13 +23,15 @@ export default () => {
         countPerPage: 10,
         countPages: 1
     });
-    const [categories, setCategory] = useState([]);
-    const [lgShow, setLgShow] = useState(false);
-    const [editCategory, setEditCategory] = useState({
-        editShow: false,
-        customer: []
+    const [items, setItems] = useState([]);
+    const [writeOffModal, setWriteOffShow] = useState({
+        writeOffShow: false,
+        warehouseId: ''
     });
-    const [errorMessage, setErrors] = useState('');
+    const [errors, setErrors] = useState({
+        errorMessage: ''
+    });
+
 
     const handleCountPerPage = (e) => {
         e.preventDefault();
@@ -36,24 +39,29 @@ export default () => {
             ...preState,
             countPerPage: e.target.value
         }));
-        getCategories(`/customers/${currentCustomerId}/category?size=${e.target.value}`);
+        getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?size=${e.target.value}`);
     };
 
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getCategories(`/customers/${currentCustomerId}/category?page=${currentPage}&size=${page.countPerPage}`);
+        setPage(preState => ({
+            ...preState,
+            currentPage: e.target.innerHTML - 1
+        }));
+        getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?page=${currentPage}&size=${page.countPerPage}`);
     };
 
     useEffect(() => {
-        getCategories(`/customers/${currentCustomerId}/category?size=${page.countPerPage}`);
+        getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?size=${page.countPerPage}`);
     }, []);
 
-    function getCategories(url) {
+    function getWarehouseItems(url) {
+        setErrors('');
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                setCategory(commits.content);
+                setItems(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
@@ -62,53 +70,40 @@ export default () => {
             });
     }
 
-    const closeModalAdd = (e, categoryDto) => {
-        setLgShow(e);
-        if (categoryDto) {
-            getCategories(`/customers/${currentCustomerId}/category?size=${page.countPerPage}`);
-        }
-    };
-
-    const closeModalEdit = (e, categoryDto) => {
-        setEditCategory(
-            preState => ({
-                ...preState,
-                editShow: false
-            }));
-        if (categoryDto) {
-            getCategories(`/customers/${currentCustomerId}/category?size=${page.countPerPage}`);
-        }
-    };
-
-    const tableRows = categories.map(category => (
-        <tr key={category.id}>
-            <td>{category.category}</td>
-            <td>{category.taxRate}</td>
-            <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
-                        size={'1.3em'}
-                        onClick={() => {
-                            setEditCategory({
-                                editShow: true,
-                                category: category
-                            });
-                        }}/>
-            </td>
+    const tableRows = items.map(item => (
+        <tr id={`whItem${item.id}`} key={item.id}>
+            <td>{item.item.label}</td>
+            <td>{item.item.upc}</td>
+            <td>{item.item.units}</td>
+            <td>{item.item.categoryDto.category}</td>
+            <td>{item.amount}</td>
         </tr>
     ));
 
+    const closeModalAddAct = (e, warehouseDto) => {
+        setWriteOffShow(e);
+        if (warehouseDto) {
+            getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?size=${page.countPerPage}`);
+        }
+    };
+
     const modals =
         <React.Fragment>
-            {errorMessage && <ErrorMessage message={errorMessage}/>}
-            <ModalAddCategory props={lgShow} onChange={closeModalAdd}/>
-            <ModalEditCategory props={editCategory} onChange={closeModalEdit}/>
+            {errors.errorMessage && <ErrorMessage message={errors.errorMessage}/>}
+            <ModalWriteOff props={writeOffModal} onChange={closeModalAddAct}/>
         </React.Fragment>;
 
     const header =
         <React.Fragment>
             <Row>
                 <Col md={2}>
-                    <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
-                        Add
+                    <Button className="mainButton" size="sm" onClick={() => {
+                        setWriteOffShow({
+                            writeOffShow: true,
+                            warehouseId: warehouseId
+                        })
+                    }}>
+                        Write-off items
                     </Button>
                 </Col>
                 <Col md={9}></Col>
@@ -123,9 +118,11 @@ export default () => {
             <Table hover size="sm">
                 <thead>
                 <tr>
+                    <th>Label</th>
+                    <th>UPC</th>
+                    <th>Units per item</th>
                     <th>Category</th>
-                    <th>Tax Rate(per km)</th>
-                    <th></th>
+                    <th>Amount</th>
                 </tr>
                 </thead>
                 <tbody>

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './App.css';
 import UserContext from './UserContext';
 import Header from './Header';
@@ -16,6 +16,8 @@ import {AuthContext} from "./context/authContext";
 import Cars from "./pages/car/Cars";
 import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
+import WarehouseItems from "./pages/warehouse/WarehouseItems";
+import WriteOffAct from "./pages/write-off/WriteOffPage";
 import Waybill from "./pages/waybill/Waybill";
 
 function App() {
@@ -61,7 +63,7 @@ function App() {
 
     const renderCategory = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
-        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
+        || user.role === "ROLE_DIRECTOR"} render={(() => {
             return <Category/>
         })}/>
     };
@@ -72,6 +74,21 @@ function App() {
             return <Application/>
         })}/>
     };
+
+    const renderWarehouseItems = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        || user.role === "ROLE_DISPATCHER"} render={(() => {
+            return <WarehouseItems/>
+        })}/>
+    };
+
+    const renderWriteOffActs =() => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_DRIVER"
+        || user.role === "ROLE_DIRECTOR"} render={(() => {
+            return <WriteOffAct/>
+        })}/>
+    }
 
     const renderCar = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" | user.role === "ROLE_ADMIN"}
@@ -96,6 +113,8 @@ function App() {
     const itemPath = pathWithCustomer(`/item`);
     const profilePath = pathWithCustomer(`/profile`);
     const applicationPath = pathWithCustomer(`/application`);
+    const warehouseItemsPath = pathWithCustomer(`/warehouses/:warehouseId/items`);
+    const writeOffPath = pathWithCustomer(`/write-off-act`);
     const waybillPath = pathWithCustomer(`/waybills`);
 
     return (
@@ -103,11 +122,13 @@ function App() {
             <Header/>
             <Switch>
                 <Route exact path='/' component={Login}/>
+                <Route path={warehouseItemsPath} render={renderWarehouseItems}/>
                 <Route path={'/customers/' + currentCustomerId + '/warehouses'} render={renderWarehouse}/>
                 <Route path={categoryPath} render={renderCategory}/>/>
                 <Route path={itemPath} render={renderItems}/>/>
                 <Route path={profilePath} render={renderProfile}/>/>
                 <Route path={applicationPath} render={renderApplication}/>
+                <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>

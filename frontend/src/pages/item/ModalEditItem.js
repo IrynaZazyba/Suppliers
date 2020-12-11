@@ -24,12 +24,6 @@ function ModalEditItem(props) {
         serverErrors: ''
     });
 
-    const [category, setCategory] = useState({
-        id: '',
-        category: '',
-        taxRate: '',
-        customerId: ''
-    });
     const [options, setOptions] = useState([]);
 
     const filterBy = () => true;

@@ -122,7 +122,12 @@ export default (props) => {
 
     const tableRows = warehouses.map(warehouse => (
         <tr key={warehouse.id}>
-            <td>{warehouse.identifier}</td>
+            <td onClick={() => {
+                if (warehouse.type === 'WAREHOUSE') {
+                    document.location.href = `/customers/${currentCustomerId}/warehouses/${warehouse.id}/items`
+                }
+            }}>
+                {warehouse.identifier}</td>
             <td>{warehouse.type}</td>
             <td>{showAddress(warehouse.addressDto)}</td>
             <td>{warehouse.totalCapacity}</td>
