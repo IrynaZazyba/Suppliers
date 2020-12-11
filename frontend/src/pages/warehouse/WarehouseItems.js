@@ -83,7 +83,7 @@ export default () => {
     const closeModalAddAct = (e, warehouseDto) => {
         setWriteOffShow(e);
         if (warehouseDto) {
-            getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?size=${e.target.value}`);
+            getWarehouseItems(`/customers/${currentCustomerId}/warehouses/items/${warehouseId}?size=${page.countPerPage}`);
         }
     };
 

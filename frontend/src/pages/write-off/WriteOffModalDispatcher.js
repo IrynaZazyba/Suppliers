@@ -414,7 +414,7 @@ function ModalAddWriteOff(props) {
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine1">
-                    <Form.Label column sm="3">Address line1</Form.Label>
+                    <Form.Label column sm="3">Address line 1</Form.Label>
                     <Col sm="6">
                     <Form.Control type="text"
                                   value={currentWarehouse.address.addressLine1}
@@ -423,7 +423,7 @@ function ModalAddWriteOff(props) {
                     /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine2">
-                    <Form.Label column sm="3">Address line2</Form.Label>
+                    <Form.Label column sm="3">Address line 2</Form.Label>
                     <Col sm="6">
                     <Form.Control type="text"
                                   value={currentWarehouse.address.addressLine2}

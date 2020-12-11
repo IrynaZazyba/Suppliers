@@ -43,9 +43,7 @@ public class WriteOffActController {
     private UserService userService;
 
     @PostMapping
-    public WriteOffActDto save(@Valid @RequestBody WriteOffActDto writeOffActDto,
-                               @PathVariable Long customerId) {
-        writeOffActDto.setCustomerId(customerId);
+    public WriteOffActDto save(@Valid @RequestBody WriteOffActDto writeOffActDto) {
         return writeOffActService.save(writeOffActDto);
     }
 
