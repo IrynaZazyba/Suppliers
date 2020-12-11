@@ -1,11 +1,13 @@
 package by.itech.lab.supplier.dto.mapper;
 
+import by.itech.lab.supplier.domain.Application;
 import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WayBillDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
@@ -61,13 +63,15 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
         to.setSourceLocationWarehouse(Objects.nonNull(from.getSourceLocationWarehouseDto())
                 ? warehouseMapper.map(from.getSourceLocationWarehouseDto()) : to.getSourceLocationWarehouse());
         to.setDriver(Objects.nonNull(from.getDriver()) ? userMapper.map(from.getDriver()) : to.getDriver());
+        to.setRoute(Objects.nonNull(from.getRoute()) ? routeMapper.map(from.getRoute()) : to.getRoute());
         mapApplications(to, from);
     }
 
     private void mapApplications(final WayBill wayBill,
                                  final WayBillDto wayBillDto) {
-        final Map<Long, ApplicationDto> mappedByAppId = wayBillDto.getApplications()
-                .stream().collect(Collectors.toMap(ApplicationDto::getId, Function.identity()));
+        final List<ApplicationDto> applications = wayBillDto.getApplications();
+        final Map<Long, ApplicationDto> mappedByAppId = applications.stream()
+                .collect(Collectors.toMap(ApplicationDto::getId, Function.identity()));
         wayBill.getApplications().forEach(e -> {
             final ApplicationDto appDto = mappedByAppId.get(e.getId());
             if (appDto.isDeleteFromWaybill()) {
@@ -76,6 +80,11 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
                 e.setWayBill(wayBill);
             }
         });
+        final List<Application> newApplications = applications.stream()
+                .filter(app -> Objects.isNull(app.getWayBillId()))
+                .peek(app -> app.setWayBillId(wayBill.getId()))
+                .map(applicationMapper::map).collect(Collectors.toList());
+        wayBill.getApplications().addAll(newApplications);
     }
 
 }

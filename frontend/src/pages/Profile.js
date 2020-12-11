@@ -104,7 +104,7 @@ export default () => {
                 setZone(res.addressDto.state);
                 setAddressDto(res.addressDto);
                 setUserDto(res);
-                setState(res.addressDto.state);
+                userDto.addressDto && setState(res.addressDto.state);
             });
         fetch('/states')
             .then(response => response.json())
@@ -185,7 +185,7 @@ export default () => {
                                           onChange={handleName}
                                           value={userDto.name}
                                           className={
-                                             isValid("name")
+                                              isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid name.
@@ -261,6 +261,11 @@ export default () => {
                         </Form.Group>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
+                            <Form.Control type="text" placeholder="city"
+                                          value={userDto.addressDto && userDto.addressDto.city}
+                                          readOnly={true}
+                            />
+
                             <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
                                           className={
                                               isValid("city")
@@ -273,6 +278,10 @@ export default () => {
 
                         <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
+                            <Form.Control type="text" placeholder="address line 1"
+                                          value={userDto.addressDto && userDto.addressDto.addressLine1} readOnly={true}
+                            />
+
                             <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
@@ -285,6 +294,18 @@ export default () => {
 
                         <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
+                            <Form.Control type="text" placeholder="address line 2"
+                                          value={userDto.addressDto && userDto.addressDto.addressLine2} readOnly={true}
+                            />
+
+                        </Form.Group>
+
+
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Label>State</Form.Label>
+                            <Form.Control type="text" placeholder="state" value={state.state} readOnly={true}
+                            />
+
                             <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2} onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")

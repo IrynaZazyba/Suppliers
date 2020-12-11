@@ -30,8 +30,7 @@ function Header() {
     const waybillClass = getClass(/.waybills/);
 
     const categoryAndItemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
-        user.role === "ROLE_DISPATCHER" ||
-        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
+        user.role === "ROLE_DISPATCHER"|| user.role === "ROLE_ADMIN");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -47,7 +46,7 @@ function Header() {
                               href={`/customers/${currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission &&
+                    {checkPermission && user.role === "ROLE_DISPATCHER" &&
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
@@ -58,7 +57,7 @@ function Header() {
                               href={`/customers/${currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
-                    {checkPermission &&
+                    {checkPermission && (user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_DRIVER") &&
                     <Nav.Link className={waybillClass}
                               href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}

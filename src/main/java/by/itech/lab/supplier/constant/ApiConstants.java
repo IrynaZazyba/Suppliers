@@ -42,4 +42,6 @@ public final class ApiConstants {
     public final static String URL_DELETE_LIST = "/delete-list";
     public final static String URL_DISPATCHERS = "/dispatchers";
     public final static String URL_IDENTIFIER = "/identifier";
+    public final static String URL_UNPAGED = "/unpaged";
+
 }
