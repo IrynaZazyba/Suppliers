@@ -8,10 +8,6 @@ export default function validateWriteOffAct(act, items) {
         errorsFields.push("identifier");
     }
 
-    if (!act.totalSum) {
-        errorsFields.push("totalSum");
-    }
-
     if (!act.totalAmount) {
         errorsFields.push("totalAmount");
     }

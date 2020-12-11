@@ -69,12 +69,14 @@ export default () => {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                setActs(commits.content);
-                setPage({
-                    active: (commits.pageable.pageNumber + 1),
-                    countPerPage: commits.size,
-                    countPages: commits.totalPages
-                });
+                if (commits.content) {
+                    setActs(commits.content);
+                    setPage({
+                        active: (commits.pageable.pageNumber + 1),
+                        countPerPage: commits.size,
+                        countPages: commits.totalPages
+                    });
+                }
             });
     }
 

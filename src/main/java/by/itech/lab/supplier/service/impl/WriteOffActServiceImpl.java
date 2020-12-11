@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,6 +82,9 @@ public class WriteOffActServiceImpl implements WriteOffActService {
     @Override
     public Page<WriteOffActDto> findAllByWarehouseId(final Pageable pageable) {
         UserDto userDto = userService.findById(getCurrentUserId());
+        if (Objects.isNull(userDto.getWarehouseDto())) {
+            throw new ResourceNotFoundException("User doesn't have available warehouses.");
+        }
         return writeOffActRepository.findAllByWarehouseIdOrderByDateDesc(userDto.getWarehouseDto().getId(), pageable)
                 .map(writeOffActMapper::map);
     }

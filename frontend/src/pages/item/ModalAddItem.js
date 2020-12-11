@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -110,6 +110,13 @@ function ModalAddItem(props) {
                             ...preState,
                             validationErrors: []
                         }));
+                        setItem({
+                            label: '',
+                            upc: '',
+                            units: '',
+                            customerId: currentCustomerId,
+                            categoryDto: ''
+                        });
                         props.onChange(false, itemDto);
                     }
                 });
@@ -124,6 +131,13 @@ function ModalAddItem(props) {
                     setErrors({
                         serverErrors: '',
                         validationErrors: []
+                    });
+                    setItem({
+                        label: '',
+                        upc: '',
+                        units: '',
+                        customerId: currentCustomerId,
+                        categoryDto: ''
                     });
                     props.onChange(false);
                 }}

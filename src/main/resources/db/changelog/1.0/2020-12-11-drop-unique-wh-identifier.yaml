@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id:  DC-1
+      author:  iryna_zazybo
+      changes:
+        - dropUniqueConstraint:
+            constraintName:  identifier
+            tableName:  warehouse
+            uniqueColumns:  identifier

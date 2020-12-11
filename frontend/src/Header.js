@@ -49,7 +49,7 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission &&
+                    {checkPermission && user.role === "ROLE_DISPATCHER" &&
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
@@ -60,7 +60,7 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/category`}>
                         Categories
                     </Nav.Link>}
-                    {checkPermission &&
+                    {checkPermission && (user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_DRIVER") &&
                     <Nav.Link className={waybillClass}
                               href={`/customers/${user.currentCustomerId}/waybills`}>Waybills
                     </Nav.Link>}
