@@ -63,16 +63,18 @@ function AddWaybillModal(props) {
     const [mapCenter, setMapCenter] = useState({lat: 51.494900, lng: -0.146231});
 
     useEffect(() => {
-        Promise.all([
-            fetch(`/customers/${customerId}/warehouses/applications`),
-            fetch(`/customers/${customerId}/car/unpaged`),
-            fetch(`/customers/${customerId}/users/role?role=ROLE_DRIVER`),
-        ]).then(res => Promise.all(res.map(r => r.json())))
-            .then(content => {
-                setSourceWarehouse(content[0]);
-                setCars(content[1].content);
-                setDrivers(content[2]);
-            });
+        if(props.modal) {
+            Promise.all([
+                fetch(`/customers/${customerId}/warehouses/applications`),
+                fetch(`/customers/${customerId}/car/unpaged`),
+                fetch(`/customers/${customerId}/users/role?role=ROLE_DRIVER`),
+            ]).then(res => Promise.all(res.map(r => r.json())))
+                .then(content => {
+                    setSourceWarehouse(content[0]);
+                    setCars(content[1].content);
+                    setDrivers(content[2]);
+                });
+        }
     }, [props.modal]);
 
     useEffect(() => {

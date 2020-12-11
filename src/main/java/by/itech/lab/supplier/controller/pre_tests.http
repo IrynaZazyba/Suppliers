@@ -487,6 +487,7 @@ Cookie: {{test}}
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
     });
 %}
+
 ###
 
 #---------------------------------------------------Category----------------------------------------------------------
@@ -1000,3 +1001,22 @@ Cookie: {{test}}
 %}
 
 ###
+PUT http://localhost:8080/customers/3/waybills/21/delivery
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+###
+
+PUT http://localhost:8080/customers/3/waybills/21/route/1
+Content-Type: application/json
+Connection: keep-alive
+Cookie: {{test}}
+
+{
+  "id": 1,
+  "isVisited": true
+}
+
+###
+

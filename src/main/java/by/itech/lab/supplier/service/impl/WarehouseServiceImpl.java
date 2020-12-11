@@ -250,7 +250,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         final Map<Long, Map<Long, WarehouseItem>> whItemByWhAndItem = findOnlyRelatedItems(applicationsDto);
         final List<WarehouseItem> warehouseItems = applicationsDto.stream().map(app -> app.getItems().stream()
                 .map(appItem -> reduceItemAmount(appItem, whItemByWhAndItem
-                        .get(app.getDestinationLocationDto().getId())
+                        .get(app.getSourceLocationDto().getId())
                         .get(appItem.getItemDto().getId())))
                 .collect(Collectors.toList())
         ).flatMap(Collection::stream).collect(Collectors.toList());

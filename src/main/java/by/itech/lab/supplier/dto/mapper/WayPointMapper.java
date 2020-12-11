@@ -16,6 +16,7 @@ public class WayPointMapper implements BaseMapper<WayPoint, WayPointDto> {
     @Override
     public WayPoint map(WayPointDto dto) {
         return WayPoint.builder()
+                .id(dto.getId())
                 .isVisited(dto.isVisited())
                 .address(addressMapper.map(dto.getAddress()))
                 .priority(dto.getPriority())
@@ -25,6 +26,7 @@ public class WayPointMapper implements BaseMapper<WayPoint, WayPointDto> {
     @Override
     public WayPointDto map(WayPoint entity) {
         return WayPointDto.builder()
+                .id(entity.getId())
                 .isVisited(entity.isVisited())
                 .address(addressMapper.map(entity.getAddress()))
                 .priority(entity.getPriority())
