@@ -841,17 +841,19 @@ Cookie: {{test}}
   "identifier": "Test",
   "customerId": 3,
   "totalSum": 20.0,
-  "totalAmount": 10000,
+  "totalAmount": 100,
   "deletedAt": null,
+  "creatorId": 3,
+  "warehouseId": 8,
   "items": [
     {
       "sum": 20.0,
-      "amount": 10000,
+      "amount": 100,
       "writeOffActReasonDto": {
         "id": 1
       },
       "itemDto": {
-        "id": 2
+        "id": 8
       }
     }
   ]

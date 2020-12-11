@@ -264,8 +264,12 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional
     public void writeOffItems(final WriteOffActDto writeOffActDto) {
         for (WriteOffItemDto item : writeOffActDto.getItems()) {
-            WarehouseItem warehouseItem = itemInWarehouseRepository
-                    .findByItemId(item.getItemDto().getId(), writeOffActDto.getWarehouseId()).get();
+            WarehouseItem warehouseItem = null;
+            if (itemInWarehouseRepository.findByItemId(item.getItemDto().getId(), writeOffActDto.getWarehouseId())
+                    .isPresent()) {
+                warehouseItem = itemInWarehouseRepository
+                        .findByItemId(item.getItemDto().getId(), writeOffActDto.getWarehouseId()).get();
+            }
             itemInWarehouseRepository.save(writeOffItem(item, warehouseItem));
         }
 

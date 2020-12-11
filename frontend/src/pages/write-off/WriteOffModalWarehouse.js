@@ -400,7 +400,7 @@ function WriteOffWarehouseModal(props) {
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine1">
                     <Form.Label column sm="3">Address line 1</Form.Label>
-                    <Col sm="6">
+                    <Col sm="7">
                         <Form.Control type="text"
                                       value={warehouseDto.addressDto.addressLine1}
                                       placeholder="Address line 1"
@@ -409,7 +409,7 @@ function WriteOffWarehouseModal(props) {
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine2">
                     <Form.Label column sm="3">Address line 2</Form.Label>
-                    <Col sm="6">
+                    <Col sm="7">
                         <Form.Control type="text"
                                       value={warehouseDto.addressDto.addressLine2}
                                       placeholder="Address line 2"
@@ -418,7 +418,7 @@ function WriteOffWarehouseModal(props) {
                 </Form.Group>
                 <Form.Group as={Row} controlId="formBasicText">
                     <Form.Label column sm="3">Act identifier</Form.Label>
-                    <Col sm="6">
+                    <Col sm="7">
                         <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
                                       className={
                                           errors.validationErrors.includes("identifier")
