@@ -41,6 +41,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> tagHandler(ResourceNotFoundException ex) {
+        log.error("ResourceNotFoundException: " + ex.getMessage(), ex);
         return new ResponseEntity<>(
                 new DefaultExceptionInfo(ex.getMessage(), NOT_FOUND.value()), new HttpHeaders(), NOT_FOUND);
     }
@@ -56,7 +57,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ConflictWithTheCurrentWarehouseStateException.class, ConflictWithWayPointTrackingException.class})
     public ResponseEntity<Object> handleConflict(Exception ex) {
-        log.error("Conflict: " + ex.getMessage(),ex);
+        log.error("Conflict: " + ex.getMessage(), ex);
         return new ResponseEntity<>(
                 new DefaultExceptionInfo(ex.getMessage(), CONFLICT.value()), new HttpHeaders(), CONFLICT);
     }
@@ -67,6 +68,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
                                                                   WebRequest request) {
+        log.error("MethodArgumentNotValidException: " + ex.getMessage(), ex);
         Map<String, String> errors = ex.getBindingResult().getAllErrors().stream()
                 .collect(Collectors.toMap(
                         e -> ((FieldError) e).getField(),
@@ -76,6 +78,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+        log.error("ConstraintViolationException: " + ex.getMessage(), ex);
         Map<String, String> errors = ex.getConstraintViolations().stream().collect(Collectors.toMap(
                 v -> v.getPropertyPath().toString(),
                 ConstraintViolation::getMessage));

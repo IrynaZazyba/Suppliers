@@ -493,7 +493,7 @@ function AddWaybillModal(props) {
                     <td style={{fontSize: '0.9rem', width: '37%'}}>{app.destinationLocationDto.addressDto.city}{', '}
                         {app.destinationLocationDto.addressDto.addressLine1}{', '}
                         {app.destinationLocationDto.addressDto.addressLine2}</td>
-                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0)}</td>
+                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0).toFixed(2)}</td>
                 </tr>
             ))}
         </React.Fragment>;

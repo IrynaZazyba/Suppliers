@@ -112,7 +112,7 @@ function ModalAddCar(props) {
                 body: JSON.stringify(carDto)
             })
                 .then(response => {
-                    if (response.status !== 200) {
+                    if (response.status !== 201) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
                             validationErrors: ''

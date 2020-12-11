@@ -10,8 +10,7 @@ import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Button from "react-bootstrap/Button";
 import {validateEditApplication} from "../../validation/ApplicationValidationRules";
 import calculateItemPrice, {calculateDistance, recalculateItemWhenChangeWarehouse} from "./CalculatePrice";
-import {validateShipmentEditItem} from "../../validation/ItemValidationRules";
-import {checkItemsAtWarehouse} from "../../validation/ItemValidationRules";
+import {checkItemsAtWarehouse, validateShipmentEditItem} from "../../validation/ItemValidationRules";
 
 function EditShipmentModal(props) {
 
@@ -248,13 +247,23 @@ function EditShipmentModal(props) {
                 },
                 body: JSON.stringify(dtoApp)
             })
-                .then(function (response) {
-                    if (response.status !== 200) {
+                .then(response => {
+                    if (response.status === 400) {
+                        response.json().then(json => {
+                            let res = Object.values(json).join('. ');
+                            setErrors({
+                                serverErrors: res,
+                                validationErrors: ''
+                            });
+                        });
+                    }
+                    if (response.status !== 200 && response.status !== 400) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
                             validationErrors: ''
                         });
-                    } else {
+                    }
+                    if (response.status === 200) {
                         setErrors(preState => ({
                             ...preState,
                             validationErrors: []

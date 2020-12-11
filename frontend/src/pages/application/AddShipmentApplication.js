@@ -249,14 +249,14 @@ function AddShipmentApplication(props) {
                         let res = Object.values(json).join('. ');
                         setErrors({
                             serverErrors: res,
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     });
                 }
                 if (response.status !== 200 && response.status !== 400) {
                     setErrors({
                         serverErrors: "Something go wrong, try later",
-                        validationErrors: ''
+                        validationErrors: []
                     });
                 }
                 if (response.status === 200) {

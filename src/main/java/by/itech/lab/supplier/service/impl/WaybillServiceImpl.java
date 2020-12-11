@@ -4,6 +4,7 @@ import by.itech.lab.supplier.auth.domain.UserImpl;
 import by.itech.lab.supplier.domain.Car;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.WayBill;
+import by.itech.lab.supplier.domain.WayPoint;
 import by.itech.lab.supplier.domain.WaybillStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WayBillDto;
@@ -30,9 +31,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -159,6 +163,10 @@ public class WaybillServiceImpl implements WaybillService {
         final WayBill wayBill = waybillRepository.findById(waybillId).orElseThrow();
         wayBill.setWaybillStatus(WaybillStatus.FINISHED);
         final Car car = wayBill.getCar();
+        final Map<Integer, WayPoint> mappedByPriority = wayBill.getRoute().getWayPoints().stream()
+                .collect(Collectors.toMap(WayPoint::getPriority, Function.identity()));
+        final Integer maxPriority = Collections.max(mappedByPriority.keySet());
+        car.setAddress(mappedByPriority.get(maxPriority).getAddress());
         car.setOnTheWay(false);
         car.setCurrentCapacity(car.getTotalCapacity());
         waybillRepository.save(wayBill);

@@ -224,13 +224,23 @@ function EditSupplyAppModal(props) {
                 },
                 body: JSON.stringify(dtoApp)
             })
-                .then(function (response) {
-                    if (response.status !== 200) {
+                .then(response => {
+                    if (response.status === 400) {
+                        response.json().then(json => {
+                            let res = Object.values(json).join('. ');
+                            setErrors({
+                                serverErrors: res,
+                                validationErrors: ''
+                            });
+                        });
+                    }
+                    if (response.status !== 200 && response.status !== 400) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
                             validationErrors: ''
                         });
-                    } else {
+                    }
+                    if (response.status === 200) {
                         setErrors(preState => ({
                             ...preState,
                             validationErrors: []

@@ -27,13 +27,10 @@ function Header() {
     const writeOffActClass = getClass(/.write-off-act/)
     const waybillClass = getClass(/.waybills/);
 
-    const itemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
-        user.role === "ROLE_DISPATCHER" ||
-        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
-    const categoryPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
-        user.role === "ROLE_DIRECTOR" || user.role === "ROLE_ADMIN");
-    const writeOffActPermission = checkPermission && (user.role === "ROLE_ADMIN" || user.role === "ROLE_DISPATCHER"
-        || user.role === "ROLE_DIRECTOR" || user.role === "ROLE_DRIVER" || user.role === "ROLE_SYSTEM_ADMIN");
+    const itemPermission = checkPermission && (user.role === "ROLE_DISPATCHER");
+    const categoryPermission = checkPermission && (user.role === "ROLE_DIRECTOR");
+    const writeOffActPermission = checkPermission && (user.role === "ROLE_DISPATCHER"
+        || user.role === "ROLE_DIRECTOR" || user.role === "ROLE_DRIVER");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -49,7 +46,7 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/application`}>Application</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission && user.role === "ROLE_DISPATCHER" &&
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role==="ROLE_ADMIN")&&
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${user.currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
@@ -72,7 +69,7 @@ function Header() {
                     <Nav.Link className={writeOffActClass}
                               href={`/customers/${user.currentCustomerId}/write-off-act`}>Write-off acts
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
+                    {checkPermission && user.role === "ROLE_ADMIN" &&
                     <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
                     <UserProfile/>
                 </Nav>
