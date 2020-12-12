@@ -162,7 +162,6 @@ function ModalEditRetailer(props) {
             <td>{warehouse.type}</td>
             <td>{warehouse.addressDto.city}, {warehouse.addressDto.addressLine1},
                 {warehouse.addressDto.addressLine2}, {warehouse.addressDto.state.state}</td>
-            <td>{warehouse.totalCapacity}</td>
             <td><FaEdit style={{textAlign: 'center', color: '#1a7fa8'}}
                         size={'1.3em'}
                         onClick={() => {
@@ -197,7 +196,6 @@ function ModalEditRetailer(props) {
                     <th>Identifier</th>
                     <th>Type</th>
                     <th>Full Address</th>
-                    <th>Total Capacity</th>
                 </tr>
                 </thead>
                 <tbody>

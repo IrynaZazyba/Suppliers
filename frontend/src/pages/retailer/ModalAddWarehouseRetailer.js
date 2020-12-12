@@ -84,13 +84,6 @@ function ModalAddWarehouseRetailer(props) {
         }));
     };
 
-    const handleTotalCapacity = (e) => {
-        setWarehouseDto(preState => ({
-            ...preState,
-            totalCapacity: e.target.value
-        }));
-    };
-
     const addWarehouseHandler = (e) => {
         e.preventDefault();
 
@@ -121,8 +114,9 @@ function ModalAddWarehouseRetailer(props) {
                         longitude: response.data.results[0].geometry.location.lng
                     }
                 }
-                props.onAddWarehouse(warehouseUpdateDto);
+
                 setWarehouseDto(warehouseUpdateDto);
+
             }})
 
         let validationResult = validateWarehouse(warehouseDto);
@@ -133,7 +127,7 @@ function ModalAddWarehouseRetailer(props) {
         }));
         if (!validationResult.length) {
             props.onChange(false, warehouseDto)
-
+            props.onAddWarehouse(warehouseDto);
         }
     };
 
@@ -224,19 +218,6 @@ function ModalAddWarehouseRetailer(props) {
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid address line 2.
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
-                            total capacity
-                            <Form.Control type="number"
-                                          onChange={handleTotalCapacity}
-                                          className={
-                                              errors.validationErrors.includes("totalCapacity")
-                                                  ? "form-control is-invalid"
-                                                  : "form-control"
-                                          }/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
 

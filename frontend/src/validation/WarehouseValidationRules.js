@@ -2,9 +2,10 @@ export default function validateWarehouse(dto, dropdownMenuName, dispatchersId) 
     return [
         ...validateIdentifier(dto), ...validateCity(dto),
         ...validateAddressLine1(dto), ...validateAddressLine2(dto),
-        ...validateTotalCapacity(dto), ...validateState(dto),
+       ...validateState(dto),
         ...validateUsername(dto, dispatchersId), ...validateType(dropdownMenuName)];
 }
+
 
 export function validateWarehouseWithIdentifierExist(dto, dropdownMenuName, dispatchersId, isIdentifierExist) {
     return [
