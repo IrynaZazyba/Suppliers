@@ -134,8 +134,6 @@ function ModalEditRetailer(props) {
             validationErrors: ''
         }));
         retailerDto.warehouses = warehouses;
-        console.log(retailerDto);
-        console.log(warehouses);
         fetch(`/customers/${currentCustomerId}/retailers`, {
             method: 'POST',
             headers: {
