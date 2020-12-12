@@ -22,7 +22,7 @@ function ModalEditUser(props) {
 
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: null,
+        state: {},
         addressLine1: '',
         addressLine2: ''
     });
