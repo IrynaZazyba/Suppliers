@@ -5,10 +5,13 @@ import by.itech.lab.supplier.dto.RetailerDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 @Component
 @AllArgsConstructor
 public class RetailerMapper implements BaseMapper<Retailer, RetailerDto> {
-
+    private final WarehouseMapper warehouseMapper;
     @Override
     public RetailerDto map(Retailer retailer) {
         return RetailerDto.builder()

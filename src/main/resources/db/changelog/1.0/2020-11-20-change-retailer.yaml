@@ -9,7 +9,7 @@ databaseChangeLog:
             oldColumnName: fullname
             tableName: retailer
   - changeSet:
-      id: SUP-RETAILER-13
+      id: SUP-RETAILER-19
       author: alesia_hlushakova
       changes:
         - dropColumn:

@@ -180,8 +180,9 @@ function ModalEditUser(props) {
                                 Please provide a valid date.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Label>State</Form.Label>
+
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Label>State</Form.Label>
                             <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
 
                                           onChange={onChangeState}>

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
@@ -27,7 +28,7 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
     Double getTotalCapacity(@Param("warehouseId") Long warehouseId);
 
     @Query("select w from Warehouse w where w.retailerId=:retailer_id")
-    Page<Warehouse> findAllByRetailerId(@Param("retailer_id") Long retailerId, final Pageable page);
+    Set<Warehouse> findAllByRetailerId(@Param("retailer_id") Long retailerId);
 
     List<Warehouse> findAllByType(WarehouseType warehouseType);
 

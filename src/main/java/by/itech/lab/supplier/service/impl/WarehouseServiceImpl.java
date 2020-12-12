@@ -89,8 +89,8 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable) {
-        return warehouseRepository.findAllByRetailerId(retailerId, pageable).map(warehouseMapper::map);
+    public Set<WarehouseDto> findByRetailerId(final Long retailerId) {
+        return warehouseRepository.findAllByRetailerId(retailerId).stream().map(warehouseMapper::map).collect(Collectors.toSet());
     }
 
     @Override
