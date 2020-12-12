@@ -49,6 +49,7 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
     @ModelAttribute
     public void contextListener(HttpServletRequest request) {
+        log.info("{} {}, {}", request.getMethod(), request.getRequestURI(), request.getSession().getId());
         String[] split = request.getRequestURI().trim().split("/");
         if (split.length >= 3) {
             threadLocal.set(Long.parseLong(split[2]));
