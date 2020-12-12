@@ -52,6 +52,12 @@ public class WarehouseController {
         return warehouseService.findAll(pageable);
     }
 
+    @GetMapping(URL_ITEMS + URL_ID_PARAMETER)
+    public Page<WarehouseItemDto> findItemsOfWarehouse(@PageableDefault final Pageable pageable,
+                                                       @PathVariable final Long id) {
+        return warehouseService.getItemsByWarehouseId(id, pageable);
+    }
+
     @GetMapping(URL_ID_PARAMETER)
     public WarehouseDto findById(@PathVariable final Long id) {
         return warehouseService.findById(id);
@@ -118,6 +124,12 @@ public class WarehouseController {
     public List<WarehouseItemDto> getWarehouseItemByItemsId(@PathVariable final Long id,
                                                             @RequestParam final List<Long> itemsId) {
         return warehouseService.getWarehouseItemContainingItems(id, itemsId);
+    }
+
+    @GetMapping(ApiConstants.URL_TYPE + ApiConstants.IDENTIFIER)
+    public List<WarehouseDto> findByTypeAndIdentifier(@RequestParam final String identifier,
+                                                      @RequestParam final WarehouseType type) {
+        return warehouseService.getWarehouseByTypeAndIdentifier(identifier, type);
     }
 
     @GetMapping(URL_APPLICATIONS)

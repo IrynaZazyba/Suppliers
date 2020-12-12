@@ -37,6 +37,7 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
                 .driver(userMapper.map(dto.getDriver()))
                 .applications(dto.getApplications().stream().map(applicationMapper::map).collect(Collectors.toList()))
                 .route(Objects.nonNull(dto.getRoute()) ? routeMapper.map(dto.getRoute()) : null)
+                .deliveryStart(Objects.nonNull(dto.getDeliveryStart()) ? dto.getDeliveryStart() : null)
                 .build();
     }
 
@@ -55,6 +56,7 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
                 .driver(userMapper.map(wayBill.getDriver()))
                 .applications(wayBill.getApplications().stream().map(applicationMapper::map).collect(Collectors.toList()))
                 .route(Objects.nonNull(wayBill.getRoute()) ? routeMapper.map(wayBill.getRoute()) : null)
+                .deliveryStart(Objects.nonNull(wayBill.getDeliveryStart()) ? wayBill.getDeliveryStart() : null)
                 .build();
     }
 

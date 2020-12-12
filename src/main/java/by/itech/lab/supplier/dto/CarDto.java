@@ -14,5 +14,7 @@ public class CarDto implements BaseDto {
     private Double currentCapacity;
     private CustomerDto customerDto;
     private AddressDto addressDto;
+    private boolean isOnTheWay;
+
 
 }

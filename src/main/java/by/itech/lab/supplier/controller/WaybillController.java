@@ -3,8 +3,10 @@ package by.itech.lab.supplier.controller;
 import by.itech.lab.supplier.domain.WaybillStatus;
 import by.itech.lab.supplier.dto.RouteDto;
 import by.itech.lab.supplier.dto.WayBillDto;
+import by.itech.lab.supplier.dto.WayPointDto;
 import by.itech.lab.supplier.dto.validation.CreateDtoValidationGroup;
 import by.itech.lab.supplier.dto.validation.UpdateDtoValidationGroup;
+import by.itech.lab.supplier.service.RouteService;
 import by.itech.lab.supplier.service.WaybillService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,8 +29,10 @@ import java.util.List;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CUSTOMER_ID;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_DELIVERY;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ID_PARAMETER;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_ROUTE;
+import static by.itech.lab.supplier.constant.ApiConstants.URL_ROUTE_ID;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_WAYBILL;
 
 @RestController
@@ -39,6 +43,7 @@ import static by.itech.lab.supplier.constant.ApiConstants.URL_WAYBILL;
 public class WaybillController {
 
     private final WaybillService waybillService;
+    private final RouteService routeService;
 
     @Validated(CreateDtoValidationGroup.class)
     @PostMapping
@@ -68,6 +73,18 @@ public class WaybillController {
 
     @GetMapping(URL_ROUTE)
     public RouteDto getWaybillRoute(@RequestParam List<Long> waybillAppsId) {
-        return waybillService.calculateWaybillRoute(waybillAppsId);
+        return routeService.calculateWaybillRoute(waybillAppsId);
+    }
+
+    @PutMapping(URL_ID_PARAMETER + URL_DELIVERY)
+    public WayBillDto startDelivery(@PathVariable final Long id) {
+        return waybillService.startWaybillDelivery(id);
+    }
+
+    @PutMapping(URL_ID_PARAMETER + URL_ROUTE + URL_ROUTE_ID)
+    public WaybillStatus visitWayPoint(@PathVariable final Long id,
+                                       @PathVariable final Long routeId,
+                                       @RequestBody final WayPointDto wayPoint) {
+        return routeService.makeWayPointVisited(id, routeId, wayPoint);
     }
 }

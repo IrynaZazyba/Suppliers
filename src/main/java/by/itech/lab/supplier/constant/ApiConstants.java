@@ -35,13 +35,18 @@ public final class ApiConstants {
     public final static String URL_UPC = "/upc";
     public final static String URL_TYPE = "/type";
     public final static String URL_TAXES = "/taxes";
+    public final static String URL_REASON = "/reason";
     public final static String URL_WAREHOUSE_ITEMS = "/warehouse-items";
+    public final static String DRIVER = "/driver";
+    public static final String IDENTIFIER = "/identifier";
     public final static String URL_ROLE = "/role";
-    public final static String URL_APPLICATIONS ="/applications";
-    public final static String URL_ROUTE ="/route";
+    public final static String URL_APPLICATIONS = "/applications";
+    public final static String URL_ROUTE = "/route";
     public final static String URL_DELETE_LIST = "/delete-list";
     public final static String URL_DISPATCHERS = "/dispatchers";
     public final static String URL_IDENTIFIER = "/identifier";
+    public final static String URL_DELIVERY ="/delivery";
+    public final static String URL_ROUTE_ID = "/{routeId}";
     public final static String URL_UNPAGED = "/unpaged";
 
 }

@@ -1,5 +1,4 @@
-import {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../../context/authContext";
+import {useEffect, useState} from "react";
 import Page from "../../components/Page";
 import {FaEdit} from "react-icons/fa";
 import React from "react";
@@ -166,7 +165,7 @@ export default () => {
                     <th>Label</th>
                     <th>Units</th>
                     <th>Category</th>
-                    <th>Cost per unit</th>
+                    <th>UPC</th>
                     <th></th>
                 </tr>
                 </thead>

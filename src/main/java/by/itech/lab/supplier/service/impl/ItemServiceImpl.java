@@ -81,8 +81,13 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findByUpc(String upc) {
+    public List<ItemDto> findByUpc(final String upc) {
         return itemRepository.findByUpcStartsWith(upc).stream().map(itemMapper::map).collect(Collectors.toList());
+    }
+
+    @Override
+    public int getCountOfCategoryUsages(final Long categoryId) {
+        return itemRepository.countOfCategoryUsages(categoryId);
     }
 
 }

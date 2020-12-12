@@ -137,49 +137,55 @@ function ModalEditWarehouse(props) {
 
     const editWarehouseHandler = (e) => {
         e.preventDefault();
-        let location = `${warehouseDto.addressDto.state.state} 
+
+        let warehouseUpdateDto = {};
+        let dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
+        warehouseUpdateDto = {
+            ...warehouseDto,
+            dispatchersId: dispatchersId,
+            customerId: props.currentCustomerId,
+            irrelevantDispatchersId: dispatcherDeleteList
+        }
+
+        let validationResult = validateEditWarehouse(warehouseUpdateDto, dispatchersId);
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: validationResult
+        }));
+
+        if (!validationResult.length) {
+            let location = `${warehouseDto.addressDto.state.state} 
                         ${warehouseDto.addressDto.city} 
                         ${warehouseDto.addressDto.addressLine1} 
                         ${warehouseDto.addressDto.addressLine2}`
 
-        axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-            params: {
-                address: location,
-                key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
-            }
-        }).then(function (response) {
-            if (response.status !== 200) {
-                setErrors(preState => ({
-                    ...preState,
-                    serverErrors: "Something go wrong, try later",
-                }));
-            } else {
-                let warehouseUpdateDto = {};
-                let dispatchersId = dispatchers.map(dispatcher => dispatcher.id);
-                warehouseUpdateDto = {
-                    ...warehouseDto,
-                    dispatchersId: dispatchersId,
-                    customerId: props.currentCustomerId,
-                    irrelevantDispatchersId: dispatcherDeleteList,
-                    addressDto: {
-                        ...warehouseDto.addressDto,
-                        latitude: response.data.results[0].geometry.location.lat,
-                        longitude: response.data.results[0].geometry.location.lng
-                    }
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+                params: {
+                    address: location,
+                    key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
                 }
+            }).then(function (response) {
+                if (response.status !== 200) {
+                    setErrors(preState => ({
+                        ...preState,
+                        serverErrors: "Something go wrong, try later",
+                    }));
+                } else {
+                    let warehouseUpdateDto2 = {
+                        ...warehouseUpdateDto,
+                        addressDto: {
+                            ...warehouseDto.addressDto,
+                            latitude: response.data.results[0].geometry.location.lat,
+                            longitude: response.data.results[0].geometry.location.lng
+                        }
+                    }
 
-                let validationResult = validateEditWarehouse(warehouseUpdateDto, dispatchersId);
-                setErrors(preState => ({
-                    ...preState,
-                    validationErrors: validationResult
-                }));
-                if (!validationResult.length) {
                     fetch(`/customers/${props.currentCustomerId}/warehouses/${warehouseDto.id}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(warehouseUpdateDto)
+                        body: JSON.stringify(warehouseUpdateDto2)
                     })
                         .then(function (response) {
                             if (response.status !== 202 || errors.serverErrors !== '') {
@@ -199,8 +205,8 @@ function ModalEditWarehouse(props) {
                             }
                         });
                 }
-            }
-        })
+            })
+        }
     };
 
     const showDispatchers = dispatchers.map(disp =>
@@ -261,6 +267,8 @@ function ModalEditWarehouse(props) {
                         validationErrors: [],
                         serverErrors: ''
                     });
+                    setDispatchers([]);
+                    setDispatcherDeleteList([]);
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-warehouse"

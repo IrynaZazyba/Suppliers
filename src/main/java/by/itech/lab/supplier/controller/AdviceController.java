@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.controller;
 
 import by.itech.lab.supplier.exception.ConflictWithTheCurrentWarehouseStateException;
+import by.itech.lab.supplier.exception.ConflictWithWayPointTrackingException;
 import by.itech.lab.supplier.exception.ResourceNotFoundException;
 import by.itech.lab.supplier.exception.ValidationException;
 import by.itech.lab.supplier.exception.domain.DefaultExceptionInfo;
@@ -53,8 +54,9 @@ public class AdviceController extends ResponseEntityExceptionHandler {
         }
     }
 
-    @ExceptionHandler(ConflictWithTheCurrentWarehouseStateException.class)
-    public ResponseEntity<Object> handleConflict(ConflictWithTheCurrentWarehouseStateException ex) {
+    @ExceptionHandler({ConflictWithTheCurrentWarehouseStateException.class, ConflictWithWayPointTrackingException.class})
+    public ResponseEntity<Object> handleConflict(Exception ex) {
+        log.error("Conflict: " + ex.getMessage(),ex);
         return new ResponseEntity<>(
                 new DefaultExceptionInfo(ex.getMessage(), CONFLICT.value()), new HttpHeaders(), CONFLICT);
     }

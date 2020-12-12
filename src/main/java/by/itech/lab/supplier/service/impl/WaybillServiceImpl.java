@@ -1,12 +1,11 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.auth.domain.UserImpl;
+import by.itech.lab.supplier.domain.Car;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.domain.WaybillStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
-import by.itech.lab.supplier.dto.RouteDto;
-import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WayBillDto;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
@@ -17,7 +16,9 @@ import by.itech.lab.supplier.exception.domain.ValidationErrors;
 import by.itech.lab.supplier.repository.WaybillRepository;
 import by.itech.lab.supplier.service.ApplicationService;
 import by.itech.lab.supplier.service.CalculationService;
+import by.itech.lab.supplier.service.CarService;
 import by.itech.lab.supplier.service.UserService;
+import by.itech.lab.supplier.service.WarehouseService;
 import by.itech.lab.supplier.service.WaybillService;
 import by.itech.lab.supplier.service.validation.WaybillValidationService;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,8 @@ public class WaybillServiceImpl implements WaybillService {
     private final CalculationService calculationService;
     private final WaybillValidationService waybillValidationService;
     private final ApplicationMapper applicationMapper;
+    private final WarehouseService warehouseService;
+    private final CarService carService;
 
     @Transactional
     @Override
@@ -129,15 +132,37 @@ public class WaybillServiceImpl implements WaybillService {
         return allByRoleAndStatus.map(wayBillMapper::map);
     }
 
+
     @Override
-    public RouteDto calculateWaybillRoute(final List<Long> appsIds) {
-        final List<ApplicationDto> applicationsByIds = applicationService.getApplicationsByIds(appsIds);
-        final List<WarehouseDto> warehouses = applicationsByIds
-                .stream()
-                .map(ApplicationDto::getDestinationLocationDto)
-                .collect(Collectors.toList());
-        return calculationService.calculateOptimalRoute(warehouses, applicationsByIds.get(0).getSourceLocationDto());
+    @Transactional
+    public WayBillDto startWaybillDelivery(final Long waybillId) {
+        final WayBill wayBill = waybillRepository.findById(waybillId).orElseThrow();
+        final List<ApplicationDto> apps = wayBill.getApplications()
+                .stream().map(applicationMapper::map).collect(Collectors.toList());
+        warehouseService.shipItemsAccordingApplications(apps);
+        final Double appsCapacity = apps.stream().map(app ->
+                applicationService.getCapacityItemInApplication(app.getItems()))
+                .reduce(0.0, Double::sum);
+
+        wayBill.setWaybillStatus(WaybillStatus.IN_PROGRESS);
+        wayBill.setDeliveryStart(LocalDateTime.now());
+        final Car car = wayBill.getCar();
+        car.setOnTheWay(true);
+        car.setCurrentCapacity(car.getTotalCapacity() - appsCapacity);
+        waybillRepository.save(wayBill);
+        return wayBillMapper.map(wayBill);
     }
 
+    @Override
+    @Transactional
+    public WaybillStatus completeWaybillDelivery(final Long waybillId) {
+        final WayBill wayBill = waybillRepository.findById(waybillId).orElseThrow();
+        wayBill.setWaybillStatus(WaybillStatus.FINISHED);
+        final Car car = wayBill.getCar();
+        car.setOnTheWay(false);
+        car.setCurrentCapacity(car.getTotalCapacity());
+        waybillRepository.save(wayBill);
+        return wayBill.getWaybillStatus();
+    }
 
 }

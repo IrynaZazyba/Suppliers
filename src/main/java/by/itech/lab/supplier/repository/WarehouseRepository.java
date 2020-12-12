@@ -32,6 +32,8 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     List<Warehouse> findAllByType(WarehouseType warehouseType);
 
+    List<Warehouse> findByTypeAndIdentifierStartingWith(WarehouseType type, String identifier);
+
     @Query("select w.id from Warehouse w where w.identifier = :identifier")
     Long findWarehouseIdByIdentifier(@Param("identifier") String identifier);
 }

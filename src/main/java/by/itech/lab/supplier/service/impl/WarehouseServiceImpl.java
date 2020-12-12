@@ -10,6 +10,8 @@ import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
+import by.itech.lab.supplier.dto.WriteOffActDto;
+import by.itech.lab.supplier.dto.WriteOffItemDto;
 import by.itech.lab.supplier.dto.mapper.ItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseItemMapper;
 import by.itech.lab.supplier.dto.mapper.WarehouseMapper;
@@ -58,6 +60,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final UserService userService;
     private final WarehouseItemMapper warehouseItemMapper;
     private final WarehouseItemFilter warehouseItemFilter;
+    private final WarehouseItemRepository warehouseItemRepository;
 
     @Lazy
     @Autowired
@@ -250,11 +253,26 @@ public class WarehouseServiceImpl implements WarehouseService {
         final Map<Long, Map<Long, WarehouseItem>> whItemByWhAndItem = findOnlyRelatedItems(applicationsDto);
         final List<WarehouseItem> warehouseItems = applicationsDto.stream().map(app -> app.getItems().stream()
                 .map(appItem -> reduceItemAmount(appItem, whItemByWhAndItem
-                        .get(app.getDestinationLocationDto().getId())
+                        .get(app.getSourceLocationDto().getId())
                         .get(appItem.getItemDto().getId())))
                 .collect(Collectors.toList())
         ).flatMap(Collection::stream).collect(Collectors.toList());
         itemInWarehouseRepository.saveAll(warehouseItems);
+    }
+
+    @Override
+    @Transactional
+    public void writeOffItems(final WriteOffActDto writeOffActDto) {
+        for (WriteOffItemDto item : writeOffActDto.getItems()) {
+            WarehouseItem warehouseItem = null;
+            if (itemInWarehouseRepository.findByItemId(item.getItemDto().getId(), writeOffActDto.getWarehouseId())
+                    .isPresent()) {
+                warehouseItem = itemInWarehouseRepository
+                        .findByItemId(item.getItemDto().getId(), writeOffActDto.getWarehouseId()).get();
+            }
+            itemInWarehouseRepository.save(writeOffItem(item, warehouseItem));
+        }
+
     }
 
     private Map<Long, Map<Long, WarehouseItem>> findOnlyRelatedItems(final List<ApplicationDto> apps) {
@@ -267,6 +285,22 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private WarehouseItem reduceItemAmount(final ApplicationItemDto item,
                                            final WarehouseItem itemInWarehouse) {
+        if (Objects.isNull(itemInWarehouse)) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Warehouse doesn't have item with id = " + item.getItemDto().getId());
+        }
+        final Double amountAtWarehouse = itemInWarehouse.getAmount();
+        final Double amountAfterReducing = amountAtWarehouse - item.getAmount();
+        if (amountAfterReducing < 0) {
+            throw new ConflictWithTheCurrentWarehouseStateException(
+                    "Required amount of items bigger than existing at warehouse");
+        }
+        itemInWarehouse.setAmount(amountAfterReducing);
+        return itemInWarehouse;
+    }
+
+    private WarehouseItem writeOffItem(final WriteOffItemDto item,
+                                       final WarehouseItem itemInWarehouse) {
         if (Objects.isNull(itemInWarehouse)) {
             throw new ConflictWithTheCurrentWarehouseStateException(
                     "Warehouse doesn't have item with id=" + item.getItemDto().getId());
@@ -282,12 +316,25 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public Page<WarehouseItemDto> getItemsByWarehouseId(final Long warehouseId, final Pageable pageable) {
+        return warehouseItemRepository.findItemsByWarehouseId(warehouseId, pageable)
+                .map(warehouseItemMapper::map);
+    }
+
+    @Override
     public List<WarehouseItemDto> getWarehouseItemContainingItems(Long warehouseId, List<Long> itemId) {
         return itemInWarehouseRepository
                 .getWarehouseItemByWarehouseIdAndItemIdIn(warehouseId, itemId)
                 .stream()
                 .map(warehouseItemMapper::map)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WarehouseDto> getWarehouseByTypeAndIdentifier(final String identifier,
+                                                              final WarehouseType warehouseType) {
+        return warehouseRepository.findByTypeAndIdentifierStartingWith(warehouseType, identifier).stream()
+                .map(warehouseMapper::map).collect(Collectors.toList());
     }
 
     @Override

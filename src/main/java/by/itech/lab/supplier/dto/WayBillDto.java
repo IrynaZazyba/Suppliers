@@ -43,4 +43,7 @@ public class WayBillDto implements BaseDto {
     private List<ApplicationDto> applications = new ArrayList<>();
     @NotNull(groups = CreateDtoValidationGroup.class, message = "Route should be specified")
     private RouteDto route;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_PATTERN)
+    private LocalDateTime deliveryStart;
+
 }

@@ -25,7 +25,7 @@ public class WarehouseItemFilter {
             Join<WarehouseItem, Warehouse> whJoin = root.join(WarehouseItem_.warehouse);
             Join<WarehouseItem, Item> itemJoin = root.join(WarehouseItem_.item);
             return cb.or(apps.stream().map(app -> {
-                Long whId = app.getDestinationLocationDto().getId();
+                Long whId = app.getSourceLocationDto().getId();
                 // getting all related items
                 List<Long> itemIds = app.getItems().stream()
                         .map(ApplicationItemDto::getItemDto).map(ItemDto::getId).collect(Collectors.toList());
