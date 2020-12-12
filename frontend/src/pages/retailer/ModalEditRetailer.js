@@ -107,7 +107,6 @@ function ModalEditRetailer(props) {
             fetch(`/customers/${currentCustomerId}/warehouses/retailers/${props.props.retailer.id}`)
                 .then(response => response.json())
                 .then(res => {
-                    console.log(res);
                     setWarehouses(res);
                 });
         }
@@ -115,6 +114,7 @@ function ModalEditRetailer(props) {
 
     const closeModalAdd = (e) => {
         setLgShow(e);
+
     };
     const closeModalEdit = (e) => {
         setEditWarehouse(
@@ -133,10 +133,9 @@ function ModalEditRetailer(props) {
             ...preState,
             validationErrors: ''
         }));
-        setRetailerDto(preState => ({
-            ...preState,
-            warehouses: warehouses
-        }));
+        retailerDto.warehouses = warehouses;
+        console.log(retailerDto);
+        console.log(warehouses);
         fetch(`/customers/${currentCustomerId}/retailers`, {
             method: 'POST',
             headers: {

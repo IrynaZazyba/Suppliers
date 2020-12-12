@@ -32,7 +32,7 @@ function ModalAddRetailer(props) {
     });
 
     const addWarehouseHandler = warehouse => {
-        warehouses.push(warehouse);
+        setWarehouses(preState => [...preState, warehouse]);
     }
     const editWarehouseHandler = warehouse => {
         setWarehouses(preState =>
@@ -115,6 +115,7 @@ function ModalAddRetailer(props) {
 
     const closeModalAdd = (e) => {
         setLgShow(e);
+
     };
 
     function removeFromWarehouseArray() {

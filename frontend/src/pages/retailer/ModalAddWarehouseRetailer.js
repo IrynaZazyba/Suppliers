@@ -132,7 +132,6 @@ function ModalAddWarehouseRetailer(props) {
             serverErrors: ''
         }));
         if (!validationResult.length) {
-        //    props.onAddWarehouse(warehouseDto);
             props.onChange(false, warehouseDto)
 
         }
