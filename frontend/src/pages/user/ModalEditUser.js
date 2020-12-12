@@ -175,7 +175,12 @@ function ModalEditUser(props) {
                                 Please provide a valid date.
                             </Form.Control.Feedback>
                         </Form.Group>
-
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
+                            Current state
+                            <Form.Control type="text"
+                                          value={addressDto.state.state}
+                                          disabled/>
+                        </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
                                 style={{padding: '5px 10px'}}
@@ -186,7 +191,7 @@ function ModalEditUser(props) {
                                 labelKey="state"
                                 minLength={3}
                                 options={stateOptions}
-                                placeholder="Select state..."
+                                placeholder="Search, if you want to change state..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
