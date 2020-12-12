@@ -1,8 +1,8 @@
 package by.itech.lab.supplier.service.mail;
 
-import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.domain.User;
 
 public interface MailService {
-    void sendMail(UserDto userDto);
+    void sendMail(User userDto);
 
 }

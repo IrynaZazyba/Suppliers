@@ -76,12 +76,10 @@ public class UserServiceImpl implements UserService {
                     userMapper.update(userDTO, existing);
                     return existing;
                 })
-                .orElseGet(() -> {
-                    userDTO.setPassword(RandomStringUtils.random(10, 97, 122, true, true));
-                    return userMapper.map(userDTO);
-                });
+                .orElseGet(() -> userMapper.map(userDTO));
         if (Objects.isNull(user.getId())) {
-            mailService.sendMail(userDTO);
+            user.setPassword(RandomStringUtils.random(10, 97, 122, true, true));
+            mailService.sendMail(user);
         }
         final User saved = userRepository.save(user);
         return userMapper.map(saved);
@@ -103,7 +101,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int changePassword(Long id, String password) {
-        return userRepository.changePassword(passwordEncoder.encode(password), id);
+        return userRepository.changePassword(passwordEncoder.
+                encode(password.replaceAll("\"", "")), id);
     }
 
     @Override

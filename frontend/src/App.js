@@ -16,6 +16,7 @@ import {AuthContext} from "./context/authContext";
 import Cars from "./pages/car/Cars";
 import Warehouses from "./pages/warehouse/Warehouses";
 import Application from "./pages/application/Application";
+import Retailers from "./pages/retailer/Retailers";
 import WarehouseItems from "./pages/warehouse/WarehouseItems";
 import WriteOffAct from "./pages/write-off/WriteOffPage";
 import Waybill from "./pages/waybill/Waybill";
@@ -44,6 +45,13 @@ function App() {
                                    render={(() => {
                                        return <Warehouses/>
                                    })}/>
+    };
+
+    const renderRetailer = () => {
+        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
+        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST"} render={(() => {
+            return <Retailers/>
+        })}/>
     };
 
     const renderUser = () => {
@@ -116,7 +124,7 @@ function App() {
     const warehouseItemsPath = pathWithCustomer(`/warehouses/:warehouseId/items`);
     const writeOffPath = pathWithCustomer(`/write-off-act`);
     const waybillPath = pathWithCustomer(`/waybills`);
-
+    const retailerPath = pathWithCustomer(`/retailers`);
     return (
         <UserContext>
             <Header/>
@@ -130,6 +138,7 @@ function App() {
                 <Route path={applicationPath} render={renderApplication}/>
                 <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={waybillPath} render={renderWaybill}/>
+                <Route path={retailerPath} render={renderRetailer}/>
                 <Route path={'/customers'} render={renderCustomer}/>
                 <Route path={'/users'} render={renderUser}/>
                 <Route path={'/cars'} render={renderCar}/>

@@ -1,12 +1,13 @@
 package by.itech.lab.supplier.service.mail;
 
 
-import by.itech.lab.supplier.dto.UserDto;
+import by.itech.lab.supplier.domain.User;
 import lombok.AllArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ public class MailServiceImpl implements MailService {
     private final TemplateEngine templateEngine;
     private final Sender sender;
 
-    public void sendMail(final UserDto userDto) {
+    public void sendMail(final User userDto) {
         Map<String, Object> emailMap = new HashMap<>();
         emailMap.put("firstName", userDto.getName());
         emailMap.put("lastName", userDto.getSurname());

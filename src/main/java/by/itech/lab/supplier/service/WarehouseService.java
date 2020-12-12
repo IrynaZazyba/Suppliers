@@ -36,7 +36,7 @@ public interface WarehouseService {
 
     void deleteByRetailerId(final Long id);
 
-    Page<WarehouseDto> findByRetailerId(final Long retailerId, final Pageable pageable);
+    Set<WarehouseDto> findByRetailerId(final Long retailerId);
 
     void shipItemsAccordingApplications(List<ApplicationDto> applicationDto);
 

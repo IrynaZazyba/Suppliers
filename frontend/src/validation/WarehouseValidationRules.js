@@ -2,9 +2,10 @@ export default function validateWarehouse(dto, dropdownMenuName, dispatchersId) 
     return [
         ...validateIdentifier(dto), ...validateCity(dto),
         ...validateAddressLine1(dto), ...validateAddressLine2(dto),
-        ...validateTotalCapacity(dto), ...validateState(dto),
+       ...validateState(dto),
         ...validateUsername(dto, dispatchersId), ...validateType(dropdownMenuName)];
 }
+
 
 export function validateWarehouseWithIdentifierExist(dto, dropdownMenuName, dispatchersId, isIdentifierExist) {
     return [
@@ -76,7 +77,7 @@ export function validateTotalCapacity(dto) {
 
 export function validateState(dto) {
     let errorsFields = [];
-    if (!dto.addressDto.state.state) {
+    if (!dto.addressDto.state) {
         errorsFields.push("state");
     }
     return errorsFields;
