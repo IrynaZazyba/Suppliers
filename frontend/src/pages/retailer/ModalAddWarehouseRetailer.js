@@ -17,7 +17,9 @@ function ModalAddWarehouseRetailer(props) {
         identifier: '',
         type: 'RETAILER',
         addressDto: {
-            state: {}
+            state: {},
+            latitude: '',
+            longitude: ''
         },
         totalCapacity: ''
     });
@@ -91,34 +93,38 @@ function ModalAddWarehouseRetailer(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
-        // let warehouseUpdateDto = {};
-        // let location = `${warehouseDto.addressDto.state.state}
-        //                 ${warehouseDto.addressDto.city}
-        //                 ${warehouseDto.addressDto.addressLine1}
-        //                 ${warehouseDto.addressDto.addressLine2}`
-        //
-        // axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
-        //     params: {
-        //         address: location,
-        //         key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
-        //     }
-        // }).then(function (response) {
-        //     if (response.status !== 200) {
-        //         setErrors(preState => ({
-        //             ...preState,
-        //             serverErrors: "Something go wrong, try later",
-        //         }));
-        //     } else {
-        //
-        //         warehouseUpdateDto = {
-        //             ...warehouseDto,
-        //             customerId: currentCustomerId,
-        //             addressDto: {
-        //                 ...warehouseDto.addressDto,
-        //                 latitude: response.data.results[0].geometry.location.lat,
-        //                 longitude: response.data.results[0].geometry.location.lng
-        //             }
-        //         }}})
+
+        let location = `${warehouseDto.addressDto.state.state}
+                        ${warehouseDto.addressDto.city}
+                        ${warehouseDto.addressDto.addressLine1}
+                        ${warehouseDto.addressDto.addressLine2}`
+
+        axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+            params: {
+                address: location,
+                key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
+            }
+        }).then(function (response) {
+            if (response.status !== 200) {
+                setErrors(preState => ({
+                    ...preState,
+                    serverErrors: "Something go wrong, try later",
+                }));
+            } else {
+                let warehouseUpdateDto = {};
+                warehouseUpdateDto = {
+                    ...warehouseDto,
+                    customerId: currentCustomerId,
+                    addressDto: {
+                        ...warehouseDto.addressDto,
+                        latitude: response.data.results[0].geometry.location.lat,
+                        longitude: response.data.results[0].geometry.location.lng
+                    }
+                }
+                props.onAddWarehouse(warehouseUpdateDto);
+                setWarehouseDto(warehouseUpdateDto);
+            }})
+
         let validationResult = validateWarehouse(warehouseDto);
         setErrors(preState => ({
             ...preState,
@@ -126,10 +132,7 @@ function ModalAddWarehouseRetailer(props) {
             serverErrors: ''
         }));
         if (!validationResult.length) {
-
-            props.onAddWarehouse(warehouseDto);
-
-            setWarehouseDto(warehouseDto);
+        //    props.onAddWarehouse(warehouseDto);
             props.onChange(false, warehouseDto)
 
         }

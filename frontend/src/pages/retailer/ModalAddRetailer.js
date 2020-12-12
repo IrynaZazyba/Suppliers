@@ -11,6 +11,7 @@ import ModalEditWarehouseRetailer from "./ModalEditWarehouseRetailer";
 import ModalAddWarehouseRetailer from "./ModalAddWarehouseRetailer";
 import {FaEdit} from "react-icons/fa/index";
 import "./styles.css"
+import axios from "axios";
 
 function ModalAddRetailer(props) {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
@@ -31,7 +32,7 @@ function ModalAddRetailer(props) {
     });
 
     const addWarehouseHandler = warehouse => {
-        setWarehouses(preState => [...preState, warehouse]);
+        warehouses.push(warehouse);
     }
     const editWarehouseHandler = warehouse => {
         setWarehouses(preState =>
@@ -71,10 +72,8 @@ function ModalAddRetailer(props) {
             ...preState,
             validationErrors: ''
         }));
-        setRetailerDto(preState => ({
-            ...preState,
-            warehouses: warehouses
-        }));
+
+                retailerDto.warehouses = warehouses;
         fetch(`/customers/${currentCustomerId}/retailers`, {
             method: 'POST',
             headers: {
@@ -93,6 +92,7 @@ function ModalAddRetailer(props) {
                         ...preState,
                         validationErrors: []
                     }));
+                    setCheckBox([]);
                     props.onChange(false, retailerDto);
                 }
             });
