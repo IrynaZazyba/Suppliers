@@ -16,10 +16,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -43,7 +45,6 @@ public class Warehouse implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
     private String identifier;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -55,6 +56,7 @@ public class Warehouse implements BaseEntity {
     @JoinColumn(name = "address_id")
     private Address address;
     private Long customerId;
+   @Column(name="retailer_id")
     private Long retailerId;
     @OneToMany(mappedBy = "warehouse", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @EqualsAndHashCode.Exclude

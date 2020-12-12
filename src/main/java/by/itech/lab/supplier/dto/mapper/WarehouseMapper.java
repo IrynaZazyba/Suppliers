@@ -19,6 +19,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .id(dto.getId())
                 .identifier(dto.getIdentifier())
                 .type(dto.getType())
+                .deletedAt(dto.getDeletedAt())
                 .totalCapacity(dto.getTotalCapacity())
                 .address(!Objects.isNull(dto.getAddressDto()) ? addressMapper.map(dto.getAddressDto()) : null)
                 .customerId(dto.getCustomerId())
@@ -32,6 +33,8 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
                 .id(entity.getId())
                 .identifier(entity.getIdentifier())
                 .type(entity.getType())
+                .deletedAt(entity.getDeletedAt())
+                .customerId(entity.getCustomerId())
                 .totalCapacity(entity.getTotalCapacity())
                 .addressDto(!Objects.isNull(entity.getAddress()) ? addressMapper.map(entity.getAddress()) : null)
                 .retailerId(entity.getRetailerId())
@@ -40,6 +43,7 @@ public class WarehouseMapper implements BaseMapper<Warehouse, WarehouseDto> {
 
     public void map(final WarehouseDto from, final Warehouse to) {
         to.setType(from.getType());
+        to.setDeletedAt(from.getDeletedAt());
         to.setTotalCapacity(from.getTotalCapacity());
         to.setAddress(addressMapper.map(from.getAddressDto()));
     }

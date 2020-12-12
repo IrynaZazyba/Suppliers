@@ -10,7 +10,7 @@ export default () => {
     const {user, setUser} = useContext(AuthContext);
     const [zones, setZones] = useState([]);
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
-
+    const [zone, setZone] = useState([]);
     const [addressDto, setAddressDto] = useState({
         city: '',
         state: null,
@@ -61,16 +61,56 @@ export default () => {
             birthday: e.target.value
         }));
     };
+    const handleCity = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            city: e.target.value
+        }));
+    };
+    const handleaddressLine1 = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            addressLine1: e.target.value
+        }));
+    };
+    const handleaddressLine2 = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            addressLine2: e.target.value
+        }));
+        setUser(preState => ({
+            ...preState,
+            addressDto: addressDto
+        }));
 
+    };
+    const onChangeState = (e) => {
+        const selectedState = zones.find(state => state.state === e.target.value);
+
+        setZone(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+        setAddressDto(preState => ({
+            ...preState,
+            state: selectedState
+        }));
+    };
 
     useEffect(() => {
         fetch(`/customers/${currentCustomerId}/users/username/${user.username}`)
             .then(response => response.json())
             .then(res => {
+                setZone(res.addressDto.state);
+                setAddressDto(res.addressDto);
                 setUserDto(res);
                 userDto.addressDto && setState(res.addressDto.state);
             });
-
+        fetch('/states')
+            .then(response => response.json())
+            .then(commits => {
+                setZones(commits.content);
+            });
 
     }, []);
 
@@ -207,38 +247,40 @@ export default () => {
                             />
                         </Form.Group>
 
-                        <Form.Group controlId="formBasicCity" style={{padding: '5px 10px'}}>
-                            <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city"
-                                          value={userDto.addressDto && userDto.addressDto.city}
-                                          readOnly={true}
-                            />
-
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicAddress" style={{padding: '5px 10px'}}>
-                            <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="text" placeholder="address line 1"
-                                          value={userDto.addressDto && userDto.addressDto.addressLine1} readOnly={true}
-                            />
-
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicAddress" style={{padding: '5px 10px'}}>
-                            <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="text" placeholder="address line 2"
-                                          value={userDto.addressDto && userDto.addressDto.addressLine2} readOnly={true}
-                            />
-
-                        </Form.Group>
-
-
-                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
                             <Form.Label>State</Form.Label>
-                            <Form.Control type="text" placeholder="state" value={state.state} readOnly={true}
-                            />
+                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
 
+                                          onChange={onChangeState}>
+                                {Object.entries(zones).map(([k, v]) => (
+
+                                    <option>{v.state}</option>
+
+                                ))}
+                            </Form.Control>
                         </Form.Group>
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
+                                          className={
+                                              isValid("city")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid city.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
+                                          className={
+                                              isValid("addressLine1")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid address line 1.
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    
+
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="password" placeholder="change password" onChange={handlePassword}
                             />

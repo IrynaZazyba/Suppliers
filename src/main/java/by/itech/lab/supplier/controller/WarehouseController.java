@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 import static by.itech.lab.supplier.constant.ApiConstants.URL_APPLICATIONS;
 import static by.itech.lab.supplier.constant.ApiConstants.URL_CAPACITY;
@@ -68,9 +69,9 @@ public class WarehouseController {
     }
 
     @GetMapping(URL_RETAILER_ID_PARAMETER)
-    public Page<WarehouseDto> findByRetailerId(@PageableDefault final Pageable pageable,
+    public Set<WarehouseDto> findByRetailerId(
                                                @PathVariable final Long retailerId) {
-        return warehouseService.findByRetailerId(retailerId, pageable);
+        return warehouseService.findByRetailerId(retailerId);
     }
 
     @PostMapping

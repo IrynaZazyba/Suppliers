@@ -11,6 +11,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class WarehouseDto implements BaseDto {
     @NotNull
     @Valid
     private AddressDto addressDto;
+    private LocalDate deletedAt;
     private Long retailerId;
     private List<Long> dispatchersId = new ArrayList<>();
     private List<Long> irrelevantDispatchersId = new ArrayList<>();

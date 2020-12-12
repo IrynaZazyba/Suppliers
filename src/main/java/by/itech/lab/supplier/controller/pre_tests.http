@@ -174,7 +174,7 @@ Cookie: {{test}}
 
 ###
 
-GET http://localhost:8080/customers/3/warehouses/type?type=FACTORY
+GET http://localhost:8080/customers/3/warehouses/type?type=RETAILER
 Content-Type: application/json
 Connection: keep-alive
 Cookie: {{test}}
@@ -305,15 +305,34 @@ Cookie: {{test}}
 
 {
   "fullName": "Tetya Motya",
-  "identifier": "1615091480024",
+  "identifier": "1615093480024",
   "deletedAt": null,
   "active": null,
-  "customerId": 4
+  "customerId": 4,
+"warehouses":[
+  {
+    "identifier": "1615093480024",
+    "customerId": 4,
+    "type": "FACTORY",
+    "totalCapacity": "1",
+    "addressDto": {
+      "city": "Kanzas",
+      "addressLine1": "Linkoln Str.",
+      "addressLine2": "66",
+      "state": {
+        "id": "6",
+        "state": "Arizona"
+      },
+      "latitude": 40.854785,
+      "longitude": -75.85785
+    }
+  }
+]
 }
 
 
 ###
-#--------------------------------------------------State---------------------------------------------------------------
+#--------------------------------------------------Users---------------------------------------------------------------
 
 GET http://localhost:8080/states
 Content-Type: application/json
@@ -722,6 +741,9 @@ Cookie: {{test}}
   ]
 }
 
+
+
+
 > {%
     client.test("Request executed successfully", function() {
         client.assert(response.status === 200, "Response status is not 200 status="+response.status);
@@ -1066,4 +1088,5 @@ Cookie: {{test}}
 }
 
 ###
+
 

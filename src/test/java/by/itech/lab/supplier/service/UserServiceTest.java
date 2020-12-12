@@ -57,7 +57,6 @@ public class UserServiceTest {
         customer.setRegistrationDate(LocalDate.now());
         userDto = new UserDto();
         userDto.setUsername(USERNAME);
-        userDto.setPassword("password");
         userDto.setActive(true);
         userDto.setEmail(EMAIL);
         userDto.setName("john");
@@ -66,7 +65,6 @@ public class UserServiceTest {
         userDto.setBirthday(LocalDate.of(1999, 11, 15));
         user = new User();
         user.setUsername(USERNAME);
-        user.setPassword(passwordEncoder.encode("password"));
         user.setActive(true);
         user.setEmail(EMAIL);
         user.setName("john");
