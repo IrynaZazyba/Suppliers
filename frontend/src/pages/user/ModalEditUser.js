@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import validateUserName from "../../validation/UserValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalEditUser(props) {
 
@@ -13,11 +14,11 @@ function ModalEditUser(props) {
         surname:'',
         birthday: ''
     });
+    const ref = React.createRef();
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
-    const [zone, setZone] = useState([]);
-
-    const [zones, setZones] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const filterByState = () => true;
 
     const [addressDto, setAddressDto] = useState({
         city: '',
@@ -25,6 +26,22 @@ function ModalEditUser(props) {
         addressLine1: '',
         addressLine2: ''
     });
+
+    const onChangeState = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            state: (e.length ?
+                {id: e[0].id, state: e[0].state}
+                : {id: '', state: ''})
+        }));
+    };
+    const handleStateSearch = (query) => {
+        fetch(`/customers/${currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                setStateOptions(res);
+            });
+    };
     const handleName = (e) => {
         setUser(preState => ({
             ...preState,
@@ -44,27 +61,6 @@ function ModalEditUser(props) {
             birthday: e.target.value
         }));
     };
-    const onChangeState = (e) => {
-        const selectedState = zones.find(state => state.state === e.target.value);
-
-        setZone(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-        setAddressDto(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-    };
-    useEffect(() => {
-
-
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setZones(commits.content);
-            });
-    }, []);
     const handleCity = (e) => {
         setAddressDto(preState => ({
             ...preState,
@@ -97,7 +93,6 @@ function ModalEditUser(props) {
                 .then(response => response.json())
                 .then(res => {
                     setUser(res);
-                    setZone(res.addressDto.state);
                     setAddressDto(res.addressDto);
                 });
         }
@@ -180,19 +175,31 @@ function ModalEditUser(props) {
                                 Please provide a valid date.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Label>State</Form.Label>
-                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
 
-                                          onChange={onChangeState}>
-                                {Object.entries(zones).map(([k, v]) => (
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Select state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}>
 
-                                    <option>{v.state}</option>
+                                {/*<Form.Control type="text" onChange={onChangeState}*/}
+                                {/*              className={*/}
+                                {/*                  isValid("state")*/}
+                                {/*              }/>*/}
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    Please provide a state.*/}
+                                {/*</Form.Control.Feedback>*/}
 
-                                ))}
-                            </Form.Control>
+                            </AsyncTypeahead>
                         </Form.Group>
-
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
                             <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}

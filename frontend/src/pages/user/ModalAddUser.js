@@ -1,21 +1,18 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalAddUser(props) {
 
-
+    const ref = React.createRef();
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
-
-    const [zone, setZone] = useState([]);
-
-    const [zones, setZones] = useState([]);
-
+    const [stateOptions, setStateOptions] = useState([]);
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: null,
+        state: {},
         addressLine1: '',
         addressLine2: ''
     });
@@ -31,28 +28,24 @@ function ModalAddUser(props) {
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
+    const filterByState = () => true;
 
     const onChangeState = (e) => {
-        const selectedState = zones.find(state => state.state === e.target.value);
-
-        setZone(preState => ({
-            ...preState,
-            state: selectedState
-        }));
         setAddressDto(preState => ({
             ...preState,
-            state: selectedState
+            state: (e.length ?
+                {id: e[0].id, state: e[0].state}
+                : {id: '', state: ''})
         }));
     };
-    useEffect(() => {
 
-
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setZones(commits.content);
+    const handleStateSearch = (query) => {
+        fetch(`/customers/${currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                setStateOptions(res);
             });
-    }, []);
+    };
 
     const handleName = (e) => {
         setUser(preState => ({
@@ -115,7 +108,7 @@ function ModalAddUser(props) {
     };
     const addUserHandler = (e) => {
         e.preventDefault();
-
+        console.log(userDto.addressDto.state)
 
         fetch(`customers/${currentCustomerId}/users`, {
             method: 'POST',
@@ -206,18 +199,30 @@ function ModalAddUser(props) {
                             <option value={"ROLE_DIRECTOR"}>ROLE_DIRECTOR</option>
                         </Form.Control>
                     </Form.Group>
-                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                        <Form.Control style={{padding: '5px 10px'}} as="select"
-                                      defaultValue="Choose..."
-                                      onChange={onChangeState}>
-                            {Object.entries(zones).map(([k, v]) => (
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Select state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}>
 
-                                <option>{v.state}</option>
+                                {/*<Form.Control type="text" onChange={onChangeState}*/}
+                                {/*              className={*/}
+                                {/*                  isValid("state")*/}
+                                {/*              }/>*/}
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    Please provide a state.*/}
+                                {/*</Form.Control.Feedback>*/}
 
-                            ))}
-                        </Form.Control>
+                            </AsyncTypeahead>
                         </Form.Group>
-
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="text" placeholder="city" onChange={handleCity}
                                           className={
