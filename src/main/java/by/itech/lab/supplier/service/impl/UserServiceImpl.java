@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
         if (Objects.isNull(user.getId())) {
             user.setPassword(RandomStringUtils.random(10, 97, 122, true, true));
             mailService.sendMail(user);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         final User saved = userRepository.save(user);
         return userMapper.map(saved);
