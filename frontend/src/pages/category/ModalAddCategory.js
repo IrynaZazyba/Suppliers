@@ -58,6 +58,10 @@ function ModalAddCategory(props) {
                             ...preState,
                             validationErrors: []
                         }));
+                        setCategory({
+                            category: '',
+                            taxRate: ''
+                        });
                         props.onChange(false, categoryDto);
                     }
                 });
