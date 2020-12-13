@@ -20,7 +20,7 @@ function Header() {
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
     const usersClass = window.location.pathname.match(/.users/) ? "active" : "";
-    const carsClass = window.location.pathname === "/cars" ? "active" : "";
+    const carsClass = window.location.pathname.match(/.cars/) ? "active" : "";
 
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
@@ -78,7 +78,7 @@ function Header() {
                               href={`/customers/${user.currentCustomerId}/write-off-act`}>Write-off acts
                     </Nav.Link>}
                     {isPermittedAndRoleAdmin &&
-                    <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
+                    <Nav.Link className={carsClass} href={`/customers/${user.currentCustomerId}/cars`}>Cars</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     <UserProfile/>
