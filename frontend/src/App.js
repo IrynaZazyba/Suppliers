@@ -124,7 +124,6 @@ function App() {
     const warehouseItemsPath = pathWithCustomer(`/warehouses/:warehouseId/items`);
     const writeOffPath = pathWithCustomer(`/write-off-act`);
     const waybillPath = pathWithCustomer(`/waybills`);
-
     const retailerPath = pathWithCustomer(`/retailers`);
     return (
         <UserContext>
@@ -140,10 +139,10 @@ function App() {
                 <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={retailerPath} render={renderRetailer}/>
-                <Route path={'/customers'} render={renderCustomer}/>
-                <Route path={'/users'} render={renderUser}/>
+                <Route path={'/customers/' + currentCustomerId + '/users'} render={renderUser}/>
                 <Route path={'/cars'} render={renderCar}/>
                 <Route path={'/login'} component={Login}/>
+                <Route path={'/customers'} render={renderCustomer}/>
             </Switch>
             <Footer/>
         </UserContext>
