@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import './App.css';
 import UserContext from './UserContext';
 import Header from './Header';
@@ -35,7 +35,7 @@ function App() {
     };
 
     const renderCustomer = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+        return <ProtectedComponent conditions={user && user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
             return <Customers/>
         })}/>
     };
@@ -90,7 +90,7 @@ function App() {
         })}/>
     };
 
-    const renderWriteOffActs =() => {
+    const renderWriteOffActs = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
         || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_DRIVER"
         || user.role === "ROLE_DIRECTOR"} render={(() => {
