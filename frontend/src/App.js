@@ -139,10 +139,10 @@ function App() {
                 <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={retailerPath} render={renderRetailer}/>
-                <Route path={'/customers'} render={renderCustomer}/>
-                <Route path={'/users'} render={renderUser}/>
+                <Route path={'/customers/' + currentCustomerId + '/users'} render={renderUser}/>
                 <Route path={'/cars'} render={renderCar}/>
                 <Route path={'/login'} component={Login}/>
+                <Route path={'/customers'} render={renderCustomer}/>
             </Switch>
             <Footer/>
         </UserContext>

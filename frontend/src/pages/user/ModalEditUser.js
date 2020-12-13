@@ -11,7 +11,7 @@ function ModalEditUser(props) {
     const [userDto, setUser] = useState({
         id: '',
         name: '',
-        surname:'',
+        surname: '',
         birthday: ''
     });
     const ref = React.createRef();
@@ -82,14 +82,12 @@ function ModalEditUser(props) {
             ...preState,
             addressDto: addressDto
         }));
-
     };
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     useEffect(() => {
         if (props.props.editShow) {
-            fetch(`customers/${currentCustomerId}/users/${props.props.user.id}`)
+            fetch(`/customers/${currentCustomerId}/users/${props.props.user.id}`)
                 .then(response => response.json())
                 .then(res => {
                     setUser(res);
@@ -102,22 +100,28 @@ function ModalEditUser(props) {
     const editUserHandler = (e) => {
         e.preventDefault();
 
-               fetch(`customers/${currentCustomerId}/users/${userDto.id}`, {
-                   method: 'PUT',
-                   headers: {
-                       'Content-Type': 'application/json'
-                   },
-                   body: JSON.stringify(userDto)
-               })
-                   .then((response) => {
-                       if (response.status !== 200) {
-                           setError('');
-                           setErrors("Something go wrong, try later");
-                       } else {
-                           setError('');
-                           props.onChange(false, userDto);
-                       }
-                   });
+        let userUpdateDto = {};
+        userUpdateDto = {
+            ...userDto,
+            addressDto: addressDto
+        };
+
+        fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userUpdateDto)
+        })
+            .then((response) => {
+                if (response.status !== 200) {
+                    setError('');
+                    setErrors("Something go wrong, try later");
+                } else {
+                    setError('');
+                    props.onChange(false, userDto);
+                }
+            });
 
     };
     const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
@@ -148,7 +152,7 @@ function ModalEditUser(props) {
                                               isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  name.
+                                Please provide a valid name.
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
@@ -161,13 +165,14 @@ function ModalEditUser(props) {
                                               isValid("surname")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  surname.
+                                Please provide a valid surname.
                             </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday} onChange={handleBirthday}
+                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday}
+                                          onChange={handleBirthday}
                                           className={
                                               isValid("birthday")
                                           }/>
@@ -217,9 +222,10 @@ function ModalEditUser(props) {
                         </Form.Group>
 
 
-                        <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
+                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1}
+                                          onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -229,9 +235,10 @@ function ModalEditUser(props) {
                         </Form.Group>
 
 
-                        <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2} onChange={handleaddressLine2}
+                            <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2}
+                                          onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")
                                           }/>

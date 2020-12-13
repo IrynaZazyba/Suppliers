@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -101,16 +101,19 @@ function ModalAddUser(props) {
             ...preState,
             addressLine2: e.target.value
         }));
-        setUser(preState => ({
-            ...preState,
-            addressDto: addressDto
-        }));
     };
     const addUserHandler = (e) => {
         e.preventDefault();
-        console.log(userDto.addressDto.state)
 
-        fetch(`customers/${currentCustomerId}/users`, {
+        let userUpdateDto = {};
+        userUpdateDto = {
+            ...userDto,
+            addressDto: addressDto
+        };
+
+        console.log(userUpdateDto)
+
+        fetch(`/customers/${currentCustomerId}/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -122,6 +125,23 @@ function ModalAddUser(props) {
                     setError('');
                     setErrors("Something go wrong, try later");
                 } else {
+                    setUser({
+                        name: '',
+                        surname: '',
+                        birthday: '',
+                        addressDto: {},
+                        role: 'ROLE_SYSTEM_ADMIN',
+                        username: '',
+                        email: '',
+                        customerId: ''
+                    });
+                    setAddressDto({
+                        city: '',
+                        state: {},
+                        addressLine1: '',
+                        addressLine2: ''
+                    });
+
                     setError('');
                     props.onChange(false, userDto);
                 }
@@ -187,18 +207,18 @@ function ModalAddUser(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicRole" style={{padding: '5px 10px'}}>
-                        <Form.Control style={{padding: '5px 10px '}} as="select"
-                                      defaultValue="Choose..."
-                                      onChange={handleRole}>
+                            <Form.Control style={{padding: '5px 10px '}} as="select"
+                                          defaultValue="Choose..."
+                                          onChange={handleRole}>
 
-                            <option value={"ROLE_SYSTEM_ADMIN"}>ROLE_SYSTEM_ADMIN</option>
-                            <option value={"ROLE_ADMIN"}>ROLE_ADMIN</option>
-                            <option value={"ROLE_DISPATCHER"}>ROLE_DISPATCHER</option>
-                            <option value={"ROLE_LOGISTICS_SPECIALIST"}>ROLE_LOGISTICS_SPECIALIST</option>
-                            <option value={"ROLE_DRIVER"}>ROLE_DRIVER</option>
-                            <option value={"ROLE_DIRECTOR"}>ROLE_DIRECTOR</option>
-                        </Form.Control>
-                    </Form.Group>
+                                <option value={"ROLE_SYSTEM_ADMIN"}>ROLE_SYSTEM_ADMIN</option>
+                                <option value={"ROLE_ADMIN"}>ROLE_ADMIN</option>
+                                <option value={"ROLE_DISPATCHER"}>ROLE_DISPATCHER</option>
+                                <option value={"ROLE_LOGISTICS_SPECIALIST"}>ROLE_LOGISTICS_SPECIALIST</option>
+                                <option value={"ROLE_DRIVER"}>ROLE_DRIVER</option>
+                                <option value={"ROLE_DIRECTOR"}>ROLE_DIRECTOR</option>
+                            </Form.Control>
+                        </Form.Group>
                         <Form.Group>
                             <AsyncTypeahead
                                 style={{padding: '5px 10px'}}
