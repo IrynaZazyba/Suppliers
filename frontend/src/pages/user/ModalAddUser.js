@@ -20,7 +20,7 @@ function ModalAddUser(props) {
         name: '',
         surname: '',
         birthday: '',
-        addressDto: addressDto,
+        addressDto: {},
         role: 'ROLE_SYSTEM_ADMIN',
         username: '',
         email: '',
@@ -111,6 +111,7 @@ function ModalAddUser(props) {
             addressDto: addressDto
         };
 
+        console.log(addressDto)
         console.log(userUpdateDto)
 
         fetch(`/customers/${currentCustomerId}/users`, {
@@ -118,7 +119,7 @@ function ModalAddUser(props) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userDto)
+            body: JSON.stringify(userUpdateDto)
         })
             .then(function (response) {
                 if (response.status !== 201) {

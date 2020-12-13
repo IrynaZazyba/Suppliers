@@ -56,10 +56,10 @@ public class User implements BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-//    @ToString.Exclude
+    @ToString.Exclude
     @OneToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "address_id")
-//    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Exclude
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)
