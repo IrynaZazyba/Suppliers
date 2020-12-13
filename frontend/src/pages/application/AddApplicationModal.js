@@ -92,6 +92,10 @@ function AddApplicationModal(props) {
         };
 
     const appNumberOnChange = (e) => {
+        setErrors(prevState => ({
+            ...prevState,
+            serverErrors: ''
+        }));
         const value = e.target.value;
         checkValidationErrors("number");
         setApp(preState => ({
@@ -111,6 +115,7 @@ function AddApplicationModal(props) {
     };
 
     function checkValidationErrors(fieldName) {
+        console.log(errors.validationErrors);
         let res = errors.validationErrors.filter(e => e != fieldName);
         setErrors(prevState => ({
             ...prevState,
@@ -218,22 +223,22 @@ function AddApplicationModal(props) {
                        let res=Object.values(json).join('. ');
                         setErrors({
                             serverErrors: res,
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     });
                 }
                 if (response.status !== 200 && response.status !== 400) {
                     setErrors({
                         serverErrors: "Something go wrong, try later",
-                        validationErrors: ''
+                        validationErrors: []
                     });
                 }
                 if (response.status === 200) {
                     response.json().then(json => {
-                        setErrors(preState => ({
-                            ...preState,
+                        setErrors({
+                            serverErrors:'',
                             validationErrors: []
-                        }));
+                        });
                         setApp([]);
                         setItems([]);
                         props.onChange(false, appDto);
@@ -252,7 +257,7 @@ function AddApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost, $ per unit</th>
+                    <th>Cost, $ per item</th>
                     <th></th>
 
                 </tr>

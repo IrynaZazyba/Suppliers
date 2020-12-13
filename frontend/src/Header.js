@@ -47,7 +47,7 @@ function Header() {
                     {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
                     <Nav.Link className={appClass}
                               href={`/customers/${currentCustomerId}/application`}>Application</Nav.Link>}
-                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_ADMIN")&&
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_ADMIN") &&
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
@@ -64,7 +64,7 @@ function Header() {
                     <Nav.Link className={itemClass}
                               href={`/customers/${currentCustomerId}/item`}>Items
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
+                    {checkPermission && user.role === "ROLE_ADMIN" &&
                     <Nav.Link className={retailerClass}
                               href={`/customers/${currentCustomerId}/retailers`}>Retailers
                     </Nav.Link>}

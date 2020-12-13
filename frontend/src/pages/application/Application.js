@@ -221,7 +221,7 @@ export default () => {
                         </Button>
                     </Col></> : <Col md={3}></Col>}
                 <Col md={4}></Col>
-                <Col md={2} className="checkbox-all-app">
+                {user.role === 'ROLE_DISPATCHER'? <><Col md={2} className="checkbox-all-app">
                     <Form.Group controlId="formBasicCheckbox">
                         <Form.Check
                             type="checkbox"
@@ -229,7 +229,7 @@ export default () => {
                             onChange={handleBelongToDispatcherFilter}
                             checked={isCheckboxAll.checkboxChecked}/>
                     </Form.Group>
-                </Col>
+                </Col></>: <Col md={2}></Col>}
                 <Col md={2}>
                     <Form.Control size="sm" as="select"
                                   value={filter}

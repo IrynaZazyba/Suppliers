@@ -267,7 +267,7 @@ function AcceptApplicationModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost, $ per unit</th>
+                    <th>Cost, $ per item</th>
                     <th className="accept-all-item">
                         {acceptedItems.length === mapAppItems.size &&
                         <Button variant="link"

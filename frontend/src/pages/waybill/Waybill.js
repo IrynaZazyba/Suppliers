@@ -132,7 +132,7 @@ export default () => {
                 <Badge className="badge-status">
                     {waybill.waybillStatus.replace('_', ' ').toLowerCase()}
                 </Badge></td>
-            <td> {user && user.role === 'ROLE_LOGISTICS_SPECIALIST' &&
+            <td> {user && user.role === 'ROLE_LOGISTICS_SPECIALIST' && waybill.waybillStatus !== 'FINISHED' &&
             <FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                     onClick={() => {
                         setOpenEditModal({

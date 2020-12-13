@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: D-1
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-12-13-delete-data.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true
