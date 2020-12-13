@@ -108,10 +108,10 @@ function ModalAddCar(props) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(carDto)
+                body: JSON.stringify(carUpdateDto)
             })
                 .then(response => {
-                    if (response.status !== 200) {
+                    if (response.status !== 201) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
                             validationErrors: ''
@@ -119,7 +119,8 @@ function ModalAddCar(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
-                            validationErrors: []
+                            validationErrors: [],
+                            serverErrors: ''
                         }));
                         props.onChange(false, carDto);
                     }
