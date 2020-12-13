@@ -252,7 +252,7 @@ export default () => {
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
                             Current state
                             <Form.Control type="text"
-                                          value={addressDto.state.state}
+                                          value={addressDto && addressDto.state.state}
                                           disabled/>
                         </Form.Group>
                         <Form.Group>
@@ -280,7 +280,8 @@ export default () => {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
+                            <Form.Control type="text" placeholder="city" value={addressDto && addressDto.city}
+                                          onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -291,7 +292,9 @@ export default () => {
 
 
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
+                            <Form.Control type="text" placeholder="addressLine1"
+                                          value={addressDto && addressDto.addressLine1}
+                                          onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -299,7 +302,7 @@ export default () => {
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
                         </Form.Group>
-                    
+
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="password" placeholder="change password" onChange={handlePassword}
