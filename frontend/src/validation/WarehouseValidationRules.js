@@ -23,7 +23,7 @@ export function validateEditWarehouse(dto, dispatchersId) {
 
 export function validateIdentifier(dto) {
     let errorsFields = [];
-    if (dto.identifier.length < 1 || dto.identifier.length > 50) {
+    if ( dto.identifier && (dto.identifier.length < 1 || dto.identifier.length > 50)) {
         errorsFields.push("identifier");
     }
     return errorsFields;
