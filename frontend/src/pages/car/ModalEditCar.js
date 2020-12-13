@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 
 import ErrorMessage from "../../messages/errorMessage";
 import validateCar from "../../validation/CarValidationRules";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalEditCar(props) {
 
@@ -17,7 +18,7 @@ function ModalEditCar(props) {
         totalCapacity: '',
         currentCapacity: '',
         customerId: currentCustomerId,
-        addressDto: null,
+        addressDto: {},
     });
 
     const [errors, setErrors] = useState({
@@ -27,16 +28,13 @@ function ModalEditCar(props) {
 
 
     const [options, setOptions] = useState([]);
-
     const filterBy = () => true;
-
-    const [zone, setZone] = useState([]);
-
-    const [zones, setZones] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const filterByState = () => true;
 
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: null,
+        state: {},
         addressLine1: '',
         addressLine2: ''
     });
@@ -55,30 +53,21 @@ function ModalEditCar(props) {
         }));
     };
     const onChangeState = (e) => {
-        const selectedState = zones.find(state => state.state === e.target.value);
-
-        setZone(preState => ({
-            ...preState,
-            state: selectedState
-        }));
         setAddressDto(preState => ({
             ...preState,
-            state: selectedState
-        }));
-        setCar(preState => ({
-            ...preState,
-            addressDto: addressDto
+            state: (e.length ?
+                {id: e[0].id, state: e[0].state}
+                : {id: '', state: ''})
         }));
     };
-    useEffect(() => {
-
-
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setZones(commits.content);
+    const handleStateSearch = (query) => {
+        fetch(`/customers/${currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                setStateOptions(res);
             });
-    }, []);
+    };
+
     const handleCity = (e) => {
         setAddressDto(preState => ({
             ...preState,
@@ -121,7 +110,6 @@ function ModalEditCar(props) {
 
                     setCar(res);
                     setAddressDto(res.addressDto);
-                    setZone(res.addressDto.state);
                 });
         }
     }, [props.props.editShow]);
@@ -129,7 +117,14 @@ function ModalEditCar(props) {
 
     const editCarHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateCar(carDto);
+
+        let carUpdateDto = {};
+        carUpdateDto = {
+            ...carDto,
+            addressDto: addressDto
+        };
+
+        let validationResult = validateCar(carUpdateDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult
@@ -140,10 +135,10 @@ function ModalEditCar(props) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(carDto)
+                body: JSON.stringify(carUpdateDto)
             })
                 .then(response => {
-                    if (response.status !== 200) {
+                    if (response.status !== 201) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
                             validationErrors: ''
@@ -201,17 +196,35 @@ function ModalEditCar(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Label>State</Form.Label>
-                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
+                            Current state
+                            <Form.Control type="text"
+                                          value={addressDto.state.state}
+                                          disabled/>
+                        </Form.Group>
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Search, if you want to change state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}>
 
-                                          onChange={onChangeState}>
-                                {Object.entries(zones).map(([k, v]) => (
+                                {/*<Form.Control type="text" onChange={onChangeState}*/}
+                                {/*              className={*/}
+                                {/*                  isValid("state")*/}
+                                {/*              }/>*/}
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    Please provide a state.*/}
+                                {/*</Form.Control.Feedback>*/}
 
-                                    <option>{v.state}</option>
-
-                                ))}
-                            </Form.Control>
+                            </AsyncTypeahead>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
