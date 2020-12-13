@@ -140,7 +140,7 @@ function App() {
                 <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={retailerPath} render={renderRetailer}/>
                 <Route path={'/customers/' + currentCustomerId + '/users'} render={renderUser}/>
-                <Route path={'/cars'} render={renderCar}/>
+                <Route path={'/customers/' + currentCustomerId + '/cars'} render={renderCar}/>
                 <Route path={'/login'} component={Login}/>
                 <Route path={'/customers'} render={renderCustomer}/>
             </Switch>

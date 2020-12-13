@@ -91,9 +91,8 @@ public class UserController {
         userService.changePassword(id, password);
     }
 
-    //todo add secured when change url
     @PutMapping(ApiConstants.URL_ID_PARAMETER)
-    @PreAuthorize("#id==authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SYSTEM_ADMIN') or #id==authentication.principal.id")
     public UserDto updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDTO) {
         userDTO.setId(id);
         return userService.save(userDTO);

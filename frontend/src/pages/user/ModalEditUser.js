@@ -78,10 +78,6 @@ function ModalEditUser(props) {
             ...preState,
             addressLine2: e.target.value
         }));
-        setUser(preState => ({
-            ...preState,
-            addressDto: addressDto
-        }));
     };
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
