@@ -73,6 +73,7 @@ function ModalAddCustomer(props) {
                     });
                     props.onChange(false);
                 }}
+                backdrop="static"
                 aria-labelledby="modal-custom"
                 className="shadow"
                 centered

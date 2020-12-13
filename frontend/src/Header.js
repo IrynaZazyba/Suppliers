@@ -7,9 +7,7 @@ import {AuthContext} from "./context/authContext";
 function Header() {
 
     const {user, setUser} = useContext(AuthContext);
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
     const checkPermission = user && user.currentCustomerId;
     const isPermittedAndRoleAdmin = user && user.currentCustomerId && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN");
 
@@ -74,7 +72,7 @@ function Header() {
                     <Nav.Link className={writeOffActClass}
                               href={`/customers/${user.currentCustomerId}/write-off-act`}>Write-off acts
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
+                    {checkPermission && user.role === "ROLE_ADMIN" &&
                     <Nav.Link className={carsClass} href={`/customers/${user.currentCustomerId}/cars`}>Cars</Nav.Link>}
                     {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
                     <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
