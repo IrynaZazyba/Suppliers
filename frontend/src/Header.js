@@ -53,8 +53,6 @@ function Header() {
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
-                    <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryPermission &&
                     <Nav.Link className={categoryClass}
                               href={`/customers/${currentCustomerId}/category`}>
