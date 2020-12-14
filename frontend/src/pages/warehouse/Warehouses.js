@@ -10,6 +10,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import TogglePage from "../../components/TogglePage";
 import ModalAddWarehouse from "./ModalAddWarehouse";
+import alert from 'alert'
 
 export default (props) => {
 
@@ -105,9 +106,7 @@ export default (props) => {
         })
             .then(response => {
                 if (response.status !== 204) {
-                    setErrors({
-                        errorMessage: "Warehouse can not be deleted, because it is already used in application"
-                    })
+                     alert("Warehouse can not be deleted, because it's already used in application or this warehouse still contains items. Please, try later")
                 } else {
                     setCheckBox([]);
                     getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);

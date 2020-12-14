@@ -19,6 +19,8 @@ public interface ApplicationService extends BaseService<ApplicationDto> {
 
     Page<ApplicationDto> findAllByStatus(Pageable pageable, ApplicationStatus status);
 
+    Boolean isExistNotFinishedStatus(List<Long> id);
+
     ApplicationDto findByNumber(String number);
 
     void changeStatus(Long appId, ApplicationStatus applicationStatus);

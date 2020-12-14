@@ -42,17 +42,15 @@ function ModalAddWarehouseRetailer(props) {
     };
 
     const onChangeState = (e) => {
-        setErrors({
-            setErrors: '',
-            validationErrors: []
-        });
         setWarehouseDto(preState => ({
             ...preState,
             addressDto: {
                 ...preState.addressDto,
-                state: e.length ? {id: e[0].id, state: e[0].stateZone} : {id: '', state: ''}
+                state: (e.length ?
+                    {id: e[0].id, state: e[0].state}
+                    : {id: '', state: ''})
             }
-        }))
+        }));
     };
 
     const handleIdentifier = (e) => {

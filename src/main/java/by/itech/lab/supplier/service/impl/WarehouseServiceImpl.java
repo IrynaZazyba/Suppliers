@@ -127,8 +127,15 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional
     @Override
     public void deleteByIds(final List<Long> id) {
-        warehouseRepository.deleteByIds(id);
-        userService.deleteWarehousesForAllUsers(id);
+//        System.out.println(applicationService.isExistNotFinishedStatus(id) + " app");
+//        System.out.println(itemInWarehouseRepository.findWarehouseItemIdsByWarehouseIds(id).isEmpty() + " item");
+
+//        if (applicationService.isExistNotFinishedStatus(id) &&
+//                itemInWarehouseRepository.findWarehouseItemIdsByWarehouseIds(id).isEmpty()){
+
+            warehouseRepository.deleteByIds(id);
+            userService.deleteWarehousesForAllUsers(id);
+//        }
     }
 
     @Transactional
