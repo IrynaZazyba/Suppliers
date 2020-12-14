@@ -139,6 +139,9 @@ export default () => {
             });
 
     };
+    function parseRole(role){
+        return role.toLowerCase().replaceAll("_"," ").replaceAll("role", "");
+    }
     const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
     const editPasswordHandler = (e) => {
         e.preventDefault();
@@ -244,7 +247,7 @@ export default () => {
                         </Form.Group>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Role</Form.Label>
-                            <Form.Control type="text" placeholder="role" value={userDto.role} readOnly={true}
+                            <Form.Control type="text" placeholder="role" value={parseRole(userDto.role)} readOnly={true}
                             />
                         </Form.Group>
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
