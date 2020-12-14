@@ -56,12 +56,12 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
             "and a.sourceLocationAddress.type='WAREHOUSE' and a.wayBill is null")
     List<Warehouse> getWarehousesWithOpenApplications();
 
-    @Query("select app from Application app where app.applicationStatus=:status " +
+    @Query("select app from Application app where (app.applicationStatus='OPEN' " +
+            "or app.applicationStatus='STARTED_PROCESSING') " +
             "and app.sourceLocationAddress.id=:warehouseId and app.type=:type and (app.wayBill is null or " +
             "(:waybillId is not null and app.wayBill.id=:waybillId))")
     Page<Application> findAllByTypeAndApplicationStatusAndSourceLocationAddressId(Pageable pageable,
                                                                                   ApplicationType type,
-                                                                                  ApplicationStatus status,
                                                                                   Long warehouseId,
                                                                                   Long waybillId);
 

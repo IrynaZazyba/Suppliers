@@ -76,7 +76,7 @@ function ModalEditCustomer(props) {
                 aria-labelledby="modal-custom"
                 className="shadow"
                 centered
-            >
+                backdrop="static">
                 <Modal.Header closeButton>
                     <Modal.Title id="modal-custom">
                         Edit customer

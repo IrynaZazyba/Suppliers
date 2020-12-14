@@ -1,12 +1,17 @@
 package by.itech.lab.supplier.service.impl;
 
 import by.itech.lab.supplier.auth.domain.UserImpl;
+import by.itech.lab.supplier.domain.Application;
+import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.Car;
 import by.itech.lab.supplier.domain.User;
 import by.itech.lab.supplier.domain.WayBill;
+import by.itech.lab.supplier.domain.WayPoint;
 import by.itech.lab.supplier.domain.WaybillStatus;
 import by.itech.lab.supplier.dto.ApplicationDto;
+import by.itech.lab.supplier.dto.ApplicationItemDto;
 import by.itech.lab.supplier.dto.WayBillDto;
+import by.itech.lab.supplier.dto.mapper.ApplicationItemMapper;
 import by.itech.lab.supplier.dto.mapper.ApplicationMapper;
 import by.itech.lab.supplier.dto.mapper.UserMapper;
 import by.itech.lab.supplier.dto.mapper.WayBillMapper;
@@ -15,8 +20,6 @@ import by.itech.lab.supplier.exception.ValidationException;
 import by.itech.lab.supplier.exception.domain.ValidationErrors;
 import by.itech.lab.supplier.repository.WaybillRepository;
 import by.itech.lab.supplier.service.ApplicationService;
-import by.itech.lab.supplier.service.CalculationService;
-import by.itech.lab.supplier.service.CarService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
 import by.itech.lab.supplier.service.WaybillService;
@@ -30,9 +33,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,11 +51,10 @@ public class WaybillServiceImpl implements WaybillService {
     private final UserMapper userMapper;
     private final UserService userService;
     private final ApplicationService applicationService;
-    private final CalculationService calculationService;
     private final WaybillValidationService waybillValidationService;
     private final ApplicationMapper applicationMapper;
     private final WarehouseService warehouseService;
-    private final CarService carService;
+    private final ApplicationItemMapper applicationItemMapper;
 
     @Transactional
     @Override
@@ -73,6 +79,7 @@ public class WaybillServiceImpl implements WaybillService {
 
         if (Objects.isNull(wayBillDto.getId())) {
             final List<ApplicationDto> appDtos = apps.stream().peek(app -> app.setWayBillId(saved.getId()))
+                    .peek(app -> app.setApplicationStatus(ApplicationStatus.STARTED_PROCESSING))
                     .collect(Collectors.toList());
             applicationService.saveAll(appDtos);
         }
@@ -158,11 +165,32 @@ public class WaybillServiceImpl implements WaybillService {
     public WaybillStatus completeWaybillDelivery(final Long waybillId) {
         final WayBill wayBill = waybillRepository.findById(waybillId).orElseThrow();
         wayBill.setWaybillStatus(WaybillStatus.FINISHED);
+        wayBill.getApplications().forEach(app -> app.setApplicationStatus(ApplicationStatus.FINISHED_PROCESSING));
         final Car car = wayBill.getCar();
+        final Map<Integer, WayPoint> mappedByPriority = wayBill.getRoute().getWayPoints().stream()
+                .collect(Collectors.toMap(WayPoint::getPriority, Function.identity()));
+        final Integer maxPriority = Collections.max(mappedByPriority.keySet());
+        car.setAddress(mappedByPriority.get(maxPriority).getAddress());
         car.setOnTheWay(false);
         car.setCurrentCapacity(car.getTotalCapacity());
         waybillRepository.save(wayBill);
         return wayBill.getWaybillStatus();
+    }
+
+    @Override
+    @Transactional
+    public void markWaybillApplicationShipped(final Long waybillId, final Long addressId) {
+        final WayBill wayBill = waybillRepository.findById(waybillId).orElseThrow();
+        final Application application = wayBill.getApplications().stream()
+                .filter(app -> app.getDestinationLocationAddress().getAddress().getId().equals(addressId))
+                .findAny().orElseThrow();
+        final Set<ApplicationItemDto> appsItems = application.getItems().stream()
+                .map(applicationItemMapper::map).collect(Collectors.toSet());
+        final Double capacityItemInApplication = applicationService.getCapacityItemInApplication(appsItems);
+        final Car car = wayBill.getCar();
+        car.setAddress(application.getDestinationLocationAddress().getAddress());
+        car.setCurrentCapacity(car.getCurrentCapacity() + capacityItemInApplication);
+        waybillRepository.save(wayBill);
     }
 
 }

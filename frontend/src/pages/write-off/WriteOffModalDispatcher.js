@@ -91,15 +91,19 @@ function ModalAddWriteOff(props) {
     const filterBy = () => true;
 
     const onChangeWarehouse = (e) => {
-        checkValidationErrors('identifier');
-        e.length > 0 ?
+        if (e.length > 0) {
             setCurrentWarehouse(preState => ({
                 ...preState,
                 id: e[0].id,
                 identifier: e[0].identifier,
                 address: e[0].address
-            })) :
-            setCurrentWarehouse('');
+            }));
+            setItems([]);
+        } else {
+            setCurrentWarehouse({
+                address: ''
+            });
+        }
     };
 
     const onChangeUpc = (e) => {

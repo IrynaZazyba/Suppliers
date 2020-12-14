@@ -2,29 +2,45 @@ import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import validateUserName from "../../validation/UserValidationRules";
 import ErrorMessage from "../../messages/errorMessage";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalEditUser(props) {
 
     const [userDto, setUser] = useState({
         id: '',
         name: '',
-        surname:'',
+        surname: '',
         birthday: ''
     });
+    const ref = React.createRef();
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
-    const [zone, setZone] = useState([]);
-
-    const [zones, setZones] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const filterByState = () => true;
 
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: null,
+        state: {},
         addressLine1: '',
         addressLine2: ''
     });
+
+    const onChangeState = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            state: (e.length ?
+                {id: e[0].id, state: e[0].state}
+                : {id: '', state: ''})
+        }));
+    };
+    const handleStateSearch = (query) => {
+        fetch(`/customers/${currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                setStateOptions(res);
+            });
+    };
     const handleName = (e) => {
         setUser(preState => ({
             ...preState,
@@ -44,27 +60,6 @@ function ModalEditUser(props) {
             birthday: e.target.value
         }));
     };
-    const onChangeState = (e) => {
-        const selectedState = zones.find(state => state.state === e.target.value);
-
-        setZone(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-        setAddressDto(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-    };
-    useEffect(() => {
-
-
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setZones(commits.content);
-            });
-    }, []);
     const handleCity = (e) => {
         setAddressDto(preState => ({
             ...preState,
@@ -82,22 +77,15 @@ function ModalEditUser(props) {
             ...preState,
             addressLine2: e.target.value
         }));
-        setUser(preState => ({
-            ...preState,
-            addressDto: addressDto
-        }));
-
     };
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
 
     useEffect(() => {
         if (props.props.editShow) {
-            fetch(`customers/${currentCustomerId}/users/${props.props.user.id}`)
+            fetch(`/customers/${currentCustomerId}/users/${props.props.user.id}`)
                 .then(response => response.json())
                 .then(res => {
                     setUser(res);
-                    setZone(res.addressDto.state);
                     setAddressDto(res.addressDto);
                 });
         }
@@ -107,22 +95,28 @@ function ModalEditUser(props) {
     const editUserHandler = (e) => {
         e.preventDefault();
 
-               fetch(`customers/${currentCustomerId}/users/${userDto.id}`, {
-                   method: 'PUT',
-                   headers: {
-                       'Content-Type': 'application/json'
-                   },
-                   body: JSON.stringify(userDto)
-               })
-                   .then((response) => {
-                       if (response.status !== 200) {
-                           setError('');
-                           setErrors("Something go wrong, try later");
-                       } else {
-                           setError('');
-                           props.onChange(false, userDto);
-                       }
-                   });
+        let userUpdateDto = {};
+        userUpdateDto = {
+            ...userDto,
+            addressDto: addressDto
+        };
+
+        fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userUpdateDto)
+        })
+            .then((response) => {
+                if (response.status !== 200) {
+                    setError('');
+                    setErrors("Something go wrong, try later");
+                } else {
+                    setError('');
+                    props.onChange(false, userDto);
+                }
+            });
 
     };
     const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
@@ -153,7 +147,7 @@ function ModalEditUser(props) {
                                               isValid("name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  name.
+                                Please provide a valid name.
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
@@ -166,13 +160,14 @@ function ModalEditUser(props) {
                                               isValid("surname")
                                           }/>
                             <Form.Control.Feedback type="invalid">
-                                Please provide a valid  surname.
+                                Please provide a valid surname.
                             </Form.Control.Feedback>
                         </Form.Group>
 
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday} onChange={handleBirthday}
+                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday}
+                                          onChange={handleBirthday}
                                           className={
                                               isValid("birthday")
                                           }/>
@@ -180,23 +175,40 @@ function ModalEditUser(props) {
                                 Please provide a valid date.
                             </Form.Control.Feedback>
                         </Form.Group>
-
-                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Label>State</Form.Label>
-                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
-
-                                          onChange={onChangeState}>
-                                {Object.entries(zones).map(([k, v]) => (
-
-                                    <option>{v.state}</option>
-
-                                ))}
-                            </Form.Control>
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
+                            Current state
+                            <Form.Control type="text"
+                                          value={addressDto && addressDto.state.state}
+                                          disabled/>
                         </Form.Group>
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Search, if you want to change state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}>
 
+                                {/*<Form.Control type="text" onChange={onChangeState}*/}
+                                {/*              className={*/}
+                                {/*                  isValid("state")*/}
+                                {/*              }/>*/}
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    Please provide a state.*/}
+                                {/*</Form.Control.Feedback>*/}
+
+                            </AsyncTypeahead>
+                        </Form.Group>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
+                            <Form.Control type="text" placeholder="city" value={addressDto && addressDto.city}
+                                          onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -206,9 +218,11 @@ function ModalEditUser(props) {
                         </Form.Group>
 
 
-                        <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
+                            <Form.Control type="text" placeholder="addressLine1"
+                                          value={addressDto && addressDto.addressLine1}
+                                          onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -218,9 +232,11 @@ function ModalEditUser(props) {
                         </Form.Group>
 
 
-                        <Form.Group controlId="formBasicText"  style={{padding: '5px 10px'}}>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2} onChange={handleaddressLine2}
+                            <Form.Control type="text" placeholder="addressLine2"
+                                          value={addressDto && addressDto.addressLine2}
+                                          onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")
                                           }/>

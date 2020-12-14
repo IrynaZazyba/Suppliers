@@ -93,6 +93,7 @@ function ModalAddRetailer(props) {
                         validationErrors: []
                     }));
                     setCheckBox([]);
+                    setWarehouses([]);
                     props.onChange(false, retailerDto);
                 }
             });

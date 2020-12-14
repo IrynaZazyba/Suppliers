@@ -117,18 +117,19 @@ function ModalAddWarehouseRetailer(props) {
 
                 setWarehouseDto(warehouseUpdateDto);
 
+                let validationResult = validateWarehouse(warehouseUpdateDto);
+                setErrors(preState => ({
+                    ...preState,
+                    validationErrors: validationResult,
+                    serverErrors: ''
+                }));
+                if (!validationResult.length) {
+                    props.onChange(false, warehouseUpdateDto)
+                    props.onAddWarehouse(warehouseUpdateDto);
+                }
             }})
 
-        let validationResult = validateWarehouse(warehouseDto);
-        setErrors(preState => ({
-            ...preState,
-            validationErrors: validationResult,
-            serverErrors: ''
-        }));
-        if (!validationResult.length) {
-            props.onChange(false, warehouseDto)
-            props.onAddWarehouse(warehouseDto);
-        }
+
     };
 
     return (

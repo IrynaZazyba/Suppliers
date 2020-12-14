@@ -168,7 +168,7 @@ function ModalEditWarehouse(props) {
                 if (response.status !== 200) {
                     setErrors(preState => ({
                         ...preState,
-                        serverErrors: "Something go wrong, try later",
+                        serverErrors: "Something go wrong, try later"
                     }));
                 } else {
                     let warehouseUpdateDto2 = {
@@ -223,6 +223,26 @@ function ModalEditWarehouse(props) {
             />
         </div>
     );
+
+    const totalCapacityForm = (e) => {
+        if (e === "WAREHOUSE") {
+            return (
+        <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
+            total capacity
+            <Form.Control type="text"
+                          onChange={handleTotalCapacity}
+                          value={warehouseDto.totalCapacity}
+                          className={errors.validationErrors.includes("totalCapacity")
+                              ? "form-control is-invalid" : "form-control"}/>
+            <Form.Control.Feedback type="invalid">
+                Please provide a valid total capacity.
+            </Form.Control.Feedback>
+        </Form.Group>
+            )
+        } else {
+            return (<div/>)
+        }
+    }
 
     const dispatchersForm = (e) => {
         if (e === "WAREHOUSE") {
@@ -352,16 +372,8 @@ function ModalEditWarehouse(props) {
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
-                            total capacity
-                            <Form.Control type="text"
-                                          onChange={handleTotalCapacity}
-                                          value={warehouseDto.totalCapacity}
-                                          className={errors.validationErrors.includes("totalCapacity")
-                                              ? "form-control is-invalid" : "form-control"}/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid total capacity.
-                            </Form.Control.Feedback>
+                        <Form.Group>
+                            {totalCapacityForm(warehouseDto.type)}
                         </Form.Group>
                         <Form.Group>
                             {dispatchersForm(warehouseDto.type)}

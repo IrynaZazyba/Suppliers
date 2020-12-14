@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import validateLoginForm from "../validation/LoginFormValidationRules";
 import Companies from "./Companies";
+import Profile from "./Profile";
 
 export default (props) => {
     const {user, setUser} = useContext(AuthContext);
@@ -118,5 +119,5 @@ export default (props) => {
         </div>
     );
 
-    return user ? <Companies/> : loginForm;
+    return user ? (user.currentCustomerId ? <Profile/> : <Companies/>) : loginForm;
 }

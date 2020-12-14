@@ -39,8 +39,7 @@ public class RouteServiceImpl implements RouteService {
                 new ConflictWithWayPointTrackingException("Attempt to change the route that doesn't exist"));
         final Map<Integer, WayPoint> mappedByPriority = route.getWayPoints().stream()
                 .collect(Collectors.toMap(WayPoint::getPriority, Function.identity()));
-        final WayPoint wayPoint = route.getWayPoints()
-                .stream()
+        final WayPoint wayPoint = route.getWayPoints().stream()
                 .filter(wp -> wp.getId().equals(wayPointId))
                 .findAny()
                 .orElseThrow(() -> new ConflictWithWayPointTrackingException(
@@ -48,10 +47,10 @@ public class RouteServiceImpl implements RouteService {
 
         final WayPoint prevPoint = mappedByPriority.get(wayPoint.getPriority() - 1);
         if (prevPoint.getPriority() != 0 && !prevPoint.isVisited()) {
-            throw new ConflictWithWayPointTrackingException("The order of following the route points is violated");
+            throw new ConflictWithWayPointTrackingException("The order of the following route points is violated");
         }
-
         routeRepository.makeWayPointVisited(wayPointId);
+        waybillService.markWaybillApplicationShipped(wayBillId, wayPoint.getAddress().getId());
         return checkIsLastPointVisited(wayBillId, route.getWayPoints());
     }
 

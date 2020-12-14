@@ -7,9 +7,7 @@ import {AuthContext} from "./context/authContext";
 function Header() {
 
     const {user, setUser} = useContext(AuthContext);
-    const currentCustomerId = localStorage.
-    getItem("currentCustomerId") != null ? localStorage.
-    getItem("currentCustomerId"): 0;
+    const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
     const checkPermission = user && user.currentCustomerId;
     const isPermittedAndRoleAdmin = user && user.currentCustomerId && (user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN");
 
@@ -19,8 +17,8 @@ function Header() {
 
     const customersClass = window.location.pathname === "/customers" ? "active" : "";
     const warehousesClass = window.location.pathname.match(/.warehouses/) ? "active" : "";
-    const usersClass = window.location.pathname === "/users" ? "active" : "";
-    const carsClass = window.location.pathname === "/cars" ? "active" : "";
+    const usersClass = window.location.pathname.match(/.users/) ? "active" : "";
+    const carsClass = window.location.pathname.match(/.cars/) ? "active" : "";
 
     const profileClass = getClass(/.profile/);
     const categoryClass = getClass(/.category/);
@@ -30,13 +28,10 @@ function Header() {
     const writeOffActClass = getClass(/.write-off-act/)
     const waybillClass = getClass(/.waybills/);
 
-    const itemPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
-        user.role === "ROLE_DISPATCHER" ||
-        user.role === "ROLE_LOGISTICS_SPECIALIST" || user.role === "ROLE_ADMIN");
-    const categoryPermission = checkPermission && (user.role === "ROLE_SYSTEM_ADMIN" ||
-        user.role === "ROLE_DIRECTOR" || user.role === "ROLE_ADMIN");
-    const writeOffActPermission = checkPermission && (user.role === "ROLE_ADMIN" || user.role === "ROLE_DISPATCHER"
-        || user.role === "ROLE_DIRECTOR" || user.role === "ROLE_DRIVER" || user.role === "ROLE_SYSTEM_ADMIN");
+    const itemPermission = checkPermission && (user.role === "ROLE_DISPATCHER");
+    const categoryPermission = checkPermission && (user.role === "ROLE_DIRECTOR");
+    const writeOffActPermission = checkPermission && (user.role === "ROLE_DISPATCHER"
+        || user.role === "ROLE_DIRECTOR" || user.role === "ROLE_DRIVER");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">
@@ -47,17 +42,15 @@ function Header() {
                     <Nav.Link className={profileClass}
                               href={`/customers/${currentCustomerId}/profile`}>Profile
                     </Nav.Link>}
+                    {isPermittedAndRoleAdmin &&
+                    <Nav.Link className={usersClass} href={`/customers/${currentCustomerId}/users`}>Users</Nav.Link>}
                     {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_LOGISTICS_SPECIALIST") &&
                     <Nav.Link className={appClass}
                               href={`/customers/${currentCustomerId}/application`}>Application</Nav.Link>}
-                    {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
-                    <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
-                    {checkPermission && user.role === "ROLE_DISPATCHER" &&
+                    {checkPermission && (user.role === "ROLE_DISPATCHER" || user.role === "ROLE_ADMIN") &&
                     <Nav.Link className={warehousesClass}
                               href={`/customers/${currentCustomerId}/warehouses`}>Warehouses
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
-                    <Nav.Link className={usersClass} href="/users">Users</Nav.Link>}
                     {categoryPermission &&
                     <Nav.Link className={categoryClass}
                               href={`/customers/${currentCustomerId}/category`}>
@@ -71,7 +64,7 @@ function Header() {
                     <Nav.Link className={itemClass}
                               href={`/customers/${currentCustomerId}/item`}>Items
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
+                    {checkPermission && user.role === "ROLE_ADMIN" &&
                     <Nav.Link className={retailerClass}
                               href={`/customers/${currentCustomerId}/retailers`}>Retailers
                     </Nav.Link>}
@@ -79,8 +72,10 @@ function Header() {
                     <Nav.Link className={writeOffActClass}
                               href={`/customers/${user.currentCustomerId}/write-off-act`}>Write-off acts
                     </Nav.Link>}
-                    {isPermittedAndRoleAdmin &&
-                    <Nav.Link className={carsClass} href="/cars">Cars</Nav.Link>}
+                    {checkPermission && user.role === "ROLE_ADMIN" &&
+                    <Nav.Link className={carsClass} href={`/customers/${user.currentCustomerId}/cars`}>Cars</Nav.Link>}
+                    {checkPermission && user.role === "ROLE_SYSTEM_ADMIN" &&
+                    <Nav.Link className={customersClass} href="/customers">Customers</Nav.Link>}
                     <UserProfile/>
                 </Nav>
             </Navbar.Collapse>

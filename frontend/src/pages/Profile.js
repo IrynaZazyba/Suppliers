@@ -4,16 +4,17 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {AuthContext} from "../context/authContext";
 import Card from "react-bootstrap/Card";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 
 export default () => {
     const {user, setUser} = useContext(AuthContext);
-    const [zones, setZones] = useState([]);
+    const [stateOptions, setStateOptions] = useState([]);
+    const ref = React.createRef();
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
-    const [zone, setZone] = useState([]);
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: null,
+        state: {},
         addressLine1: '',
         addressLine2: ''
     });
@@ -34,6 +35,24 @@ export default () => {
     });
     const [validError, setError] = useState([]);
     const [errorMessage, setErrors] = useState('');
+    const filterByState = () => true;
+
+    const onChangeState = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            state: (e.length ?
+                {id: e[0].id, state: e[0].state}
+                : {id: '', state: ''})
+        }));
+    };
+
+    const handleStateSearch = (query) => {
+        fetch(`/customers/${currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                setStateOptions(res);
+            });
+    };
     const handleName = (e) => {
         setUserDto(preState => ({
             ...preState,
@@ -78,52 +97,36 @@ export default () => {
             ...preState,
             addressLine2: e.target.value
         }));
-        setUser(preState => ({
-            ...preState,
-            addressDto: addressDto
-        }));
-
-    };
-    const onChangeState = (e) => {
-        const selectedState = zones.find(state => state.state === e.target.value);
-
-        setZone(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-        setAddressDto(preState => ({
-            ...preState,
-            state: selectedState
-        }));
     };
 
     useEffect(() => {
         fetch(`/customers/${currentCustomerId}/users/username/${user.username}`)
             .then(response => response.json())
             .then(res => {
-                setZone(res.addressDto.state);
                 setAddressDto(res.addressDto);
                 setUserDto(res);
                 userDto.addressDto && setState(res.addressDto.state);
             });
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setZones(commits.content);
-            });
-
     }, []);
 
 
     const editUserHandler = (e) => {
         e.preventDefault();
 
+        let userUpdateDto = {};
+        userUpdateDto = {
+            ...userDto,
+            addressDto: addressDto
+        };
+
+        console.log(userUpdateDto)
+
         fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userDto)
+            body: JSON.stringify(userUpdateDto)
         })
             .then(function (response) {
                 if (response.status !== 200) {
@@ -246,21 +249,39 @@ export default () => {
                             <Form.Control type="text" placeholder="role" value={userDto.role} readOnly={true}
                             />
                         </Form.Group>
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
+                            Current state
+                            <Form.Control type="text"
+                                          value={addressDto && addressDto.state.state}
+                                          disabled/>
+                        </Form.Group>
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Search, if you want to change state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}>
 
-                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Label>State</Form.Label>
-                            <Form.Control style={{padding: '5px 10px'}} value={zone.state} as="select"
+                                {/*<Form.Control type="text" onChange={onChangeState}*/}
+                                {/*              className={*/}
+                                {/*                  isValid("state")*/}
+                                {/*              }/>*/}
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    Please provide a state.*/}
+                                {/*</Form.Control.Feedback>*/}
 
-                                          onChange={onChangeState}>
-                                {Object.entries(zones).map(([k, v]) => (
-
-                                    <option>{v.state}</option>
-
-                                ))}
-                            </Form.Control>
+                            </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
+                            <Form.Control type="text" placeholder="city" value={addressDto && addressDto.city}
+                                          onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -271,7 +292,9 @@ export default () => {
 
 
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1} onChange={handleaddressLine1}
+                            <Form.Control type="text" placeholder="addressLine1"
+                                          value={addressDto && addressDto.addressLine1}
+                                          onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -279,7 +302,7 @@ export default () => {
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
                         </Form.Group>
-                    
+
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Control type="password" placeholder="change password" onChange={handlePassword}

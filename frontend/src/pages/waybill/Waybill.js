@@ -110,10 +110,13 @@ export default () => {
 
         <tr key={waybill.id}
             onClick={() => {
-                setOpenDeliveryModal({
-                    isOpen: true,
-                    waybillId: waybill.id
-                })
+                {
+                    user && user.role === 'ROLE_DRIVER' &&
+                    setOpenDeliveryModal({
+                        isOpen: true,
+                        waybillId: waybill.id
+                    })
+                }
             }}>
             <td>{waybill.number}</td>
             <td style={{fontSize: '0.9rem'}}>{waybill.sourceLocationWarehouseDto.identifier}{','}<br/>
@@ -129,16 +132,16 @@ export default () => {
                 <Badge className="badge-status">
                     {waybill.waybillStatus.replace('_', ' ').toLowerCase()}
                 </Badge></td>
-            <td> {user&&user.role==='ROLE_LOGISTICS_SPECIALIST'&&
+            <td> {user && user.role === 'ROLE_LOGISTICS_SPECIALIST' && waybill.waybillStatus !== 'FINISHED' &&
             <FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
-                        onClick={() => {
-                            setOpenEditModal({
-                                isOpen: true,
-                                waybillId: waybill.id,
-                                customerId: customerId
-                            });
-                        }}
-                        size={'1.3em'}
+                    onClick={() => {
+                        setOpenEditModal({
+                            isOpen: true,
+                            waybillId: waybill.id,
+                            customerId: customerId
+                        });
+                    }}
+                    size={'1.3em'}
             />}
             </td>
         </tr>
@@ -178,7 +181,7 @@ export default () => {
         <React.Fragment>
             <Row>
                 <Col md={2}>
-                    {user&&user.role==='ROLE_LOGISTICS_SPECIALIST'&&
+                    {user && user.role === 'ROLE_LOGISTICS_SPECIALIST' &&
                     <Button className="mainButton" size="sm" onClick={() => setOpenAddModal(true)}>
                         Create waybill
                     </Button>}

@@ -117,19 +117,20 @@ function ModalEditWarehouseRetailer(props) {
                         longitude: response.data.results[0].geometry.location.lng
                     }
                 }
-                props.onAddWarehouse(warehouseUpdateDto);
+
                 setWarehouseDto(warehouseUpdateDto);
+                let validationResult = validateWarehouseRetailer(warehouseUpdateDto);
+                setErrors(preState => ({
+                    ...preState,
+                    validationErrors: validationResult,
+                    serverErrors: ''
+                }));
+                if (!validationResult.length) {
+                    props.onEditWarehouse(warehouseUpdateDto);
+                    props.onChange(false, warehouseUpdateDto);
+                }
             }})
-        let validationResult = validateWarehouseRetailer(warehouseUpdateDto);
-        setErrors(preState => ({
-            ...preState,
-            validationErrors: validationResult,
-            serverErrors: ''
-        }));
-        if (!validationResult.length) {
-            props.onEditWarehouse(warehouseDto);
-            props.onChange(false, warehouseDto);
-        }
+
     };
 
     return (

@@ -125,7 +125,7 @@ function AddWaybillModal(props) {
         if (validationRes.length === 0) {
             checkValidationErrors('source');
             let sourceId = e[0].id;
-            sourceId && getApps(`/customers/${customerId}/application/warehouses?warehouseId=${sourceId}&applicationStatus=OPEN&size=5`);
+            sourceId && getApps(`/customers/${customerId}/application/warehouses?warehouseId=${sourceId}&size=5`);
             setWaybill(prevState => ({
                 ...prevState,
                 sourceLocationWarehouseDto: sourceId
@@ -146,7 +146,7 @@ function AddWaybillModal(props) {
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&applicationStatus=OPEN&page=${currentPage}&size=5`);
+        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${currentPage}&size=5`);
     };
 
     const driverHandler = (e) => {
@@ -493,7 +493,7 @@ function AddWaybillModal(props) {
                     <td style={{fontSize: '0.9rem', width: '37%'}}>{app.destinationLocationDto.addressDto.city}{', '}
                         {app.destinationLocationDto.addressDto.addressLine1}{', '}
                         {app.destinationLocationDto.addressDto.addressLine2}</td>
-                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0)}</td>
+                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0).toFixed(2)}</td>
                 </tr>
             ))}
         </React.Fragment>;

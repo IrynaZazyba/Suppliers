@@ -81,7 +81,7 @@ export default () => {
         let value = e.target.checked;
         setCheckbox(value);
         setBelongToWarehouse(value);
-        getApplications(`/customers/${customerId}/application?status=${filter}&size=${page.countPerPage}&isAll=${value}`);
+        getApplications(`/customers/${customerId}/application?size=${page.countPerPage}&isAll=${value}`);
     };
 
     const onChangeFilter = (e) => {
@@ -166,30 +166,30 @@ export default () => {
                         }}>Accept</Button>}
             </td>
             <td>
-                {user.role === 'ROLE_DISPATCHER' && <FaEdit
-                    className={app.applicationStatus === 'FINISHED_PROCESSING'
-                        ? "edit-app-icon-disable"
-                        : "edit-app-icon-active"}
-                    size={'1.3em'}
-                    onClick={() => {
+                {user.role === 'ROLE_DISPATCHER' &&
+                <FaEdit className={app.applicationStatus === 'FINISHED_PROCESSING' || app.wayBillId
+                    ? "edit-app-icon-disable"
+                    : "edit-app-icon-active"}
+                        size={'1.3em'}
+                        onClick={() => {
 
-                        let statusRule = app.applicationStatus === 'OPEN'
-                            || app.applicationStatus === 'STARTED_PROCESSING';
+                            let statusRule = app.applicationStatus === 'OPEN'
+                                || app.applicationStatus === 'STARTED_PROCESSING';
 
-                        if (app.type === 'SUPPLY' && statusRule) {
-                            setOpenEditModal({
-                                isOpen: true,
-                                app: app,
-                                customerId: customerId
-                            });
-                        } else if (app.type === 'TRAFFIC' && statusRule) {
-                            setOpenEditShipmentModal({
-                                isOpen: true,
-                                app: app,
-                                customerId: customerId
-                            });
-                        }
-                    }}
+                            if (app.type === 'SUPPLY' && statusRule && !app.wayBillId) {
+                                setOpenEditModal({
+                                    isOpen: true,
+                                    app: app,
+                                    customerId: customerId
+                                });
+                            } else if (app.type === 'TRAFFIC' && statusRule && !app.wayBillId) {
+                                setOpenEditShipmentModal({
+                                    isOpen: true,
+                                    app: app,
+                                    customerId: customerId
+                                });
+                            }
+                        }}
                 />}
             </td>
         </tr>
@@ -221,7 +221,7 @@ export default () => {
                         </Button>
                     </Col></> : <Col md={3}></Col>}
                 <Col md={4}></Col>
-                <Col md={2} className="checkbox-all-app">
+                {user.role === 'ROLE_DISPATCHER'? <><Col md={2} className="checkbox-all-app">
                     <Form.Group controlId="formBasicCheckbox">
                         <Form.Check
                             type="checkbox"
@@ -229,7 +229,7 @@ export default () => {
                             onChange={handleBelongToDispatcherFilter}
                             checked={isCheckboxAll.checkboxChecked}/>
                     </Form.Group>
-                </Col>
+                </Col></>: <Col md={2}></Col>}
                 <Col md={2}>
                     <Form.Control size="sm" as="select"
                                   value={filter}

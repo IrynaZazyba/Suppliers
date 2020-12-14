@@ -4,31 +4,30 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import validateCar from "../../validation/CarValidationRules";
+import {AsyncTypeahead} from "react-bootstrap-typeahead";
 
 function ModalAddCar(props) {
 
     const ref = React.createRef();
+    const [stateOptions, setStateOptions] = useState([]);
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
 
     const [carDto, setCar] = useState({
         number: '',
         totalCapacity: '',
-        currentCapacity: '',
-        customerId: currentCustomerId,
-        addressDto: null,
+        currentCapacity: currentCustomerId,
+        customerId: '',
+        addressDto: {},
     });
 
     const [errors, setErrors] = useState({
         validationErrors: [],
         serverErrors: ''
     });
-    const [zone, setZone] = useState([]);
-
-    const [zones, setZones] = useState([]);
 
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: null,
+        state: {},
         addressLine1: '',
         addressLine2: ''
     });
@@ -36,7 +35,24 @@ function ModalAddCar(props) {
     const [options, setOptions] = useState([]);
 
     const filterBy = () => true;
+    const filterByState = () => true;
 
+    const onChangeState = (e) => {
+        setAddressDto(preState => ({
+            ...preState,
+            state: (e.length ?
+                {id: e[0].id, state: e[0].state}
+                : {id: '', state: ''})
+        }));
+    };
+
+    const handleStateSearch = (query) => {
+        fetch(`/customers/${currentCustomerId}/states?state=${query}`)
+            .then(resp => resp.json())
+            .then(res => {
+                setStateOptions(res);
+            });
+    };
 
     const handleNumber = (e) => {
         setCar(preState => ({
@@ -51,27 +67,7 @@ function ModalAddCar(props) {
             currentCapacity: e.target.value
         }));
     };
-    const onChangeState = (e) => {
-        const selectedState = zones.find(state => state.state === e.target.value);
 
-        setZone(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-        setAddressDto(preState => ({
-            ...preState,
-            state: selectedState
-        }));
-    };
-    useEffect(() => {
-
-
-        fetch('/states')
-            .then(response => response.json())
-            .then(commits => {
-                setZones(commits.content);
-            });
-    }, []);
     const handleCity = (e) => {
         setAddressDto(preState => ({
             ...preState,
@@ -89,16 +85,19 @@ function ModalAddCar(props) {
             ...preState,
             addressLine2: e.target.value
         }));
-        setCar(preState => ({
-            ...preState,
-            addressDto: addressDto
-        }));
     };
     const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
 
     const addCarHandler = (e) => {
         e.preventDefault();
-        let validationResult = validateCar(carDto);
+
+        let carUpdateDto = {};
+        carUpdateDto = {
+            ...carDto,
+            addressDto: addressDto
+        };
+
+        let validationResult = validateCar(carUpdateDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult
@@ -109,10 +108,10 @@ function ModalAddCar(props) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(carDto)
+                body: JSON.stringify(carUpdateDto)
             })
                 .then(response => {
-                    if (response.status !== 200) {
+                    if (response.status !== 201) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
                             validationErrors: ''
@@ -120,7 +119,8 @@ function ModalAddCar(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
-                            validationErrors: []
+                            validationErrors: [],
+                            serverErrors: ''
                         }));
                         props.onChange(false, carDto);
                     }
@@ -171,17 +171,30 @@ function ModalAddCar(props) {
                                 Please provide a valid total capacity.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
 
-                            <Form.Control style={{padding: '5px 10px'}} as="select"
-                                          defaultValue="Choose..."
-                                          onChange={onChangeState}>
-                                {Object.entries(zones).map(([k, v]) => (
+                        <Form.Group>
+                            <AsyncTypeahead
+                                style={{padding: '5px 10px'}}
+                                ref={ref}
+                                name="state"
+                                filterBy={filterByState}
+                                id="async-state"
+                                labelKey="state"
+                                minLength={3}
+                                options={stateOptions}
+                                placeholder="Select state..."
+                                onSearch={handleStateSearch}
+                                onChange={onChangeState}>
 
-                                    <option>{v.state}</option>
+                                {/*<Form.Control type="text" onChange={onChangeState}*/}
+                                {/*              className={*/}
+                                {/*                  isValid("state")*/}
+                                {/*              }/>*/}
+                                {/*<Form.Control.Feedback type="invalid">*/}
+                                {/*    Please provide a state.*/}
+                                {/*</Form.Control.Feedback>*/}
 
-                                ))}
-                            </Form.Control>
+                            </AsyncTypeahead>
                         </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>

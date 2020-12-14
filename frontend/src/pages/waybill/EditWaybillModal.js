@@ -76,7 +76,7 @@ function EditWaybillModal(props) {
                     if (google) {
                         parseAndRenderRoute(waybill.route.wayPoints);
                     }
-                    getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&size=5&waybillId=${props.modal.waybillId}`);
+                    getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&size=5&waybillId=${props.modal.waybillId}`);
                 });
         }
     }, [props.modal]);
@@ -178,7 +178,7 @@ function EditWaybillModal(props) {
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&page=${currentPage}&size=5&waybillId=${props.modal.waybillId}`);
+        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&page=${currentPage}&size=5&waybillId=${props.modal.waybillId}`);
     };
 
     function calculateTotalValues(waybill) {
@@ -637,7 +637,7 @@ function EditWaybillModal(props) {
                         {app.destinationLocationDto.addressDto.city}{', '}
                         {app.destinationLocationDto.addressDto.addressLine1}{', '}
                         {app.destinationLocationDto.addressDto.addressLine2}</td>
-                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0)}</td>
+                    <td className="table-text-center">{app.items.reduce((total, i) => total + i.cost, 0).toFixed(2)}</td>
                 </tr>
             ))}
         </React.Fragment>;

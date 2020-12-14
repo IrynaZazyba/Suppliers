@@ -41,6 +41,5 @@ public interface ApplicationService extends BaseService<ApplicationDto> {
 
     Page<ApplicationDto> getShipmentApplicationsByWarehouseAndStatus(Pageable pageable,
                                                                      Long warehouseId,
-                                                                     ApplicationStatus status,
                                                                      Long waybillId);
 }

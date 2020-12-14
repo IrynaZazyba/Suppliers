@@ -25,4 +25,7 @@ public interface WaybillService {
     WayBillDto startWaybillDelivery(Long waybillId);
 
     WaybillStatus completeWaybillDelivery(Long waybillId);
+
+    @Transactional
+    void markWaybillApplicationShipped(Long waybillId, Long addressId);
 }

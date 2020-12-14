@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import './App.css';
 import UserContext from './UserContext';
 import Header from './Header';
@@ -35,7 +35,7 @@ function App() {
     };
 
     const renderCustomer = () => {
-        return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
+        return <ProtectedComponent conditions={user && user.role === "ROLE_SYSTEM_ADMIN"} render={(() => {
             return <Customers/>
         })}/>
     };
@@ -90,7 +90,7 @@ function App() {
         })}/>
     };
 
-    const renderWriteOffActs =() => {
+    const renderWriteOffActs = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
         || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_DRIVER"
         || user.role === "ROLE_DIRECTOR"} render={(() => {
@@ -124,7 +124,6 @@ function App() {
     const warehouseItemsPath = pathWithCustomer(`/warehouses/:warehouseId/items`);
     const writeOffPath = pathWithCustomer(`/write-off-act`);
     const waybillPath = pathWithCustomer(`/waybills`);
-
     const retailerPath = pathWithCustomer(`/retailers`);
     return (
         <UserContext>
@@ -140,10 +139,10 @@ function App() {
                 <Route path={writeOffPath} render={renderWriteOffActs}/>
                 <Route path={waybillPath} render={renderWaybill}/>
                 <Route path={retailerPath} render={renderRetailer}/>
-                <Route path={'/customers'} render={renderCustomer}/>
-                <Route path={'/users'} render={renderUser}/>
-                <Route path={'/cars'} render={renderCar}/>
+                <Route path={'/customers/' + currentCustomerId + '/users'} render={renderUser}/>
+                <Route path={'/customers/' + currentCustomerId + '/cars'} render={renderCar}/>
                 <Route path={'/login'} component={Login}/>
+                <Route path={'/customers'} render={renderCustomer}/>
             </Switch>
             <Footer/>
         </UserContext>

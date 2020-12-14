@@ -2,7 +2,7 @@ export default function validateWarehouse(dto, dropdownMenuName, dispatchersId) 
     return [
         ...validateIdentifier(dto), ...validateCity(dto),
         ...validateAddressLine1(dto), ...validateAddressLine2(dto),
-       ...validateState(dto),
+       ...validateState(dto), ...validateTotalCapacity(dto),
         ...validateUsername(dto, dispatchersId), ...validateType(dropdownMenuName)];
 }
 
@@ -23,7 +23,7 @@ export function validateEditWarehouse(dto, dispatchersId) {
 
 export function validateIdentifier(dto) {
     let errorsFields = [];
-    if (dto.identifier.length < 1 || dto.identifier.length > 50) {
+    if (!dto.identifier || (dto.identifier.length < 1 || dto.identifier.length > 50)) {
         errorsFields.push("identifier");
     }
     return errorsFields;
@@ -68,16 +68,18 @@ export function validateAddressLine2(dto) {
 export function validateTotalCapacity(dto) {
     let errorsFields = [];
 
-    if (!dto.totalCapacity ||
-        (dto.totalCapacity.length < 1 || dto.totalCapacity.length > 50)) {
-        errorsFields.push("totalCapacity");
+    if (dto.type ==="WAREHOUSE") {
+        if (!dto.totalCapacity ||
+            (dto.totalCapacity.length < 1 || dto.totalCapacity.length > 50)) {
+            errorsFields.push("totalCapacity");
+        }
     }
     return errorsFields;
 }
 
 export function validateState(dto) {
     let errorsFields = [];
-    if (!dto.addressDto.state) {
+    if (!dto.addressDto.state.state) {
         errorsFields.push("state");
     }
     return errorsFields;

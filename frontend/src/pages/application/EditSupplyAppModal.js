@@ -224,26 +224,36 @@ function EditSupplyAppModal(props) {
                 },
                 body: JSON.stringify(dtoApp)
             })
-                .then(function (response) {
-                    if (response.status !== 200) {
+                .then(response => {
+                    if (response.status === 400) {
+                        response.json().then(json => {
+                            let res = Object.values(json).join('. ');
+                            setErrors({
+                                serverErrors: res,
+                                validationErrors: []
+                            });
+                        });
+                    }
+                    if (response.status !== 200 && response.status !== 400) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
-                        });
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
                             validationErrors: []
-                        }));
+                        });
+                    }
+                    if (response.status === 200) {
+                        setErrors({
+                            serverErrors:'',
+                            validationErrors: []
+                        });
                         setApp('');
+                        setCurrentItem('');
+                        setDeleted(prevState => ({
+                            ...prevState,
+                            deletedItems: []
+                        }));
                         props.onChange(false, app);
                     }
                 });
-            setCurrentItem('');
-            setDeleted(prevState => ({
-                ...prevState,
-                deletedItems: []
-            }));
         }
     };
 
@@ -365,7 +375,7 @@ function EditSupplyAppModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost, $ per unit</th>
+                    <th>Cost, $ per item</th>
                     <th>{status && 'Accepted at'}</th>
                 </tr>
                 </thead>

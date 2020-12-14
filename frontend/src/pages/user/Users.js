@@ -132,6 +132,7 @@ export default () => {
                 onChange={handleChangeStatus}
                 checked={custom.active}
                 value={custom.active}
+                disabled={!custom.customerDto.active}
             />
             </td>
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}

@@ -10,8 +10,7 @@ import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import Button from "react-bootstrap/Button";
 import {validateEditApplication} from "../../validation/ApplicationValidationRules";
 import calculateItemPrice, {calculateDistance, recalculateItemWhenChangeWarehouse} from "./CalculatePrice";
-import {validateShipmentEditItem} from "../../validation/ItemValidationRules";
-import {checkItemsAtWarehouse} from "../../validation/ItemValidationRules";
+import {checkItemsAtWarehouse, validateShipmentEditItem} from "../../validation/ItemValidationRules";
 
 function EditShipmentModal(props) {
 
@@ -133,6 +132,10 @@ function EditShipmentModal(props) {
 
     const appNumberOnChange = (e) => {
         const value = e.target.value;
+        setErrors(prevState => ({
+            ...prevState,
+            serverErrors: ''
+        }));
         setApp(preState => ({
             ...preState,
             number: value
@@ -248,26 +251,37 @@ function EditShipmentModal(props) {
                 },
                 body: JSON.stringify(dtoApp)
             })
-                .then(function (response) {
-                    if (response.status !== 200) {
+                .then(response => {
+                    if (response.status === 400) {
+                        response.json().then(json => {
+                            let res = Object.values(json).join('. ');
+                            setErrors({
+                                serverErrors: res,
+                                validationErrors: []
+                            });
+                        });
+                    }
+                    if (response.status !== 200 && response.status !== 400) {
                         setErrors({
                             serverErrors: "Something go wrong, try later",
-                            validationErrors: ''
-                        });
-                    } else {
-                        setErrors(preState => ({
-                            ...preState,
                             validationErrors: []
-                        }));
+                        });
+                    }
+                    if (response.status === 200) {
+                        setErrors({
+                            serverErrors:'',
+                            validationErrors: []
+                        });
                         setApp('');
+                        setCurrentItem('');
+                        setDeleted(prevState => ({
+                            ...prevState,
+                            deletedItems: []
+                        }));
                         props.onChange(false, app);
                     }
                 });
-            setCurrentItem('');
-            setDeleted(prevState => ({
-                ...prevState,
-                deletedItems: []
-            }));
+
         }
     };
 
@@ -383,7 +397,7 @@ function EditShipmentModal(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Cost, $ per unit</th>
+                    <th>Cost, $ per item</th>
                     <th></th>
                 </tr>
                 </thead>

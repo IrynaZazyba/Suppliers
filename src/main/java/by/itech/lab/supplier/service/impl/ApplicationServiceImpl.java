@@ -59,12 +59,12 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .map(appToSave -> buildApplicationForUpdate(dto))
                 .orElseGet(() -> buildApplicationToCreate(dto, user));
 
-        if (application.getType() == ApplicationType.TRAFFIC) {
-            application = calculationService.calculateAppItemsPrice(application);
-        }
         application.setLastUpdated(LocalDate.now());
         application.setLastUpdatedByUsers(user);
         application = applicationMapper.mapItems(application);
+        if (application.getType() == ApplicationType.TRAFFIC) {
+            application = calculationService.calculateAppItemsPrice(application);
+        }
         final Application saved = applicationRepository.save(application);
         return applicationMapper.map(saved);
     }
@@ -108,8 +108,11 @@ public class ApplicationServiceImpl implements ApplicationService {
                                                        final Boolean roleFlag,
                                                        final ApplicationStatus status,
                                                        final Long userId) {
-        final Long warehouseId = roleFlag &&
-                Objects.nonNull(userId) ? userService.findById(userId).getWarehouseDto().getId() : null;
+        Long warehouseId = null;
+        if (Objects.nonNull(userId) && roleFlag) {
+            final WarehouseDto warehouseDto = userService.findById(userId).getWarehouseDto();
+            warehouseId = warehouseDto.getId();
+        }
         return applicationRepository.findAllByRoleAndStatusAndWarehouse(pageable, roleFlag, status, warehouseId)
                 .map(applicationMapper::map);
     }
@@ -185,11 +188,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Page<ApplicationDto> getShipmentApplicationsByWarehouseAndStatus(Pageable pageable,
                                                                             Long warehouseId,
-                                                                            ApplicationStatus status,
                                                                             Long waybillId) {
         return applicationRepository
                 .findAllByTypeAndApplicationStatusAndSourceLocationAddressId(pageable,
-                        ApplicationType.TRAFFIC, status, warehouseId, waybillId).map(applicationMapper::map);
+                        ApplicationType.TRAFFIC, warehouseId, waybillId).map(applicationMapper::map);
     }
 
 }
