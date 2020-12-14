@@ -10,7 +10,7 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
 import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
-import Page from "../../components/Page";
+import Pagination from 'react-bootstrap-4-pagination';
 import Button from "react-bootstrap/Button";
 import validateWaybill, {
     checkCarCapacity,
@@ -63,7 +63,7 @@ function AddWaybillModal(props) {
     const [mapCenter, setMapCenter] = useState({lat: 51.494900, lng: -0.146231});
 
     useEffect(() => {
-        if(props.modal) {
+        if (props.modal) {
             Promise.all([
                 fetch(`/customers/${customerId}/warehouses/applications`),
                 fetch(`/customers/${customerId}/car/unpaged`),
@@ -105,6 +105,24 @@ function AddWaybillModal(props) {
     }, [addedApps]);
 
 
+
+    let paginationConfig = {
+        totalPages: page.countPages,
+        currentPage: page.currentPage,
+        showMax: 5,
+        activeBgColor: '#1A7FA8',
+        activeBorderColor: '#1A7FA8',
+        prevText: "Prev",
+        nextText: "Next",
+        size: "sm",
+        threeDots: true,
+        prevNext: true,
+        onClick: function (p) {
+            let curr = p - 1;
+            getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${curr}&size=5`);
+        }
+    };
+
     const numberHandler = (e) => {
         e.preventDefault();
         checkValidationErrors('number');
@@ -120,10 +138,12 @@ function AddWaybillModal(props) {
             .then(commits => {
                 setAllLoadedApps(apps.concat(commits.content));
                 setApps(commits.content);
+                console.log(commits.totalPages);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
-                    countPages: commits.totalPages
+                    countPages: commits.totalPages,
+                    currentPage: (commits.pageable.pageNumber + 1)
                 });
                 setErrors({
                     serverErrors: '',
@@ -157,12 +177,6 @@ function AddWaybillModal(props) {
                 validationErrors: [...errors.validationErrors, ...validationRes]
             }));
         }
-    };
-
-    const changePage = (e) => {
-        e.preventDefault();
-        let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${currentPage}&size=5`);
     };
 
     const driverHandler = (e) => {
@@ -417,7 +431,6 @@ function AddWaybillModal(props) {
 
     }
 
-
     const waybillInfo =
         <React.Fragment>
             <Form.Group controlId="number">
@@ -542,7 +555,7 @@ function AddWaybillModal(props) {
                 {appRows}
                 </tbody>
             </Table>
-            <Page page={page} onChange={changePage}/>
+            <Pagination {...paginationConfig} />
         </React.Fragment>;
 
 
