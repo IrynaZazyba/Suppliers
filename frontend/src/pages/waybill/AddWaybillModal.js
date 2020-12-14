@@ -73,7 +73,15 @@ function AddWaybillModal(props) {
                     setSourceWarehouse(content[0]);
                     setCars(content[1].content);
                     setDrivers(content[2]);
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     }, [props.modal]);
 
@@ -117,7 +125,15 @@ function AddWaybillModal(props) {
                     countPerPage: commits.size,
                     countPages: commits.totalPages
                 });
-            });
+                setErrors({
+                    serverErrors: '',
+                    validationErrors: []
+                });
+            })
+            .catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
     }
 
     const sourceLocationHandler = (e) => {
@@ -256,7 +272,10 @@ function AddWaybillModal(props) {
                         }));
                         hideModalHandler();
                     }
-                });
+                }).catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
         } else {
             setErrors(prevState => ({
                 ...prevState,
@@ -362,8 +381,16 @@ function AddWaybillModal(props) {
                         lat: endPoint[0].address.latitude,
                         lng: endPoint[0].address.longitude
                     };
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
                     renderRoute(start, end, waypoints);
-                });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     };
 

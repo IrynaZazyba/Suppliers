@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: WB-M-1
+      author: iryna_zazybo
+      changes:
+        - sqlFile:
+            dbms:  '!h2,  oracle,  mysql'
+            encoding:  UTF-8
+            endDelimiter: ;
+            path: ../sql/2020-12-14-activate-customer.sql
+            relativeToChangelogFile: true
+            splitStatements:  true
+            stripComments:  true
+  - changeSet:
+        id: WB-M-2
+        author: iryna_zazybo
+        changes:
+            - modifyDataType:
+                  columnName: last_updated
+                  newDataType: datetime
+                  tableName: waybill
+  - changeSet:
+        id: WB-M-3
+        author: iryna_zazybo
+        changes:
+            - modifyDataType:
+                  columnName: registration_date
+                  newDataType: datetime
+                  tableName: waybill

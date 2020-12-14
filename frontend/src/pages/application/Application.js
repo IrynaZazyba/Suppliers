@@ -74,7 +74,9 @@ export default () => {
                     countPerPage: commits.size,
                     countPages: commits.totalPages
                 });
-            });
+                setErrors('');
+            })
+            .catch(error => setErrors("Something go wrong, try later"));
     }
 
     const handleBelongToDispatcherFilter = (e) => {

@@ -76,8 +76,16 @@ function EditWaybillModal(props) {
                     if (google) {
                         parseAndRenderRoute(waybill.route.wayPoints);
                     }
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
                     getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&size=5&waybillId=${props.modal.waybillId}`);
-                });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     }, [props.modal]);
 
@@ -99,7 +107,11 @@ function EditWaybillModal(props) {
                 .then(response => response.json())
                 .then(commits => {
                     parseAndRenderRoute(commits.wayPoints);
-                });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     };
 
@@ -149,7 +161,15 @@ function EditWaybillModal(props) {
                     countPerPage: commits.size,
                     countPages: commits.totalPages
                 });
-            });
+                setErrors({
+                    serverErrors: '',
+                    validationErrors: []
+                });
+            })
+            .catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
     }
 
     function renderRoute(start, end, waypoints) {

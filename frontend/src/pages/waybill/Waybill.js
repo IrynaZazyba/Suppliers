@@ -13,6 +13,7 @@ import {FaEdit} from "react-icons/fa";
 import AddWaybillModal from "./AddWaybillModal";
 import DeliveryModal from "./DeliveryModal";
 import EditWaybillModal from "./EditWaybillModal";
+import ErrorMessage from "../../messages/errorMessage";
 
 export default () => {
 
@@ -42,6 +43,7 @@ export default () => {
         waybillId: '',
         customerId: customerId
     });
+    const [errorMessage, setErrors] = useState('');
 
     const changePage = (e) => {
         e.preventDefault();
@@ -64,7 +66,8 @@ export default () => {
                     countPerPage: commits.size,
                     countPages: commits.totalPages
                 });
-            });
+                setErrors('');
+            }).catch(error => setErrors("Something go wrong, try later"));
     }
 
     const onChangeFilter = (e) => {
@@ -179,6 +182,7 @@ export default () => {
 
     const header =
         <React.Fragment>
+            {errorMessage && <ErrorMessage message={errorMessage}/>}
             <Row>
                 <Col md={2}>
                     {user && user.role === 'ROLE_LOGISTICS_SPECIALIST' &&
