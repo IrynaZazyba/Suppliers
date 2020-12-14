@@ -30,7 +30,12 @@ export default (props) => {
         editShow: false,
         warehouse: []
     });
-    const [errorMessage, setErrors] = useState('');
+    // const [errorMessage, setErrors] = useState('');
+
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
 
     const handleCheckedChange = (warehouseId) => {
         let checkboxUpdate = checkBoxes.slice();
@@ -106,9 +111,13 @@ export default (props) => {
         })
             .then(response => {
                 if (response.status !== 204) {
-                     alert("Warehouse can not be deleted, because it's already used in application or this warehouse still contains items. Please, try later")
+                    setErrors(preState => ({
+                        ...preState,
+                        serverErrors: "Warehouse can not be deleted, because it's already used in application or this warehouse still contains items. Please, try later"
+                    }))
                 } else {
                     setCheckBox([]);
+                    alert("done");
                     getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
                 }
             });
@@ -149,7 +158,7 @@ export default (props) => {
 
     const modals =
         <React.Fragment>
-            {errorMessage && <ErrorMessage message={errorMessage}/>}
+            {errors.errorMessage && <ErrorMessage message={errors.errorMessage}/>}
             <ModalEditWarehouse editWarehouse={editWarehouse} onChange={closeModalEdit}
                                 currentCustomerId={currentCustomerId}/>
             <ModalAddWarehouse lgShow={lgShow} onChange={closeModalAdd}

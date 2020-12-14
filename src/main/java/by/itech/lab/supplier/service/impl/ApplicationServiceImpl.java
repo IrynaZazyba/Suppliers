@@ -92,9 +92,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Boolean isExistNotFinishedStatus(List<Long> id) {
-        List<Long> idsByFinishedStatus = applicationRepository.findIdsByFinishedStatus(id);
-        return idsByFinishedStatus.isEmpty();
+    public Boolean isWarehousesFreeFromApplications(List<Long> id) {
+        List<Long> IdsAllUsedWarehouses = applicationRepository.findAllUsedWarehouses(id);
+        return IdsAllUsedWarehouses.isEmpty();
     }
 
     @Override

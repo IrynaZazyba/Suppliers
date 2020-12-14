@@ -29,9 +29,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Page<Application> findAllByStatus(Pageable pageable,
                                       @Param("status") ApplicationStatus status);
 
-    @Query("select app from Application app where :flag = true or (:flag = false and app.type like 'TRAFFIC')")
-    Page<Application> findAllByUserRole(Pageable pageable,
-                                        @Param("flag") Boolean roleFlag);
+//    @Query("select app from Application app where :flag = true or (:flag = false and app.type like 'TRAFFIC')")
+//    Page<Application> findAllByUserRole(Pageable pageable,
+//                                        @Param("flag") Boolean roleFlag);
 
     @Modifying
     @Query("update Application set applicationStatus = :status where id = :id")
@@ -67,7 +67,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
                                                                                   Long warehouseId,
                                                                                   Long waybillId);
 
-    @Query("select app.id from Application app where app.sourceLocationAddress in :id or app.destinationLocationAddress in :id")
-    List<Long> findIdsByFinishedStatus(@Param("id") List<Long> id);
+    @Query("select app.id from Application app where (app.sourceLocationAddress.id in :id " +
+            "or app.destinationLocationAddress.id in :id) and app.applicationStatus <> 'FINISHED_PROCESSING' ")
+    List<Long> findAllUsedWarehouses(@Param("id") List<Long> id);
 
 }
