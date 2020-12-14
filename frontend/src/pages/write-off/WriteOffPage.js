@@ -107,36 +107,33 @@ export default () => {
         <React.Fragment>
             {(user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN" || user.role === "ROLE_DIRECTOR") &&
             <Row>
-                <Col md={3}>
+                <Col xs={3}>
                     <Button className="mainButton" size="sm" onClick={() => {
                         setLgShow(true)
                     }}>
                         Write off warehouse items
                     </Button>
                 </Col>
-                <Col md={8}/>
-                <Col md={1}>
+                <Col xs={9}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>}
             {user.role === "ROLE_DISPATCHER" &&
             <Row>
-                <Col md={3}>
+                <Col xs={3}>
                     <Button className="mainButton" size="sm" onClick={() => {
                         setLgShow(true)
                     }}>
                         Write off warehouse items
                     </Button>
                 </Col>
-                <Col md={8}/>
-                <Col md={1}>
+                <Col xs={9}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>}
             {user.role === "ROLE_DRIVER" &&
             <Row>
-                <Col md={11}/>
-                <Col md={1}>
+                <Col xs={12}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>}

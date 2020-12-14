@@ -72,7 +72,7 @@ code {
 }
 
 .deleteButton {
-    margin-left: 10px;
+    margin-left: 15px !important;
     border: 1px solid #9D100D !important;
     color: black !important;
     background-color: #fcd9e0 !important;
@@ -288,3 +288,6 @@ th.accept-all-item:hover {
     background-color: #E8E8EE !important;
 }
 
+.page-size{
+    float: right;
+}

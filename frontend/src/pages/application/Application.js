@@ -212,37 +212,35 @@ export default () => {
         <React.Fragment>
             <Row>
                 {user.role === 'ROLE_DISPATCHER' ? <>
-                    <Col md={'auto'}>
+                    <Col xs={'auto'}>
                         <Button className="mainButton" size="sm" onClick={() => setModalAddSupplyOpen(true)}>
                             Add supply
                         </Button>
                     </Col>
-                    <Col md={'auto'}>
+                    <Col xs={'auto'}>
                         <Button className="mainButton" size="sm" onClick={() => setModalAddShipmentOpen(true)}>
                             Add shipment
                         </Button>
-                    </Col></> : <Col md={3}></Col>}
-                <Col md={4}></Col>
-                {user.role === 'ROLE_DISPATCHER'? <><Col md={2} className="checkbox-all-app">
-                    <Form.Group controlId="formBasicCheckbox">
+                    </Col></> : <Col xs={3}></Col>}
+                <Col xs={9} style={{textAlign: 'right'}}>
+                    {user.role === 'ROLE_DISPATCHER' &&
+                    <Form.Group controlId="formBasicCheckbox"
+                                style={{width: '150px', display: 'inline-block', marginRight: '15px'}}>
                         <Form.Check
                             type="checkbox"
                             label="See all"
                             onChange={handleBelongToDispatcherFilter}
                             checked={isCheckboxAll.checkboxChecked}/>
-                    </Form.Group>
-                </Col></>: <Col md={2}></Col>}
-                <Col md={2}>
+                    </Form.Group>}
                     <Form.Control size="sm" as="select"
                                   value={filter}
+                                  style={{width: '150px', display: 'inline-block', marginRight: '15px'}}
                                   defaultValue="Choose..."
                                   onChange={onChangeFilter}>
                         {Object.entries(filterOptions).map(([k, v]) => (
                             <option value={v}>{k}</option>
                         ))}
                     </Form.Control>
-                </Col>
-                <Col md={1}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>

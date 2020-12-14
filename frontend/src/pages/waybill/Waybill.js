@@ -184,16 +184,16 @@ export default () => {
         <React.Fragment>
             {errorMessage && <ErrorMessage message={errorMessage}/>}
             <Row>
-                <Col md={2}>
+                <Col xs={6}>
                     {user && user.role === 'ROLE_LOGISTICS_SPECIALIST' &&
                     <Button className="mainButton" size="sm" onClick={() => setOpenAddModal(true)}>
                         Create waybill
                     </Button>}
                 </Col>
-                <Col md={7} className="checkbox-all-app">
-                </Col>
-                <Col md={2}>
+
+                <Col xs={6} style={{textAlign: 'right'}}>
                     <Form.Control size="sm" as="select"
+                                  style={{display: 'inline', width: '150px', marginRight:'15px'}}
                                   value={filter}
                                   defaultValue="Choose..."
                                   onChange={onChangeFilter}>
@@ -201,8 +201,6 @@ export default () => {
                             <option value={v}>{k}</option>
                         ))}
                     </Form.Control>
-                </Col>
-                <Col md={1}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>
