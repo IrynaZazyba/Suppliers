@@ -76,7 +76,7 @@ function EditWaybillModal(props) {
                     if (google) {
                         parseAndRenderRoute(waybill.route.wayPoints);
                     }
-                    getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&size=5&waybillId=${props.modal.waybillId}`);
+                    getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&size=5&waybillId=${props.modal.waybillId}`);
                 });
         }
     }, [props.modal]);
@@ -178,7 +178,7 @@ function EditWaybillModal(props) {
     const changePage = (e) => {
         e.preventDefault();
         let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&applicationStatus=OPEN&page=${currentPage}&size=5&waybillId=${props.modal.waybillId}`);
+        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&page=${currentPage}&size=5&waybillId=${props.modal.waybillId}`);
     };
 
     function calculateTotalValues(waybill) {

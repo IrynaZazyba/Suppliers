@@ -7,7 +7,7 @@ databaseChangeLog:
             dbms:  '!h2,  oracle,  mysql'
             encoding:  UTF-8
             endDelimiter: ;
-            path: ../sql/2020-12-11-delete-data.sql
+            path: ../sql/2020-12-13-delete-data.sql
             relativeToChangelogFile: true
             splitStatements:  true
             stripComments:  true
