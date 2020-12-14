@@ -61,8 +61,11 @@ function AddShipmentApplication(props) {
     };
     const filterBy = () => true;
     const onChangeUpc = (e) => {
-        checkValidationErrors('upc');
-        checkValidationErrors('exist');
+        let res = errors.validationErrors.filter(e => e !== 'upc' && e !== 'exist');
+        setErrors(prevState => ({
+            ...prevState,
+            validationErrors: res
+        }));
         e.length > 0 ?
             setCurrentItem(preState => ({
                 ...preState,
@@ -260,10 +263,10 @@ function AddShipmentApplication(props) {
                     });
                 }
                 if (response.status === 200) {
-                    setErrors(preState => ({
-                        ...preState,
+                    setErrors({
+                        serverErrors: '',
                         validationErrors: []
-                    }));
+                    });
                     setApp([]);
                     setItems([]);
                     props.onChange(false, appDto);
@@ -281,7 +284,7 @@ function AddShipmentApplication(props) {
                     <th>Item upc</th>
                     <th>Label</th>
                     <th>Amount</th>
-                    <th>Price, $ per unit</th>
+                    <th>Price, $ per item</th>
                     <th></th>
 
                 </tr>

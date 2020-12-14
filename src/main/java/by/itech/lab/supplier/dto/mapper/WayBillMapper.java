@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.dto.mapper;
 
 import by.itech.lab.supplier.domain.Application;
+import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.WayBill;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.WayBillDto;
@@ -78,6 +79,7 @@ public class WayBillMapper implements BaseMapper<WayBill, WayBillDto> {
             final ApplicationDto appDto = mappedByAppId.get(e.getId());
             if (appDto.isDeleteFromWaybill()) {
                 e.setWayBill(null);
+                e.setApplicationStatus(ApplicationStatus.OPEN);
             } else {
                 e.setWayBill(wayBill);
             }

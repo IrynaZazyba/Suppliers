@@ -191,9 +191,10 @@ function ModalAddWarehouse(props) {
                                 })
                                     .then(function (response) {
                                         if (response.status !== 201) {
-                                            setErrors({
-                                                serverErrors: "Something go wrong, try later",
-                                            });
+                                            setErrors(preState => ({
+                                                ...preState,
+                                                serverErrors: "Something go wrong, try later"
+                                            }));
                                         } else {
                                             setErrors(preState => ({
                                                 ...preState,
@@ -236,6 +237,25 @@ function ModalAddWarehouse(props) {
             />
         </div>
     );
+
+    const totalCapacityForm = (e) => {
+        if (e === "WAREHOUSE") {
+            return (
+                <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
+                    total capacity
+                    <Form.Control type="number"
+                                  onChange={handleTotalCapacity}
+                                  className={errors.validationErrors.includes("totalCapacity")
+                                      ? "form-control is-invalid" : "form-control"}/>
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a valid total capacity.
+                    </Form.Control.Feedback>
+                </Form.Group>
+            )
+        } else {
+            return (<div/>)
+        }
+    }
 
     const dispatchersForm = (e) => {
         if (e === "WAREHOUSE") {
@@ -322,8 +342,7 @@ function ModalAddWarehouse(props) {
                                     {dropdownMenuName}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item
-                                        onClick={handleType.bind(this, "FACTORY")}>FACTORY</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleType("FACTORY")}>FACTORY</Dropdown.Item>
                                     <Dropdown.Item onClick={() => handleType("WAREHOUSE")}>WAREHOUSE</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
@@ -380,15 +399,8 @@ function ModalAddWarehouse(props) {
                                 Please provide a valid address line 2.
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
-                            total capacity
-                            <Form.Control type="number"
-                                          onChange={handleTotalCapacity}
-                                          className={errors.validationErrors.includes("totalCapacity")
-                                              ? "form-control is-invalid" : "form-control"}/>
-                            <Form.Control.Feedback type="invalid">
-                                Please provide a valid total capacity.
-                            </Form.Control.Feedback>
+                        <Form.Group>
+                            {totalCapacityForm(warehouseDto.type)}
                         </Form.Group>
                         <Form.Group>
                             {dispatchersForm(warehouseDto.type)}

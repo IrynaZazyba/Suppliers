@@ -115,10 +115,9 @@ public class ApplicationController {
     public Page<ApplicationDto> getShipmentApplicationByWarehouseAndStatus(
             @PageableDefault(sort = {"wayBill"}, direction = Sort.Direction.DESC) final Pageable pageable,
             @RequestParam final Long warehouseId,
-            @RequestParam final ApplicationStatus applicationStatus,
             @RequestParam(required = false) final Long waybillId) {
         return applicationService
-                .getShipmentApplicationsByWarehouseAndStatus(pageable, warehouseId, applicationStatus, waybillId);
+                .getShipmentApplicationsByWarehouseAndStatus(pageable, warehouseId, waybillId);
     }
 
 }

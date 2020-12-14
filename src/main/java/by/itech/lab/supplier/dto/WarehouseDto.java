@@ -27,8 +27,6 @@ public class WarehouseDto implements BaseDto {
     private String identifier;
     @NotNull
     private WarehouseType type;
-    @DecimalMin(value = "0.0")
-    @NotNull
     private Double totalCapacity;
     @NotNull
     @Valid

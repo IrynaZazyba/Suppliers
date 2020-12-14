@@ -205,7 +205,7 @@ function DeliveryModal(props) {
                     </Row>
                     <Row style={{margin: '10px 5px'}}>
                         <Col><span className="edit-appList">Created by: </span>
-                            {waybill.createdByUsersDto.username + ', ' + waybill.createdByUsersDto.surname}
+                            {waybill.createdByUsersDto.username + ' ' + waybill.createdByUsersDto.surname}
                         </Col>
                         <Col style={{marginLeft: '-30px'}}>
                             <span className="edit-appList">Registration date: </span>
@@ -214,7 +214,7 @@ function DeliveryModal(props) {
                     </Row>
                     <Row style={{margin: '10px 5px'}}>
                         <Col><span className="edit-appList">Last updated by: </span>
-                            {waybill.updatedByUsersDto.username + ', ' + waybill.updatedByUsersDto.surname}
+                            {waybill.updatedByUsersDto.username + ' ' + waybill.updatedByUsersDto.surname}
                         </Col>
                         <Col style={{marginLeft: '-30px'}}>
                             <span className="edit-appList">Last updated date: </span>
