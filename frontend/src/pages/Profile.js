@@ -120,7 +120,6 @@ export default () => {
             addressDto: addressDto
         };
 
-        console.log(userUpdateDto)
 
         fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
             method: 'PUT',
@@ -167,15 +166,14 @@ export default () => {
             margin: '70px 10px',
             height: '40px'
         }}>
-            <Alert variant="success">
-                <Alert.Heading> Info about user </Alert.Heading>
-            </Alert>
+
             <div className="ProfileCard" style={{
                 alignSelf: "center",
                 padding: "2px 300px 400px 500px"
             }}>
 
                 <Card style={{width: '25rem'}}
+
                       className="shadow p-3 mb-5 bg-white rounded">
                     <Card.Header className="text-center border-bottom border-primary" style={{'background': 'white'}}>
                         Info about user
@@ -255,9 +253,9 @@ export default () => {
                                           value={addressDto && addressDto.state.state}
                                           disabled/>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group style={{padding: '5px 10px'}}>
+                            <Form.Label>State</Form.Label>
                             <AsyncTypeahead
-                                style={{padding: '5px 10px'}}
                                 ref={ref}
                                 name="state"
                                 filterBy={filterByState}
@@ -280,6 +278,7 @@ export default () => {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Label>City</Form.Label>
                             <Form.Control type="text" placeholder="city" value={addressDto && addressDto.city}
                                           onChange={handleCity}
                                           className={
@@ -292,7 +291,8 @@ export default () => {
 
 
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine1"
+                            <Form.Label>Address line 1</Form.Label>
+                            <Form.Control type="text" placeholder="AddressLine1"
                                           value={addressDto && addressDto.addressLine1}
                                           onChange={handleaddressLine1}
                                           className={
@@ -302,13 +302,21 @@ export default () => {
                                 Please provide a valid address line 1.
                             </Form.Control.Feedback>
                         </Form.Group>
-
-
-                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="password" placeholder="change password" onChange={handlePassword}
-                            />
-
+                        <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
+                            <Form.Label>Address line 2</Form.Label>
+                            <Form.Control type="text" placeholder="AddressLine2"
+                                          value={addressDto && addressDto.addressLine2}
+                                          onChange={handleaddressLine2}
+                                          className={
+                                              isValid("addressLine2")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid address line 2.
+                            </Form.Control.Feedback>
                         </Form.Group>
+
+
+
 
 
                         <div className="float-right" style={{paddingRight: '10px'}}>
@@ -317,6 +325,21 @@ export default () => {
                                 Save
                             </Button>
                         </div>
+                    </Form>
+                    </Card.Body>
+                </Card>
+                <Card style={{width: '25rem'}}
+
+                      className="shadow p-3 mb-5 bg-white rounded">
+                    <Card.Header className="text-center border-bottom border-primary" style={{'background': 'white'}}>
+                        Change password
+                    </Card.Header>
+                    <Card.Body> <Form>
+                        <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Control type="password" placeholder="Change password" onChange={handlePassword}
+                            />
+
+                        </Form.Group>
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
                                     onClick={editPasswordHandler}>

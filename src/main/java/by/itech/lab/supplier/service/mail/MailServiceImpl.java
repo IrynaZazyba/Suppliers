@@ -29,6 +29,6 @@ public class MailServiceImpl implements MailService {
         ctx.setVariables(emailMap);
         final String textContent = templateEngine.process(HTML_TEMPLATE_NAME, ctx);
         Email email = new Email(userDto.getEmail(), userDto.getEmail(), textContent);
-        sender.send(email);
+        sender.send(email, textContent);
     }
 }
