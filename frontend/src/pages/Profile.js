@@ -67,6 +67,7 @@ export default () => {
     };
 
     const handlePassword = (e) => {
+        Alert.name = "Password changed";
         setUserDto(preState => ({
             ...preState,
             password: e.target.value
@@ -142,7 +143,6 @@ export default () => {
     const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
     const editPasswordHandler = (e) => {
         e.preventDefault();
-        console.log(JSON.stringify(userDto.password));
         fetch(`/customers/${currentCustomerId}/users/${userDto.id}/password`, {
             method: 'PUT',
             headers: {
