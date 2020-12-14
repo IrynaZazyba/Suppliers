@@ -100,6 +100,9 @@ export default () => {
                 });
             });
     }
+    function parseRole(role){
+        return role.toLowerCase().replaceAll("_"," ").replaceAll("role", "");
+    }
 
     const closeModalAdd = (e, customerDto) => {
         setAddUserShow(e);
@@ -124,7 +127,7 @@ export default () => {
         <tr key={custom.id}>
             <td>{custom.name} {custom.surname}</td>
             <td>{custom.birthday}</td>
-            <td>{custom.role}</td>
+            <td>{parseRole(custom.role)}</td>
             <td><Form.Check
                 type="switch"
                 id={custom.id}
