@@ -91,7 +91,6 @@ export default () => {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                console.log(commits.content);
                 setUsers(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),

@@ -27,8 +27,6 @@ public class UserDto implements BaseDto {
     @Size(min = 1, max = 50)
     private String surname;
     private LocalDate birthday;
-    @NotBlank
-    @Size(min = 1, max = 50)
     private String username;
     @Email
     @Size(min = 5, max = 254)
