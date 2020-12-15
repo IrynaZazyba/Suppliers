@@ -10,7 +10,6 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import TogglePage from "../../components/TogglePage";
 import ModalAddWarehouse from "./ModalAddWarehouse";
-import alert from 'alert'
 
 export default (props) => {
 
@@ -30,7 +29,6 @@ export default (props) => {
         editShow: false,
         warehouse: []
     });
-    // const [errorMessage, setErrors] = useState('');
 
     const [errors, setErrors] = useState({
         validationErrors: [],
@@ -109,18 +107,24 @@ export default (props) => {
             },
             body: JSON.stringify(checkBoxes)
         })
-            .then(response => {
-                if (response.status !== 204) {
-                    setErrors(preState => ({
-                        ...preState,
-                        serverErrors: "Warehouse can not be deleted, because it's already used in application or this warehouse still contains items. Please, try later"
-                    }))
-                } else {
-                    setCheckBox([]);
-                    alert("done");
-                    getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
-                }
-            });
+            .then(response => response.json())
+            .then(result => {
+
+                console.log(result.value() + " hey")
+            })
+
+
+        //     console.log(isDeleted + " resp from del")
+        //     if (!isDeleted) {
+        //         setErrors(preState => ({
+        //             ...preState,
+        //             serverErrors: "Warehouse can not be deleted, because it's already used in application or this warehouse still contains items."
+        //         }))
+        //     } else {
+        setCheckBox([]);
+        getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
+        // }
+        // })
     }
 
     function showAddress(address) {

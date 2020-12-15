@@ -126,12 +126,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Transactional
     @Override
-    public void deleteByIds(final List<Long> id) {
+    public Boolean deleteByIds(final List<Long> id) {
         if (applicationService.isWarehousesFreeFromApplications(id) &&
                 itemInWarehouseRepository.findWarehouseItemIdsByWarehouseIds(id).isEmpty()){
-
             warehouseRepository.deleteByIds(id);
             userService.deleteWarehousesForAllUsers(id);
+            return true;
+        } else {
+            return false;
         }
     }
 
