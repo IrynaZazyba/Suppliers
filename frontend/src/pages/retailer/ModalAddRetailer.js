@@ -219,6 +219,7 @@ function ModalAddRetailer(props) {
                         serverErrors: '',
                         validationErrors: []
                     });
+                    setRetailerDto({});
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
