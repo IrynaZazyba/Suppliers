@@ -55,9 +55,16 @@ function AddShipmentApplication(props) {
                     category: i.item.categoryDto,
                     cost: i.cost
                 }));
-
+                setErrors({
+                    setErrors: '',
+                    validationErrors: []
+                });
                 setOptions(optionsFromBack);
-            });
+            })
+            .catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
     };
     const filterBy = () => true;
     const onChangeUpc = (e) => {
@@ -178,7 +185,15 @@ function AddShipmentApplication(props) {
                         destination: content[1]
                     }));
                     setTaxes(content[2]);
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                })
+                .catch(error =>setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     }, [props]);
 
@@ -271,7 +286,10 @@ function AddShipmentApplication(props) {
                     setItems([]);
                     props.onChange(false, appDto);
                 }
-            });
+            }).catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
         }
     };
 

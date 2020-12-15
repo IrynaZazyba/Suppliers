@@ -55,8 +55,15 @@ function EditShipmentModal(props) {
                         ...preState,
                         destination: content[1]
                     }));
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
                     setTaxes(content[2]);
-                });
+                }).catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
         }
     }, [props]);
 
@@ -67,7 +74,15 @@ function EditShipmentModal(props) {
                 .then(res => {
                     calculateTotalValues(res.items);
                     setApp(res);
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     }, [props.props.isOpen]);
 
@@ -117,7 +132,15 @@ function EditShipmentModal(props) {
                 let recalculatedApp = recalculateItemWhenChangeWarehouse(
                     Object.assign({}, app), sourceId, destinationId, taxes, res, warehouses);
                 setApp(recalculatedApp);
-            });
+                setErrors({
+                    serverErrors: '',
+                    validationErrors: []
+                });
+            })
+            .catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
     }
 
 
@@ -269,7 +292,7 @@ function EditShipmentModal(props) {
                     }
                     if (response.status === 200) {
                         setErrors({
-                            serverErrors:'',
+                            serverErrors: '',
                             validationErrors: []
                         });
                         setApp('');
@@ -280,7 +303,11 @@ function EditShipmentModal(props) {
                         }));
                         props.onChange(false, app);
                     }
-                });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
 
         }
     };

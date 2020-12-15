@@ -51,7 +51,15 @@ function EditSupplyAppModal(props) {
                         ...preState,
                         destination: warehouses[1]
                     }));
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+
+                }).catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
         }
     }, [props]);
 
@@ -63,7 +71,15 @@ function EditSupplyAppModal(props) {
                 .then(res => {
                     calculateTotalValues(res.items);
                     setApp(res);
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
 
         }
 
@@ -124,8 +140,15 @@ function EditSupplyAppModal(props) {
                     label: i.label,
                     units: i.units
                 }));
+                setErrors({
+                    serverErrors: '',
+                    validationErrors: []
+                });
                 setOptions(optionsFromBack);
-            });
+            }).catch(error => setErrors({
+            serverErrors: "Something go wrong, try later",
+            validationErrors: []
+        }));
     };
 
     const appNumberOnChange = (e) => {
@@ -242,7 +265,7 @@ function EditSupplyAppModal(props) {
                     }
                     if (response.status === 200) {
                         setErrors({
-                            serverErrors:'',
+                            serverErrors: '',
                             validationErrors: []
                         });
                         setApp('');
@@ -253,7 +276,10 @@ function EditSupplyAppModal(props) {
                         }));
                         props.onChange(false, app);
                     }
-                });
+                }).catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
         }
     };
 

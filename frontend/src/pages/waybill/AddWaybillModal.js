@@ -10,7 +10,6 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
 import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
-import Page from "../../components/Page";
 import Button from "react-bootstrap/Button";
 import validateWaybill, {
     checkCarCapacity,
@@ -22,7 +21,7 @@ import validateWaybill, {
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import MyMapComponent from "../../components/MyMapComponent";
 import {Typeahead} from 'react-bootstrap-typeahead';
-
+import Pagination from "react-js-pagination";
 
 function AddWaybillModal(props) {
 
@@ -62,8 +61,9 @@ function AddWaybillModal(props) {
     const [showMap, setShowMap] = useState(false);
     const [mapCenter, setMapCenter] = useState({lat: 51.494900, lng: -0.146231});
 
+
     useEffect(() => {
-        if(props.modal) {
+        if (props.modal) {
             Promise.all([
                 fetch(`/customers/${customerId}/warehouses/applications`),
                 fetch(`/customers/${customerId}/car/unpaged`),
@@ -73,7 +73,15 @@ function AddWaybillModal(props) {
                     setSourceWarehouse(content[0]);
                     setCars(content[1].content);
                     setDrivers(content[2]);
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     }, [props.modal]);
 
@@ -115,9 +123,18 @@ function AddWaybillModal(props) {
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
-                    countPages: commits.totalPages
+                    countPages: commits.totalPages,
+                    currentPage: (commits.pageable.pageNumber + 1)
                 });
-            });
+                setErrors({
+                    serverErrors: '',
+                    validationErrors: []
+                });
+            })
+            .catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
     }
 
     const sourceLocationHandler = (e) => {
@@ -141,12 +158,6 @@ function AddWaybillModal(props) {
                 validationErrors: [...errors.validationErrors, ...validationRes]
             }));
         }
-    };
-
-    const changePage = (e) => {
-        e.preventDefault();
-        let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${currentPage}&size=5`);
     };
 
     const driverHandler = (e) => {
@@ -256,7 +267,10 @@ function AddWaybillModal(props) {
                         }));
                         hideModalHandler();
                     }
-                });
+                }).catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
         } else {
             setErrors(prevState => ({
                 ...prevState,
@@ -362,8 +376,16 @@ function AddWaybillModal(props) {
                         lat: endPoint[0].address.latitude,
                         lng: endPoint[0].address.longitude
                     };
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
                     renderRoute(start, end, waypoints);
-                });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     };
 
@@ -389,7 +411,6 @@ function AddWaybillModal(props) {
         });
 
     }
-
 
     const waybillInfo =
         <React.Fragment>
@@ -515,7 +536,25 @@ function AddWaybillModal(props) {
                 {appRows}
                 </tbody>
             </Table>
-            <Page page={page} onChange={changePage}/>
+            <div style={{fontSize: '0.8em'}}>
+                <Pagination
+                    activePage={page.currentPage}
+                    itemsCountPerPage={page.countPerPage}
+                    totalItemsCount={page.countPages * 5}
+                    activeLinkClass="active-page-modal"
+                    pageRangeDisplayed={3}
+                    prevPageText="<"
+                    nextPageText=">"
+                    size="sm"
+                    firstPageText="First"
+                    lastPageText="Last"
+                    itemClass="page-item"
+                    linkClass="page-link"
+                    innerClass="pagination justify-content-center"
+                    onChange={(p) => {
+                        let curr = p - 1;
+                        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${curr}&size=5`);
+                    }}/></div>
         </React.Fragment>;
 
 

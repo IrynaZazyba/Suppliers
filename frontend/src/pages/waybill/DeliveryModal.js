@@ -36,7 +36,15 @@ function DeliveryModal(props) {
                     defineProtectedPoints(res);
                     setWaybill(res);
                     parseDirections(res);
-                });
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     }, [props.modal]);
 
@@ -140,7 +148,11 @@ function DeliveryModal(props) {
                             }));
                         });
                     }
-                });
+                })
+                .catch(error => setErrors({
+                    serverErrors: "Something go wrong, try later",
+                    validationErrors: []
+                }));
         }
     };
 
@@ -164,7 +176,11 @@ function DeliveryModal(props) {
                         setWaybill(json);
                     });
                 }
-            });
+            })
+            .catch(error => setErrors({
+                serverErrors: "Something go wrong, try later",
+                validationErrors: []
+            }));
 
     };
 

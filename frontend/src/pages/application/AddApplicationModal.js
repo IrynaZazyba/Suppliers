@@ -51,7 +51,15 @@ function AddApplicationModal(props) {
                     units: i.units
                 }));
                 setOptions(optionsFromBack);
-            });
+                setErrors({
+                    setErrors: '',
+                    validationErrors: []
+                });
+            })
+            .catch(error => setErrors(prevState => ({
+                ...prevState,
+                serverErrors: 'Something go wrong, try later'
+            })));
     };
 
     const filterBy = () => true;
