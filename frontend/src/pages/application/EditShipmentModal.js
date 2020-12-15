@@ -316,12 +316,12 @@ function EditShipmentModal(props) {
         <>
             {app &&
             <Row>
-                <Col sm={8}>
+                <Col sm={7}>
                     <Row style={{margin: '10px 5px'}}>
                         <Col><span className="edit-appList">Created by: </span>
                             {app.createdByUsersDto.username + ', ' + app.createdByUsersDto.surname}
                         </Col>
-                        <Col style={{marginLeft: '-20px'}}>
+                        <Col style={{textAlign: 'end'}}>
                             <span className="edit-appList">Registration date: </span>
                             {app.registrationDate}
                         </Col>
@@ -330,7 +330,7 @@ function EditShipmentModal(props) {
                         <Col><span className="edit-appList">Last updated by: </span>
                             {app.lastUpdatedByUsersDto.username + ', ' + app.lastUpdatedByUsersDto.surname}
                         </Col>
-                        <Col style={{marginLeft: '-20px'}}>
+                        <Col style={{textAlign: 'end'}}>
                             <span className="edit-appList">Last updated date: </span>
                             {app.lastUpdated}
                         </Col>
@@ -338,8 +338,8 @@ function EditShipmentModal(props) {
                     <Row style={{margin: '20px 5px 10px'}}>
                         <Col>
                             <Form.Group as={Row} controlId="appNumber">
-                                <Form.Label column sm="3">Number:</Form.Label>
-                                <Col sm="7">
+                                <Form.Label column sm="4">Number:</Form.Label>
+                                <Col sm="8">
                                     <Form.Control size="sm" type="text" value={app.number} onChange={appNumberOnChange}
                                                   className={
                                                       errors.validationErrors.includes("number")
@@ -351,11 +351,9 @@ function EditShipmentModal(props) {
                                     </Form.Control.Feedback>
                                 </Col>
                             </Form.Group>
-
-
                             <Form.Group as={Row} controlId="sourceLocation">
-                                <Form.Label column sm="3">Source location:</Form.Label>
-                                <Col sm="7">
+                                <Form.Label column sm="4">Source location:</Form.Label>
+                                <Col sm="8">
                                     <Form.Control name="sourceId" size="sm" onChange={handleSourceLocations}
                                                   as="select">
                                         {warehouses && warehouses.source.map(f =>
@@ -369,11 +367,9 @@ function EditShipmentModal(props) {
                                     </Form.Control>
                                 </Col>
                             </Form.Group>
-
-
                             <Form.Group as={Row} controlId="destinationLocation">
-                                <Form.Label column sm="3">Destination location:</Form.Label>
-                                <Col sm="7">
+                                <Form.Label column sm="4">Destination location:</Form.Label>
+                                <Col sm="8">
                                     <Form.Control name="destinationLocationId" size="sm"
                                                   disabled={unavailableItems && unavailableItems.length !== 0 && true}
                                                   onChange={handleDestinationLocations} as="select">
@@ -391,22 +387,20 @@ function EditShipmentModal(props) {
                         </Col>
                     </Row>
                 </Col>
-                <Col sm={2} style={{marginLeft: '-25px'}}>
-                    <Card className="total-card">
-                        <Card.Body>
-                            <h6>Total amount of items</h6>
-                            <Card.Text>
-                                <h3>{totalValues.totalAmount}</h3>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col sm={2}>
-                    <Card className="total-card">
+                <Col sm={5} style={{float: 'right'}}>
+                    <Card className="total-card card-position">
                         <Card.Body>
                             <h6>Total number of units</h6>
                             <Card.Text>
                                 <h3>{totalValues.totalUnits}</h3>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card className="total-card" style={{display: 'inline-block', float: 'inherit'}}>
+                        <Card.Body>
+                            <h6>Total amount of items</h6>
+                            <Card.Text>
+                                <h3>{totalValues.totalAmount}</h3>
                             </Card.Text>
                         </Card.Body>
                     </Card>

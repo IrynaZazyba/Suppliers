@@ -588,40 +588,32 @@ function EditWaybillModal(props) {
                 <Col sm={6}>
                     {waybillInfo}
                 </Col>
-                <Col sm={6}>
-                    <Row>
-                        <Col sm={3} className="waybill-card">
-                            <Card className="total-card">
-                                <Card.Body>
-                                    <h6>Total amount of items</h6>
-                                    <Card.Text>
-                                        <h3>{totalValues.totalAmount}</h3>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col sm={3} className="waybill-card">
-                            <Card className="total-card">
-                                <Card.Body>
-                                    <h6>Total number of units</h6>
-                                    <Card.Text>
-                                        <h3>{totalValues.totalUnits}</h3>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col sm={3} className="waybill-card">
-                            <Card className="total-card">
-                                <Card.Body
-                                    className={errors.validationErrors.includes('capacity') ? "car-capacity-attention" : ''}>
-                                    <h6>Available car capacity</h6>
-                                    <Card.Text>
-                                        <h3> {totalValues.carCapacity}</h3>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
+                <Col sm={6} style={{float: 'right'}}>
+                    <Card className="total-card waybill-card-position" style={{marginLeft: '15px'}}>
+                        <Card.Body>
+                            <h6>Total amount of items</h6>
+                            <Card.Text>
+                                <h3>{totalValues.totalAmount}</h3>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card className="total-card waybill-card-position" style={{marginLeft: '15px'}}>
+                        <Card.Body>
+                            <h6>Total number of units</h6>
+                            <Card.Text>
+                                <h3>{totalValues.totalUnits}</h3>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card className="total-card waybill-card-position" style={{marginLeft: '15px'}}>
+                        <Card.Body
+                            className={errors.validationErrors.includes('capacity') ? "car-capacity-attention" : ''}>
+                            <h6>Available car capacity</h6>
+                            <Card.Text>
+                                <h3> {totalValues.carCapacity}</h3>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
         </React.Fragment>;

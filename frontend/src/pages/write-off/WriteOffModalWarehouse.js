@@ -10,7 +10,6 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
 import validateWriteOffAct, {validateWriteOffActItem} from "../../validation/WriteOffValidationRules";
-import Dropdown from "../warehouse/ModalAddWarehouse";
 
 
 function WriteOffWarehouseModal(props) {
@@ -383,26 +382,26 @@ function WriteOffWarehouseModal(props) {
 
     const actDataFields =
         <Row>
-            <Col sm={8}>
+            <Col sm={6}>
                 <Form.Group as={Row} controlId="identifier">
-                    <Form.Label column sm="3">Identifier</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Identifier</Form.Label>
+                    <Col sm="8">
                         <Form.Control type="text"
                                       disabled
                                       value={warehouseDto.identifier}/>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="type">
-                    <Form.Label column sm="3">Warehouse type</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Warehouse type</Form.Label>
+                    <Col sm="8">
                         <Form.Control type="text"
                                       disabled
                                       value={warehouseDto.type}/>
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine1">
-                    <Form.Label column sm="3">Address line 1</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Address line 1</Form.Label>
+                    <Col sm="8">
                         <Form.Control type="text"
                                       value={warehouseDto.addressDto.addressLine1}
                                       placeholder="Address line 1"
@@ -410,8 +409,8 @@ function WriteOffWarehouseModal(props) {
                         /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine2">
-                    <Form.Label column sm="3">Address line 2</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Address line 2</Form.Label>
+                    <Col sm="8">
                         <Form.Control type="text"
                                       value={warehouseDto.addressDto.addressLine2}
                                       placeholder="Address line 2"
@@ -419,8 +418,8 @@ function WriteOffWarehouseModal(props) {
                         /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="formBasicText">
-                    <Form.Label column sm="3">Act identifier</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Act identifier</Form.Label>
+                    <Col sm="8">
                         <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
                                       className={
                                           errors.validationErrors.includes("identifier")
@@ -433,22 +432,20 @@ function WriteOffWarehouseModal(props) {
                     </Col>
                 </Form.Group>
             </Col>
-            <Col sm={2} style={{marginLeft: '-25px'}}>
-                <Card className="total-card">
-                    <Card.Body>
-                        <h6>Total amount of items</h6>
-                        <Card.Text>
-                            <h3>{totalValues.totalAmount}</h3>
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col sm={2}>
-                <Card className="total-card">
+            <Col sm={6} style={{float: 'right'}}>
+                <Card className="total-card" style={{display: 'inline-block', marginLeft: '15px', float: 'inherit'}}>
                     <Card.Body>
                         <h6>Total summary of items</h6>
                         <Card.Text>
                             <h3> {totalValues.totalSum}</h3>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card className="total-card" style={{display: 'inline-block', float: 'inherit'}}>
+                    <Card.Body>
+                        <h6>Total amount of items</h6>
+                        <Card.Text>
+                            <h3>{totalValues.totalAmount}</h3>
                         </Card.Text>
                     </Card.Body>
                 </Card>
