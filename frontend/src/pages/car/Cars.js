@@ -172,7 +172,10 @@ export default () => {
                 {tableRows}
                 </tbody>
             </Table>
-            <Page page={page} onChange={changePage}/>
+            {(cars.length > 0) &&
+            <Page page={page} onChange={changePage}/>}
+            {cars.length == 0 &&
+            <span>Empty list of items.</span>}
         </React.Fragment>;
 
     return (

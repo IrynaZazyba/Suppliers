@@ -186,7 +186,8 @@ function ModalAddCar(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        <Form.Group>
+                        <Form.Group >
+
                             <AsyncTypeahead
                                 style={{padding: '5px 10px'}}
                                 ref={ref}

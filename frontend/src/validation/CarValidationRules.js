@@ -13,6 +13,9 @@ export default function validateCar(car) {
         errorsFields.push("currentCapacity");
     }
 
+    if (!car.addressDto.state.state) {
+        errorsFields.push("state");
+    }
 
     return errorsFields;
 };
