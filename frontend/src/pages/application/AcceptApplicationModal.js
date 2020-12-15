@@ -11,6 +11,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import Modal from "react-bootstrap/Modal";
 import Badge from "react-bootstrap/Badge";
 import Alert from "react-bootstrap/Alert";
+import ErrorMessage from "../../messages/errorMessage";
 
 function AcceptApplicationModal(props) {
 
@@ -43,7 +44,9 @@ function AcceptApplicationModal(props) {
                             let percentage = calculatePercentage(capacity, res.destinationLocationDto.totalCapacity);
                             setWhPercentage(percentage);
                             setAvailableCapacity(capacity);
-                        });
+                            setError('');
+                        })
+                        .catch(error => setError("Something go wrong, try later"));
                 });
         }
     }, [props.modal.isOpen]);
@@ -139,7 +142,8 @@ function AcceptApplicationModal(props) {
                     setWarning('');
                     props.onChange(false, appDto);
                 }
-            });
+            })
+            .catch(error => setError("Something go wrong, try later"));
     };
 
     const appData =
@@ -312,6 +316,7 @@ function AcceptApplicationModal(props) {
                     </div>
                 </Modal.Header>
                 <Modal.Body>
+                    {serverError && <ErrorMessage message="Something go wrong, try later"/>}
                     <Form>
                         {appData}
                         <div className="validation-error">
