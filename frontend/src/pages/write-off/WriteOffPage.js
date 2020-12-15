@@ -162,7 +162,7 @@ export default () => {
             <Page page={page} onChange={changePage}/>
             }
             {acts.length == 0 &&
-            <span>There aren't created acts</span>
+            <span>Empty list of write-off acts</span>
             }
         </React.Fragment>;
 
