@@ -127,7 +127,6 @@ function ModalAddWarehouse(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
-        console.log(warehouseDto.type + " type")
 
         let warehouseUpdateDto = {};
         warehouseUpdateDto = {
