@@ -582,6 +582,7 @@ function EditWaybillModal(props) {
         </React.Fragment>
         }</>;
 
+
     const waybillContentData =
         <React.Fragment>
             <Row>
