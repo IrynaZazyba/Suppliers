@@ -100,9 +100,13 @@ function ModalAddWriteOff(props) {
             }));
             setItems([]);
         } else {
-            setCurrentWarehouse({
+            setCurrentWarehouse(preState => ({
+                ...preState,
+                id: '',
+                identifier: '',
                 address: ''
-            });
+            }));
+            setItemOptions([]);
         }
     };
 
@@ -230,7 +234,8 @@ function ModalAddWriteOff(props) {
                 }
                 if (response.status !== 200 && response.status !== 400) {
                     setErrors({
-                        serverErrors: "Something go wrong, try later",
+                        serverErrors: "Something went wrong, try later. Maybe you are trying to write off more items " +
+                            "than warehouse contains.",
                         validationErrors: ''
                     });
                 }
@@ -241,9 +246,6 @@ function ModalAddWriteOff(props) {
                     }));
                     setWriteOff([]);
                     setItems([]);
-                    setCurrentWarehouse({
-                        address: ''
-                    });
                     props.onChange(false, writeOffDto);
                 }
             });
@@ -440,12 +442,12 @@ function ModalAddWriteOff(props) {
                     <Col sm="6">
                     <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
                                   className={
-                                      errors.validationErrors.includes("identifier")
+                                      errors.validationErrors.includes("act-identifier")
                                           ? "form-control is-invalid"
                                           : "form-control"
                                   }/>
                     <Form.Control.Feedback type="invalid">
-                        Please provide a valid identifier.
+                        Please provide an identifier.
                     </Form.Control.Feedback>
                     </Col>
                 </Form.Group>

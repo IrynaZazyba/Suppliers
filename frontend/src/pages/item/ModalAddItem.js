@@ -108,6 +108,7 @@ function ModalAddItem(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
+                            serverErrors: '',
                             validationErrors: []
                         }));
                         setItem({
@@ -154,6 +155,7 @@ function ModalAddItem(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="formBasicLabel" style={{padding: '5px 10px'}}>
+                            Label
                             <Form.Control type="text" placeholder="Label" onChange={handleLabel}
                                           className={
                                               errors.validationErrors.includes("label")
@@ -165,6 +167,7 @@ function ModalAddItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicUpc" style={{padding: '5px 10px'}}>
+                            UPC
                             <Form.Control type="text"
                                           placeholder="Code of item"
                                           onChange={handleUpc}
@@ -178,6 +181,7 @@ function ModalAddItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicUnits" style={{padding: '5px 10px'}}>
+                            Units
                             <Form.Control type="number"
                                           step="any"
                                           placeholder="Units"
@@ -191,6 +195,7 @@ function ModalAddItem(props) {
                                 Please provide valid units.
                             </Form.Control.Feedback>
                         </Form.Group>
+                        <span style={{padding: '5px 10px'}}>Category</span>
                         <AsyncTypeahead
                             style={{padding: '5px 10px'}}
                             ref={ref}

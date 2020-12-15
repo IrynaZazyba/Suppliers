@@ -5,7 +5,7 @@ export default function validateWriteOffAct(act, items) {
     console.log(act);
 
     if (!act.identifier) {
-        errorsFields.push("identifier");
+        errorsFields.push("act-identifier");
     }
 
     if (!act.totalAmount) {
