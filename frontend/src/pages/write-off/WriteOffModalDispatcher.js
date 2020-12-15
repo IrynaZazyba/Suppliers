@@ -98,16 +98,15 @@ function ModalAddWriteOff(props) {
                 identifier: e[0].identifier,
                 address: e[0].address
             }));
-            setItems([]);
         } else {
-            setCurrentWarehouse(preState => ({
-                ...preState,
-                id: '',
-                identifier: '',
-                address: ''
-            }));
-            setItemOptions([]);
+            setCurrentWarehouse({
+                address: {
+                    addressLine1: '',
+                    addressLine2: ''
+                }
+            });
         }
+        setItems([]);
     };
 
     const onChangeUpc = (e) => {
@@ -209,7 +208,7 @@ function ModalAddWriteOff(props) {
         e.preventDefault();
 
         let writeOffAct = prepareActDto();
-        let validErrors = validateWriteOffAct(writeOffAct, items);
+        let validErrors = validateWriteOffAct(writeOffAct, items, currentWarehouse);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validErrors
@@ -397,10 +396,10 @@ function ModalAddWriteOff(props) {
 
     const actDataFields =
         <Row>
-            <Col sm={8}>
+            <Col sm={6}>
                 <Form.Group as={Row} controlId="actIdentifier">
                     <Form.Label column sm="3">Identifier</Form.Label>
-                    <Col sm="6">
+                    <Col sm="9">
                         <AsyncTypeahead
                             ref={refIdentifier}
                             name="identifier"
@@ -421,7 +420,7 @@ function ModalAddWriteOff(props) {
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine1">
                     <Form.Label column sm="3">Address line 1</Form.Label>
-                    <Col sm="6">
+                    <Col sm="9">
                     <Form.Control type="text"
                                   value={currentWarehouse.address.addressLine1}
                                   placeholder="Address line 1"
@@ -430,7 +429,7 @@ function ModalAddWriteOff(props) {
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine2">
                     <Form.Label column sm="3">Address line 2</Form.Label>
-                    <Col sm="6">
+                    <Col sm="9">
                     <Form.Control type="text"
                                   value={currentWarehouse.address.addressLine2}
                                   placeholder="Address line 2"
@@ -439,7 +438,7 @@ function ModalAddWriteOff(props) {
                 </Form.Group>
                 <Form.Group as={Row} controlId="formBasicText">
                     <Form.Label column sm="3">Act identifier</Form.Label>
-                    <Col sm="6">
+                    <Col sm="9">
                     <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
                                   className={
                                       errors.validationErrors.includes("act-identifier")
@@ -452,22 +451,20 @@ function ModalAddWriteOff(props) {
                     </Col>
                 </Form.Group>
             </Col>
-            <Col sm={2} style={{marginLeft: '-25px'}}>
-                <Card className="total-card">
-                    <Card.Body>
-                        <h6>Total amount of items</h6>
-                        <Card.Text>
-                            <h3>{totalValues.totalAmount}</h3>
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col sm={2}>
-                <Card className="total-card">
+            <Col sm={6} style={{float:'right'}}>
+                <Card className="total-card"  style={{display:'inline-block',marginLeft:'15px', float:'inherit'}}>
                     <Card.Body>
                         <h6>Total summary of items</h6>
                         <Card.Text>
                             <h3> {totalValues.totalSum}</h3>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card className="total-card" style={{display:'inline-block',  float:'inherit'}}>
+                    <Card.Body>
+                        <h6>Total amount of items</h6>
+                        <Card.Text>
+                            <h3>{totalValues.totalAmount}</h3>
                         </Card.Text>
                     </Card.Body>
                 </Card>

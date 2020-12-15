@@ -175,6 +175,7 @@ export default () => {
 
     const body =
         <React.Fragment>
+            {retailers.length > 0 &&
             <Table hover size="sm">
                 <thead>
                 <tr>
@@ -187,8 +188,11 @@ export default () => {
                 <tbody>
                 {tableRows}
                 </tbody>
-            </Table>
-            <Page page={page} onChange={changePage}/>
+            </Table>}
+            {retailers.length > 0 &&
+            <Page page={page} onChange={changePage}/>}
+            {retailers.length == 0 &&
+            <span>Empty list of retailers.</span>}
         </React.Fragment>;
 
     return (

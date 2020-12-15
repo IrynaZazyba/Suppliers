@@ -72,6 +72,10 @@ function ModalAddCustomer(props) {
                         serverErrors: '',
                         validationErrors: []
                     });
+                    setCustomer({
+                        name: '',
+                        adminEmail: ''
+                    });
                     props.onChange(false);
                 }}
                 backdrop="static"

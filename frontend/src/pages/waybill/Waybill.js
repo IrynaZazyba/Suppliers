@@ -115,6 +115,7 @@ export default () => {
     const tableRows = waybills && waybills.map(waybill => (
 
         <tr key={waybill.id}
+            className={user && user.role === 'ROLE_DRIVER'?'cursor-pointer':''}
             onClick={() => {
                 {
                     user && user.role === 'ROLE_DRIVER' &&
@@ -156,6 +157,7 @@ export default () => {
 
     const body =
         <React.Fragment>
+            {waybills.length > 0 &&
             <Table hover size="sm">
                 <thead>
                 <tr>
@@ -172,8 +174,11 @@ export default () => {
                 <tbody>
                 {tableRows}
                 </tbody>
-            </Table>
-            <Page page={page} onChange={changePage}/>
+            </Table>}
+            {waybills.length > 0 &&
+            <Page page={page} onChange={changePage}/>}
+            {waybills.length == 0 &&
+            <span>Empty list of waybills.</span>}
         </React.Fragment>;
 
     const modals =
@@ -195,6 +200,7 @@ export default () => {
                 </Col>
 
                 <Col xs={6} style={{textAlign: 'right'}}>
+                    {user && user.role !== 'ROLE_DRIVER'&&
                     <Form.Control size="sm" as="select"
                                   style={{display: 'inline', width: '150px', marginRight: '15px'}}
                                   value={filter}
@@ -203,7 +209,7 @@ export default () => {
                         {Object.entries(filterOptions).map(([k, v]) => (
                             <option value={v}>{k}</option>
                         ))}
-                    </Form.Control>
+                    </Form.Control>}
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>

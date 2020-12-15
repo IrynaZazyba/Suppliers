@@ -296,10 +296,37 @@ th.accept-all-item:hover {
     border-color: #1A7FA8 !important;
 }
 
-.page-size{
+.page-size {
     float: right;
 }
 
-.page-size{
-    float: right;
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #b3b4bc !important;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #b3b4bc !important;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #b3b4bc !important;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #b3b4bc !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.card-position {
+    display: inline-block !important;
+    margin-left: 15px !important;
+    float: inherit !important;
+}
+
+.waybill-card-position {
+    display: inline-block !important;
+    float: inherit !important;
 }
