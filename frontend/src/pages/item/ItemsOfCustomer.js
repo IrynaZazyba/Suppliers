@@ -176,6 +176,7 @@ export default () => {
 
     const body =
         <React.Fragment>
+            {items.length > 0}
             <Table hover size="sm">
                 <thead>
                 <tr>

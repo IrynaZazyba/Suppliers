@@ -144,6 +144,7 @@ export default () => {
 
     const body =
         <React.Fragment>
+            {acts.length > 0 &&
             <Table hover size="sm">
                 <thead>
                 <tr>
@@ -157,7 +158,12 @@ export default () => {
                 {tableRows}
                 </tbody>
             </Table>
+            &&
             <Page page={page} onChange={changePage}/>
+            }
+            {acts.length == 0 &&
+            <span>There aren't created acts</span>
+            }
         </React.Fragment>;
 
     return (
