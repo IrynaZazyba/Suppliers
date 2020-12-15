@@ -157,6 +157,7 @@ function ModalEditCar(props) {
     return (
         <>
             <Modal
+                backdrop="static"
                 show={props.props.editShow}
                 onHide={() => {
                     setErrors({
@@ -209,6 +210,7 @@ function ModalEditCar(props) {
                                           disabled/>
                         </Form.Group>
                         <Form.Group>
+                            <span style={{padding: '5px 10px'}}>U.S. state</span>
                             <AsyncTypeahead
                                 style={{padding: '5px 10px'}}
                                 ref={ref}
@@ -230,7 +232,7 @@ function ModalEditCar(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city" value={addressDto.city} onChange={handleCity}
+                            <Form.Control type="text" placeholder="City" value={addressDto.city} onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -242,7 +244,7 @@ function ModalEditCar(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine1" value={addressDto.addressLine1}
+                            <Form.Control type="text" placeholder="Address line 1" value={addressDto.addressLine1}
                                           onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
@@ -255,7 +257,7 @@ function ModalEditCar(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine2" value={addressDto.addressLine2}
+                            <Form.Control type="text" placeholder="Address line 2" value={addressDto.addressLine2}
                                           onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")

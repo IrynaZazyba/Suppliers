@@ -242,8 +242,8 @@ function ModalAddWarehouse(props) {
         if (e === "WAREHOUSE") {
             return (
                 <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
-                    total capacity
-                    <Form.Control type="number"
+                    Total capacity
+                    <Form.Control type="number" placeholder="Total capacity"
                                   onChange={handleTotalCapacity}
                                   className={errors.validationErrors.includes("totalCapacity")
                                       ? "form-control is-invalid" : "form-control"}/>
@@ -265,6 +265,7 @@ function ModalAddWarehouse(props) {
                         {showDispatchers}
                     </Form.Group>
                     <Form.Group>
+                        <span style={{padding: '5px 10px'}}>Dispatcher(s) username</span>
                         <AsyncTypeahead
                             style={{padding: '5px 10px'}}
                             ref={ref}
@@ -328,7 +329,7 @@ function ModalAddWarehouse(props) {
                     <Form>
                         <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
                             Identifier
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="Identifier"
                                           onChange={handleIdentifier}
                                           className={errors.validationErrors.includes("identifier")
                                               ? "form-control is-invalid" : "form-control"}/>
@@ -337,6 +338,7 @@ function ModalAddWarehouse(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
+                            Type
                             <Dropdown>
                                 <Dropdown.Toggle variant="btn btn-outline-primary" id="dropdown-basic">
                                     {dropdownMenuName}
@@ -351,6 +353,7 @@ function ModalAddWarehouse(props) {
                             </div>
                         </Form.Group>
                         <Form.Group>
+                            <span style={{padding: '5px 10px'}}>U.S. state</span>
                             <AsyncTypeahead
                                 style={{padding: '5px 10px'}}
                                 ref={ref}
@@ -371,7 +374,7 @@ function ModalAddWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             City
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="City"
                                           onChange={handleCity}
                                           className={errors.validationErrors.includes("city")
                                               ? "form-control is-invalid" : "form-control"}/>
@@ -381,7 +384,7 @@ function ModalAddWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="addressLine1" style={{padding: '5px 10px'}}>
                             Address line 1
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="Address line 1"
                                           onChange={handleLineOne}
                                           className={errors.validationErrors.includes("addressLine1")
                                               ? "form-control is-invalid" : "form-control"}/>
@@ -391,7 +394,7 @@ function ModalAddWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="addressLine2" style={{padding: '5px 10px'}}>
                             Address line 2
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="Address line 1"
                                           onChange={handleLineTwo}
                                           className={errors.validationErrors.includes("addressLine2")
                                               ? "form-control is-invalid" : "form-control"}/>
