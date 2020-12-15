@@ -69,6 +69,8 @@ code {
     margin-top: 80px !important;
     padding: 0 205px !important;
     margin-bottom: 70px !important;
+    max-width: 1800px !important;
+
 }
 
 .deleteButton {
