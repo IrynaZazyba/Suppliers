@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import {AuthContext} from "../../context/authContext";
 
 function ModalAddUser(props) {
 
+    const {user, setUsers} = useContext(AuthContext);
     const ref = React.createRef();
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
     const [stateOptions, setStateOptions] = useState([]);
@@ -111,8 +113,6 @@ function ModalAddUser(props) {
             addressDto: addressDto
         };
 
-        console.log(addressDto)
-        console.log(userUpdateDto)
 
         fetch(`/customers/${currentCustomerId}/users`, {
             method: 'POST',
@@ -212,12 +212,12 @@ function ModalAddUser(props) {
                                           defaultValue="Choose..."
                                           onChange={handleRole}>
 
-                                <option value={"ROLE_SYSTEM_ADMIN"}>ROLE_SYSTEM_ADMIN</option>
-                                <option value={"ROLE_ADMIN"}>ROLE_ADMIN</option>
-                                <option value={"ROLE_DISPATCHER"}>ROLE_DISPATCHER</option>
-                                <option value={"ROLE_LOGISTICS_SPECIALIST"}>ROLE_LOGISTICS_SPECIALIST</option>
-                                <option value={"ROLE_DRIVER"}>ROLE_DRIVER</option>
-                                <option value={"ROLE_DIRECTOR"}>ROLE_DIRECTOR</option>
+                                {user.role ==='ROLE_SYSTEM_ADMIN' &&<option value={"ROLE_SYSTEM_ADMIN"}>System admin</option>}
+                                {user.role ==='ROLE_ADMIN' &&<option value={"ROLE_ADMIN"}>Admin</option>}
+                                <option value={"ROLE_DISPATCHER"}>Dispatcher</option>
+                                <option value={"ROLE_LOGISTICS_SPECIALIST"}>Logistic specialist</option>
+                                <option value={"ROLE_DRIVER"}>Driver</option>
+                                <option value={"ROLE_DIRECTOR"}>Director</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
@@ -234,13 +234,6 @@ function ModalAddUser(props) {
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
-                                {/*<Form.Control type="text" onChange={onChangeState}*/}
-                                {/*              className={*/}
-                                {/*                  isValid("state")*/}
-                                {/*              }/>*/}
-                                {/*<Form.Control.Feedback type="invalid">*/}
-                                {/*    Please provide a state.*/}
-                                {/*</Form.Control.Feedback>*/}
 
                             </AsyncTypeahead>
                         </Form.Group>

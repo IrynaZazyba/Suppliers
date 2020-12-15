@@ -195,13 +195,6 @@ function ModalEditUser(props) {
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
-                                {/*<Form.Control type="text" onChange={onChangeState}*/}
-                                {/*              className={*/}
-                                {/*                  isValid("state")*/}
-                                {/*              }/>*/}
-                                {/*<Form.Control.Feedback type="invalid">*/}
-                                {/*    Please provide a state.*/}
-                                {/*</Form.Control.Feedback>*/}
 
                             </AsyncTypeahead>
                         </Form.Group>

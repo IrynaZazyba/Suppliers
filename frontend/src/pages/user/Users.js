@@ -91,7 +91,6 @@ export default () => {
         fetch(url)
             .then(response => response.json())
             .then(commits => {
-                console.log(commits.content);
                 setUsers(commits.content);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
@@ -99,6 +98,9 @@ export default () => {
                     countPages: commits.totalPages
                 });
             });
+    }
+    function parseRole(role){
+        return role.toLowerCase().replaceAll("_"," ").replaceAll("role", "");
     }
 
     const closeModalAdd = (e, customerDto) => {
@@ -124,7 +126,7 @@ export default () => {
         <tr key={custom.id}>
             <td>{custom.name} {custom.surname}</td>
             <td>{custom.birthday}</td>
-            <td>{custom.role}</td>
+            <td>{parseRole(custom.role)}</td>
             <td><Form.Check
                 type="switch"
                 id={custom.id}

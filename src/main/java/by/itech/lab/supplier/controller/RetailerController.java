@@ -34,7 +34,6 @@ public class RetailerController {
 
     @GetMapping(ApiConstants.URL_ID_PARAMETER)
     public RetailerDto getRetailer(@PathVariable Long id) {
-        log.debug("request to get User : {}", id);
         return retailerService.findById(id);
     }
 
