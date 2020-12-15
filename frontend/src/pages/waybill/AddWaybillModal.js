@@ -10,7 +10,6 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
 import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
-import Pagination from 'react-bootstrap-4-pagination';
 import Button from "react-bootstrap/Button";
 import validateWaybill, {
     checkCarCapacity,
@@ -22,7 +21,7 @@ import validateWaybill, {
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import MyMapComponent from "../../components/MyMapComponent";
 import {Typeahead} from 'react-bootstrap-typeahead';
-
+import Pagination from "react-js-pagination";
 
 function AddWaybillModal(props) {
 
@@ -61,6 +60,7 @@ function AddWaybillModal(props) {
     const [startPoint, setStartPoint] = useState({});
     const [showMap, setShowMap] = useState(false);
     const [mapCenter, setMapCenter] = useState({lat: 51.494900, lng: -0.146231});
+
 
     useEffect(() => {
         if (props.modal) {
@@ -105,24 +105,6 @@ function AddWaybillModal(props) {
     }, [addedApps]);
 
 
-
-    let paginationConfig = {
-        totalPages: page.countPages,
-        currentPage: page.currentPage,
-        showMax: 5,
-        activeBgColor: '#1A7FA8',
-        activeBorderColor: '#1A7FA8',
-        prevText: "Prev",
-        nextText: "Next",
-        size: "sm",
-        threeDots: true,
-        prevNext: true,
-        onClick: function (p) {
-            let curr = p - 1;
-            getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${curr}&size=5`);
-        }
-    };
-
     const numberHandler = (e) => {
         e.preventDefault();
         checkValidationErrors('number');
@@ -138,7 +120,6 @@ function AddWaybillModal(props) {
             .then(commits => {
                 setAllLoadedApps(apps.concat(commits.content));
                 setApps(commits.content);
-                console.log(commits.totalPages);
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
@@ -555,7 +536,25 @@ function AddWaybillModal(props) {
                 {appRows}
                 </tbody>
             </Table>
-            <Pagination {...paginationConfig} />
+            <div style={{fontSize: '0.8em'}}>
+                <Pagination
+                    activePage={page.currentPage}
+                    itemsCountPerPage={page.countPerPage}
+                    totalItemsCount={page.countPages * 5}
+                    activeLinkClass="active-page-modal"
+                    pageRangeDisplayed={3}
+                    prevPageText="<"
+                    nextPageText=">"
+                    size="sm"
+                    firstPageText="First"
+                    lastPageText="Last"
+                    itemClass="page-item"
+                    linkClass="page-link"
+                    innerClass="pagination justify-content-center"
+                    onChange={(p) => {
+                        let curr = p - 1;
+                        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto}&page=${curr}&size=5`);
+                    }}/></div>
         </React.Fragment>;
 
 

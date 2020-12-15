@@ -7,6 +7,7 @@ import by.itech.lab.supplier.domain.WarehouseItem;
 import by.itech.lab.supplier.domain.WarehouseType;
 import by.itech.lab.supplier.dto.ApplicationDto;
 import by.itech.lab.supplier.dto.ApplicationItemDto;
+import by.itech.lab.supplier.dto.RetailerDto;
 import by.itech.lab.supplier.dto.UserDto;
 import by.itech.lab.supplier.dto.WarehouseDto;
 import by.itech.lab.supplier.dto.WarehouseItemDto;
@@ -21,6 +22,7 @@ import by.itech.lab.supplier.repository.WarehouseItemRepository;
 import by.itech.lab.supplier.repository.WarehouseRepository;
 import by.itech.lab.supplier.repository.filter.WarehouseItemFilter;
 import by.itech.lab.supplier.service.ApplicationService;
+import by.itech.lab.supplier.service.RetailerService;
 import by.itech.lab.supplier.service.UserService;
 import by.itech.lab.supplier.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +64,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseItemFilter warehouseItemFilter;
     private final WarehouseItemRepository warehouseItemRepository;
 
+    @Autowired
+    @Lazy
+    private RetailerService retailerService;
+
     @Lazy
     @Autowired
     private WarehouseService _self;
@@ -84,8 +90,18 @@ public class WarehouseServiceImpl implements WarehouseService {
             UserDto currentUser = userService.findById(principal.getId());
             return Collections.singletonList(currentUser.getWarehouseDto());
         }
-        return warehouseRepository.findAllByType(warehouseType)
+        List<WarehouseDto> warehouses = warehouseRepository.findAllByType(warehouseType)
                 .stream().map(warehouseMapper::map).collect(Collectors.toList());
+
+        if (warehouseType == WarehouseType.RETAILER) {
+            final List<Long> disabledRetailers = retailerService.findAllByActive(Pageable.unpaged(), false)
+                    .stream().map(RetailerDto::getId).collect(Collectors.toList());
+            warehouses = warehouses.stream()
+                    .filter(wh -> Objects.nonNull(wh.getRetailerId()) && !disabledRetailers.contains(wh.getRetailerId()))
+                    .collect(Collectors.toList());
+        }
+
+        return warehouses;
     }
 
     @Override

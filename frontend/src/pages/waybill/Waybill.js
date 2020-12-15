@@ -67,7 +67,10 @@ export default () => {
                     countPages: commits.totalPages
                 });
                 setErrors('');
-            }).catch(error => setErrors("Something go wrong, try later"));
+            }).catch(error => {
+            setErrors("Something go wrong, try later");
+            console.log("here")
+        });
     }
 
     const onChangeFilter = (e) => {
@@ -109,7 +112,7 @@ export default () => {
 
     }
 
-    const tableRows = waybills.map(waybill => (
+    const tableRows = waybills && waybills.map(waybill => (
 
         <tr key={waybill.id}
             onClick={() => {
@@ -193,7 +196,7 @@ export default () => {
 
                 <Col xs={6} style={{textAlign: 'right'}}>
                     <Form.Control size="sm" as="select"
-                                  style={{display: 'inline', width: '150px', marginRight:'15px'}}
+                                  style={{display: 'inline', width: '150px', marginRight: '15px'}}
                                   value={filter}
                                   defaultValue="Choose..."
                                   onChange={onChangeFilter}>

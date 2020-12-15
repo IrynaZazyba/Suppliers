@@ -18,11 +18,11 @@ import {
 } from "../../validation/WaybillValidationRules";
 import {Typeahead} from "react-bootstrap-typeahead";
 import Table from "react-bootstrap/Table";
-import Page from "../../components/Page";
 import {FaFlag, FaMapMarkerAlt, FaMinus, FaPlus} from "react-icons/fa";
 import MyMapComponent from "../../components/MyMapComponent";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 import Spinner from "react-bootstrap/Spinner";
+import Pagination from "react-js-pagination";
 
 function EditWaybillModal(props) {
 
@@ -159,7 +159,8 @@ function EditWaybillModal(props) {
                 setPage({
                     active: (commits.pageable.pageNumber + 1),
                     countPerPage: commits.size,
-                    countPages: commits.totalPages
+                    countPages: commits.totalPages,
+                    currentPage: (commits.pageable.pageNumber + 1)
                 });
                 setErrors({
                     serverErrors: '',
@@ -194,12 +195,6 @@ function EditWaybillModal(props) {
         });
 
     }
-
-    const changePage = (e) => {
-        e.preventDefault();
-        let currentPage = e.target.innerHTML - 1;
-        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&page=${currentPage}&size=5&waybillId=${props.modal.waybillId}`);
-    };
 
     function calculateTotalValues(waybill) {
         let totalAmount = waybill.applications
@@ -679,7 +674,25 @@ function EditWaybillModal(props) {
                 {appRows}
                 </tbody>
             </Table>
-            <Page page={page} onChange={changePage}/>
+            <div style={{fontSize: '0.8em'}}>
+                <Pagination
+                    activePage={page.currentPage}
+                    itemsCountPerPage={page.countPerPage}
+                    totalItemsCount={page.countPages * 5}
+                    activeLinkClass="active-page-modal"
+                    pageRangeDisplayed={3}
+                    prevPageText="<"
+                    nextPageText=">"
+                    size="sm"
+                    firstPageText="First"
+                    lastPageText="Last"
+                    itemClass="page-item"
+                    linkClass="page-link"
+                    innerClass="pagination justify-content-center"
+                    onChange={(p) => {
+                        let curr = p - 1;
+                        getApps(`/customers/${customerId}/application/warehouses?warehouseId=${waybill.sourceLocationWarehouseDto.id}&page=${curr}&size=5&waybillId=${props.modal.waybillId}`);
+                    }}/></div>
         </React.Fragment>;
 
     const dragAndDropWaypoints =

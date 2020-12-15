@@ -200,6 +200,7 @@ a.page-link {
 .waybill-app {
     background-color: #c9efff;
 }
+
 .accepted-item {
     background-color: #c9efff;
 }
@@ -229,12 +230,12 @@ th.accept-all-item:hover {
     margin: 3px;
 }
 
-.edit-app-icon-active{
+.edit-app-icon-active {
     text-align: center;
     color: #1A7FA8;
 }
 
-.edit-app-icon-disable{
+.edit-app-icon-disable {
     text-align: center;
     color: #9497AA;
 }
@@ -243,11 +244,11 @@ th.accept-all-item:hover {
     margin: 0 15px;
 }
 
-.car-capacity-attention{
+.car-capacity-attention {
     background-color: #fcc7ca;
 }
 
-.waybill-button{
+.waybill-button {
     margin: 5px;
 }
 
@@ -268,7 +269,7 @@ th.accept-all-item:hover {
     float: left;
 }
 
-.delivery-button{
+.delivery-button {
     float: right;
     background-color: #008000 !important;
     border-color: #008000 !important;
@@ -277,17 +278,18 @@ th.accept-all-item:hover {
 
 }
 
-.delivery-button:hover:enabled{
+.delivery-button:hover:enabled {
     float: right;
     border: 1px solid #008000 !important;
     transform: scale(0.98);
     box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
 }
 
-.delivery-blocked-waypoint{
+.delivery-blocked-waypoint {
     background-color: #E8E8EE !important;
 }
 
-.page-size{
-    float: right;
+.active-page-modal {
+    background-color: #1A7FA8 !important;
+    border-color: #1A7FA8 !important;
 }
