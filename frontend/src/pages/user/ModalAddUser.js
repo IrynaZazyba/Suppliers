@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {AuthContext} from "../../context/authContext";
+import validateUser from "../../validation/UserValidationRules";
 
 function ModalAddUser(props) {
 
@@ -28,8 +29,10 @@ function ModalAddUser(props) {
         email: '',
         customerId: currentCustomerId
     });
-    const [validError, setError] = useState([]);
-    const [errorMessage, setErrors] = useState('');
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
     const filterByState = () => true;
 
     const onChangeState = (e) => {
@@ -112,50 +115,65 @@ function ModalAddUser(props) {
             ...userDto,
             addressDto: addressDto
         };
+        const validationResult2 = validateUser(userUpdateDto);
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: validationResult2,
+            serverErrors: ''
+        }));
+        if (!validationResult2.length) {
+            fetch(`/customers/${currentCustomerId}/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userUpdateDto)
+            })
+                .then(function (response) {
+                    if (response.status !== 201) {
+                        setErrors("Something go wrong, try later");
+                    } else {
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: [],
+                            serverErrors: ''
+                        }));
+                        setUser({
+                            name: '',
+                            surname: '',
+                            birthday: '',
+                            addressDto: {},
+                            role: 'ROLE_SYSTEM_ADMIN',
+                            username: '',
+                            email: '',
+                            customerId: ''
+                        });
+                        setAddressDto({
+                            city: '',
+                            state: {},
+                            addressLine1: '',
+                            addressLine2: ''
+                        });
 
+                        props.onChange(false, userDto);
+                    }
+                });
+        }
 
-        fetch(`/customers/${currentCustomerId}/users`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(userUpdateDto)
-        })
-            .then(function (response) {
-                if (response.status !== 201) {
-                    setError('');
-                    setErrors("Something go wrong, try later");
-                } else {
-                    setUser({
-                        name: '',
-                        surname: '',
-                        birthday: '',
-                        addressDto: {},
-                        role: 'ROLE_SYSTEM_ADMIN',
-                        username: '',
-                        email: '',
-                        customerId: ''
-                    });
-                    setAddressDto({
-                        city: '',
-                        state: {},
-                        addressLine1: '',
-                        addressLine2: ''
-                    });
-
-                    setError('');
-                    props.onChange(false, userDto);
-                }
-            });
-    };
-    const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
-
+    }
+    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
 
     return (
         <>
             <Modal
                 show={props.props}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        validationErrors: [],
+                        serverErrors: ''
+                    });
+                    props.onChange(false)
+                }}
                 aria-labelledby="modal-custom"
                 className="shadow"
             >
@@ -165,10 +183,10 @@ function ModalAddUser(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {errorMessage && <ErrorMessage message={errorMessage}/>}
+                    {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="name" onChange={handleName}
+                            <Form.Control type="text" placeholder="Name" onChange={handleName}
                                           className={
                                               isValid("name")
                                           }/>
@@ -178,7 +196,7 @@ function ModalAddUser(props) {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="surname" onChange={handleSurname}
+                            <Form.Control type="text" placeholder="Surname" onChange={handleSurname}
                                           className={
                                               isValid("surname")
                                           }/>
@@ -188,7 +206,7 @@ function ModalAddUser(props) {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="username" onChange={handleUsername}
+                            <Form.Control type="text" placeholder="Username" onChange={handleUsername}
                                           className={
                                               isValid("username")
                                           }/>
@@ -199,7 +217,7 @@ function ModalAddUser(props) {
 
 
                         <Form.Group controlId="formBasicDate" style={{padding: '5px 10px'}}>
-                            <Form.Control type="date" placeholder="birthday" onChange={handleBirthday}
+                            <Form.Control type="date" placeholder="Birthday" onChange={handleBirthday}
                                           className={
                                               isValid("birthday")
                                           }/>
@@ -212,8 +230,9 @@ function ModalAddUser(props) {
                                           defaultValue="Choose..."
                                           onChange={handleRole}>
 
-                                {user.role ==='ROLE_SYSTEM_ADMIN' &&<option value={"ROLE_SYSTEM_ADMIN"}>System admin</option>}
-                                {user.role ==='ROLE_ADMIN' &&<option value={"ROLE_ADMIN"}>Admin</option>}
+                                {user.role === 'ROLE_SYSTEM_ADMIN' &&
+                                <option value={"ROLE_SYSTEM_ADMIN"}>System admin</option>}
+                                {user.role === 'ROLE_ADMIN' && <option value={"ROLE_ADMIN"}>Admin</option>}
                                 <option value={"ROLE_DISPATCHER"}>Dispatcher</option>
                                 <option value={"ROLE_LOGISTICS_SPECIALIST"}>Logistic specialist</option>
                                 <option value={"ROLE_DRIVER"}>Driver</option>
@@ -233,12 +252,14 @@ function ModalAddUser(props) {
                                 placeholder="Select state..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
-
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
+                                </div>
 
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="city" onChange={handleCity}
+                            <Form.Control type="text" placeholder="City" onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -249,7 +270,7 @@ function ModalAddUser(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine1" onChange={handleaddressLine1}
+                            <Form.Control type="text" placeholder="AddressLine1" onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -260,7 +281,7 @@ function ModalAddUser(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine2" onChange={handleaddressLine2}
+                            <Form.Control type="text" placeholder="AddressLine2" onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")
                                           }/>
@@ -271,7 +292,7 @@ function ModalAddUser(props) {
 
 
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
-                            <Form.Control type="email" placeholder="email" onChange={handleEmail}
+                            <Form.Control type="email" placeholder="Email" onChange={handleEmail}
                                           className={
                                               isValid("email")
                                           }/>
