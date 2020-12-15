@@ -183,21 +183,25 @@ export default () => {
 
     const body =
         <React.Fragment>
+            {users.length > 0 &&
             <Table hover size="sm">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Birthday</th>
                         <th>Role</th>
-                        <th>status</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {tableRows}
                 </tbody>
-            </Table>
-            <Page page={page} onChange={changePage}/>
+            </Table>}
+            {users.length > 0 &&
+            <Page page={page} onChange={changePage}/>}
+            {users.length == 0 &&
+            <span>Empty list of users</span>}
         </React.Fragment>;
 
     return (

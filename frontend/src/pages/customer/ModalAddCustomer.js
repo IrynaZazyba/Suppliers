@@ -51,6 +51,7 @@ function ModalAddCustomer(props) {
                             serverErrors: "Something go wrong, try later",
                             validationErrors: ''
                         });
+                        setCustomer({});
                     } else {
                         setErrors(preState => ({
                             ...preState,

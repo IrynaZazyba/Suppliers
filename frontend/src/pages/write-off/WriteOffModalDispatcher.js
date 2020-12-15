@@ -98,16 +98,15 @@ function ModalAddWriteOff(props) {
                 identifier: e[0].identifier,
                 address: e[0].address
             }));
-            setItems([]);
         } else {
-            setCurrentWarehouse(preState => ({
-                ...preState,
-                id: '',
-                identifier: '',
-                address: ''
-            }));
-            setItemOptions([]);
+            setCurrentWarehouse({
+                address: {
+                    addressLine1: '',
+                    addressLine2: ''
+                }
+            });
         }
+        setItems([]);
     };
 
     const onChangeUpc = (e) => {
@@ -209,7 +208,7 @@ function ModalAddWriteOff(props) {
         e.preventDefault();
 
         let writeOffAct = prepareActDto();
-        let validErrors = validateWriteOffAct(writeOffAct, items);
+        let validErrors = validateWriteOffAct(writeOffAct, items, currentWarehouse);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validErrors
