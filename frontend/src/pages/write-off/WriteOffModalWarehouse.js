@@ -10,6 +10,7 @@ import Card from "react-bootstrap/Card";
 import Modal from "react-bootstrap/Modal";
 import ErrorMessage from "../../messages/errorMessage";
 import validateWriteOffAct, {validateWriteOffActItem} from "../../validation/WriteOffValidationRules";
+import Dropdown from "../warehouse/ModalAddWarehouse";
 
 
 function WriteOffWarehouseModal(props) {
@@ -221,7 +222,8 @@ function WriteOffWarehouseModal(props) {
                 }
                 if (response.status !== 200 && response.status !== 400) {
                     setErrors({
-                        serverErrors: "Something go wrong, try later",
+                        serverErrors: "Something went wrong, try later. Maybe you are trying to write off more items " +
+                            "than warehouse contains.",
                         validationErrors: []
                     });
                 }

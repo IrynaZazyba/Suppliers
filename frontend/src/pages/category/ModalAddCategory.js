@@ -56,6 +56,7 @@ function ModalAddCategory(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
+                            serverErrors: '',
                             validationErrors: []
                         }));
                         setCategory({
@@ -92,6 +93,7 @@ function ModalAddCategory(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="formBasicCategory" style={{padding: '5px 10px'}}>
+                            Category name
                             <Form.Control type="text" placeholder="Category name" onChange={handleCategoryName}
                                           className={
                                               errors.validationErrors.includes("category")
@@ -104,6 +106,7 @@ function ModalAddCategory(props) {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicTaxRate" style={{padding: '5px 10px'}}>
+                            Tax rate
                             <Form.Control type="number" step="0.001" placeholder="Tax rate(per km)"
                                           onChange={handleTaxRate}
                                           className={
