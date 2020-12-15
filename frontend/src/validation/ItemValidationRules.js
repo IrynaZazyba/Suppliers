@@ -57,7 +57,7 @@ export function validateEditItem(currentItem, itemsInApp) {
         errorsFields.push("amount");
     }
 
-    if (!currentItem.cost) {
+    if (!currentItem.cost || currentItem.cost < 0) {
         errorsFields.push("cost");
     }
 
@@ -92,7 +92,6 @@ export function checkItemsAtWarehouse(appItemsIds, whItems) {
     let itemIds = whItems.map(i => i.item.id);
     return appItemsIds.filter(appItem => !itemIds.includes(appItem));
 }
-
 
 
 export function validateWriteOffItem(currentItem, items, app) {
