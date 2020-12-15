@@ -98,16 +98,15 @@ function ModalAddWriteOff(props) {
                 identifier: e[0].identifier,
                 address: e[0].address
             }));
-            setItems([]);
         } else {
-            setCurrentWarehouse(preState => ({
-                ...preState,
-                id: '',
-                identifier: '',
-                address: ''
-            }));
-            setItemOptions([]);
+            setCurrentWarehouse({
+                address: {
+                    addressLine1: '',
+                    addressLine2: ''
+                }
+            });
         }
+        setItems([]);
     };
 
     const onChangeUpc = (e) => {
@@ -209,7 +208,7 @@ function ModalAddWriteOff(props) {
         e.preventDefault();
 
         let writeOffAct = prepareActDto();
-        let validErrors = validateWriteOffAct(writeOffAct, items);
+        let validErrors = validateWriteOffAct(writeOffAct, items, currentWarehouse);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validErrors
@@ -422,33 +421,33 @@ function ModalAddWriteOff(props) {
                 <Form.Group as={Row} controlId="addressLine1">
                     <Form.Label column sm="3">Address line 1</Form.Label>
                     <Col sm="6">
-                    <Form.Control type="text"
-                                  value={currentWarehouse.address.addressLine1}
-                                  placeholder="Address line 1"
-                                  disabled
-                    /></Col>
+                        <Form.Control type="text"
+                                      value={currentWarehouse.address.addressLine1}
+                                      placeholder="Address line 1"
+                                      disabled
+                        /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine2">
                     <Form.Label column sm="3">Address line 2</Form.Label>
                     <Col sm="6">
-                    <Form.Control type="text"
-                                  value={currentWarehouse.address.addressLine2}
-                                  placeholder="Address line 2"
-                                  disabled
-                    /></Col>
+                        <Form.Control type="text"
+                                      value={currentWarehouse.address.addressLine2}
+                                      placeholder="Address line 2"
+                                      disabled
+                        /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="formBasicText">
                     <Form.Label column sm="3">Act identifier</Form.Label>
                     <Col sm="6">
-                    <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
-                                  className={
-                                      errors.validationErrors.includes("act-identifier")
-                                          ? "form-control is-invalid"
-                                          : "form-control"
-                                  }/>
-                    <Form.Control.Feedback type="invalid">
-                        Please provide an identifier.
-                    </Form.Control.Feedback>
+                        <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
+                                      className={
+                                          errors.validationErrors.includes("act-identifier")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }/>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide an identifier.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
             </Col>
