@@ -31,7 +31,7 @@ function Header() {
     const itemPermission = checkPermission && (user.role === "ROLE_DISPATCHER");
     const categoryPermission = checkPermission && (user.role === "ROLE_DIRECTOR");
     const writeOffActPermission = checkPermission && (user.role === "ROLE_DISPATCHER"
-        || user.role === "ROLE_DIRECTOR" || user.role === "ROLE_DRIVER");
+        || user.role === "ROLE_DIRECTOR");
 
     return (
         <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" className="header">

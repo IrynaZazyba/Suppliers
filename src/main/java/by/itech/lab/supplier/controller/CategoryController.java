@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +41,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public Page<CategoryDto> getAllNotDeleted(Pageable pageable) {
+    public Page<CategoryDto> getAllNotDeleted(@PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable) {
         return categoryService.findAll(pageable);
     }
 

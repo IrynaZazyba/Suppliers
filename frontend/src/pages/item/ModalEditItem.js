@@ -119,6 +119,7 @@ function ModalEditItem(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
+                            serverErrors: '',
                             validationErrors: []
                         }));
                         props.onChange(false, itemDto);
@@ -145,6 +146,7 @@ function ModalEditItem(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="editLabel" style={{padding: '5px 10px'}}>
+                            Label
                             <Form.Control type="text"
                                           placeholder="Label"
                                           onChange={handleLabel}
@@ -159,6 +161,7 @@ function ModalEditItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUpc" style={{padding: '5px 10px'}}>
+                            UPC
                             <Form.Control type="text"
                                           placeholder="Code of item"
                                           onChange={handleUpc}
@@ -173,6 +176,7 @@ function ModalEditItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editUnits" style={{padding: '5px 10px'}}>
+                            Units
                             <Form.Control type="number"
                                           step="any"
                                           placeholder="Units"
@@ -188,6 +192,7 @@ function ModalEditItem(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="categoryName" style={{padding: '5px 10px'}}>
+                            Category name
                             <Form.Control type="text"
                                           value={itemDto.categoryDto.category}
                                           placeholder="Category name"
@@ -195,12 +200,14 @@ function ModalEditItem(props) {
                             />
                         </Form.Group>
                         <Form.Group controlId="taxRate" style={{padding: '5px 10px'}}>
+                            Category tax rate
                             <Form.Control type="text"
                                           value={itemDto.categoryDto.taxRate}
                                           placeholder="Tax rate"
                                           disabled
                             />
                         </Form.Group>
+                        <span style={{padding: '5px 10px'}}>Change category</span>
                         <AsyncTypeahead
                             style={{padding: '5px 10px'}}
                             ref={ref}

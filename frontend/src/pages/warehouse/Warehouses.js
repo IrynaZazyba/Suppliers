@@ -126,7 +126,8 @@ export default (props) => {
                 if (warehouse.type === 'WAREHOUSE') {
                     document.location.href = `/customers/${currentCustomerId}/warehouses/${warehouse.id}/items`
                 }
-            }}>
+            }}
+            className={warehouse.type === "WAREHOUSE" && 'App-pointer'}>
                 {warehouse.identifier}</td>
             <td>{warehouse.type}</td>
             <td>{showAddress(warehouse.addressDto)}</td>

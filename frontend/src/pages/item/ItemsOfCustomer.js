@@ -29,6 +29,7 @@ export default () => {
         editShow: false,
         customer: []
     });
+    const [deletedItems, setDeletedItem] = useState([]);
     const [errors, setErrors] = useState({
         errorMessage: ''
     });
@@ -97,18 +98,29 @@ export default () => {
         }).then(response => {
             if (response.status !== 204) {
                 setErrors({
-                    errorMessage: "Item can not be deleted, because it is already used in application"
+                    errorMessage: "Item can not be deleted, because it is already used"
                 });
             } else {
-                let raw = document.getElementById(`item${idOfItem}`);
-                raw.style.opacity = '0.3';
-                raw.style.background = '#656662';
+                let row = document.getElementById(`item${idOfItem}`);
+                row.style.opacity = '0.3';
+                row.style.background = '#656662';
                 setErrors(preState => ({
                     ...preState,
                     errorMessage: ''
                 }));
+                setDeletedItem([...deletedItems, idOfItem])
             }
         });
+    }
+
+    function checkIsActive(idOfItem) {
+        let result = true;
+        deletedItems.forEach(i => {
+            if (i == idOfItem) {
+                result = false;
+            }
+        });
+        return result;
     }
 
     const tableRows = items.map(item => (
@@ -120,15 +132,20 @@ export default () => {
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
                         onClick={() => {
-                            setEditItem({
-                                editShow: true,
-                                item: item
-                            });
-                        }}/>
+                            if (checkIsActive(item.id)) {
+                                setEditItem({
+                                    editShow: true,
+                                    item: item
+                                });
+                            }
+                        }}
+            />
             </td>
             <td><FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                          onClick={() => {
-                             deleteItem(item.id);
+                             if (checkIsActive(item.id)) {
+                                 deleteItem(item.id);
+                             }
                          }}
             />
             </td>
@@ -158,6 +175,7 @@ export default () => {
 
     const body =
         <React.Fragment>
+            {(items.length > 0) &&
             <Table hover size="sm">
                 <thead>
                 <tr>
@@ -171,15 +189,18 @@ export default () => {
                 <tbody>
                 {tableRows}
                 </tbody>
-            </Table>
-            <Page page={page} onChange={changePage}/>
-        </React.Fragment>;
+            </Table>}
+            {(items.length > 0) &&
+            <Page page={page} onChange={changePage}/>}
+            {items.length == 0 &&
+            <span>Empty list of items.</span>}
+            </React.Fragment>;
 
-    return (
-        <CardContainer
-            modals={modals}
-            header={header}
-            body={body}/>
-    );
+                return (
+                <CardContainer
+                modals={modals}
+                header={header}
+                body={body}/>
+                );
 
-}
+            }
