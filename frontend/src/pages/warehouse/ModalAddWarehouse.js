@@ -20,7 +20,7 @@ function ModalAddWarehouse(props) {
         id: '',
         customerId: '',
         identifier: '',
-        type: '',
+        type: 'FACTORY',
         addressDto: {
             state: {}
         },
@@ -127,6 +127,7 @@ function ModalAddWarehouse(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
+        console.log(warehouseDto.type + " type")
 
         let warehouseUpdateDto = {};
         warehouseUpdateDto = {
@@ -205,7 +206,7 @@ function ModalAddWarehouse(props) {
                                                 id: '',
                                                 customerId: '',
                                                 identifier: '',
-                                                type: '',
+                                                type: 'FACTORY',
                                                 addressDto: {
                                                     state: {}
                                                 },
@@ -227,6 +228,7 @@ function ModalAddWarehouse(props) {
 
     const showDispatchers = dispatchers.map(disp =>
         <div key={disp.id}>
+            <span style={{padding: '5px 10px'}}>
             {disp.name} {disp.surname}, username: {disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
@@ -235,6 +237,7 @@ function ModalAddWarehouse(props) {
                              dispatchers.filter((dispatcher) => dispatcher.id !== disp.id));
                      }}
             />
+            </span>
         </div>
     );
 
@@ -261,11 +264,12 @@ function ModalAddWarehouse(props) {
         if (e === "WAREHOUSE") {
             return (
                 <Form>
+                    <span style={{padding: '5px 10px'}}>Dispatcher(s) username</span>
                     <Form.Group>
                         {showDispatchers}
                     </Form.Group>
                     <Form.Group>
-                        <span style={{padding: '5px 10px'}}>Dispatcher(s) username</span>
+
                         <AsyncTypeahead
                             style={{padding: '5px 10px'}}
                             ref={ref}
@@ -304,7 +308,7 @@ function ModalAddWarehouse(props) {
                         id: '',
                         customerId: '',
                         identifier: '',
-                        type: '',
+                        type: 'FACTORY',
                         addressDto: {
                             state: {}
                         },

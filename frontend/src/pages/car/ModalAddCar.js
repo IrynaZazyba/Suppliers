@@ -129,6 +129,12 @@ function ModalAddCar(props) {
                             customerId: '',
                             addressDto: {},
                         });
+                        setAddressDto({
+                            city: '',
+                            state: {},
+                            addressLine1: '',
+                            addressLine2: ''
+                        });
                         props.onChange(false, carDto);
                     }
                 });
