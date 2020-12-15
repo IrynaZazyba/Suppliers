@@ -170,7 +170,7 @@ function ModalAddWarehouse(props) {
                             if (response.status !== 200) {
                                 setErrors(preState => ({
                                     ...preState,
-                                    serverErrors: "Something go wrong, try later",
+                                    serverErrors: "Something went wrong, try later",
                                 }));
                             } else {
                                 let warehouseUpdateDto2 = {
@@ -193,7 +193,7 @@ function ModalAddWarehouse(props) {
                                         if (response.status !== 201) {
                                             setErrors(preState => ({
                                                 ...preState,
-                                                serverErrors: "Something go wrong, try later"
+                                                serverErrors: "Something went wrong, try later"
                                             }));
                                         } else {
                                             setErrors(preState => ({

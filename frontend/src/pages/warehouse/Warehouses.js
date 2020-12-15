@@ -108,7 +108,7 @@ export default (props) => {
         }).then(response => {
             if (response.status !== 204) {
                 setErrors({
-                    errorMessage: "Warehouse can not be deleted, because it's already used in application or this warehouse still contains items."
+                    errorMessage: "Something went wrong. Warehouse can not be deleted. Probably, it's already used in application or this warehouse still contains items."
                 })
             } else {
                 setErrors({
