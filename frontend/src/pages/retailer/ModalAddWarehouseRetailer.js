@@ -185,7 +185,7 @@ function ModalAddWarehouseRetailer(props) {
                             <Form.Control type="text"
                                           onChange={handleCity}
                                           className={
-                                              errors.validationErrors.includes("city")
+                                              errors.validationErrors.includes("City")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -198,7 +198,7 @@ function ModalAddWarehouseRetailer(props) {
                             <Form.Control type="text"
                                           onChange={handleLineOne}
                                           className={
-                                              errors.validationErrors.includes("addressLine1")
+                                              errors.validationErrors.includes("AddressLine1")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -211,7 +211,7 @@ function ModalAddWarehouseRetailer(props) {
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
                                           className={
-                                              errors.validationErrors.includes("addressLine2")
+                                              errors.validationErrors.includes("AddressLine2")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>

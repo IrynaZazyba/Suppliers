@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import validateUser from "../../validation/UserValidationRules";
 
 function ModalEditUser(props) {
 
@@ -14,8 +15,10 @@ function ModalEditUser(props) {
         birthday: ''
     });
     const ref = React.createRef();
-    const [validError, setError] = useState([]);
-    const [errorMessage, setErrors] = useState('');
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
     const [stateOptions, setStateOptions] = useState([]);
     const filterByState = () => true;
 
@@ -100,7 +103,13 @@ function ModalEditUser(props) {
             ...userDto,
             addressDto: addressDto
         };
-
+        const validationResult2 = validateUser(userUpdateDto);
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: validationResult2,
+            serverErrors: ''
+        }));
+        if (!validationResult2.length) {
         fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
             method: 'PUT',
             headers: {
@@ -110,22 +119,29 @@ function ModalEditUser(props) {
         })
             .then((response) => {
                 if (response.status !== 200) {
-                    setError('');
                     setErrors("Something go wrong, try later");
                 } else {
-                    setError('');
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: [],
+                        serverErrors: ''
+                    }));
                     props.onChange(false, userDto);
                 }
             });
 
-    };
-    const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
+    }; }
+    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
 
     return (
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
+                onHide={() => { setErrors({
+                    validationErrors: [],
+                    serverErrors: ''
+                });
+                props.onChange(false)}}
                 aria-labelledby="modal-custom"
                 className="shadow"
             >
@@ -135,7 +151,7 @@ function ModalEditUser(props) {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {errorMessage && <ErrorMessage message={errorMessage}/>}
+                    {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Name</Form.Label>
@@ -195,7 +211,9 @@ function ModalEditUser(props) {
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
-
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
+                                </div>
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>

@@ -189,7 +189,7 @@ export default () => {
                         <th>Name</th>
                         <th>Birthday</th>
                         <th>Role</th>
-                        <th>status</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
