@@ -115,8 +115,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createAdmin(CustomerDto customerDto) {
         return UserDto.builder()
-                .name("Name")
-                .surname("Surname")
+                .name(customerDto.getName())
+                .surname("Admin")
                 .email(customerDto.getAdminEmail())
                 .role(Role.ROLE_ADMIN)
                 .customerDto(customerDto)
