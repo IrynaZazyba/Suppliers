@@ -92,6 +92,12 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public Boolean isWarehousesFreeFromApplications(List<Long> id) {
+        List<Long> IdsAllUsedWarehouses = applicationRepository.findAllUsedWarehouses(id);
+        return IdsAllUsedWarehouses.isEmpty();
+    }
+
+    @Override
     public ApplicationDto findById(Long id) {
         return applicationRepository.findById(id).map(applicationMapper::map)
                 .orElseThrow(() -> new ResourceNotFoundException("Application with id=" + id + " doesn't exist"));

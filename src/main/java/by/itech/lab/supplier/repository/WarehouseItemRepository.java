@@ -28,4 +28,7 @@ public interface WarehouseItemRepository extends JpaRepository<WarehouseItem, Lo
 
     List<WarehouseItem> getWarehouseItemByWarehouseIdAndItemIdIn(Long id, List<Long> itemIds);
 
+    @Query("select i.id from WarehouseItem i where i.warehouse.id in :id")
+    List<Long> findWarehouseItemIdsByWarehouseIds(@Param("id") List<Long> id);
+
 }

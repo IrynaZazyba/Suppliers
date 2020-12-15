@@ -1,6 +1,7 @@
 package by.itech.lab.supplier.repository;
 
 import by.itech.lab.supplier.domain.Application;
+import by.itech.lab.supplier.domain.ApplicationItem;
 import by.itech.lab.supplier.domain.ApplicationStatus;
 import by.itech.lab.supplier.domain.ApplicationType;
 import by.itech.lab.supplier.domain.Warehouse;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
@@ -27,9 +29,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Page<Application> findAllByStatus(Pageable pageable,
                                       @Param("status") ApplicationStatus status);
 
-    @Query("select app from Application app where :flag = true or (:flag = false and app.type like 'TRAFFIC')")
-    Page<Application> findAllByUserRole(Pageable pageable,
-                                        @Param("flag") Boolean roleFlag);
+//    @Query("select app from Application app where :flag = true or (:flag = false and app.type like 'TRAFFIC')")
+//    Page<Application> findAllByUserRole(Pageable pageable,
+//                                        @Param("flag") Boolean roleFlag);
 
     @Modifying
     @Query("update Application set applicationStatus = :status where id = :id")
@@ -64,5 +66,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
                                                                                   ApplicationType type,
                                                                                   Long warehouseId,
                                                                                   Long waybillId);
+
+    @Query("select app.id from Application app where (app.sourceLocationAddress.id in :id " +
+            "or app.destinationLocationAddress.id in :id) and app.applicationStatus <> 'FINISHED_PROCESSING' ")
+    List<Long> findAllUsedWarehouses(@Param("id") List<Long> id);
 
 }

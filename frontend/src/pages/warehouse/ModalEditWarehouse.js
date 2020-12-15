@@ -168,7 +168,7 @@ function ModalEditWarehouse(props) {
                 if (response.status !== 200) {
                     setErrors(preState => ({
                         ...preState,
-                        serverErrors: "Something go wrong, try later"
+                        serverErrors: "Something went wrong, try later"
                     }));
                 } else {
                     let warehouseUpdateDto2 = {
@@ -191,7 +191,7 @@ function ModalEditWarehouse(props) {
                             if (response.status !== 202 || errors.serverErrors !== '') {
                                 setErrors(preState => ({
                                     ...preState,
-                                    serverErrors: "Something go wrong, try later",
+                                    serverErrors: "Something went wrong, try later",
                                 }));
                             } else {
                                 setErrors(preState => ({
@@ -228,7 +228,7 @@ function ModalEditWarehouse(props) {
         if (e === "WAREHOUSE") {
             return (
         <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
-            total capacity
+            Total capacity
             <Form.Control type="text"
                           onChange={handleTotalCapacity}
                           value={warehouseDto.totalCapacity}
@@ -304,19 +304,19 @@ function ModalEditWarehouse(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
-                            identifier
+                            Identifier
                             <Form.Control type="text"
                                           disabled
                                           value={warehouseDto.identifier}/>
                         </Form.Group>
                         <Form.Group controlId="type" style={{padding: '5px 10px'}}>
-                            current type
+                            Current type
                             <Form.Control type="text"
                                           disabled
                                           value={warehouseDto.type}/>
                         </Form.Group>
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
-                            current state
+                            Current U.S. state
                             <Form.Control type="text"
                                           value={warehouseDto.addressDto.state.state}
                                           disabled/>
@@ -331,7 +331,7 @@ function ModalEditWarehouse(props) {
                                 labelKey="state"
                                 minLength={3}
                                 options={stateOptions}
-                                placeholder="Search, if you want to change state..."
+                                placeholder="Search, if you want to change U.S. state..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
                                 <div className="validation-error">
@@ -340,7 +340,7 @@ function ModalEditWarehouse(props) {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
-                            city
+                            City
                             <Form.Control type="text"
                                           onChange={handleCity}
                                           value={warehouseDto.addressDto.city}
@@ -351,7 +351,7 @@ function ModalEditWarehouse(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="addressLine1" style={{padding: '5px 10px'}}>
-                            address line 1
+                            Address line 1
                             <Form.Control type="text"
                                           onChange={handleLineOne}
                                           value={warehouseDto.addressDto.addressLine1}
@@ -362,7 +362,7 @@ function ModalEditWarehouse(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="addressLine2" style={{padding: '5px 10px'}}>
-                            address line 2
+                            Address line 2
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
                                           value={warehouseDto.addressDto.addressLine2}
