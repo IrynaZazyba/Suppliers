@@ -590,10 +590,11 @@ function EditWaybillModal(props) {
                 </Col>
                 <Col sm={6} style={{float: 'right'}}>
                     <Card className="total-card waybill-card-position" style={{marginLeft: '15px'}}>
-                        <Card.Body>
-                            <h6>Total amount of items</h6>
+                        <Card.Body
+                            className={errors.validationErrors.includes('capacity') ? "car-capacity-attention" : ''}>
+                            <h6>Available car capacity</h6>
                             <Card.Text>
-                                <h3>{totalValues.totalAmount}</h3>
+                                <h3> {totalValues.carCapacity}</h3>
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -606,11 +607,10 @@ function EditWaybillModal(props) {
                         </Card.Body>
                     </Card>
                     <Card className="total-card waybill-card-position" style={{marginLeft: '15px'}}>
-                        <Card.Body
-                            className={errors.validationErrors.includes('capacity') ? "car-capacity-attention" : ''}>
-                            <h6>Available car capacity</h6>
+                        <Card.Body>
+                            <h6>Total amount of items</h6>
                             <Card.Text>
-                                <h3> {totalValues.carCapacity}</h3>
+                                <h3>{totalValues.totalAmount}</h3>
                             </Card.Text>
                         </Card.Body>
                     </Card>
