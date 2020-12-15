@@ -211,6 +211,7 @@ function ModalEditWarehouse(props) {
 
     const showDispatchers = dispatchers.map(disp =>
         <div key={disp.id}>
+            <span style={{padding: '5px 10px'}}>
             {disp.name} {disp.surname}, username: {disp.username}
             <FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
                      onClick={() => {
@@ -221,6 +222,7 @@ function ModalEditWarehouse(props) {
                          setDispatcherDeleteList([...dispatcherDeleteList, disp.id]);
                      }}
             />
+            </span>
         </div>
     );
 
@@ -229,7 +231,7 @@ function ModalEditWarehouse(props) {
             return (
         <Form.Group controlId="totalCapacity" style={{padding: '5px 10px'}}>
             Total capacity
-            <Form.Control type="text"
+            <Form.Control type="text" placeholder="Total capacity"
                           onChange={handleTotalCapacity}
                           value={warehouseDto.totalCapacity}
                           className={errors.validationErrors.includes("totalCapacity")
@@ -248,6 +250,7 @@ function ModalEditWarehouse(props) {
         if (e === "WAREHOUSE") {
             return (
                 <Form>
+                    <span style={{padding: '5px 10px'}}>Dispatcher(s) username</span>
                     <Form.Group>
                         {showDispatchers}
                     </Form.Group>
@@ -341,7 +344,7 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
                             City
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="City"
                                           onChange={handleCity}
                                           value={warehouseDto.addressDto.city}
                                           className={errors.validationErrors.includes("city")
@@ -352,7 +355,7 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="addressLine1" style={{padding: '5px 10px'}}>
                             Address line 1
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="Address line 1"
                                           onChange={handleLineOne}
                                           value={warehouseDto.addressDto.addressLine1}
                                           className={errors.validationErrors.includes("addressLine1")
@@ -363,7 +366,7 @@ function ModalEditWarehouse(props) {
                         </Form.Group>
                         <Form.Group controlId="addressLine2" style={{padding: '5px 10px'}}>
                             Address line 2
-                            <Form.Control type="text"
+                            <Form.Control type="text" placeholder="Address line 2"
                                           onChange={handleLineTwo}
                                           value={warehouseDto.addressDto.addressLine2}
                                           className={errors.validationErrors.includes("addressLine2")
