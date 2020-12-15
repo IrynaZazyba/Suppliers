@@ -80,7 +80,13 @@ function ModalEditCategory(props) {
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                    props.onChange(false);
+                }}
                 aria-labelledby="modal-custom"
                 className="shadow"
                 centered

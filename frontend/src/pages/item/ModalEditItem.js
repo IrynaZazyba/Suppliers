@@ -132,7 +132,20 @@ function ModalEditItem(props) {
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                    setItem({
+                        label: '',
+                        upc: '',
+                        units: '',
+                        customerId: currentCustomerId,
+                        categoryDto: ''
+                    });
+                    props.onChange(false);
+                }}
                 aria-labelledby="modal-custom"
                 className="shadow"
                 centered

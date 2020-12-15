@@ -1,8 +1,9 @@
-export default function validateWriteOffAct(act, items) {
+export default function validateWriteOffAct(act, items, warehouse) {
     let errorsFields = [];
 
-   console.log(!act.identifier);
-    console.log(act);
+    if (!warehouse.identifier) {
+        errorsFields.push("identifier");
+    }
 
     if (!act.identifier) {
         errorsFields.push("act-identifier");
