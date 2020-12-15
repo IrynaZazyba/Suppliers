@@ -158,7 +158,13 @@ function ModalEditCar(props) {
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        validationErrors: [],
+                        serverErrors: ''
+                    });
+                    props.onChange(false)
+                }}
                 aria-labelledby="modal-custom"
                 className="shadow"
                 centered
@@ -216,14 +222,9 @@ function ModalEditCar(props) {
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
-                                {/*<Form.Control type="text" onChange={onChangeState}*/}
-                                {/*              className={*/}
-                                {/*                  isValid("state")*/}
-                                {/*              }/>*/}
-                                {/*<Form.Control.Feedback type="invalid">*/}
-                                {/*    Please provide a state.*/}
-                                {/*</Form.Control.Feedback>*/}
-
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
+                                </div>
                             </AsyncTypeahead>
                         </Form.Group>
 
