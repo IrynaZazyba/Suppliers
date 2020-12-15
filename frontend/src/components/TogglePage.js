@@ -32,7 +32,7 @@ function ToggleButtonExample(props) {
 
     return (
         <>
-            <ButtonGroup toggle>
+            <ButtonGroup className="page-size" toggle>
                 {toggleButtons}
             </ButtonGroup>
         </>

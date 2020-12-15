@@ -18,7 +18,7 @@ public class Sender {
     private String password;
     private Properties props;
 
-    public void send(Email email) {
+    public void send(Email email, final String textContent) {
         Session session = Session.getDefaultInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
@@ -31,6 +31,7 @@ public class Sender {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getTo()));
             message.setSubject(email.getSubject());
             message.setText(email.getText());
+            message.setContent(textContent, "text/html");
             Transport.send(message);
         } catch (MessagingException e) {
             throw new RuntimeException(e);

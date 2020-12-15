@@ -162,13 +162,12 @@ export default () => {
     const header =
         <React.Fragment>
             <Row>
-                <Col md={2}>
+                <Col xs={2}>
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                         Add
                     </Button>
                 </Col>
-                <Col md={9}></Col>
-                <Col md={1}>
+                <Col xs={10}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>

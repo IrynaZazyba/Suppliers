@@ -162,12 +162,10 @@ export default (props) => {
     const header =
         <React.Fragment>
             <Row>
-                <Col md={1}>
+                <Col xs={6}>
                     <Button className="mainButton" size="sm" onClick={() => setLgShow(true)}>
                         Add
                     </Button>
-                </Col>
-                <Col md={1}>
                     <Button
                         variant="link"
                         disabled={checkBoxes.length === 0}
@@ -176,8 +174,7 @@ export default (props) => {
                         Delete
                     </Button>
                 </Col>
-                <Col md={9}/>
-                <Col md={1}>
+                <Col xs={6}>
                     <TogglePage props={page} onChange={handleCountPerPage}/>
                 </Col>
             </Row>
