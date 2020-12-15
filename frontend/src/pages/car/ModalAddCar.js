@@ -138,6 +138,7 @@ function ModalAddCar(props) {
     return (
         <>
             <Modal
+                backdrop="static"
                 show={props.props}
                 onHide={() => {
                     setErrors({
@@ -165,7 +166,9 @@ function ModalAddCar(props) {
                 <Modal.Body>
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
+
                         <Form.Group controlId="formBasicLabel" style={{padding: '5px 10px'}}>
+                            Number
                             <Form.Control type="text" placeholder="Number" onChange={handleNumber}
                                           className={
                                               isValid("number")
@@ -175,6 +178,7 @@ function ModalAddCar(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicCapacity" style={{padding: '5px 10px'}}>
+                            Total capacity
                             <Form.Control type="text"
                                           placeholder="Total capacity"
                                           onChange={handleTotalCapacity}
@@ -187,6 +191,7 @@ function ModalAddCar(props) {
                         </Form.Group>
 
                         <Form.Group>
+                            <span style={{padding: '5px 10px'}}>U.S. state</span>
                             <AsyncTypeahead
                                 style={{padding: '5px 10px'}}
                                 ref={ref}
@@ -208,7 +213,8 @@ function ModalAddCar(props) {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="city" onChange={handleCity}
+                            City
+                            <Form.Control type="text" placeholder="City" onChange={handleCity}
                                           className={
                                               isValid("city")
                                           }/>
@@ -219,7 +225,8 @@ function ModalAddCar(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine1" onChange={handleaddressLine1}
+                            Address line 1
+                            <Form.Control type="text" placeholder="Address line 1" onChange={handleaddressLine1}
                                           className={
                                               isValid("addressLine1")
                                           }/>
@@ -230,7 +237,8 @@ function ModalAddCar(props) {
 
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
-                            <Form.Control type="text" placeholder="addressLine2" onChange={handleaddressLine2}
+                            Address line 2
+                            <Form.Control type="text" placeholder="Address line 2" onChange={handleaddressLine2}
                                           className={
                                               isValid("addressLine2")
                                           }/>
