@@ -150,7 +150,7 @@ function AcceptApplicationModal(props) {
         <>
             {app &&
             <Row>
-                <Col sm={8}>
+                <Col sm={7}>
                     <Row style={{margin: '10px 5px'}}>
                         <Col>
                             <span className="edit-appList">Number: </span> {app.number}
@@ -184,7 +184,6 @@ function AcceptApplicationModal(props) {
                             {app.sourceLocationDto.addressDto.addressLine2}
                         </Col>
                         <Col sm={1}>
-
                         </Col>
                         <Col
                             style={{borderLeft: '3px dotted yellowgreen'}}
@@ -196,10 +195,18 @@ function AcceptApplicationModal(props) {
                         </Col>
                     </Row>
                 </Col>
-                <Col sm={4}>
+                <Col sm={5}>
                     <Row>
-                        <Col sm={6} style={{marginLeft: '-25px'}}>
-                            <Card className="total-card">
+                        <Col sm={12} style={{float: 'right'}}>
+                            <Card className="total-card card-position">
+                                <Card.Body>
+                                    <h6>Total number of units</h6>
+                                    <Card.Text>
+                                        <h3>{totalValues.totalUnits}</h3>
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                            <Card className="total-card" style={{display: 'inline-block', float: 'inherit'}}>
                                 <Card.Body>
                                     <h6>Total amount of items</h6>
                                     <Card.Text>
@@ -208,21 +215,10 @@ function AcceptApplicationModal(props) {
                                 </Card.Body>
                             </Card>
                         </Col>
-                        <Col sm={6}>
-                            <Card className="total-card">
-                                <Card.Body>
-                                    <h6>Total number of units</h6>
-                                    <Card.Text>
-                                        <h3>{totalValues.totalUnits}</h3>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
                     </Row>
-                    <Row style={{marginTop: '25px'}}>
+                    <Row style={{marginTop: '25px', paddingLeft: '105px'}}>
                         <h6>Available capacity{": "}</h6>
-                        <span
-                            style={{marginLeft: '10px'}}>{availableCapacity}</span>
+                        <span style={{marginLeft: '10px'}}>{availableCapacity}</span>
                         <ProgressBar
                             variant={(whCapacityPercentage > 40 && "success") ||
                             (whCapacityPercentage < 40 && whCapacityPercentage > 20 && "warning")

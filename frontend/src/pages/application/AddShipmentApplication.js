@@ -190,7 +190,7 @@ function AddShipmentApplication(props) {
                         validationErrors: []
                     });
                 })
-                .catch(error =>setErrors({
+                .catch(error => setErrors({
                     serverErrors: "Something go wrong, try later",
                     validationErrors: []
                 }));
@@ -396,10 +396,10 @@ function AddShipmentApplication(props) {
 
     const appDataFields =
         <Row>
-            <Col sm={8}>
+            <Col sm={7}>
                 <Form.Group as={Row} controlId="appNumber">
-                    <Form.Label column sm="3">Number</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Number</Form.Label>
+                    <Col sm="8">
                         <Form.Control type="text" onChange={appNumberOnChange}
                                       className={
                                           errors.validationErrors.includes("number")
@@ -412,8 +412,8 @@ function AddShipmentApplication(props) {
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="sourceLocation">
-                    <Form.Label column sm="3">Source location</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Source location</Form.Label>
+                    <Col sm="8">
                         <Form.Control onChange={handleAppSourceLocations} as="select"
                                       disabled={items.length > 0 ? true : false}
                                       className={
@@ -434,8 +434,8 @@ function AddShipmentApplication(props) {
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="destinationLocation">
-                    <Form.Label column sm="3">Destination location</Form.Label>
-                    <Col sm="7">
+                    <Form.Label column sm="4">Destination location</Form.Label>
+                    <Col sm="8">
                         <Form.Control onChange={handleAppDestinationLocations} as="select"
                                       className={
                                           errors.validationErrors.includes("destinationId")
@@ -456,22 +456,20 @@ function AddShipmentApplication(props) {
                     </Col>
                 </Form.Group>
             </Col>
-            <Col sm={2} style={{marginLeft: '-25px'}}>
-                <Card className="total-card">
-                    <Card.Body>
-                        <h6>Total amount of items</h6>
-                        <Card.Text>
-                            <h3>{totalValues.totalAmount}</h3>
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col sm={2}>
-                <Card className="total-card">
+            <Col sm={5} style={{float: 'right'}}>
+                <Card className="total-card card-position">
                     <Card.Body>
                         <h6>Total number of units</h6>
                         <Card.Text>
                             <h3> {totalValues.totalUnits}</h3>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card className="total-card" style={{display: 'inline-block', float: 'inherit'}}>
+                    <Card.Body>
+                        <h6>Total amount of items</h6>
+                        <Card.Text>
+                            <h3>{totalValues.totalAmount}</h3>
                         </Card.Text>
                     </Card.Body>
                 </Card>
