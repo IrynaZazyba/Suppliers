@@ -1,24 +1,41 @@
 import isEmail from 'validator/lib/isEmail';
+import {useState} from "react";
 
-export default function validateUser(dto) {
+export default function validateUser(user) {
     let errorsFields = [];
 
-    if (dto.email.length < 5 || dto.email.length > 254 || !isEmail(dto.email)) {
+    if (!user.name) {
+        errorsFields.push("name");
+    }
+
+    if (!user.surname) {
+        errorsFields.push("surname");
+    }
+
+    if (!user.birthday) {
+        errorsFields.push("birthday");
+    }
+
+    if (!user.role) {
+        errorsFields.push("role");
+    }
+
+    if (!user.email || !isEmail(user.email)) {
         errorsFields.push("email");
     }
 
-    let validationResult = validateUserName(dto);
-    errorsFields = [...errorsFields, ...validationResult];
+    if (!user.addressDto || !user.addressDto.city) {
+        errorsFields.push("city");
+    }
+    if (!user.addressDto || !user.addressDto.addressLine1) {
+        errorsFields.push("addressLine1");
+    }
+    if (!user.addressDto || !user.addressDto.addressLine2) {
+        errorsFields.push("addressLine2");
+    }
+    if (!user.addressDto || !user.addressDto.state.state) {
+        errorsFields.push("state");
+    }
+
     return errorsFields;
 };
-
-export function validateUserName(dto) {
-    let errorsFields = [];
-
-    if (dto.name.length < 2 || dto.name.length > 50 || /[*?=%:]/.test(dto.name)) {
-        errorsFields.push("name");
-    }
-    return errorsFields;
-}
-
-

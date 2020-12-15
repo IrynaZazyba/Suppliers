@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import {AuthContext} from "../context/authContext";
 import Card from "react-bootstrap/Card";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
+import validateUser from "../validation/UserValidationRules";
 
 
 export default () => {
@@ -33,8 +34,10 @@ export default () => {
         id: '',
         state: ''
     });
-    const [validError, setError] = useState([]);
-    const [errorMessage, setErrors] = useState('');
+    const [errors, setErrors] = useState({
+        validationErrors: [],
+        serverErrors: ''
+    });
     const filterByState = () => true;
 
     const onChangeState = (e) => {
@@ -67,7 +70,6 @@ export default () => {
     };
 
     const handlePassword = (e) => {
-        Alert.name = "Password changed";
         setUserDto(preState => ({
             ...preState,
             password: e.target.value
@@ -120,7 +122,13 @@ export default () => {
             addressDto: addressDto
         };
 
-
+        const validationResult2 = validateUser(userUpdateDto);
+        setErrors(preState => ({
+            ...preState,
+            validationErrors: validationResult2,
+            serverErrors: ''
+        }));
+        if (!validationResult2.length) {
         fetch(`/customers/${currentCustomerId}/users/${userDto.id}`, {
             method: 'PUT',
             headers: {
@@ -130,21 +138,25 @@ export default () => {
         })
             .then(function (response) {
                 if (response.status !== 200) {
-                    setError('');
                     setErrors("Something go wrong, try later");
                 } else {
-                    setError('');
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: [],
+                        serverErrors: 'User edited'
+                    }));
 
                 }
             });
 
-    };
+    };}
     function parseRole(role){
         return role.toLowerCase().replaceAll("_"," ").replaceAll("role", "");
     }
-    const isValid = (param) => validError.includes(param) ? "form-control is-invalid" : "form-control";
+    const isValid = (param) => errors.validationErrors.includes(param) ? "form-control is-invalid" : "form-control";
     const editPasswordHandler = (e) => {
         e.preventDefault();
+
         fetch(`/customers/${currentCustomerId}/users/${userDto.id}/password`, {
             method: 'PUT',
             headers: {
@@ -154,10 +166,17 @@ export default () => {
         })
             .then(function (response) {
                 if (response.status !== 200) {
-                    setError('');
-                    setErrors("Something go wrong, try later");
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: [],
+                        serverErrors: 'Something went wrong, try later'
+                    }));
                 } else {
-                    setError('Password changed');
+                    setErrors(preState => ({
+                        ...preState,
+                        validationErrors: [],
+                        serverErrors: 'Password changed'
+                    }));
 
                 }
             });

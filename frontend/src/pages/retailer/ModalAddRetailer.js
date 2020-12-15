@@ -12,6 +12,8 @@ import ModalAddWarehouseRetailer from "./ModalAddWarehouseRetailer";
 import {FaEdit} from "react-icons/fa/index";
 import "./styles.css"
 import axios from "axios";
+import validateUser from "../../validation/UserValidationRules";
+import validateRetailer from "../../validation/RetailerValidationRules";
 
 function ModalAddRetailer(props) {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
@@ -68,37 +70,43 @@ function ModalAddRetailer(props) {
     }, [props.props.editShow]);
     const addRetailerHandler = (e) => {
 
+        const validationResult2 = validateRetailer(retailerDto);
         setErrors(preState => ({
             ...preState,
-            validationErrors: ''
+            validationErrors: validationResult2,
+            serverErrors: ''
         }));
 
-                retailerDto.warehouses = warehouses;
-        fetch(`/customers/${currentCustomerId}/retailers`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(retailerDto)
-        })
-            .then(function (response) {
-                if (response.status !== 201) {
-                    setErrors({
-                        serverErrors: "Something go wrong, try later",
-                        validationErrors: ''
-                    });
-                } else {
-                    setErrors(preState => ({
-                        ...preState,
-                        validationErrors: []
-                    }));
-                    setCheckBox([]);
-                    setWarehouses([]);
-                    props.onChange(false, retailerDto);
-                }
-            });
-
+        if (!validationResult2.length) {
+            retailerDto.warehouses = warehouses;
+            fetch(`/customers/${currentCustomerId}/retailers`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(retailerDto)
+            })
+                .then(function (response) {
+                    if (response.status !== 201) {
+                        setErrors({
+                            serverErrors: "Something went wrong, try later",
+                            validationErrors: []
+                        });
+                    } else {
+                        setErrors(preState => ({
+                            ...preState,
+                            validationErrors: []
+                        }));
+                        setCheckBox([]);
+                        setRetailerDto({});
+                        setWarehouses([]);
+                        props.onChange(false, retailerDto);
+                    }
+                });
+        }
     };
+
+
 
     const handleCheckedChange = (warehouse) => {
         setCheckBox(preState => [...preState, warehouse])
