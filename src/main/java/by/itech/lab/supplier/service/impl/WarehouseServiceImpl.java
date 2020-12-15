@@ -143,8 +143,13 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Transactional
     @Override
     public void deleteByIds(final List<Long> id) {
-        warehouseRepository.deleteByIds(id);
-        userService.deleteWarehousesForAllUsers(id);
+        if (applicationService.isWarehousesFreeFromApplications(id) &&
+                itemInWarehouseRepository.findWarehouseItemIdsByWarehouseIds(id).isEmpty()) {
+            warehouseRepository.deleteByIds(id);
+            userService.deleteWarehousesForAllUsers(id);
+        } else {
+            throw new ResourceNotFoundException("Warehouse can not be deleted, because it's already used in application or this warehouse still contains items.");
+        }
     }
 
     @Transactional

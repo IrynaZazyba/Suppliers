@@ -15,7 +15,7 @@ function ModalAddWarehouse(props) {
     const [stateOptions, setStateOptions] = useState([]);
     const [dispatcherOptions, setDispatcherOptions] = useState([]);
     const [dispatchers, setDispatchers] = useState([]);
-    const [dropdownMenuName, setDropdownMenuName] = useState("select type");
+    const [dropdownMenuName, setDropdownMenuName] = useState("FACTORY");
     const [warehouseDto, setWarehouseDto] = useState({
         id: '',
         customerId: '',
@@ -170,7 +170,7 @@ function ModalAddWarehouse(props) {
                             if (response.status !== 200) {
                                 setErrors(preState => ({
                                     ...preState,
-                                    serverErrors: "Something go wrong, try later",
+                                    serverErrors: "Something went wrong, try later",
                                 }));
                             } else {
                                 let warehouseUpdateDto2 = {
@@ -193,7 +193,7 @@ function ModalAddWarehouse(props) {
                                         if (response.status !== 201) {
                                             setErrors(preState => ({
                                                 ...preState,
-                                                serverErrors: "Something go wrong, try later"
+                                                serverErrors: "Something went wrong, try later"
                                             }));
                                         } else {
                                             setErrors(preState => ({
@@ -213,7 +213,7 @@ function ModalAddWarehouse(props) {
                                                 dispatchersId: []
                                             });
                                             setDispatchers([]);
-                                            setDropdownMenuName("select type");
+                                            setDropdownMenuName("FACTORY");
                                             props.onChange(false, warehouseDto)
                                         }
                                     })
@@ -311,7 +311,7 @@ function ModalAddWarehouse(props) {
                         dispatchersId: []
                     });
                     setDispatchers([]);
-                    setDropdownMenuName("select type");
+                    setDropdownMenuName("FACTORY");
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-warehouse"
@@ -327,7 +327,7 @@ function ModalAddWarehouse(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="identifier" style={{padding: '5px 10px'}}>
-                            identifier
+                            Identifier
                             <Form.Control type="text"
                                           onChange={handleIdentifier}
                                           className={errors.validationErrors.includes("identifier")
@@ -360,7 +360,7 @@ function ModalAddWarehouse(props) {
                                 labelKey="state"
                                 minLength={3}
                                 options={stateOptions}
-                                placeholder="Select state..."
+                                placeholder="Select U.S. state..."
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}
                             >
@@ -370,7 +370,7 @@ function ModalAddWarehouse(props) {
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
-                            city
+                            City
                             <Form.Control type="text"
                                           onChange={handleCity}
                                           className={errors.validationErrors.includes("city")
@@ -380,7 +380,7 @@ function ModalAddWarehouse(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="addressLine1" style={{padding: '5px 10px'}}>
-                            address line 1
+                            Address line 1
                             <Form.Control type="text"
                                           onChange={handleLineOne}
                                           className={errors.validationErrors.includes("addressLine1")
@@ -390,7 +390,7 @@ function ModalAddWarehouse(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="addressLine2" style={{padding: '5px 10px'}}>
-                            address line 2
+                            Address line 2
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
                                           className={errors.validationErrors.includes("addressLine2")

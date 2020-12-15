@@ -29,7 +29,10 @@ export default (props) => {
         editShow: false,
         warehouse: []
     });
-    const [errorMessage, setErrors] = useState('');
+
+    const [errors, setErrors] = useState({
+        errorMessage: ''
+    });
 
     const handleCheckedChange = (warehouseId) => {
         let checkboxUpdate = checkBoxes.slice();
@@ -102,17 +105,20 @@ export default (props) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(checkBoxes)
+        }).then(response => {
+            if (response.status !== 204) {
+                setErrors({
+                    errorMessage: "Something went wrong. Warehouse can not be deleted. Probably, it's already used in application or this warehouse still contains items."
+                })
+            } else {
+                setErrors({
+                    errorMessage: ''
+                });
+                setCheckBox([]);
+                getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
+
+            }
         })
-            .then(response => {
-                if (response.status !== 204) {
-                    setErrors({
-                        errorMessage: "Warehouse can not be deleted, because it is already used in application"
-                    })
-                } else {
-                    setCheckBox([]);
-                    getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
-                }
-            });
     }
 
     function showAddress(address) {
@@ -151,7 +157,7 @@ export default (props) => {
 
     const modals =
         <React.Fragment>
-            {errorMessage && <ErrorMessage message={errorMessage}/>}
+            {errors.errorMessage && <ErrorMessage message={errors.errorMessage}/>}
             <ModalEditWarehouse editWarehouse={editWarehouse} onChange={closeModalEdit}
                                 currentCustomerId={currentCustomerId}/>
             <ModalAddWarehouse lgShow={lgShow} onChange={closeModalAdd}
@@ -188,7 +194,7 @@ export default (props) => {
                 <tr>
                     <th>Identifier</th>
                     <th>Type</th>
-                    <th>Full Address</th>
+                    <th>Address</th>
                     <th>Total Capacity</th>
                     <th></th>
                     <th></th>

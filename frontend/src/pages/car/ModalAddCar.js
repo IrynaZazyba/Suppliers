@@ -114,7 +114,7 @@ function ModalAddCar(props) {
                     if (response.status !== 201) {
                         setErrors({
                             serverErrors: "Something went wrong, try later",
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     } else {
                         setErrors(preState => ({
@@ -122,6 +122,13 @@ function ModalAddCar(props) {
                             validationErrors: [],
                             serverErrors: ''
                         }));
+                        setCar({
+                            number: '',
+                            totalCapacity: '',
+                            currentCapacity: currentCustomerId,
+                            customerId: '',
+                            addressDto: {},
+                        });
                         props.onChange(false, carDto);
                     }
                 });
@@ -136,6 +143,13 @@ function ModalAddCar(props) {
                     setErrors({
                         serverErrors: '',
                         validationErrors: []
+                    });
+                    setCar({
+                        number: '',
+                        totalCapacity: '',
+                        currentCapacity: currentCustomerId,
+                        customerId: '',
+                        addressDto: {},
                     });
                     props.onChange(false);
                 }}
@@ -186,13 +200,9 @@ function ModalAddCar(props) {
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
-                                {/*<Form.Control type="text" onChange={onChangeState}*/}
-                                {/*              className={*/}
-                                {/*                  isValid("state")*/}
-                                {/*              }/>*/}
-                                {/*<Form.Control.Feedback type="invalid">*/}
-                                {/*    Please provide a state.*/}
-                                {/*</Form.Control.Feedback>*/}
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
+                                </div>
 
                             </AsyncTypeahead>
                         </Form.Group>
