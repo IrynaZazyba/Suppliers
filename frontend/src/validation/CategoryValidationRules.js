@@ -14,7 +14,7 @@ export function validateCategoryName(dto) {
 export function validateTaxRate(dto) {
     let errorFields = [];
 
-    if (!(/[0-9]/.test(dto.taxRate))) {
+    if (!(/[0-9]/.test(dto.taxRate)) || dto.taxRate < 0) {
         errorFields.push("taxRate");
     }
     return errorFields;

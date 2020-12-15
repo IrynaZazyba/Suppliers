@@ -92,6 +92,7 @@ function ModalAddCustomer(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
+                            <Form.Label>Company name</Form.Label>
                             <Form.Control type="text" placeholder="Company name" onChange={handleName}
                                           className={
                                               errors.validationErrors.includes("name")
@@ -104,6 +105,7 @@ function ModalAddCustomer(props) {
                         </Form.Group>
 
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>Admin email</Form.Label>
                             <Form.Control type="email" placeholder="Admin email" onChange={handleEmail}
                                           className={
                                               errors.validationErrors.includes("email")

@@ -86,6 +86,7 @@ function ModalEditCustomer(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="editCustomer" style={{padding: '5px 10px'}}>
+                            <Form.Label>Company name</Form.Label>
                             <Form.Control type="text"
                                           placeholder="Company name"
                                           onChange={handleName}
@@ -100,6 +101,7 @@ function ModalEditCustomer(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
+                            <Form.Label>Admin email</Form.Label>
                             <Form.Control type="email"
                                           value={customerDto.adminEmail}
                                           placeholder="Admin email"

@@ -186,6 +186,7 @@ export default (props) => {
             </Row>
         </React.Fragment>;
 
+
     const body =
         <React.Fragment>
             {warehouses.length > 0 &&
