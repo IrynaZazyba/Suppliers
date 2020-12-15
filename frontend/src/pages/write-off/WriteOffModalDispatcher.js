@@ -107,6 +107,8 @@ function ModalAddWriteOff(props) {
             });
         }
         setItems([]);
+        refReason.current.clear();
+        refUpc.current.clear();
     };
 
     const onChangeUpc = (e) => {
@@ -227,28 +229,34 @@ function ModalAddWriteOff(props) {
                         let res = Object.values(json).join('. ');
                         setErrors({
                             serverErrors: res,
-                            validationErrors: ''
+                            validationErrors: []
                         });
                     });
                 }
                 if (response.status !== 200 && response.status !== 400) {
                     setErrors({
                         serverErrors: "Something went wrong, try later. Maybe you are trying to write off more items " +
-                            "than warehouse contains.",
-                        validationErrors: ''
+                            "than warehouse contains. Or act with such identifier already exists.",
+                        validationErrors: []
                     });
                 }
                 if (response.status === 200) {
                     setErrors(preState => ({
                         ...preState,
-                        validationErrors: []
+                        validationErrors: [],
+                        serverErrors: ''
                     }));
                     setWriteOff([]);
                     setItems([]);
+                    setCurrentWarehouse({
+                        address: {
+                            addressLine1: '',
+                            addressLine2: ''
+                        }
+                    });
                     props.onChange(false, writeOffDto);
                 }
             });
-            refIdentifier.current.clear();
         }
     };
 
@@ -344,7 +352,7 @@ function ModalAddWriteOff(props) {
                                   value={currentItem && currentItem.amount}
                                   onChange={handleInput('amount')}
                                   onBlur={() => {
-                                      let itemSum = currentItem.amount * currentItem.cost;
+                                      let itemSum = (currentItem.amount * currentItem.cost).toFixed(2);
                                       setCurrentItem(prevState => ({
                                           ...prevState,
                                           sum: itemSum
@@ -421,38 +429,38 @@ function ModalAddWriteOff(props) {
                 <Form.Group as={Row} controlId="addressLine1">
                     <Form.Label column sm="3">Address line 1</Form.Label>
                     <Col sm="9">
-                    <Form.Control type="text"
-                                  value={currentWarehouse.address.addressLine1}
-                                  placeholder="Address line 1"
-                                  disabled
-                    /></Col>
+                        <Form.Control type="text"
+                                      value={currentWarehouse.address.addressLine1}
+                                      placeholder="Address line 1"
+                                      disabled
+                        /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="addressLine2">
                     <Form.Label column sm="3">Address line 2</Form.Label>
                     <Col sm="9">
-                    <Form.Control type="text"
-                                  value={currentWarehouse.address.addressLine2}
-                                  placeholder="Address line 2"
-                                  disabled
-                    /></Col>
+                        <Form.Control type="text"
+                                      value={currentWarehouse.address.addressLine2}
+                                      placeholder="Address line 2"
+                                      disabled
+                        /></Col>
                 </Form.Group>
                 <Form.Group as={Row} controlId="formBasicText">
                     <Form.Label column sm="3">Act identifier</Form.Label>
                     <Col sm="9">
-                    <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
-                                  className={
-                                      errors.validationErrors.includes("act-identifier")
-                                          ? "form-control is-invalid"
-                                          : "form-control"
-                                  }/>
-                    <Form.Control.Feedback type="invalid">
-                        Please provide an identifier.
-                    </Form.Control.Feedback>
+                        <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
+                                      className={
+                                          errors.validationErrors.includes("act-identifier")
+                                              ? "form-control is-invalid"
+                                              : "form-control"
+                                      }/>
+                        <Form.Control.Feedback type="invalid">
+                            Please provide an identifier.
+                        </Form.Control.Feedback>
                     </Col>
                 </Form.Group>
             </Col>
-            <Col sm={6} style={{float:'right'}}>
-                <Card className="total-card"  style={{display:'inline-block',marginLeft:'15px', float:'inherit'}}>
+            <Col sm={6} style={{float: 'right'}}>
+                <Card className="total-card" style={{display: 'inline-block', marginLeft: '15px', float: 'inherit'}}>
                     <Card.Body>
                         <h6>Total summary of items</h6>
                         <Card.Text>
@@ -460,7 +468,7 @@ function ModalAddWriteOff(props) {
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                <Card className="total-card" style={{display:'inline-block',  float:'inherit'}}>
+                <Card className="total-card" style={{display: 'inline-block', float: 'inherit'}}>
                     <Card.Body>
                         <h6>Total amount of items</h6>
                         <Card.Text>
@@ -482,7 +490,12 @@ function ModalAddWriteOff(props) {
                         validationErrors: []
                     });
                     setItems([]);
-                    setCurrentWarehouse({address: ''});
+                    setCurrentWarehouse({
+                        address: {
+                            addressLine1: '',
+                            addressLine2: ''
+                        }
+                    });
                     setWriteOff({});
                     props.onChange(false);
                 }}

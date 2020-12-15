@@ -78,6 +78,10 @@ function ModalAddCategory(props) {
                         serverErrors: '',
                         validationErrors: []
                     });
+                    setCategory({
+                        category: '',
+                        taxRate: ''
+                    });
                     props.onChange(false);
                 }}
                 aria-labelledby="modal-custom"
