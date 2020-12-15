@@ -31,8 +31,7 @@ export default (props) => {
     });
 
     const [errors, setErrors] = useState({
-        validationErrors: [],
-        serverErrors: ''
+        errorMessage: ''
     });
 
     const handleCheckedChange = (warehouseId) => {
@@ -106,25 +105,20 @@ export default (props) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(checkBoxes)
+        }).then(response => {
+            if (response.status !== 204) {
+                setErrors({
+                    errorMessage: "Warehouse can not be deleted, because it's already used in application or this warehouse still contains items."
+                })
+            } else {
+                setErrors({
+                    errorMessage: ''
+                });
+                setCheckBox([]);
+                getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
+
+            }
         })
-            .then(response => response.json())
-            .then(result => {
-
-                console.log(result.value() + " hey")
-            })
-
-
-        //     console.log(isDeleted + " resp from del")
-        //     if (!isDeleted) {
-        //         setErrors(preState => ({
-        //             ...preState,
-        //             serverErrors: "Warehouse can not be deleted, because it's already used in application or this warehouse still contains items."
-        //         }))
-        //     } else {
-        setCheckBox([]);
-        getWarehouses(`/customers/${currentCustomerId}/warehouses?size=${page.countPerPage}`);
-        // }
-        // })
     }
 
     function showAddress(address) {
@@ -201,7 +195,7 @@ export default (props) => {
                 <tr>
                     <th>Identifier</th>
                     <th>Type</th>
-                    <th>Full Address</th>
+                    <th>Address</th>
                     <th>Total Capacity</th>
                     <th></th>
                     <th></th>
