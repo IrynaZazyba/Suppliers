@@ -289,19 +289,12 @@ export default () => {
                                 onSearch={handleStateSearch}
                                 onChange={onChangeState}>
 
-                                {/*<Form.Control type="text" onChange={onChangeState}*/}
-                                {/*              className={*/}
-                                {/*                  isValid("state")*/}
-                                {/*              }/>*/}
-                                {/*<Form.Control.Feedback type="invalid">*/}
-                                {/*    Please provide a state.*/}
-                                {/*</Form.Control.Feedback>*/}
 
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city" value={addressDto && addressDto.city}
+                            <Form.Control type="text" placeholder="City" value={addressDto && addressDto.city}
                                           onChange={handleCity}
                                           className={
                                               isValid("city")
