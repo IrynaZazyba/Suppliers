@@ -17,7 +17,7 @@ export function validateItemLabel(dto) {
 export function validateItemUnits(dto) {
     let errorFields = [];
 
-    if (dto.units < 0 || !(/[0-9]/.test(dto.upc))) {
+    if (dto.units < 0 || !(/[0-9]/.test(dto.units))) {
         errorFields.push("units");
     }
     return errorFields;

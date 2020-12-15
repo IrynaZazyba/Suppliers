@@ -67,7 +67,8 @@ function ModalEditCategory(props) {
                     } else {
                         setErrors(preState => ({
                             ...preState,
-                            validationErrors: []
+                            validationErrors: [],
+                            serverErrors: ''
                         }));
                         props.onChange(false, categoryDto);
                     }
@@ -93,6 +94,7 @@ function ModalEditCategory(props) {
                     {errors.serverErrors && <ErrorMessage message={errors.serverErrors}/>}
                     <Form>
                         <Form.Group controlId="editCategory" style={{padding: '5px 10px'}}>
+                            Category name
                             <Form.Control type="text"
                                           placeholder="Category"
                                           onChange={handleCategoryName}
@@ -107,6 +109,7 @@ function ModalEditCategory(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="editTaxRate" style={{padding: '5px 10px'}}>
+                            Tax rate
                             <Form.Control type="number" step="0.001"
                                           placeholder="Tax rate(per km)"
                                           onChange={handleTaxRate}

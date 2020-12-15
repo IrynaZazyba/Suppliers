@@ -92,8 +92,7 @@ function App() {
 
     const renderWriteOffActs = () => {
         return <ProtectedComponent conditions={user.role === "ROLE_SYSTEM_ADMIN" || user.role === "ROLE_ADMIN"
-        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_DRIVER"
-        || user.role === "ROLE_DIRECTOR"} render={(() => {
+        || user.role === "ROLE_DISPATCHER" || user.role === "ROLE_DIRECTOR"} render={(() => {
             return <WriteOffAct/>
         })}/>
     }
