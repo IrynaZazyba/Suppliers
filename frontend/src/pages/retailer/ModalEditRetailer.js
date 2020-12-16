@@ -230,7 +230,11 @@ function ModalEditRetailer(props) {
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setRetailerDto({});
+                    setWarehouses([]);
+                    props.onChange(false)
+                }}
                 aria-labelledby="modal-custom"
                 className="shadow"
 

@@ -272,7 +272,7 @@ export default () => {
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
                             Current state
                             <Form.Control type="text"
-                                          value={addressDto && addressDto.state.state}
+                                          value={addressDto && addressDto.state && addressDto.state.state}
                                           disabled/>
                         </Form.Group>
                         <Form.Group style={{padding: '5px 10px'}}>

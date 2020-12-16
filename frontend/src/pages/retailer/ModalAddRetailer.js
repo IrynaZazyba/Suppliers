@@ -219,6 +219,7 @@ function ModalAddRetailer(props) {
                         serverErrors: '',
                         validationErrors: []
                     });
+                    setWarehouses([]);
                     setRetailerDto({});
                     props.onChange(false);
                 }}

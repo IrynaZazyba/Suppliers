@@ -137,7 +137,14 @@ console.log(warehouseDto.addressDto);
         <>
             <Modal
                 show={props.props}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                    setWarehouseDto({});
+                    props.onChange(false)
+                }}
                 aria-labelledby="modal-warehouse"
                 className="shadow"
                 centered

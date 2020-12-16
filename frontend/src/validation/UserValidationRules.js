@@ -31,7 +31,7 @@ export default function validateUser(user, addressDto) {
     if (!user.addressDto || !addressDto.addressLine2) {
         errorsFields.push("addressLine2");
     }
-    if (!user.addressDto || !addressDto.state.state) {
+    if (!user.addressDto || !addressDto.state || !addressDto.state.state) {
         errorsFields.push("state");
     }
 

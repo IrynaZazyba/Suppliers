@@ -4,9 +4,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import validateWarehouse from "../../validation/WarehouseValidationRules";
-import axios from "axios";
 import validateWarehouseRetailer from "../../validation/WarehouseValidationRules";
+import axios from "axios";
 
 function ModalEditWarehouseRetailer(props) {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
@@ -130,7 +129,8 @@ function ModalEditWarehouseRetailer(props) {
                     props.onEditWarehouse(warehouseUpdateDto);
                     props.onChange(false, warehouseUpdateDto);
                 }
-            }})
+            }
+        })
 
     };
 
@@ -138,7 +138,13 @@ function ModalEditWarehouseRetailer(props) {
         <>
             <Modal
                 show={props.props.editShow}
-                onHide={() => props.onChange(false)}
+                onHide={() => {
+                    setErrors({
+                        serverErrors: '',
+                        validationErrors: []
+                    });
+                    setWarehouseDto({});
+                    props.onChange(false)}}
                 aria-labelledby="modal-custom"
                 className="shadow"
                 centered
@@ -209,7 +215,7 @@ function ModalEditWarehouseRetailer(props) {
                                           disabled
                             />
                         </Form.Group>
-
+                        <Form.Group controlId="state" style={{padding: '5px 10px'}}>
                         <AsyncTypeahead
                             ref={ref}
                             name="state"
@@ -226,6 +232,7 @@ function ModalEditWarehouseRetailer(props) {
                                 {errors.validationErrors.includes("state") ? "Please provide a value" : ""}
                             </div>
                         </AsyncTypeahead>
+                        </Form.Group>
 
                         <div className="float-right" style={{paddingRight: '10px'}}>
                             <Button type="submit" className="mainButton pull-right"
