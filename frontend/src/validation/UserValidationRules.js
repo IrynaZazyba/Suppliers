@@ -1,7 +1,7 @@
 import isEmail from 'validator/lib/isEmail';
 import {useState} from "react";
 
-export default function validateUser(user) {
+export default function validateUser(user, addressDto) {
     let errorsFields = [];
 
     if (!user.name) {
@@ -11,7 +11,6 @@ export default function validateUser(user) {
     if (!user.surname) {
         errorsFields.push("surname");
     }
-
     if (!user.birthday) {
         errorsFields.push("birthday");
     }
@@ -24,16 +23,16 @@ export default function validateUser(user) {
         errorsFields.push("email");
     }
 
-    if (!user.addressDto || !user.addressDto.city) {
+    if (!user.addressDto || !addressDto.city) {
         errorsFields.push("city");
     }
-    if (!user.addressDto || !user.addressDto.addressLine1) {
+    if (!user.addressDto || !addressDto.addressLine1) {
         errorsFields.push("addressLine1");
     }
-    if (!user.addressDto || !user.addressDto.addressLine2) {
+    if (!user.addressDto || !addressDto.addressLine2) {
         errorsFields.push("addressLine2");
     }
-    if (!user.addressDto || !user.addressDto.state.state) {
+    if (!user.addressDto || !addressDto.state.state) {
         errorsFields.push("state");
     }
 

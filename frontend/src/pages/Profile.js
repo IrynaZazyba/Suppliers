@@ -15,7 +15,7 @@ export default () => {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: {},
+        state: { id: '', state: ''},
         addressLine1: '',
         addressLine2: ''
     });
@@ -122,7 +122,7 @@ export default () => {
             addressDto: addressDto
         };
 
-        const validationResult2 = validateUser(userUpdateDto);
+        const validationResult2 = validateUser(userUpdateDto, addressDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult2,

@@ -19,7 +19,10 @@ function ModalAddWarehouseRetailer(props) {
         addressDto: {
             state: {},
             latitude: '',
-            longitude: ''
+            longitude: '',
+            city: '',
+            addressLine1: '',
+            addressLine2: ''
         },
         totalCapacity: ''
     });
@@ -84,7 +87,7 @@ function ModalAddWarehouseRetailer(props) {
 
     const addWarehouseHandler = (e) => {
         e.preventDefault();
-
+console.log(warehouseDto.addressDto);
         let location = `${warehouseDto.addressDto.state.state}
                         ${warehouseDto.addressDto.city}
                         ${warehouseDto.addressDto.addressLine1}
@@ -181,11 +184,11 @@ function ModalAddWarehouseRetailer(props) {
                         </Form.Group>
 
                         <Form.Group controlId="city" style={{padding: '5px 10px'}}>
-                            city
+                            City
                             <Form.Control type="text"
                                           onChange={handleCity}
                                           className={
-                                              errors.validationErrors.includes("City")
+                                              errors.validationErrors.includes("city")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -194,11 +197,11 @@ function ModalAddWarehouseRetailer(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="addressLine1" style={{padding: '5px 10px'}}>
-                            address line 1
+                            Address line 1
                             <Form.Control type="text"
                                           onChange={handleLineOne}
                                           className={
-                                              errors.validationErrors.includes("AddressLine1")
+                                              errors.validationErrors.includes("addressLine1")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
@@ -207,11 +210,11 @@ function ModalAddWarehouseRetailer(props) {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId="addressLine2" style={{padding: '5px 10px'}}>
-                            address line 2
+                            Address line 2
                             <Form.Control type="text"
                                           onChange={handleLineTwo}
                                           className={
-                                              errors.validationErrors.includes("AddressLine2")
+                                              errors.validationErrors.includes("addressLine2")
                                                   ? "form-control is-invalid"
                                                   : "form-control"
                                           }/>
