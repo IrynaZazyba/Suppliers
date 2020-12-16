@@ -1,8 +1,8 @@
-import isEmail from 'validator/lib/isEmail';
+import isEmail from "validator/lib/isEmail";
 
-export default function validateUser(user, addressDto) {
+export default function validateUserWithUsername(user, addressDto) {
     let errorsFields = [];
-
+    console.log(user);
     if (!user.name) {
         errorsFields.push("name");
     }
@@ -18,6 +18,11 @@ export default function validateUser(user, addressDto) {
         errorsFields.push("role");
     }
 
+
+    if (!user.username) {
+        errorsFields.push("username");
+    }
+
     if (!user.email || !isEmail(user.email)) {
         errorsFields.push("email");
     }
@@ -31,10 +36,9 @@ export default function validateUser(user, addressDto) {
     if (!user.addressDto || !addressDto.addressLine2) {
         errorsFields.push("addressLine2");
     }
-    if (!user.addressDto || !addressDto.state || !addressDto.state.state) {
+    if (!user.addressDto || !addressDto.state.state) {
         errorsFields.push("state");
     }
 
     return errorsFields;
 };
-

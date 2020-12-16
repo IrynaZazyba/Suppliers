@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import {AuthContext} from "../../context/authContext";
-import validateUser from "../../validation/UserValidationRules";
+import validateUserWithUsername from "../../validation/EditUserValidationRules";
 
 function ModalAddUser(props) {
 
@@ -15,7 +15,7 @@ function ModalAddUser(props) {
     const [stateOptions, setStateOptions] = useState([]);
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: {},
+        state: { id: '', state: ''},
         addressLine1: '',
         addressLine2: ''
     });
@@ -115,7 +115,8 @@ function ModalAddUser(props) {
             ...userDto,
             addressDto: addressDto
         };
-        const validationResult2 = validateUser(userUpdateDto);
+
+        const validationResult2 = validateUserWithUsername(userUpdateDto, addressDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult2,
@@ -172,6 +173,8 @@ function ModalAddUser(props) {
                         validationErrors: [],
                         serverErrors: ''
                     });
+                    setAddressDto({});
+                    setUser({});
                     props.onChange(false)
                 }}
                 aria-labelledby="modal-custom"

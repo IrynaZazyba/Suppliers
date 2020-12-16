@@ -15,7 +15,7 @@ export default () => {
     const currentCustomerId = localStorage.getItem("currentCustomerId") != null ? localStorage.getItem("currentCustomerId") : 0;
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: {},
+        state: { id: '', state: ''},
         addressLine1: '',
         addressLine2: ''
     });
@@ -122,7 +122,7 @@ export default () => {
             addressDto: addressDto
         };
 
-        const validationResult2 = validateUser(userUpdateDto);
+        const validationResult2 = validateUser(userUpdateDto, addressDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult2,
@@ -208,7 +208,7 @@ export default () => {
                                           onChange={handleName}
                                           value={userDto.name}
                                           className={
-                                              isValid("name")
+                                              isValid("Name")
                                           }/>
                             <Form.Control.Feedback type="invalid">
                                 Please provide a valid name.
@@ -217,7 +217,7 @@ export default () => {
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Surname</Form.Label>
                             <Form.Control type="text"
-                                          placeholder="surname"
+                                          placeholder="Surname"
                                           onChange={handleSurname}
                                           value={userDto.surname}
                                           className={
@@ -231,7 +231,7 @@ export default () => {
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text"
-                                          placeholder="username"
+                                          placeholder="Username"
                                           readOnly={true}
                                           value={userDto.username}
                                           className={
@@ -244,7 +244,7 @@ export default () => {
                         </Form.Group>
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Birthday date</Form.Label>
-                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday}
+                            <Form.Control type="date" placeholder="Birthday" value={userDto.birthday}
                                           onChange={handleBirthday}
                                           className={
                                               isValid("birthday")
@@ -256,7 +256,7 @@ export default () => {
 
                         <Form.Group controlId="formBasicEmail" style={{padding: '5px 10px'}}>
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" placeholder="email" value={userDto.email} readOnly={true}
+                            <Form.Control type="email" placeholder="Email" value={userDto.email} readOnly={true}
                                           className={
                                               isValid("email")
                                           }/>
@@ -272,7 +272,7 @@ export default () => {
                         <Form.Group controlId="state" style={{padding: '5px 10px'}}>
                             Current state
                             <Form.Control type="text"
-                                          value={addressDto && addressDto.state.state}
+                                          value={addressDto && addressDto.state && addressDto.state.state}
                                           disabled/>
                         </Form.Group>
                         <Form.Group style={{padding: '5px 10px'}}>
@@ -290,6 +290,9 @@ export default () => {
                                 onChange={onChangeState}>
 
 
+                                <div className="validation-error">
+                                    {errors.validationErrors.includes("state") ? "Please provide a state" : ""}
+                                </div>
                             </AsyncTypeahead>
                         </Form.Group>
                         <Form.Group controlId="formBasicState" style={{padding: '5px 10px'}}>

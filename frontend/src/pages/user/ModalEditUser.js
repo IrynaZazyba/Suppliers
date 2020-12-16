@@ -4,13 +4,14 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import validateUser from "../../validation/UserValidationRules";
+import validateUserWithUsername from "../../validation/UserValidationRules";
 
 function ModalEditUser(props) {
 
     const [userDto, setUser] = useState({
         id: '',
         name: '',
+        username: '',
         surname: '',
         birthday: ''
     });
@@ -24,7 +25,7 @@ function ModalEditUser(props) {
 
     const [addressDto, setAddressDto] = useState({
         city: '',
-        state: {},
+        state: { id: '', state: ''},
         addressLine1: '',
         addressLine2: ''
     });
@@ -103,7 +104,7 @@ function ModalEditUser(props) {
             ...userDto,
             addressDto: addressDto
         };
-        const validationResult2 = validateUser(userUpdateDto);
+        const validationResult2 = validateUserWithUsername(userUpdateDto, addressDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult2,
@@ -156,7 +157,7 @@ function ModalEditUser(props) {
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Name</Form.Label>
                             <Form.Control type="text"
-                                          placeholder="name"
+                                          placeholder="Name"
                                           onChange={handleName}
                                           value={userDto.name}
                                           className={
@@ -169,7 +170,7 @@ function ModalEditUser(props) {
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Surname</Form.Label>
                             <Form.Control type="text"
-                                          placeholder="surname"
+                                          placeholder="Surname"
                                           onChange={handleSurname}
                                           value={userDto.surname}
                                           className={
@@ -179,10 +180,23 @@ function ModalEditUser(props) {
                                 Please provide a valid surname.
                             </Form.Control.Feedback>
                         </Form.Group>
+                        <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Username"
+                                         readOnly={true}
+                                          value={userDto.username}
+                                          className={
+                                              isValid("username")
+                                          }/>
+                            <Form.Control.Feedback type="invalid">
+                                Please provide a valid username.
+                            </Form.Control.Feedback>
+                        </Form.Group>
 
                         <Form.Group controlId="editUser" style={{padding: '5px 10px'}}>
                             <Form.Label>Birthday</Form.Label>
-                            <Form.Control type="date" placeholder="birthday" value={userDto.birthday}
+                            <Form.Control type="date" placeholder="Birthday" value={userDto.birthday}
                                           onChange={handleBirthday}
                                           className={
                                               isValid("birthday")
@@ -218,7 +232,7 @@ function ModalEditUser(props) {
                         </Form.Group>
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>City</Form.Label>
-                            <Form.Control type="text" placeholder="city" value={addressDto && addressDto.city}
+                            <Form.Control type="text" placeholder="City" value={addressDto && addressDto.city}
                                           onChange={handleCity}
                                           className={
                                               isValid("city")
@@ -231,7 +245,7 @@ function ModalEditUser(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 1</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine1"
+                            <Form.Control type="text" placeholder="AddressLine1"
                                           value={addressDto && addressDto.addressLine1}
                                           onChange={handleaddressLine1}
                                           className={
@@ -245,7 +259,7 @@ function ModalEditUser(props) {
 
                         <Form.Group controlId="formBasicText" style={{padding: '5px 10px'}}>
                             <Form.Label>Address line 2</Form.Label>
-                            <Form.Control type="text" placeholder="addressLine2"
+                            <Form.Control type="text" placeholder="AddressLine2"
                                           value={addressDto && addressDto.addressLine2}
                                           onChange={handleaddressLine2}
                                           className={
