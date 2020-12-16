@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
 import validateUser from "../../validation/UserValidationRules";
+import validateUserWithUsername from "../../validation/UserValidationRules";
 
 function ModalEditUser(props) {
 
@@ -104,7 +105,7 @@ function ModalEditUser(props) {
             ...userDto,
             addressDto: addressDto
         };
-        const validationResult2 = validateUser(userUpdateDto, addressDto);
+        const validationResult2 = validateUserWithUsername(userUpdateDto, addressDto);
         setErrors(preState => ({
             ...preState,
             validationErrors: validationResult2,

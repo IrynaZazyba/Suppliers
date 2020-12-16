@@ -1,8 +1,8 @@
-import isEmail from 'validator/lib/isEmail';
+import isEmail from "validator/lib/isEmail";
 
-export default function validateUser(user, addressDto) {
+export default function validateUserWithUsername(user, addressDto) {
     let errorsFields = [];
-
+    console.log(user);
     if (!user.name) {
         errorsFields.push("name");
     }
@@ -16,6 +16,11 @@ export default function validateUser(user, addressDto) {
 
     if (!user.role) {
         errorsFields.push("role");
+    }
+
+
+    if (!user.username) {
+        errorsFields.push("username");
     }
 
     if (!user.email || !isEmail(user.email)) {
@@ -37,4 +42,3 @@ export default function validateUser(user, addressDto) {
 
     return errorsFields;
 };
-
