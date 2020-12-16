@@ -173,6 +173,8 @@ function ModalAddUser(props) {
                         validationErrors: [],
                         serverErrors: ''
                     });
+                    setAddressDto({});
+                    setUser({});
                     props.onChange(false)
                 }}
                 aria-labelledby="modal-custom"

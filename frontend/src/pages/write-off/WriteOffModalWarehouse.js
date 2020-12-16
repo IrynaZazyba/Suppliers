@@ -196,7 +196,7 @@ function WriteOffWarehouseModal(props) {
         e.preventDefault();
 
         let writeOffAct = prepareActDto();
-        let validErrors = validateWriteOffAct(writeOffAct, items);
+        let validErrors = validateWriteOffAct(writeOffAct, items, warehouseDto);
         setErrors(prevState => ({
             ...prevState,
             validationErrors: validErrors
@@ -422,7 +422,7 @@ function WriteOffWarehouseModal(props) {
                     <Col sm="8">
                         <Form.Control type="text" placeholder="Act identifier" onChange={handleIdentifier}
                                       className={
-                                          errors.validationErrors.includes("identifier")
+                                          errors.validationErrors.includes("act-identifier")
                                               ? "form-control is-invalid"
                                               : "form-control"
                                       }/>

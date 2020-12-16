@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ErrorMessage from "../../messages/errorMessage";
 import {AsyncTypeahead} from "react-bootstrap-typeahead";
-import validateUser from "../../validation/UserValidationRules";
 import validateUserWithUsername from "../../validation/UserValidationRules";
 
 function ModalEditUser(props) {
