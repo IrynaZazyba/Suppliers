@@ -162,7 +162,7 @@ function ModalEditWarehouse(props) {
             axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
                 params: {
                     address: location,
-                    key: 'AIzaSyAwsnzBvhRywcdS27NNkLRr37NXk8uMSBA'
+                    key: 'API_KEY'
                 }
             }).then(function (response) {
                 if (response.status !== 200) {

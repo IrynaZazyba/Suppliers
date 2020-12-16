@@ -14,7 +14,7 @@ import CardContainer from "../../components/CardContainer";
 export default () => {
 
     const [currentCustomerId, setSelected] = useState(JSON.parse(localStorage.getItem('user')).customers[0].id);
-
+    const [deletedCars, setDeletedCar] = useState([]);
     const [page, setPage] = useState({
         active: 1,
         currentPage: 1,
@@ -106,8 +106,19 @@ export default () => {
                     ...preState,
                     errorMessage: ''
                 }));
+                setDeletedCar([...deletedCars, idOfCar])
             }
         });
+    }
+
+    function checkIsActive(idOfCar) {
+        let result = true;
+        deletedCars.forEach(i => {
+            if (i == idOfCar) {
+                result = false;
+            }
+        });
+        return result;
     }
 
     const tableRows = cars.map(car => (
@@ -119,10 +130,12 @@ export default () => {
             <td><FaEdit style={{textAlign: 'center', color: '#1A7FA8'}}
                         size={'1.3em'}
                         onClick={() => {
-                            setEditCar({
-                                editShow: true,
-                                car: car
-                            });
+                            if (checkIsActive(car.id)) {
+                                setEditCar({
+                                    editShow: true,
+                                    car: car
+                                });
+                            }
                         }}/>
             </td>
             <td><FaTrash style={{color: '#1A7FA8', textAlign: 'center'}}
